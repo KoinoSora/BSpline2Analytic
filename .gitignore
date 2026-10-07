@@ -1,0 +1,48 @@
+# Local SDK and licensing
+SGGK/
+SGGKLib/
+*.lic
+
+# Local credentials and secrets
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.pfx
+*.p12
+
+# Build directories and generated artifacts
+build/
+build-*/
+out/
+output/
+Output/
+Debug/
+Release/
+RelWithDebInfo/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+CTestTestfile.cmake
+Testing/
+*.obj
+*.o
+*.pdb
+*.ilk
+*.idb
+*.tlog
+*.lastbuildstate
+*.exe
+*.dll
+*.lib
+*.so
+*.so.*
+*.a
+
+# IDE and operating system files
+.vs/
+*.user
+*.suo
+.DS_Store
+Thumbs.db
