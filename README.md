@@ -1,6 +1,6 @@
 # BSpline2Analytic
 
-基于海星 SGK 1.7.11 的四边 NURBS 面片解析识别与转换模块，使用 C++17。
+基于海星 SGK 1.7.11 的四边样条面片解析识别与转换模块，使用 C++17。提供精确 NURBS 识别及非有理样条近似转换两条路径。
 
 ## 当前功能
 
@@ -13,6 +13,8 @@
 - 失败结果区分无效输入、退化、病态、边界关系不一致、歧义、验证失败和不支持。
 
 模块包含静态库、示例、回归测试和批量性能测试。Release 与 Debug 均已验证，结果见 [测试报告](TEST_REPORT.md)。
+
+非有理输入使用新增的 `ApproximateConversion.h`：`ConvertApproximate` 通过四边与少量内部等参线恢复五类候选，再进行参数优化和独立验收。默认距离严格小于 `1e-5`、边界切向及边界曲面法向角分别严格小于 `0.1°`。`timing.classification / optimization / validation` 分别累计类型判断、求解、验收耗时及调用次数，初值合格时优化计时为零。算法及验证口径见 [非有理转换说明](APPROXIMATE_CONVERSION.md)。
 
 ## 构建与运行
 
@@ -29,13 +31,31 @@
 .\Build.ps1 -SdkDirectory 'D:\YourSdk\SGGK' -Configuration Release -Benchmark
 ```
 
-脚本构建 `BSpline2Analytic`、`BSpline2AnalyticSample`、`BSpline2AnalyticTests`，并运行回归测试。`-Benchmark` 额外运行 1000 个不同面片的测试，原始记录写入 `build/benchmark-Release.csv`。数据生成和变换不计入识别耗时，计时包含完整 `Recognize` 流程。
+脚本构建库、示例、精确/近似回归测试及近似性能测试程序，并运行两套回归。`-Benchmark` 额外运行原有 1000 面片精确识别测试，记录写入 `build/benchmark-Release.csv`。`-ApproximateBenchmark` 运行 35 次近似转换计时（含优化成功和禁用优化的失败分支），记录写入 `build/approximate-benchmark-Release.csv`。数据生成、预热和日志不计入转换耗时。可用 `-BuildJobs` 指定构建并发数，默认 1。
 
 直接运行程序时，需将 SDK 对应配置的 DLL 目录加入 PATH：Release 为 `x64-win/bin`，Debug 为 `x64-win/bind`，RelWithDebInfo 为 `x64-win/binw`。当前测试环境在 SDK 根目录加载许可证；测试脚本自动设置工作目录和 DLL 搜索路径。RelWithDebInfo 的目录映射已配置，本轮没有构建测试该配置。
 
 模块也可通过 `add_subdirectory` 接入宿主工程，并链接 `BSpline2Analytic`。应显式传入 `SGGK_SDK_DIR`；现有 samples 顶层工程还需使用实际 SDK 的库名前后缀配置。独立模块构建是本轮验证过的入口。
 
 ## 接口示例
+
+非有理样条：
+
+```cpp
+#include "ApproximateConversion.h"
+auto result = bspline2analytic::ConvertApproximate(inputSurface);
+if (result.status == bspline2analytic::ConversionStatus::Success) {
+    auto analytic = result.patch->surface;
+    auto domain = result.patch->sdkDomain;
+    auto distanceBound = result.validation.geometry.upperBound;
+    auto classifyMs = result.timing.classification.elapsedMs;
+    auto optimizeMs = result.timing.optimization.elapsedMs;
+    auto validateMs = result.timing.validation.elapsedMs;
+}
+// 失败时 patch 可能仅是诊断候选，不能作为验收合格结果。
+```
+
+精确有理路径：
 
 宿主程序按 SGK 要求管理 `sggk::init()` / `sggk::fini()`，确保 SDK 对象在 `fini()` 前销毁。
 
@@ -68,13 +88,16 @@ if (result.status == bspline2analytic::Status::Success) {
 
 普通非退化面片是当前主范围。周期接缝与单周范围已覆盖；球极点、锥顶等坍缩边返回 `Degenerate`。圆锥按同一锥瓣恢复；Apple/Lemon 圆环已有规则区域测试，但跨奇异点、跨锥顶或多周范围未作为支持承诺。高度病态的极短圆弧可能报告无法恢复或无法验证。
 
-当前不处理一般非有理样条的近似恢复、非等参裁剪和拓扑重建。相邻面 G1、内存泄漏审计、严格区间误差证明及下游运算加速仍待后续专项验证。
+上述 `BernsteinBound` 和 `requireBound` 说明属于原 `Recognize` 接口。新增近似路径使用向外舍入区间/Bernstein 连续界，验证有限解析面片距离及边界切法向，并提供 `Passed/Exceeded/Unresolved`；没有允许采样代替验收的选项。其法向比较仅沿边界，参数及 SGK 对象需保持同步。
+
+当前不处理非等参裁剪、任意自由曲面的可转换性搜索和拓扑重建。浅锥、短圆弧、奇异边界仍没有近似路径的专项保证；相邻面 G1、内存泄漏审计和下游运算加速待后续专项验证。新验证器目前耗时明显高于纯类型判断，不能把类型判断时间当作完整转换时间。
 
 ## 文档及仓库约定
 
 - [需求说明](REQUIREMENTS.md)
 - [算法与代码实施方案](IMPLEMENTATION_PLAN.md)
 - [测试报告](TEST_REPORT.md)
+- [非有理转换、参数对应与三阶段计时](APPROXIMATE_CONVERSION.md)
 - [原始需求 PDF](中船海舟样条转二次曲面.pdf)
 - [开发与 Git 同步约定](AGENTS.md)
 

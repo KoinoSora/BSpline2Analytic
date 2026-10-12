@@ -1,3 +1,4 @@
+#include "ApproximateConversion.h"
 #include "BSpline2Analytic.h"
 #include <Foundation/init.h>
 #include <Geometry/3D/Surface/TorusSurface.h>
@@ -16,7 +17,25 @@ static int Run()
               << result.message << "\nsampled distance: " << result.validation.maxSampledDistance
               << "\nBernstein mother-surface bound: " << result.validation.surfaceDistanceBound
               << '\n';
-    return result.status == bspline2analytic::Status::Success ? 0 : 1;
+    sggk::Point3DMatrix points(4, std::vector<sggk::Point3D>(4));
+    for (unsigned i = 0; i < 4; ++i)
+        for (unsigned j = 0; j < 4; ++j)
+            points[i][j] = sggk::Point3D(i, j, (i > 0 && i < 3 && j > 0 && j < 3) ? 2e-6 : 0);
+    sggk::BSplineSurface polynomial(3, 3, points, sggk::RealArray{0, 1}, sggk::RealArray{0, 1},
+                                    sggk::UIntArray{4, 4}, sggk::UIntArray{4, 4});
+    auto approximate = bspline2analytic::ConvertApproximate(polynomial);
+    const auto &t = approximate.timing;
+    std::cout << "Approximate: " << bspline2analytic::ConversionStatusName(approximate.status)
+              << "\nclassification: " << t.classification.elapsedMs << " ms"
+              << "\noptimization: " << t.optimization.elapsedMs << " ms (" << t.optimization.calls
+              << " calls)"
+              << "\nvalidation: " << t.validation.elapsedMs << " ms (" << t.validation.calls
+              << " calls)"
+              << "\nother: " << t.otherMs << " ms; total: " << t.totalMs << " ms\n";
+    return result.status == bspline2analytic::Status::Success &&
+                   approximate.status == bspline2analytic::ConversionStatus::Success
+               ? 0
+               : 1;
 }
 int main()
 {

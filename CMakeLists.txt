@@ -13,7 +13,10 @@ if(NOT WIN32 OR NOT MSVC)
 endif()
 add_library(BSpline2Analytic STATIC
     BSpline2Analytic.cpp BoundaryAnalysis.cpp AnalyticReconstruction.cpp
-    PatchRecovery.cpp RecognitionValidation.cpp Numerics.cpp)
+    PatchRecovery.cpp RecognitionValidation.cpp Numerics.cpp
+    IntervalBounds.cpp ApproximateGeometry.cpp ApproximateNumerics.cpp IsoCurveAnalysis.cpp
+    SurfaceSampling.cpp CandidateRefinement.cpp ConversionValidation.cpp ApproximateConversion.cpp)
+set_source_files_properties(IntervalBounds.cpp ConversionValidation.cpp PROPERTIES COMPILE_OPTIONS "/fp:strict")
 target_compile_features(BSpline2Analytic PUBLIC cxx_std_17)
 target_compile_options(BSpline2Analytic PRIVATE /W4 /utf-8 /permissive-)
 target_compile_definitions(BSpline2Analytic PUBLIC NOMINMAX)
@@ -31,6 +34,16 @@ if(BSPLINE2ANALYTIC_BUILD_TESTS)
     target_link_libraries(BSpline2AnalyticTests PRIVATE BSpline2Analytic)
     target_compile_options(BSpline2AnalyticTests PRIVATE /W4 /utf-8)
     add_test(NAME BSpline2Analytic.Regression COMMAND BSpline2AnalyticTests)
+    add_executable(BSpline2AnalyticApproximateTests tests/ApproximateConversionTests.cpp tests/ApproximateCases.cpp tests/ReferenceCases.cpp)
+    target_link_libraries(BSpline2AnalyticApproximateTests PRIVATE BSpline2Analytic)
+    target_compile_options(BSpline2AnalyticApproximateTests PRIVATE /W4 /utf-8)
+    add_test(NAME BSpline2Analytic.Approximate COMMAND BSpline2AnalyticApproximateTests)
+    add_executable(BSpline2AnalyticApproximateBenchmark tests/ApproximateBenchmark.cpp tests/ApproximateCases.cpp tests/ReferenceCases.cpp)
+    target_link_libraries(BSpline2AnalyticApproximateBenchmark PRIVATE BSpline2Analytic)
+    target_compile_options(BSpline2AnalyticApproximateBenchmark PRIVATE /W4 /utf-8)
+    set_tests_properties(BSpline2Analytic.Approximate PROPERTIES
+        WORKING_DIRECTORY "${SGGK_SDK_DIR}"
+        ENVIRONMENT_MODIFICATION "PATH=path_list_prepend:${SGGK_SDK_DIR}/x64-win/bin${_sgk_config}")
     set_tests_properties(BSpline2Analytic.Regression PROPERTIES
         WORKING_DIRECTORY "${SGGK_SDK_DIR}"
         ENVIRONMENT_MODIFICATION "PATH=path_list_prepend:${SGGK_SDK_DIR}/x64-win/bin${_sgk_config}")
