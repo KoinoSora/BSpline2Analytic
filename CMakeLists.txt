@@ -15,7 +15,7 @@ add_library(BSpline2Analytic STATIC
     BSpline2Analytic.cpp BoundaryAnalysis.cpp AnalyticReconstruction.cpp
     PatchRecovery.cpp RecognitionValidation.cpp Numerics.cpp
     IntervalBounds.cpp ApproximateGeometry.cpp ApproximateNumerics.cpp IsoCurveAnalysis.cpp
-    SurfaceSampling.cpp CandidateRefinement.cpp ConversionValidation.cpp ApproximateConversion.cpp)
+    SurfaceSampling.cpp ApproximateEvaluation.cpp PlaneOffsetRefinement.cpp CandidateRefinement.cpp ConversionValidation.cpp ApproximateConversion.cpp)
 set_source_files_properties(IntervalBounds.cpp ConversionValidation.cpp PROPERTIES COMPILE_OPTIONS "/fp:strict")
 target_compile_features(BSpline2Analytic PUBLIC cxx_std_17)
 target_compile_options(BSpline2Analytic PRIVATE /W4 /utf-8 /permissive-)

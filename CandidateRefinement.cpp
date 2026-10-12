@@ -21,8 +21,7 @@ static unsigned Dimension(sggk::SurfaceType t)
         return 11;
     return 10;
 }
-static AnalyticPatch Increment(const AnalyticPatch &base, const std::vector<double> &d,
-                               double scale)
+AnalyticPatch Increment(const AnalyticPatch &base, const std::vector<double> &d, double scale)
 {
     AnalyticPatch p = base;
     auto &a = p.parameters;
@@ -68,65 +67,43 @@ static AnalyticPatch Increment(const AnalyticPatch &base, const std::vector<doub
         throw Failure(Status::InvalidInput, "Trial step left the regular chart");
     return p;
 }
-struct Residuals
+ActiveParameters ParametersFor(sggk::SurfaceType type, ParameterLevel level)
 {
-    // leastSquares: normalized vector residuals; constraints: nonnegative
-    // distance/tangent error ratios. Normal errors are acceptance-only.
-    std::vector<double> leastSquares, constraints;
-    // cost = sum of squared vector components; worst = max(constraints).
-    double cost = 0, worst = 0;
-};
-static Residuals Evaluate(const AnalyticPatch &p, const SampleCache &samples,
-                          const ValidationOptions &o,
-                          const std::array<std::vector<size_t>, 4> &order)
+    using T = sggk::SurfaceType;
+    if (level == ParameterLevel::SizeOrOffset)
+    {
+        if (type == T::Plane)
+            return {{0}};
+        if (type == T::Cylinder)
+            return {{4}};
+        if (type == T::Torus)
+            return {{5, 6}};
+        return {{5}};
+    }
+    if (level == ParameterLevel::MotherSurface)
+    {
+        if (type == T::Plane)
+            return {{0, 1, 2}};
+        if (type == T::Cylinder)
+            return {{0, 1, 2, 3, 4}};
+        if (type == T::Sphere)
+            return {{0, 1, 2, 5}};
+        if (type == T::Cone)
+            return {{0, 1, 2, 3, 4, 5}};
+        return {{0, 1, 2, 3, 4, 5, 6}};
+    }
+    ActiveParameters active;
+    active.indices.resize(Dimension(type));
+    std::iota(active.indices.begin(), active.indices.end(), 0);
+    return active;
+}
+double SampleScale(const AnalyticPatch &p, const SampleCache &samples)
 {
-    auto frame = FrameOf(p.parameters);
-    std::array<EdgeGeometry, 4> edges;
-    for (unsigned k = 0; k < 4; ++k)
-    {
-        auto e = MakeEdge(p, k);
-        double last = e.start;
-        for (size_t j = 0; j < order[k].size(); ++j)
-        {
-            last = EdgeCoordinate(e, frame.local(samples.points[order[k][j]].point), last);
-            if (j == 0)
-                e.g0 = last;
-        }
-        e.g1 = last;
-        if (std::abs(e.g1 - e.g0) < 1e-12)
-            throw Failure(Status::Degenerate, "Collapsed optimization correspondence");
-        edges[k] = e;
-    }
-    Residuals r;
-    auto add = [&](V a, double metric) {
-        r.leastSquares.push_back(a.x);
-        r.leastSquares.push_back(a.y);
-        r.leastSquares.push_back(a.z);
-        r.constraints.push_back(metric);
-        r.cost += Dot(a, a);
-        r.worst = std::max(r.worst, metric);
-    };
-    double ta = o.boundaryTangentToleranceDeg * Pi / 180;
-    for (const auto &s : samples.points)
-    {
-        if (s.edge < 0)
-        {
-            V d = (s.point - ProjectInteriorPoint(p, s.point)) / o.distanceTolerance;
-            add(d, Norm(d));
-        }
-        else
-        {
-            auto q = MapBoundaryPoint(p, edges[s.edge], s.point, s.fraction);
-            V d = (s.point - q.point) / o.distanceTolerance;
-            add(d, Norm(d));
-            add((s.tangent - q.tangent) / (2 * std::sin(ta / 2)), Angle(s.tangent, q.tangent) / ta);
-            // Boundary normals remain checked by ValidateConversion, but
-            // contribute neither to the solver cost nor its max-error metric.
-        }
-    }
-    if (!std::isfinite(r.cost) || !std::isfinite(r.worst))
-        throw Failure(Status::VerificationFailed, "Nonfinite trial residual");
-    return r;
+    double scale = 1e-8;
+    auto origin = Get(p.parameters.origin);
+    for (size_t i = 0; i < samples.size(); ++i)
+        scale = std::max(scale, Norm(samples[i].point - origin));
+    return scale;
 }
 // Minimum-norm step subject to linearized max-error constraints and a box
 // trust region. Hildreth dual coordinate updates keep multipliers nonnegative.
@@ -186,7 +163,7 @@ static double StepNorm(const std::vector<double> &step)
         norm = std::max(norm, std::abs(x));
     return norm;
 }
-static double ModelChange(const Residuals &a, const Residuals &b)
+static double ModelChange(const ResidualBuffer &a, const ResidualBuffer &b)
 {
     double change = 0;
     for (size_t i = 0; i < a.leastSquares.size(); i += 3)
@@ -199,35 +176,44 @@ RefinementResult RefineCandidate(const sggk::BSplineSurface &, AnalyticPatch &p,
                                  const SampleCache &samples, const ConversionOptions &o,
                                  ConversionStatistics &statistics)
 {
+    EvaluationWorkspace workspace;
+    return RefineCandidateLevel(p, samples, o, statistics, ParameterLevel::FullPatch,
+                                o.refinement.maxIterations, false, workspace);
+}
+RefinementResult RefineCandidateLevel(AnalyticPatch &p, const SampleCache &samples,
+                                      const ConversionOptions &o, ConversionStatistics &statistics,
+                                      ParameterLevel level, unsigned iterationBudget,
+                                      bool forceAttempt, EvaluationWorkspace &workspace)
+{
     RefinementDiagnostics diagnostic;
-    if (samples.points.empty())
+    diagnostic.level = level;
+    diagnostic.sampleVersion = samples.version;
+    auto active = ParametersFor(p.parameters.type, level);
+    diagnostic.activeDimension = static_cast<unsigned>(active.indices.size());
+    if (!samples.size())
     {
         statistics.refinementRuns.push_back(diagnostic);
         return {};
     }
     const auto &options = o.refinement;
-    std::array<std::vector<size_t>, 4> order;
-    double scale = 0;
-    V origin = Get(p.parameters.origin);
-    for (size_t i = 0; i < samples.points.size(); ++i)
-    {
-        const auto &x = samples.points[i];
-        scale = std::max(scale, Norm(x.point - origin));
-        if (x.edge >= 0)
-            order[x.edge].push_back(i);
-    }
-    for (auto &list : order)
-        std::sort(list.begin(), list.end(), [&](size_t a, size_t b) {
-            return samples.points[a].fraction < samples.points[b].fraction;
-        });
-    scale = std::max(scale, 1e-8);
-    auto current = Evaluate(p, samples, o.validation, order);
-    auto best = current;
+    double scale = SampleScale(p, samples);
+    const unsigned initialEvaluations = workspace.evaluations, initialResizes = workspace.resizes;
+    auto evaluate = [&](const AnalyticPatch &patch, ResidualBuffer &out) {
+        EvaluateResiduals(patch, samples, o.validation, workspace, out);
+    };
+    auto &current = workspace.current;
+    auto &best = workspace.best;
+    auto &plus = workspace.plus;
+    auto &minus = workspace.minus;
+    auto &next = workspace.trial;
+    evaluate(p, current);
+    best = current;
     AnalyticPatch bestPatch = p;
     diagnostic.initialWorst = current.worst;
     diagnostic.stopReason = RefinementStopReason::IterationLimit;
     double lambda = 1e-4, trust = 0.1;
-    const unsigned n = Dimension(p.parameters.type);
+    const unsigned n = diagnostic.activeDimension;
+    std::vector<double> delta(Dimension(p.parameters.type), 0);
     RefinementPhase phase =
         options.maxWarmupIterations ? RefinementPhase::Warmup : RefinementPhase::Constrained;
     unsigned failures = 0, smallChanges = 0;
@@ -235,7 +221,20 @@ RefinementResult RefineCandidate(const sggk::BSplineSurface &, AnalyticPatch &p,
     // A window of m attempts needs m+1 records, including the phase's initial
     // state.
     std::deque<std::pair<double, double>> history{{best.worst, phaseBestCost}};
-    std::vector<std::vector<double>> J, C;
+    auto &J = workspace.jacobian;
+    auto &C = workspace.constraintJacobian;
+    auto resizeMatrix = [&](std::vector<std::vector<double>> &matrix, size_t rows) {
+        bool changed = matrix.size() != rows;
+        matrix.resize(rows);
+        for (auto &row : matrix)
+        {
+            changed |= row.size() != n;
+            row.resize(n);
+            std::fill(row.begin(), row.end(), 0.0);
+        }
+        if (changed)
+            ++workspace.resizes;
+    };
     bool jacobianValid = false;
     auto enterConstrained = [&]() {
         p = bestPatch;
@@ -246,9 +245,10 @@ RefinementResult RefineCandidate(const sggk::BSplineSurface &, AnalyticPatch &p,
         history = {{best.worst, phaseBestCost}};
         jacobianValid = false;
     };
-    for (unsigned iteration = 0; iteration < options.maxIterations; ++iteration)
+    for (unsigned iteration = 0; iteration < std::min(iterationBudget, options.maxIterations);
+         ++iteration)
     {
-        if (best.worst <= 0.75)
+        if (!forceAttempt && best.worst <= 0.75)
         {
             diagnostic.stopReason = RefinementStopReason::MarginReached;
             break;
@@ -270,27 +270,26 @@ RefinementResult RefineCandidate(const sggk::BSplineSurface &, AnalyticPatch &p,
         if (!jacobianValid)
         {
             ++diagnostic.jacobianEvaluations;
-            J.assign(current.leastSquares.size(), std::vector<double>(n));
-            C.assign(current.constraints.size(), std::vector<double>(n));
+            resizeMatrix(J, current.leastSquares.size());
+            resizeMatrix(C, current.constraints.size());
             for (unsigned j = 0; j < n; ++j)
             {
                 const double h = 2e-6;
-                std::vector<double> delta(n, 0);
-                delta[j] = h;
-                Residuals plus, minus;
+                std::fill(delta.begin(), delta.end(), 0.0);
+                delta[active.indices[j]] = h;
                 bool havePlus = false, haveMinus = false;
                 try
                 {
-                    plus = Evaluate(Increment(p, delta, scale), samples, o.validation, order);
+                    evaluate(Increment(p, delta, scale), plus);
                     havePlus = true;
                 }
                 catch (const Failure &)
                 {
                 }
-                delta[j] = -h;
+                delta[active.indices[j]] = -h;
                 try
                 {
-                    minus = Evaluate(Increment(p, delta, scale), samples, o.validation, order);
+                    evaluate(Increment(p, delta, scale), minus);
                     haveMinus = true;
                 }
                 catch (const Failure &)
@@ -347,9 +346,12 @@ RefinementResult RefineCandidate(const sggk::BSplineSurface &, AnalyticPatch &p,
                     break;
                 try
                 {
-                    auto trial = Increment(p, step, scale);
+                    std::fill(delta.begin(), delta.end(), 0.0);
+                    for (unsigned j = 0; j < n; ++j)
+                        delta[active.indices[j]] = step[j];
+                    auto trial = Increment(p, delta, scale);
                     ++diagnostic.lineSearchEvaluations;
-                    auto next = Evaluate(trial, samples, o.validation, order);
+                    evaluate(trial, next);
                     record.modelChange = ModelChange(current, next);
                     // An unchanged sampled model cannot improve either acceptance
                     // objective.
@@ -360,7 +362,7 @@ RefinementResult RefineCandidate(const sggk::BSplineSurface &, AnalyticPatch &p,
                              : next.cost < current.cost && next.worst < current.worst * 1.2))
                     {
                         p = std::move(trial);
-                        current = std::move(next);
+                        std::swap(current, next);
                         record.accepted = true;
                         jacobianValid = false;
                         ++diagnostic.acceptedSteps;
@@ -414,7 +416,7 @@ RefinementResult RefineCandidate(const sggk::BSplineSurface &, AnalyticPatch &p,
             diagnostic.trace.push_back(record);
         // Every failure path reaches these checks, including a failed constrained
         // solve.
-        if (best.worst <= 0.75)
+        if (!forceAttempt && best.worst <= 0.75)
         {
             diagnostic.stopReason = RefinementStopReason::MarginReached;
             break;
@@ -452,24 +454,16 @@ RefinementResult RefineCandidate(const sggk::BSplineSurface &, AnalyticPatch &p,
             }
         }
     }
-    if (best.worst <= 0.75)
+    if (!forceAttempt && best.worst <= 0.75)
         diagnostic.stopReason = RefinementStopReason::MarginReached;
     p = std::move(bestPatch);
     diagnostic.bestWorst = best.worst;
     diagnostic.bestCost = best.cost;
     diagnostic.finalTrust = trust;
     RefinementResult result{best.worst < diagnostic.initialWorst, diagnostic.stopReason};
-    // Always materialize the best sampled candidate; success still requires full
-    // validation.
-    MakeNative(p);
-    for (unsigned i = 0; i < 4; ++i)
-    {
-        unsigned dim = p.mapping.swappedUV ? 1 : 0;
-        std::array<double, 2> uv{};
-        uv[dim] = p.domain[2 * dim + (bool(i % 2) != p.mapping.reversedU ? 1 : 0)];
-        uv[1 - dim] = p.domain[2 * (1 - dim) + (bool(i / 2) != p.mapping.reversedV ? 1 : 0)];
-        p.mapping.analyticCorners[i] = sggk::Point2D(uv[0], uv[1]);
-    }
+    MaterializePatch(p);
+    diagnostic.residualEvaluations = workspace.evaluations - initialEvaluations;
+    diagnostic.workspaceResizes = workspace.resizes - initialResizes;
     statistics.refinementRuns.push_back(std::move(diagnostic));
     return result;
 }

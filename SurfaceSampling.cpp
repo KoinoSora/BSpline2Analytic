@@ -3,6 +3,46 @@
 #include <tuple>
 namespace bspline2analytic::detail
 {
+static SampleKey KeyOf(const Sample &s)
+{
+    return {s.u, s.v, s.edge, int(s.sideU), int(s.sideV)};
+}
+SampleCache::SampleCache(std::shared_ptr<const SourceSampleCache> source) : base(std::move(source))
+{
+    if (base)
+    {
+        boundaryOrder = base->boundaryOrder;
+        keys = base->keys;
+        version = 1;
+    }
+}
+size_t SampleCache::size() const
+{
+    return (base ? base->points.size() : 0) + points.size();
+}
+const Sample &SampleCache::operator[](size_t i) const
+{
+    size_t n = base ? base->points.size() : 0;
+    return i < n ? base->points[i] : points[i - n];
+}
+void SampleCache::RebuildIndices()
+{
+    keys.clear();
+    for (auto &edge : boundaryOrder)
+        edge.clear();
+    for (size_t i = 0; i < size(); ++i)
+    {
+        const auto &s = (*this)[i];
+        keys.insert(KeyOf(s));
+        if (s.edge >= 0)
+            boundaryOrder[s.edge].push_back(i);
+    }
+    for (auto &edge : boundaryOrder)
+        std::stable_sort(edge.begin(), edge.end(), [&](size_t a, size_t b) {
+            return (*this)[a].fraction < (*this)[b].fraction;
+        });
+    ++version;
+}
 static Sample At(const sggk::BSplineSurface &s, double u, double v, int edge,
                  sggk::DerivType du = sggk::DerivType::NONE,
                  sggk::DerivType dv = sggk::DerivType::NONE)
@@ -56,7 +96,7 @@ SampleCache SampleSurface(const sggk::BSplineSurface &s, const SamplingOptions &
     auto us = Spans(s.KnotsU(), s.MinParamU(), s.MaxParamU()),
          vs = Spans(s.KnotsV(), s.MinParamV(), s.MaxParamV());
     auto add = [&](Sample x) {
-        if (cache.points.size() >= o.maxSamples)
+        if (cache.size() >= o.maxSamples)
             throw Failure(Status::VerificationFailed, "Sample budget exhausted");
         cache.points.push_back(x);
     };
@@ -93,30 +133,32 @@ SampleCache SampleSurface(const sggk::BSplineSurface &s, const SamplingOptions &
                        edge < 2 ? fixed : side, edge < 2 ? side : fixed));
             }
     }
+    cache.RebuildIndices();
     return cache;
 }
 unsigned AddWitnessSamples(const sggk::BSplineSurface &s, const ConversionValidationReport &r,
                            const SamplingOptions &o, SampleCache &cache)
 {
-    // Deduplicate only feedback; boundary one-sided records remain distinct.
-    using Key = std::tuple<double, double, int, int, int>;
-    auto key = [](const Sample &x) {
-        return Key{x.u, x.v, x.edge, static_cast<int>(x.sideU), static_cast<int>(x.sideV)};
-    };
-    std::set<Key> present;
-    for (const auto &x : cache.points)
-        present.insert(key(x));
     unsigned added = 0;
-    auto insert = [&](Sample x) {
-        if (cache.points.size() < o.maxSamples && present.insert(key(x)).second)
-        {
-            cache.points.push_back(x);
-            ++added;
-        }
+    auto insert = [&](double u, double v, int edge) {
+        if (cache.size() >= o.maxSamples)
+            return;
+        auto du = edge < 0 ? sggk::DerivType::NONE
+                           : (u == s.MaxParamU() ? sggk::DerivType::LEFT : sggk::DerivType::RIGHT);
+        auto dv = edge < 0 ? sggk::DerivType::NONE
+                           : (v == s.MaxParamV() ? sggk::DerivType::LEFT : sggk::DerivType::RIGHT);
+        SampleKey key{u, v, edge, int(du), int(dv)};
+        if (cache.keys.count(key))
+            return;
+        // Evaluate only after deduplication. One-sided boundary records stay distinct.
+        auto sample = At(s, u, v, edge, du, dv);
+        cache.points.push_back(sample);
+        cache.keys.insert(key);
+        ++added;
     };
     auto add = [&](const ConstraintReport &c, bool angle) {
         if (c.state == CheckState::Passed || c.state == CheckState::NotChecked ||
-            cache.points.size() >= o.maxSamples)
+            cache.size() >= o.maxSamples)
             return;
         double u = (c.parameterRegion[0] + c.parameterRegion[1]) * 0.5,
                v = (c.parameterRegion[2] + c.parameterRegion[3]) * 0.5;
@@ -141,17 +183,19 @@ unsigned AddWitnessSamples(const sggk::BSplineSurface &s, const ConversionValida
         }
         if (u < s.MinParamU() || u > s.MaxParamU() || v < s.MinParamV() || v > s.MaxParamV())
             return;
-        insert(At(s, u, v, edge));
+        insert(u, v, edge);
         // Include immediate neighbours: a witness should influence a region,
         // rather than just interpolate one troublesome point.
         double du = (c.parameterRegion[1] - c.parameterRegion[0]) * 0.25,
                dv = (c.parameterRegion[3] - c.parameterRegion[2]) * 0.25;
-        insert(At(s, u - du, v - dv, edge));
-        insert(At(s, u + du, v + dv, edge));
+        insert(u - du, v - dv, edge);
+        insert(u + du, v + dv, edge);
     };
     add(r.geometry, false);
     add(r.boundaryTangent, true);
     add(r.boundaryNormal, true);
+    if (added)
+        cache.RebuildIndices();
     return added;
 }
 } // namespace bspline2analytic::detail

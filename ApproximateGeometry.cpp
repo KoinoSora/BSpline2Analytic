@@ -199,11 +199,15 @@ EdgeGeometry MakeEdge(const AnalyticPatch &p, unsigned edge)
     }
     return e;
 }
-double EdgeCoordinate(const EdgeGeometry &e, V p, double reference)
+double EdgeCoordinateRaw(const EdgeGeometry &e, V p)
 {
     p = p - e.o;
-    return e.circle ? Unwrap(std::atan2(Dot(p, e.ey), Dot(p, e.ex)), reference)
-                    : Dot(p, e.d) / Dot(e.d, e.d);
+    return e.circle ? std::atan2(Dot(p, e.ey), Dot(p, e.ex)) : Dot(p, e.d) / Dot(e.d, e.d);
+}
+double EdgeCoordinate(const EdgeGeometry &e, V p, double reference)
+{
+    double raw = EdgeCoordinateRaw(e, p);
+    return e.circle ? Unwrap(raw, reference) : raw;
 }
 std::array<EdgeGeometry, 4> BoundaryMaps(const sggk::BSplineSurface &s, const AnalyticPatch &p)
 {
@@ -288,6 +292,79 @@ V ProjectInteriorPoint(const AnalyticPatch &p, V world)
     }
     return f.global(best);
 }
+V ProjectInteriorPointLocal(const AnalyticPatch &p, V a, const std::array<EdgeGeometry, 4> &edges,
+                            double coneTangent)
+{
+    auto uv = p.parameters.type == sggk::SurfaceType::Cone
+                  ? std::array<double, 2>{std::atan2(a.y, a.x),
+                                          std::max(0.0, (std::hypot(a.x, a.y) * coneTangent + a.z) /
+                                                            (1 + coneTangent * coneTangent))}
+                  : MotherParameters(p.parameters, a);
+    if (p.parameters.type != sggk::SurfaceType::Plane)
+        uv[0] = Unwrap(uv[0], (p.domain[0] + p.domain[1]) * 0.5);
+    if (p.parameters.type == sggk::SurfaceType::Torus)
+        uv[1] = Unwrap(uv[1], (p.domain[2] + p.domain[3]) * 0.5);
+    V best{};
+    double error = INFINITY;
+    auto accept = [&](V q) {
+        double d = Dot(q - a, q - a);
+        if (d < error)
+        {
+            error = d;
+            best = q;
+        }
+    };
+    if (uv[0] >= p.domain[0] && uv[0] <= p.domain[1] && uv[1] >= p.domain[2] &&
+        uv[1] <= p.domain[3])
+        return p.parameters.type == sggk::SurfaceType::Cone
+                   ? V{uv[1] * coneTangent * std::cos(uv[0]), uv[1] * coneTangent * std::sin(uv[0]),
+                       uv[1]}
+                   : CanonicalPoint(p.parameters, uv[0], uv[1]);
+    for (unsigned k = 0; k < 4; ++k)
+    {
+        const auto &e = edges[k];
+        double t = EdgeCoordinate(e, a, (e.start + e.end) * 0.5);
+        t = std::clamp(t, std::min(e.start, e.end), std::max(e.start, e.end));
+        auto q = [&](double s) {
+            return e.circle ? e.o + (e.ex * std::cos(s) + e.ey * std::sin(s)) * e.radius
+                            : e.o + e.d * s;
+        };
+        accept(q(t));
+        accept(q(e.start));
+        accept(q(e.end));
+    }
+    return best;
+}
+EdgePoint MapBoundaryPointAndTangent(const Frame3 &f, const EdgeGeometry &e, double g)
+{
+    double s = e.start + (e.end - e.start) * (g - e.g0) / (e.g1 - e.g0);
+    V point, tangent;
+    if (e.circle)
+    {
+        double c = std::cos(s), sn = std::sin(s);
+        point = e.o + (e.ex * c + e.ey * sn) * e.radius;
+        tangent = e.ex * (-sn) + e.ey * c;
+    }
+    else
+    {
+        point = e.o + e.d * s;
+        tangent = e.d;
+    }
+    return {f.global(point), Unit(f.vector(tangent)) * (e.end > e.start ? 1 : -1), {}, s};
+}
+void MaterializePatch(AnalyticPatch &p)
+{
+    MakeNative(p);
+    for (unsigned i = 0; i < 4; ++i)
+    {
+        unsigned dim = p.mapping.swappedUV ? 1 : 0;
+        std::array<double, 2> uv{};
+        uv[dim] = p.domain[2 * dim + (bool(i % 2) != p.mapping.reversedU ? 1 : 0)];
+        uv[1 - dim] = p.domain[2 * (1 - dim) + (bool(i / 2) != p.mapping.reversedV ? 1 : 0)];
+        p.mapping.analyticCorners[i] = sggk::Point2D(uv[0], uv[1]);
+    }
+}
+
 double Angle(V a, V b)
 {
     return std::atan2(Norm(Cross(a, b)), Dot(a, b));

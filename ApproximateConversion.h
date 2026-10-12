@@ -60,6 +60,11 @@ struct RefinementOptions
     double minTrustRadius = 1e-9;
     double smallModelChangeTolerance = 1e-3;
     bool recordIterationTrace = false;
+    bool enableProgressiveVariables = true;
+    // Used at SizeOrOffset level when progressive variables are enabled.
+    bool enablePlaneOffsetSolver = true;
+    unsigned maxScalarIterations = 48;
+    double scalarDistanceToleranceRatio = 1e-4;
 };
 struct ConversionOptions
 {
@@ -108,6 +113,18 @@ enum class RefinementPhase
     Warmup,
     Constrained
 };
+enum class ParameterLevel
+{
+    SizeOrOffset,
+    MotherSurface,
+    FullPatch
+};
+enum class RefinementEntryReason
+{
+    Initial,
+    WitnessSamples,
+    MoreVariables
+};
 enum class RefinementStopReason
 {
     NoSamples,
@@ -118,7 +135,9 @@ enum class RefinementStopReason
     TrustTooSmall,
     SmallStep,
     IterationLimit,
-    SolverFailure
+    SolverFailure,
+    PlaneOffsetSolved,
+    ScalarIterationLimit
 };
 struct RefinementIteration
 {
@@ -131,6 +150,12 @@ struct RefinementIteration
 };
 struct RefinementDiagnostics
 {
+    ParameterLevel level = ParameterLevel::FullPatch;
+    RefinementEntryReason entryReason = RefinementEntryReason::Initial;
+    unsigned activeDimension = 0, sampleVersion = 0;
+    unsigned planeOffsetSolves = 0, scalarIterations = 0;
+    unsigned residualEvaluations = 0, workspaceResizes = 0;
+    double planeOffset = 0;
     unsigned candidateIndex = 0,
              roundIndex = 0; // One-based, assigned by the converter.
     unsigned warmupIterations = 0, constrainedIterations = 0, acceptedSteps = 0;
@@ -142,6 +167,8 @@ struct RefinementDiagnostics
 };
 struct ConversionStatistics
 {
+    unsigned baseSamplingBuilds = 0, witnessSamplesAdded = 0;
+    // Counts generic LM/constrained attempts; scalar work is in refinementRuns.
     unsigned candidateCount = 0, optimizationIterations = 0;
     unsigned refinementRounds = 0, sampleCount = 0, validationPieces = 0;
     std::vector<RefinementDiagnostics> refinementRuns;
