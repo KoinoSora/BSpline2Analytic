@@ -91,6 +91,53 @@ static void RejectionTests()
     Timing(bad);
     Require(bad.status == ConversionStatus::InvalidInput, "Invalid distance tolerance accepted");
 }
+static void OptimizerNormalExclusionTests()
+{
+    AnalyticPatch plane;
+    plane.parameters.type = sggk::SurfaceType::Plane;
+    plane.domain = {0, .001, 0, 1};
+    MakeNative(plane);
+
+    // Distance and tangents already fit; only the boundary surface normal fails.
+    auto normalOnly = PlaneFixture(1);
+    auto samples = SampleSurface(*normalOnly, {});
+    ConversionStatistics stats;
+    bool moved = RefineCandidate(*normalOnly, plane, samples, {}, stats);
+    Require(!moved && stats.optimizationIterations == 0, "Normal-only error drove optimization");
+    auto report = ValidateConversion(*normalOnly, plane);
+    Require(report.geometry.state == CheckState::Passed, "Normal exclusion damaged geometry");
+    Require(report.boundaryTangent.state == CheckState::Passed,
+            "Normal exclusion damaged tangents");
+    Require(report.boundaryNormal.state == CheckState::Exceeded && !report.Passed(),
+            "Normal acceptance check was removed with the solver constraint");
+
+    // Exercise actual iterations: changing cached normals and their tolerance
+    // must not change the distance/tangent solve, including least-squares warm-up.
+    auto flat = PlaneFixture(0);
+    auto a = SampleSurface(*flat, {});
+    auto b = a;
+    for (auto &sample : b.points)
+        if (sample.edge >= 0)
+            sample.normal = {1, 0, 0};
+    AnalyticPatch p = plane;
+    p.parameters.origin = sggk::Point3D(0, 0, 1e-4);
+    MakeNative(p);
+    auto q = p;
+    ConversionOptions loose, tight;
+    tight.validation.boundaryNormalToleranceDeg = 1e-6;
+    ConversionStatistics sa, sb;
+    RefineCandidate(*flat, p, a, loose, sa);
+    RefineCandidate(*flat, q, b, tight, sb);
+    Require(sa.optimizationIterations > 0 && sa.optimizationIterations == sb.optimizationIterations,
+            "Normals changed optimizer iteration count");
+    Require(Norm(Get(p.parameters.origin) - Get(q.parameters.origin)) < 1e-12 &&
+                Norm(Get(p.parameters.axis) - Get(q.parameters.axis)) < 1e-12,
+            "Normals changed optimized plane");
+    Require(p.domain == q.domain, "Normals changed optimized parameter domain");
+    Require(ValidateConversion(*flat, p).Passed(),
+            "Distance/tangent solve failed on shifted plane");
+}
+
 static void IntervalTests()
 {
     Require(IntervalEnvironmentSupported(), "Unsupported floating-point environment");
@@ -144,6 +191,7 @@ int main()
     {
         IntervalTests();
         RejectionTests();
+        OptimizerNormalExclusionTests();
         auto cases = tests::MakeCases();
         for (unsigned k = 0; k < 5; ++k)
         {

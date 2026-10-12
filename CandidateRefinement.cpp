@@ -69,7 +69,10 @@ static AnalyticPatch Increment(const AnalyticPatch &base, const std::vector<doub
 }
 struct Residuals
 {
+    // leastSquares: normalized vector residuals; constraints: nonnegative
+    // distance/tangent error ratios. Normal errors are acceptance-only.
     std::vector<double> leastSquares, constraints;
+    // cost = sum of squared vector components; worst = max(constraints).
     double cost = 0, worst = 0;
 };
 static Residuals Evaluate(const AnalyticPatch &p, const SampleCache &samples,
@@ -102,8 +105,7 @@ static Residuals Evaluate(const AnalyticPatch &p, const SampleCache &samples,
         r.cost += Dot(a, a);
         r.worst = std::max(r.worst, metric);
     };
-    double ta = o.boundaryTangentToleranceDeg * Pi / 180,
-           na = o.boundaryNormalToleranceDeg * Pi / 180;
+    double ta = o.boundaryTangentToleranceDeg * Pi / 180;
     for (const auto &s : samples.points)
     {
         if (s.edge < 0)
@@ -117,7 +119,8 @@ static Residuals Evaluate(const AnalyticPatch &p, const SampleCache &samples,
             V d = (s.point - q.point) / o.distanceTolerance;
             add(d, Norm(d));
             add((s.tangent - q.tangent) / (2 * std::sin(ta / 2)), Angle(s.tangent, q.tangent) / ta);
-            add((s.normal - q.normal) / (2 * std::sin(na / 2)), Angle(s.normal, q.normal) / na);
+            // Boundary normals remain checked by ValidateConversion, but
+            // contribute neither to the solver cost nor its max-error metric.
         }
     }
     if (!std::isfinite(r.cost) || !std::isfinite(r.worst))
@@ -195,6 +198,7 @@ bool RefineCandidate(const sggk::BSplineSurface &, AnalyticPatch &p, const Sampl
             return samples.points[a].fraction < samples.points[b].fraction;
         });
     scale = std::max(scale, 1e-8);
+    // Error evaluation at the currently accepted patch, not its parameters.
     auto current = Evaluate(p, samples, o.validation, order);
     double initial = current.worst, lambda = 1e-4, trust = 0.1;
     unsigned n = Dimension(p.parameters.type);
@@ -242,6 +246,8 @@ bool RefineCandidate(const sggk::BSplineSurface &, AnalyticPatch &p, const Sampl
         bool constrained = iteration >= 5;
         if (constrained)
         {
+            // Requested upper limit for every linearized error ratio this step;
+            // it is neither a measured error nor the final acceptance threshold.
             double target = std::max(0.70, current.worst * 0.9);
             if (!ConstrainedStep(C, current.constraints, target, trust, step))
             {
