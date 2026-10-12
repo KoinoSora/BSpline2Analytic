@@ -283,7 +283,8 @@ int main()
         Print("plateau", optimized);
         Require(optimized.status == ConversionStatus::Success, "Plateau conversion failed");
         Require(optimized.timing.optimization.calls > 0 &&
-                    optimized.statistics.optimizationIterations > 0,
+                    (optimized.statistics.optimizationIterations > 0 ||
+                     optimized.statistics.refinementRuns.front().planeOffsetSolves > 0),
                 "Full conversion did not time optimizer");
         Require(optimized.timing.validation.calls >= 2, "Validation retry not timed");
         ConversionOptions disabled;

@@ -46,8 +46,14 @@ struct SamplingOptions
     unsigned boundaryPointsPerSpan = 5;
     unsigned maxSamples = 20000;
 };
+enum class JacobianMode
+{
+    AnalyticWithFallback,
+    FiniteDifference
+};
 struct RefinementOptions
 {
+    JacobianMode jacobianMode = JacobianMode::AnalyticWithFallback;
     unsigned maxIterations = 30;
     unsigned maxRounds = 5;
     double candidateToleranceFactor = 20;
@@ -160,6 +166,9 @@ struct RefinementDiagnostics
              roundIndex = 0; // One-based, assigned by the converter.
     unsigned warmupIterations = 0, constrainedIterations = 0, acceptedSteps = 0;
     unsigned jacobianEvaluations = 0, lineSearchEvaluations = 0;
+    unsigned analyticSampleBlocks = 0, fallbackSampleBlocks = 0;
+    unsigned nonsmoothConstraintRows = 0, fallbackResidualEvaluations = 0;
+    double jacobianMs = 0;
     double initialWorst = 0, bestWorst = 0, bestCost = 0;
     double finalTrust = 0, lastStepNorm = 0;
     RefinementStopReason stopReason = RefinementStopReason::NoSamples;

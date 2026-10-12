@@ -237,6 +237,7 @@ static int Run(const char *path)
     Require(bool(csv), "Cannot write plateau CSV");
     // A separate diagnostic run does not enter the timed averages above.
     ConversionOptions traced;
+    traced.refinement.jacobianMode = JacobianMode::FiniteDifference;
     traced.refinement.recordIterationTrace = true;
     traced.refinement.enablePlaneOffsetSolver = false;
     traced.refinement.enableProgressiveVariables = false;
@@ -273,7 +274,10 @@ static int Run(const char *path)
     Require(unoptimized.status != ConversionStatus::Success && !unoptimized.validation.Passed() &&
                 unoptimized.statistics.optimizationIterations == 0 &&
                 unoptimized.timing.validation.calls >= 2 &&
-                unoptimized.statistics.refinementRounds == 1,
+                unoptimized.statistics.refinementRounds <= unoptimized.statistics.candidateCount &&
+                std::all_of(unoptimized.statistics.refinementRuns.begin(),
+                            unoptimized.statistics.refinementRuns.end(),
+                            [](const RefinementDiagnostics &d) { return d.roundIndex == 1; }),
             "Zero-iteration plateau was accepted or repeatedly optimized without "
             "new samples");
     ConversionOptions tinyRange;
@@ -288,6 +292,7 @@ static int Run(const char *path)
     // This exercises constrained-phase stagnation and Jacobian reuse after rejected steps.
     auto cache = SampleSurface(*surface, {});
     ConversionOptions constrained;
+    constrained.refinement.jacobianMode = JacobianMode::FiniteDifference;
     constrained.refinement.maxWarmupIterations = 0;
     auto midpoint = feasible;
     ConversionStatistics stationary;

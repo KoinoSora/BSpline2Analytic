@@ -1,5 +1,5 @@
 #include "ApproximateCases.h"
-#include "Numerics.h"
+#include "ApproximateInternal.h"
 namespace bspline2analytic::tests
 {
 sggk::BSplineSurfacePtr PlateauFixture(const sggk::BSplineSurface &source)
@@ -12,6 +12,52 @@ sggk::BSplineSurfacePtr PlateauFixture(const sggk::BSplineSurface &source)
         for (unsigned j = 4; j + 4 < cp[i].size(); ++j)
             result->SetControlPoint(detail::Point(detail::Get(cp[i][j]) + z * 1.6e-5), i, j);
     return result;
+}
+PerturbationCase CurvedPlateauFixture(const ReferenceCase &reference)
+{
+    using namespace detail;
+    auto exact = Recognize(*reference.spline);
+    if (exact.status != Status::Success)
+        throw std::runtime_error("Perturbation reference recognition failed");
+    PerturbationCase fixture;
+    fixture.name = reference.name;
+    fixture.spline = exact.parameters.type == sggk::SurfaceType::Plane
+                         ? PlateauFixture(*reference.spline)
+                         : RefitPolynomial(*reference.spline, 16);
+    fixture.initial = RecoverApproxPatch(*fixture.spline, exact.parameters);
+    auto f = FrameOf(exact.parameters);
+    if (exact.parameters.type != sggk::SurfaceType::Plane)
+    {
+        const auto cp = fixture.spline->ControlPoints();
+        // Positive B-spline basis coefficients make a broad plateau with a
+        // transition zone. Four untouched outer rows preserve boundary jets.
+        for (unsigned i = 4; i + 4 < cp.size(); ++i)
+            for (unsigned j = 4; j + 4 < cp[i].size(); ++j)
+            {
+                V a = f.local(Get(cp[i][j]));
+                auto uv = MotherParameters(exact.parameters, a);
+                V displacement;
+                if (exact.parameters.type == sggk::SurfaceType::Cone)
+                    displacement = V{std::cos(uv[0]), std::sin(uv[0]), 0} *
+                                   (1.6e-5 * a.z / fixture.initial.domain[3]);
+                else
+                    displacement = CanonicalNormal(exact.parameters, uv[0], uv[1]) * 1.6e-5;
+                fixture.spline->SetControlPoint(Point(Get(cp[i][j]) + f.vector(displacement)), i,
+                                                j);
+            }
+    }
+    fixture.feasible = fixture.initial;
+    auto &a = fixture.feasible.parameters;
+    if (a.type == sggk::SurfaceType::Plane)
+        a.origin = Point(Get(a.origin) + f.z * 8e-6);
+    else if (a.type == sggk::SurfaceType::Cone)
+        a.halfAngle = std::atan(std::tan(a.halfAngle) + 8e-6 / fixture.initial.domain[3]);
+    else
+        a.radius += 8e-6;
+    MaterializePatch(fixture.feasible);
+    // Feasibility is intentionally asserted by the independent validator in
+    // tests, not assumed from the control-point displacement magnitude.
+    return fixture;
 }
 sggk::BSplineSurfacePtr RefitPolynomial(const sggk::BSplineSurface &source, unsigned count)
 {

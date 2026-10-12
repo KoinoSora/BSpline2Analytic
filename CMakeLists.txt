@@ -15,7 +15,7 @@ add_library(BSpline2Analytic STATIC
     BSpline2Analytic.cpp BoundaryAnalysis.cpp AnalyticReconstruction.cpp
     PatchRecovery.cpp RecognitionValidation.cpp Numerics.cpp
     IntervalBounds.cpp ApproximateGeometry.cpp ApproximateNumerics.cpp IsoCurveAnalysis.cpp
-    SurfaceSampling.cpp ApproximateEvaluation.cpp PlaneOffsetRefinement.cpp CandidateRefinement.cpp ConversionValidation.cpp ApproximateConversion.cpp)
+    SurfaceSampling.cpp ApproximateEvaluation.cpp AnalyticJacobian.cpp PlaneOffsetRefinement.cpp CandidateRefinement.cpp ConversionValidation.cpp ApproximateConversion.cpp)
 set_source_files_properties(IntervalBounds.cpp ConversionValidation.cpp PROPERTIES COMPILE_OPTIONS "/fp:strict")
 target_compile_features(BSpline2Analytic PUBLIC cxx_std_17)
 target_compile_options(BSpline2Analytic PRIVATE /W4 /utf-8 /permissive-)
@@ -45,6 +45,13 @@ if(BSPLINE2ANALYTIC_BUILD_TESTS)
     target_link_libraries(BSpline2AnalyticPlateauTests PRIVATE BSpline2Analytic)
     target_compile_options(BSpline2AnalyticPlateauTests PRIVATE /W4 /utf-8)
     add_test(NAME BSpline2Analytic.Plateau COMMAND BSpline2AnalyticPlateauTests "${CMAKE_CURRENT_BINARY_DIR}/plateau-$<CONFIG>.csv")
+    add_executable(BSpline2AnalyticJacobianTests tests/JacobianTests.cpp tests/ApproximateCases.cpp tests/ReferenceCases.cpp)
+    target_link_libraries(BSpline2AnalyticJacobianTests PRIVATE BSpline2Analytic)
+    target_compile_options(BSpline2AnalyticJacobianTests PRIVATE /W4 /utf-8)
+    add_test(NAME BSpline2Analytic.Jacobian COMMAND BSpline2AnalyticJacobianTests "${CMAKE_CURRENT_BINARY_DIR}/perturbation-$<CONFIG>.csv")
+    set_tests_properties(BSpline2Analytic.Jacobian PROPERTIES
+        WORKING_DIRECTORY "${SGGK_SDK_DIR}"
+        ENVIRONMENT_MODIFICATION "PATH=path_list_prepend:${SGGK_SDK_DIR}/x64-win/bin${_sgk_config}")
     set_tests_properties(BSpline2Analytic.Plateau PROPERTIES
         WORKING_DIRECTORY "${SGGK_SDK_DIR}"
         ENVIRONMENT_MODIFICATION "PATH=path_list_prepend:${SGGK_SDK_DIR}/x64-win/bin${_sgk_config}")

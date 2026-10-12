@@ -111,6 +111,11 @@ struct ActiveParameters
     std::vector<unsigned> indices;
 };
 ActiveParameters ParametersFor(sggk::SurfaceType, ParameterLevel);
+// Linearizes at p, independently of mutable trial geometry in the workspace.
+// Returns false if neither side of a required difference can be evaluated.
+bool BuildJacobian(const AnalyticPatch &, const SampleCache &, const ConversionOptions &,
+                   const ActiveParameters &, double scale, EvaluationWorkspace &,
+                   RefinementDiagnostics &);
 AnalyticPatch Increment(const AnalyticPatch &, const std::vector<double> &, double scale);
 double SampleScale(const AnalyticPatch &, const SampleCache &);
 struct RefinementResult

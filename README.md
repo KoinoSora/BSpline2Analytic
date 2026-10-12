@@ -12,9 +12,9 @@
 - 默认进行边界和母面的 Bézier/Bernstein 误差界估计；节点区间采样用于快速检查。
 - 失败结果区分无效输入、退化、病态、边界关系不一致、歧义、验证失败和不支持。
 
-模块包含静态库、示例、回归测试和批量性能测试。Release 与 Debug 均已验证，结果见 [测试报告](TEST_REPORT.md)。
+模块包含静态库、示例、回归测试和批量性能测试。本轮已验证 Release，历史 Debug 结果及各轮范围见 [测试报告](TEST_REPORT.md)。
 
-非有理输入使用新增的 `ApproximateConversion.h`：`ConvertApproximate` 通过四边与少量内部等参线恢复五类候选，再进行参数优化和独立验收。默认距离严格小于 `1e-5`、边界切向及边界曲面法向角分别严格小于 `0.1°`。`timing.classification / optimization / validation` 分别累计类型判断、求解、验收耗时及调用次数，初值合格时优化计时为零。算法及验证口径见 [非有理转换说明](APPROXIMATE_CONVERSION.md)。
+非有理输入使用新增的 `ApproximateConversion.h`：`ConvertApproximate` 通过四边与少量内部等参线恢复五类候选，再进行参数优化和独立验收。默认距离严格小于 `1e-5`、边界切向及边界曲面法向角分别严格小于 `0.1°`。`timing.classification / optimization / validation` 分别累计类型判断、求解、验收耗时及调用次数，初值合格时优化计时为零。默认启用解析 Jacobian（非光滑分支局部差分回退），可通过 `options.refinement.jacobianMode=JacobianMode::FiniteDifference` 切换全差分对照。算法及验证口径见 [非有理转换说明](APPROXIMATE_CONVERSION.md)。
 
 ## 构建与运行
 
@@ -31,7 +31,7 @@
 .\Build.ps1 -SdkDirectory 'D:\YourSdk\SGGK' -Configuration Release -Benchmark
 ```
 
-脚本构建库、示例、精确/近似回归测试及近似性能测试程序，并运行两套回归。`-Benchmark` 额外运行原有 1000 面片精确识别测试，记录写入 `build/benchmark-Release.csv`。`-ApproximateBenchmark` 运行 35 次近似转换计时（含优化成功和禁用优化的失败分支），记录写入 `build/approximate-benchmark-Release.csv`。数据生成、预热和日志不计入转换耗时。可用 `-BuildJobs` 指定构建并发数，默认 1。
+脚本构建库、示例、精确/近似回归测试及近似性能测试程序，并运行精确、近似、平台以及 Jacobian/五类扰动四组回归。`-Benchmark` 额外运行原有 1000 面片精确识别测试，记录写入 `build/benchmark-Release.csv`。`-ApproximateBenchmark` 运行 35 次近似转换计时（含优化成功和禁用优化的失败分支），记录写入 `build/approximate-benchmark-Release.csv`。数据生成、预热和日志不计入转换耗时。可用 `-BuildJobs` 指定构建并发数，默认 1。`-JacobianOnly` 单独构建并运行解析导数及五类扰动对照测试，输出 `build/perturbation-Release.csv` 和附加 `.jacobian.csv`；`-PlateauOnly` 保留平台专项入口。
 
 直接运行程序时，需将 SDK 对应配置的 DLL 目录加入 PATH：Release 为 `x64-win/bin`，Debug 为 `x64-win/bind`，RelWithDebInfo 为 `x64-win/binw`。当前测试环境在 SDK 根目录加载许可证；测试脚本自动设置工作目录和 DLL 搜索路径。RelWithDebInfo 的目录映射已配置，本轮没有构建测试该配置。
 

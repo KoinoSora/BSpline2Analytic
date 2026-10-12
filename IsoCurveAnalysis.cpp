@@ -253,8 +253,9 @@ std::vector<AnalyticPatch> ClassifyApproximate(const sggk::BSplineSurface &s,
     {
         AnalyticPatch patch;
         double score;
+        bool fromBoundary = false;
     };
-    std::vector<Scored> best;
+    std::vector<Scored> best, boundarySeeds;
     std::vector<std::pair<unsigned, unsigned>> pairs{{0, n + 1}};
     if (n >= 2)
         pairs.push_back({1, n});
@@ -302,14 +303,28 @@ std::vector<AnalyticPatch> ClassifyApproximate(const sggk::BSplineSurface &s,
                                                          (s.MaxParamU() - s.MinParamU()) * i / 4,
                                                      s.MinParamV() +
                                                          (s.MaxParamV() - s.MinParamV()) * j / 4)));
+                            const bool fromBoundary =
+                                pair0 == pairs.front() && pair1 == pairs.front();
+                            if (fromBoundary)
+                            {
+                                auto seed = std::find_if(boundarySeeds.begin(), boundarySeeds.end(),
+                                                         [&](const Scored &x) {
+                                                             return x.patch.parameters.type ==
+                                                                    c.parameters.type;
+                                                         });
+                                if (seed == boundarySeeds.end())
+                                    boundarySeeds.push_back({patch, score, true});
+                                else if (score < seed->score)
+                                    *seed = {patch, score, true};
+                            }
                             auto found =
                                 std::find_if(best.begin(), best.end(), [&](const Scored &x) {
                                     return x.patch.parameters.type == c.parameters.type;
                                 });
                             if (found == best.end())
-                                best.push_back({patch, score});
+                                best.push_back({patch, score, fromBoundary});
                             else if (score < found->score)
-                                *found = {patch, score};
+                                *found = {patch, score, fromBoundary};
                         }
                         catch (const Failure &)
                         {
@@ -320,7 +335,17 @@ std::vector<AnalyticPatch> ClassifyApproximate(const sggk::BSplineSurface &s,
               [](const Scored &a, const Scored &b) { return a.score < b.score; });
     std::vector<AnalyticPatch> result;
     for (auto &b : best)
+    {
+        // A low mother-surface score on internal isocurves can hide a poor
+        // finite boundary chart. Retain the four-boundary initialization rather
+        // than permanently replacing it with that scored alternative.
+        auto seed = std::find_if(boundarySeeds.begin(), boundarySeeds.end(), [&](const Scored &x) {
+            return x.patch.parameters.type == b.patch.parameters.type;
+        });
+        if (!b.fromBoundary && seed != boundarySeeds.end())
+            result.push_back(std::move(seed->patch));
         result.push_back(std::move(b.patch));
+    }
     return result;
 }
 } // namespace bspline2analytic::detail

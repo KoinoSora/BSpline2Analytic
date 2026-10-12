@@ -203,8 +203,6 @@ RefinementResult RefineCandidateLevel(AnalyticPatch &p, const SampleCache &sampl
     };
     auto &current = workspace.current;
     auto &best = workspace.best;
-    auto &plus = workspace.plus;
-    auto &minus = workspace.minus;
     auto &next = workspace.trial;
     evaluate(p, current);
     best = current;
@@ -223,18 +221,6 @@ RefinementResult RefineCandidateLevel(AnalyticPatch &p, const SampleCache &sampl
     std::deque<std::pair<double, double>> history{{best.worst, phaseBestCost}};
     auto &J = workspace.jacobian;
     auto &C = workspace.constraintJacobian;
-    auto resizeMatrix = [&](std::vector<std::vector<double>> &matrix, size_t rows) {
-        bool changed = matrix.size() != rows;
-        matrix.resize(rows);
-        for (auto &row : matrix)
-        {
-            changed |= row.size() != n;
-            row.resize(n);
-            std::fill(row.begin(), row.end(), 0.0);
-        }
-        if (changed)
-            ++workspace.resizes;
-    };
     bool jacobianValid = false;
     auto enterConstrained = [&]() {
         p = bestPatch;
@@ -270,40 +256,10 @@ RefinementResult RefineCandidateLevel(AnalyticPatch &p, const SampleCache &sampl
         if (!jacobianValid)
         {
             ++diagnostic.jacobianEvaluations;
-            resizeMatrix(J, current.leastSquares.size());
-            resizeMatrix(C, current.constraints.size());
-            for (unsigned j = 0; j < n; ++j)
+            if (!BuildJacobian(p, samples, o, active, scale, workspace, diagnostic))
             {
-                const double h = 2e-6;
-                std::fill(delta.begin(), delta.end(), 0.0);
-                delta[active.indices[j]] = h;
-                bool havePlus = false, haveMinus = false;
-                try
-                {
-                    evaluate(Increment(p, delta, scale), plus);
-                    havePlus = true;
-                }
-                catch (const Failure &)
-                {
-                }
-                delta[active.indices[j]] = -h;
-                try
-                {
-                    evaluate(Increment(p, delta, scale), minus);
-                    haveMinus = true;
-                }
-                catch (const Failure &)
-                {
-                }
-                if (!havePlus && !haveMinus)
-                    continue;
-                const auto &a = havePlus ? plus : current;
-                const auto &b = haveMinus ? minus : current;
-                double denominator = havePlus && haveMinus ? 2 * h : h;
-                for (size_t i = 0; i < J.size(); ++i)
-                    J[i][j] = (a.leastSquares[i] - b.leastSquares[i]) / denominator;
-                for (size_t i = 0; i < C.size(); ++i)
-                    C[i][j] = (a.constraints[i] - b.constraints[i]) / denominator;
+                diagnostic.stopReason = RefinementStopReason::SolverFailure;
+                break;
             }
             jacobianValid = true;
         }

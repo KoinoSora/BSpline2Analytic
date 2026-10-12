@@ -4,23 +4,28 @@ param(
     [switch]$Benchmark,
     [switch]$ApproximateBenchmark,
     [switch]$PlateauOnly,
+    [switch]$JacobianOnly,
     [ValidateRange(1,64)][int]$BuildJobs = 1
 )
 $ErrorActionPreference = 'Stop'
-if ($PlateauOnly -and ($Benchmark -or $ApproximateBenchmark)) {
-    throw 'PlateauOnly cannot be combined with broader benchmark switches'
+if (($PlateauOnly -and $JacobianOnly) -or (($PlateauOnly -or $JacobianOnly) -and ($Benchmark -or $ApproximateBenchmark))) {
+    throw 'Choose only one focused test switch and do not combine it with broader benchmarks'
 }
 $sdk = (Resolve-Path -LiteralPath $SdkDirectory).Path
 $build = Join-Path $PSScriptRoot 'build'
 cmake -S $PSScriptRoot -B $build -G 'Visual Studio 17 2022' -A x64 "-DSGGK_SDK_DIR=$sdk"
 if ($LASTEXITCODE -ne 0) { throw 'CMake configure failed' }
-if ($PlateauOnly) {
+if ($JacobianOnly) {
+    cmake --build $build --config $Configuration --target BSpline2AnalyticJacobianTests --parallel $BuildJobs
+} elseif ($PlateauOnly) {
     cmake --build $build --config $Configuration --target BSpline2AnalyticPlateauTests --parallel $BuildJobs
 } else {
     cmake --build $build --config $Configuration --parallel $BuildJobs
 }
 if ($LASTEXITCODE -ne 0) { throw 'C++ build failed' }
-if ($PlateauOnly) {
+if ($JacobianOnly) {
+    ctest --test-dir $build -C $Configuration -R '^BSpline2Analytic\.Jacobian$' --output-on-failure
+} elseif ($PlateauOnly) {
     ctest --test-dir $build -C $Configuration -R '^BSpline2Analytic\.Plateau$' --output-on-failure
 } else {
     ctest --test-dir $build -C $Configuration --output-on-failure

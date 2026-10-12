@@ -215,7 +215,9 @@ ConversionResult ConvertApproximate(const sggk::BSplineSurface &s, const Convers
             throw Failure(Status::InvalidInput, "Invalid refinement options");
         const auto &refine = o.refinement;
         auto nonnegative = [](double x) { return std::isfinite(x) && x >= 0; };
-        if (refine.maxWarmupIterations > 500 || !refine.stagnationWindow ||
+        if ((refine.jacobianMode != JacobianMode::AnalyticWithFallback &&
+             refine.jacobianMode != JacobianMode::FiniteDifference) ||
+            refine.maxWarmupIterations > 500 || !refine.stagnationWindow ||
             refine.stagnationWindow > 500 || !refine.maxConsecutiveFailures ||
             refine.maxConsecutiveFailures > 500 || !nonnegative(refine.worstImprovementAbsTol) ||
             !nonnegative(refine.worstImprovementRelTol) ||
