@@ -1,4 +1,6 @@
 #include "ApproximateInternal.h"
+#include <set>
+#include <tuple>
 namespace bspline2analytic::detail
 {
 static Sample At(const sggk::BSplineSurface &s, double u, double v, int edge,
@@ -18,6 +20,8 @@ static Sample At(const sggk::BSplineSurface &s, double u, double v, int edge,
         du = u == s.MaxParamU() ? sggk::DerivType::LEFT : sggk::DerivType::RIGHT;
     if (dv == sggk::DerivType::NONE)
         dv = v == s.MaxParamV() ? sggk::DerivType::LEFT : sggk::DerivType::RIGHT;
+    x.sideU = du;
+    x.sideV = dv;
     sggk::Point3D p;
     auto d = s.CalcPartialD1(u, v, du, dv, p);
     x.point = Get(p);
@@ -91,9 +95,25 @@ SampleCache SampleSurface(const sggk::BSplineSurface &s, const SamplingOptions &
     }
     return cache;
 }
-void AddWitnessSamples(const sggk::BSplineSurface &s, const ConversionValidationReport &r,
-                       const SamplingOptions &o, SampleCache &cache)
+unsigned AddWitnessSamples(const sggk::BSplineSurface &s, const ConversionValidationReport &r,
+                           const SamplingOptions &o, SampleCache &cache)
 {
+    // Deduplicate only feedback; boundary one-sided records remain distinct.
+    using Key = std::tuple<double, double, int, int, int>;
+    auto key = [](const Sample &x) {
+        return Key{x.u, x.v, x.edge, static_cast<int>(x.sideU), static_cast<int>(x.sideV)};
+    };
+    std::set<Key> present;
+    for (const auto &x : cache.points)
+        present.insert(key(x));
+    unsigned added = 0;
+    auto insert = [&](Sample x) {
+        if (cache.points.size() < o.maxSamples && present.insert(key(x)).second)
+        {
+            cache.points.push_back(x);
+            ++added;
+        }
+    };
     auto add = [&](const ConstraintReport &c, bool angle) {
         if (c.state == CheckState::Passed || c.state == CheckState::NotChecked ||
             cache.points.size() >= o.maxSamples)
@@ -121,19 +141,17 @@ void AddWitnessSamples(const sggk::BSplineSurface &s, const ConversionValidation
         }
         if (u < s.MinParamU() || u > s.MaxParamU() || v < s.MinParamV() || v > s.MaxParamV())
             return;
-        cache.points.push_back(At(s, u, v, edge));
+        insert(At(s, u, v, edge));
         // Include immediate neighbours: a witness should influence a region,
         // rather than just interpolate one troublesome point.
         double du = (c.parameterRegion[1] - c.parameterRegion[0]) * 0.25,
                dv = (c.parameterRegion[3] - c.parameterRegion[2]) * 0.25;
-        if (cache.points.size() + 2 <= o.maxSamples)
-        {
-            cache.points.push_back(At(s, u - du, v - dv, edge));
-            cache.points.push_back(At(s, u + du, v + dv, edge));
-        }
+        insert(At(s, u - du, v - dv, edge));
+        insert(At(s, u + du, v + dv, edge));
     };
     add(r.geometry, false);
     add(r.boundaryTangent, true);
     add(r.boundaryNormal, true);
+    return added;
 }
 } // namespace bspline2analytic::detail

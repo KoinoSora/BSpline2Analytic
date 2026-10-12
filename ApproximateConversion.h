@@ -51,6 +51,15 @@ struct RefinementOptions
     unsigned maxIterations = 30;
     unsigned maxRounds = 5;
     double candidateToleranceFactor = 20;
+    unsigned maxWarmupIterations = 5;
+    unsigned stagnationWindow = 3;
+    double worstImprovementAbsTol = 1e-5;
+    double worstImprovementRelTol = 1e-4;
+    double costImprovementRelTol = 1e-4;
+    unsigned maxConsecutiveFailures = 3;
+    double minTrustRadius = 1e-9;
+    double smallModelChangeTolerance = 1e-3;
+    bool recordIterationTrace = false;
 };
 struct ConversionOptions
 {
@@ -94,10 +103,48 @@ struct ConversionValidationReport
                boundaryNormal.state == CheckState::Passed && correspondence == CheckState::Passed;
     }
 };
+enum class RefinementPhase
+{
+    Warmup,
+    Constrained
+};
+enum class RefinementStopReason
+{
+    NoSamples,
+    MarginReached,
+    SampleFeasibleStagnation,
+    Stagnation,
+    NoAcceptedStep,
+    TrustTooSmall,
+    SmallStep,
+    IterationLimit,
+    SolverFailure
+};
+struct RefinementIteration
+{
+    unsigned iteration = 0;
+    RefinementPhase phase = RefinementPhase::Warmup;
+    double worst = 0, cost = 0, bestWorst = 0;
+    double target = 0; // Only applicable in the constrained phase.
+    double trustBefore = 0, trustAfter = 0, stepNorm = 0, modelChange = 0;
+    bool accepted = false, stepSolved = false;
+};
+struct RefinementDiagnostics
+{
+    unsigned candidateIndex = 0,
+             roundIndex = 0; // One-based, assigned by the converter.
+    unsigned warmupIterations = 0, constrainedIterations = 0, acceptedSteps = 0;
+    unsigned jacobianEvaluations = 0, lineSearchEvaluations = 0;
+    double initialWorst = 0, bestWorst = 0, bestCost = 0;
+    double finalTrust = 0, lastStepNorm = 0;
+    RefinementStopReason stopReason = RefinementStopReason::NoSamples;
+    std::vector<RefinementIteration> trace; // Populated only when explicitly requested.
+};
 struct ConversionStatistics
 {
     unsigned candidateCount = 0, optimizationIterations = 0;
     unsigned refinementRounds = 0, sampleCount = 0, validationPieces = 0;
+    std::vector<RefinementDiagnostics> refinementRuns;
 };
 struct ConversionResult
 {
@@ -116,4 +163,5 @@ ConversionValidationReport ValidateConversion(const sggk::BSplineSurface &input,
                                               const ValidationOptions &options = {});
 const char *ConversionStatusName(ConversionStatus status);
 const char *CheckStateName(CheckState state);
+const char *RefinementStopReasonName(RefinementStopReason reason);
 } // namespace bspline2analytic

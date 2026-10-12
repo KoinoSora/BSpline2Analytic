@@ -51,18 +51,24 @@ struct Sample
     V point, tangent, normal;
     int edge = -1;
     double fraction = 0;
+    sggk::DerivType sideU = sggk::DerivType::NONE, sideV = sggk::DerivType::NONE;
 };
 struct SampleCache
 {
     std::vector<Sample> points;
 };
 SampleCache SampleSurface(const sggk::BSplineSurface &, const SamplingOptions &);
-void AddWitnessSamples(const sggk::BSplineSurface &, const ConversionValidationReport &,
-                       const SamplingOptions &, SampleCache &);
+unsigned AddWitnessSamples(const sggk::BSplineSurface &, const ConversionValidationReport &,
+                           const SamplingOptions &, SampleCache &);
 std::vector<AnalyticPatch> ClassifyApproximate(const sggk::BSplineSurface &,
                                                const ConversionOptions &);
-bool RefineCandidate(const sggk::BSplineSurface &, AnalyticPatch &, const SampleCache &,
-                     const ConversionOptions &, ConversionStatistics &);
+struct RefinementResult
+{
+    bool improved = false;
+    RefinementStopReason stopReason = RefinementStopReason::NoSamples;
+};
+RefinementResult RefineCandidate(const sggk::BSplineSurface &, AnalyticPatch &, const SampleCache &,
+                                 const ConversionOptions &, ConversionStatistics &);
 bool SolveLeastSquares(std::vector<std::vector<double>>, std::vector<double>,
                        std::vector<double> &);
 void CheckApproximateInput(const sggk::BSplineSurface &, const ValidationOptions &);

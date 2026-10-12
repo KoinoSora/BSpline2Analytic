@@ -102,7 +102,7 @@ static void OptimizerNormalExclusionTests()
     auto normalOnly = PlaneFixture(1);
     auto samples = SampleSurface(*normalOnly, {});
     ConversionStatistics stats;
-    bool moved = RefineCandidate(*normalOnly, plane, samples, {}, stats);
+    bool moved = RefineCandidate(*normalOnly, plane, samples, {}, stats).improved;
     Require(!moved && stats.optimizationIterations == 0, "Normal-only error drove optimization");
     auto report = ValidateConversion(*normalOnly, plane);
     Require(report.geometry.state == CheckState::Passed, "Normal exclusion damaged geometry");

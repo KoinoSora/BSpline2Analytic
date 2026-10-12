@@ -41,6 +41,13 @@ if(BSPLINE2ANALYTIC_BUILD_TESTS)
     add_executable(BSpline2AnalyticApproximateBenchmark tests/ApproximateBenchmark.cpp tests/ApproximateCases.cpp tests/ReferenceCases.cpp)
     target_link_libraries(BSpline2AnalyticApproximateBenchmark PRIVATE BSpline2Analytic)
     target_compile_options(BSpline2AnalyticApproximateBenchmark PRIVATE /W4 /utf-8)
+    add_executable(BSpline2AnalyticPlateauTests tests/PlateauTests.cpp tests/ApproximateCases.cpp tests/ReferenceCases.cpp)
+    target_link_libraries(BSpline2AnalyticPlateauTests PRIVATE BSpline2Analytic)
+    target_compile_options(BSpline2AnalyticPlateauTests PRIVATE /W4 /utf-8)
+    add_test(NAME BSpline2Analytic.Plateau COMMAND BSpline2AnalyticPlateauTests "${CMAKE_CURRENT_BINARY_DIR}/plateau-$<CONFIG>.csv")
+    set_tests_properties(BSpline2Analytic.Plateau PROPERTIES
+        WORKING_DIRECTORY "${SGGK_SDK_DIR}"
+        ENVIRONMENT_MODIFICATION "PATH=path_list_prepend:${SGGK_SDK_DIR}/x64-win/bin${_sgk_config}")
     set_tests_properties(BSpline2Analytic.Approximate PROPERTIES
         WORKING_DIRECTORY "${SGGK_SDK_DIR}"
         ENVIRONMENT_MODIFICATION "PATH=path_list_prepend:${SGGK_SDK_DIR}/x64-win/bin${_sgk_config}")

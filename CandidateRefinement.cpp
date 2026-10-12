@@ -1,4 +1,5 @@
 #include "ApproximateInternal.h"
+#include <deque>
 #include <numeric>
 namespace bspline2analytic::detail
 {
@@ -178,11 +179,33 @@ static bool ConstrainedStep(const std::vector<std::vector<double>> &jac,
             return false;
     return true;
 }
-bool RefineCandidate(const sggk::BSplineSurface &, AnalyticPatch &p, const SampleCache &samples,
-                     const ConversionOptions &o, ConversionStatistics &statistics)
+static double StepNorm(const std::vector<double> &step)
 {
+    double norm = 0;
+    for (double x : step)
+        norm = std::max(norm, std::abs(x));
+    return norm;
+}
+static double ModelChange(const Residuals &a, const Residuals &b)
+{
+    double change = 0;
+    for (size_t i = 0; i < a.leastSquares.size(); i += 3)
+        change = std::max(change, std::hypot(a.leastSquares[i] - b.leastSquares[i],
+                                             a.leastSquares[i + 1] - b.leastSquares[i + 1],
+                                             a.leastSquares[i + 2] - b.leastSquares[i + 2]));
+    return change;
+}
+RefinementResult RefineCandidate(const sggk::BSplineSurface &, AnalyticPatch &p,
+                                 const SampleCache &samples, const ConversionOptions &o,
+                                 ConversionStatistics &statistics)
+{
+    RefinementDiagnostics diagnostic;
     if (samples.points.empty())
-        return false;
+    {
+        statistics.refinementRuns.push_back(diagnostic);
+        return {};
+    }
+    const auto &options = o.refinement;
     std::array<std::vector<size_t>, 4> order;
     double scale = 0;
     V origin = Get(p.parameters.origin);
@@ -198,62 +221,99 @@ bool RefineCandidate(const sggk::BSplineSurface &, AnalyticPatch &p, const Sampl
             return samples.points[a].fraction < samples.points[b].fraction;
         });
     scale = std::max(scale, 1e-8);
-    // Error evaluation at the currently accepted patch, not its parameters.
     auto current = Evaluate(p, samples, o.validation, order);
-    double initial = current.worst, lambda = 1e-4, trust = 0.1;
-    unsigned n = Dimension(p.parameters.type);
-    for (unsigned iteration = 0; iteration < o.refinement.maxIterations && current.worst > 0.75;
-         ++iteration)
+    auto best = current;
+    AnalyticPatch bestPatch = p;
+    diagnostic.initialWorst = current.worst;
+    diagnostic.stopReason = RefinementStopReason::IterationLimit;
+    double lambda = 1e-4, trust = 0.1;
+    const unsigned n = Dimension(p.parameters.type);
+    RefinementPhase phase =
+        options.maxWarmupIterations ? RefinementPhase::Warmup : RefinementPhase::Constrained;
+    unsigned failures = 0, smallChanges = 0;
+    double phaseBestCost = current.cost;
+    // A window of m attempts needs m+1 records, including the phase's initial
+    // state.
+    std::deque<std::pair<double, double>> history{{best.worst, phaseBestCost}};
+    std::vector<std::vector<double>> J, C;
+    bool jacobianValid = false;
+    auto enterConstrained = [&]() {
+        p = bestPatch;
+        current = best;
+        phase = RefinementPhase::Constrained;
+        failures = smallChanges = 0;
+        phaseBestCost = current.cost;
+        history = {{best.worst, phaseBestCost}};
+        jacobianValid = false;
+    };
+    for (unsigned iteration = 0; iteration < options.maxIterations; ++iteration)
     {
-        ++statistics.optimizationIterations;
-        std::vector<std::vector<double>> J(current.leastSquares.size(), std::vector<double>(n)),
-            C(current.constraints.size(), std::vector<double>(n));
-        for (unsigned j = 0; j < n; ++j)
+        if (best.worst <= 0.75)
         {
-            double h = 2e-6;
-            std::vector<double> delta(n, 0);
-            delta[j] = h;
-            Residuals plus, minus;
-            bool havePlus = false, haveMinus = false;
-            try
+            diagnostic.stopReason = RefinementStopReason::MarginReached;
+            break;
+        }
+        if (trust <= options.minTrustRadius)
+        {
+            diagnostic.stopReason = RefinementStopReason::TrustTooSmall;
+            break;
+        }
+        ++statistics.optimizationIterations;
+        if (phase == RefinementPhase::Warmup)
+            ++diagnostic.warmupIterations;
+        else
+            ++diagnostic.constrainedIterations;
+        RefinementIteration record;
+        record.iteration = iteration + 1;
+        record.phase = phase;
+        record.trustBefore = trust;
+        if (!jacobianValid)
+        {
+            ++diagnostic.jacobianEvaluations;
+            J.assign(current.leastSquares.size(), std::vector<double>(n));
+            C.assign(current.constraints.size(), std::vector<double>(n));
+            for (unsigned j = 0; j < n; ++j)
             {
-                plus = Evaluate(Increment(p, delta, scale), samples, o.validation, order);
-                havePlus = true;
+                const double h = 2e-6;
+                std::vector<double> delta(n, 0);
+                delta[j] = h;
+                Residuals plus, minus;
+                bool havePlus = false, haveMinus = false;
+                try
+                {
+                    plus = Evaluate(Increment(p, delta, scale), samples, o.validation, order);
+                    havePlus = true;
+                }
+                catch (const Failure &)
+                {
+                }
+                delta[j] = -h;
+                try
+                {
+                    minus = Evaluate(Increment(p, delta, scale), samples, o.validation, order);
+                    haveMinus = true;
+                }
+                catch (const Failure &)
+                {
+                }
+                if (!havePlus && !haveMinus)
+                    continue;
+                const auto &a = havePlus ? plus : current;
+                const auto &b = haveMinus ? minus : current;
+                double denominator = havePlus && haveMinus ? 2 * h : h;
+                for (size_t i = 0; i < J.size(); ++i)
+                    J[i][j] = (a.leastSquares[i] - b.leastSquares[i]) / denominator;
+                for (size_t i = 0; i < C.size(); ++i)
+                    C[i][j] = (a.constraints[i] - b.constraints[i]) / denominator;
             }
-            catch (const Failure &)
-            {
-            }
-            delta[j] = -h;
-            try
-            {
-                minus = Evaluate(Increment(p, delta, scale), samples, o.validation, order);
-                haveMinus = true;
-            }
-            catch (const Failure &)
-            {
-            }
-            if (!havePlus && !haveMinus)
-                continue;
-            const auto &a = havePlus ? plus : current;
-            const auto &b = haveMinus ? minus : current;
-            double denominator = havePlus && haveMinus ? 2 * h : h;
-            for (size_t i = 0; i < J.size(); ++i)
-                J[i][j] = (a.leastSquares[i] - b.leastSquares[i]) / denominator;
-            for (size_t i = 0; i < C.size(); ++i)
-                C[i][j] = (a.constraints[i] - b.constraints[i]) / denominator;
+            jacobianValid = true;
         }
         std::vector<double> step;
-        bool constrained = iteration >= 5;
+        const bool constrained = phase == RefinementPhase::Constrained;
         if (constrained)
         {
-            // Requested upper limit for every linearized error ratio this step;
-            // it is neither a measured error nor the final acceptance threshold.
-            double target = std::max(0.70, current.worst * 0.9);
-            if (!ConstrainedStep(C, current.constraints, target, trust, step))
-            {
-                trust *= 0.5;
-                continue;
-            }
+            record.target = std::max(0.70, current.worst * 0.9);
+            record.stepSolved = ConstrainedStep(C, current.constraints, record.target, trust, step);
         }
         else
         {
@@ -271,47 +331,136 @@ bool RefineCandidate(const sggk::BSplineSurface &, AnalyticPatch &p, const Sampl
                 rows.push_back(row);
                 rhs.push_back(0);
             }
-            if (!SolveLeastSquares(rows, rhs, step))
-                break;
-            double largest = 0;
-            for (double x : step)
-                largest = std::max(largest, std::abs(x));
-            if (largest > trust)
+            record.stepSolved = SolveLeastSquares(rows, rhs, step);
+            if (record.stepSolved && StepNorm(step) > trust)
+            {
+                const double factor = trust / StepNorm(step);
                 for (auto &x : step)
-                    x *= trust / largest;
+                    x *= factor;
+            }
         }
-        bool accepted = false;
-        for (unsigned line = 0; line < 12; ++line)
-        {
-            try
+        if (record.stepSolved)
+            for (unsigned line = 0; line < 12; ++line)
             {
-                auto trial = Increment(p, step, scale);
-                auto next = Evaluate(trial, samples, o.validation, order);
-                if ((constrained ? next.worst < current.worst - 1e-8
-                                 : next.cost < current.cost && next.worst < current.worst * 1.2))
-                {
-                    p = std::move(trial);
-                    current = std::move(next);
-                    accepted = true;
-                    lambda = std::max(1e-10, lambda * 0.3);
+                record.stepNorm = StepNorm(step);
+                if (record.stepNorm == 0)
                     break;
+                try
+                {
+                    auto trial = Increment(p, step, scale);
+                    ++diagnostic.lineSearchEvaluations;
+                    auto next = Evaluate(trial, samples, o.validation, order);
+                    record.modelChange = ModelChange(current, next);
+                    // An unchanged sampled model cannot improve either acceptance
+                    // objective.
+                    if (record.modelChange == 0)
+                        break;
+                    if ((constrained
+                             ? next.worst < current.worst - 1e-8
+                             : next.cost < current.cost && next.worst < current.worst * 1.2))
+                    {
+                        p = std::move(trial);
+                        current = std::move(next);
+                        record.accepted = true;
+                        jacobianValid = false;
+                        ++diagnostic.acceptedSteps;
+                        lambda = std::max(1e-10, lambda * 0.3);
+                        if (current.worst < best.worst ||
+                            (current.worst == best.worst && current.cost < best.cost))
+                        {
+                            best = current;
+                            bestPatch = p;
+                        }
+                        break;
+                    }
                 }
+                catch (const Failure &)
+                {
+                }
+                for (auto &x : step)
+                    x *= 0.5;
             }
-            catch (const Failure &)
-            {
-            }
-            for (auto &x : step)
-                x *= 0.5;
-        }
-        if (!accepted)
+        if (record.accepted)
         {
+            failures = 0;
+            smallChanges =
+                record.modelChange < options.smallModelChangeTolerance ? smallChanges + 1 : 0;
+        }
+        else
+        {
+            ++failures;
+            smallChanges = 0;
             lambda *= 10;
             trust *= 0.5;
-            if (trust < 1e-9)
+        }
+        phaseBestCost = std::min(phaseBestCost, current.cost);
+        history.push_back({best.worst, phaseBestCost});
+        if (history.size() > size_t(options.stagnationWindow) + 1)
+            history.pop_front();
+        const bool fullWindow = history.size() == size_t(options.stagnationWindow) + 1;
+        const bool stalled =
+            fullWindow && history.front().first - best.worst <=
+                              options.worstImprovementAbsTol +
+                                  options.worstImprovementRelTol * history.front().first;
+        const bool costStalled = fullWindow && history.front().second - phaseBestCost <=
+                                                   options.costImprovementRelTol *
+                                                       std::max(history.front().second, 1e-30);
+        record.worst = current.worst;
+        record.cost = current.cost;
+        record.bestWorst = best.worst;
+        record.trustAfter = trust;
+        diagnostic.lastStepNorm = record.stepNorm;
+        if (options.recordIterationTrace)
+            diagnostic.trace.push_back(record);
+        // Every failure path reaches these checks, including a failed constrained
+        // solve.
+        if (best.worst <= 0.75)
+        {
+            diagnostic.stopReason = RefinementStopReason::MarginReached;
+            break;
+        }
+        if (trust <= options.minTrustRadius)
+        {
+            diagnostic.stopReason = RefinementStopReason::TrustTooSmall;
+            break;
+        }
+        if (stalled && best.worst < 1)
+        {
+            diagnostic.stopReason = RefinementStopReason::SampleFeasibleStagnation;
+            break;
+        }
+        if (!constrained)
+        {
+            if ((stalled && costStalled) || failures >= options.maxConsecutiveFailures ||
+                diagnostic.warmupIterations >= options.maxWarmupIterations)
+                enterConstrained();
+        }
+        else
+        {
+            if (failures >= options.maxConsecutiveFailures)
+            {
+                diagnostic.stopReason = record.stepSolved ? RefinementStopReason::NoAcceptedStep
+                                                          : RefinementStopReason::SolverFailure;
                 break;
+            }
+            if (stalled)
+            {
+                diagnostic.stopReason = smallChanges >= options.stagnationWindow
+                                            ? RefinementStopReason::SmallStep
+                                            : RefinementStopReason::Stagnation;
+                break;
+            }
         }
     }
-    // Geometry and canonical/native ranges are materialized only after the solve.
+    if (best.worst <= 0.75)
+        diagnostic.stopReason = RefinementStopReason::MarginReached;
+    p = std::move(bestPatch);
+    diagnostic.bestWorst = best.worst;
+    diagnostic.bestCost = best.cost;
+    diagnostic.finalTrust = trust;
+    RefinementResult result{best.worst < diagnostic.initialWorst, diagnostic.stopReason};
+    // Always materialize the best sampled candidate; success still requires full
+    // validation.
     MakeNative(p);
     for (unsigned i = 0; i < 4; ++i)
     {
@@ -321,6 +470,7 @@ bool RefineCandidate(const sggk::BSplineSurface &, AnalyticPatch &p, const Sampl
         uv[1 - dim] = p.domain[2 * (1 - dim) + (bool(i / 2) != p.mapping.reversedV ? 1 : 0)];
         p.mapping.analyticCorners[i] = sggk::Point2D(uv[0], uv[1]);
     }
-    return current.worst < initial;
+    statistics.refinementRuns.push_back(std::move(diagnostic));
+    return result;
 }
 } // namespace bspline2analytic::detail
