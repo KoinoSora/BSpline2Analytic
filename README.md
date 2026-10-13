@@ -120,6 +120,7 @@ if (result.status == bspline2analytic::Status::Success) {
 
 ## 文档及仓库约定
 
+- [当前实现算法说明书（10 页 PDF）](docs/algorithm/BSpline2Analytic-algorithm.pdf)：总体与子模块流程图、数学推导、真实案例和工程化边界；[可编辑源文件、编译与证据清单](docs/algorithm/README.md)。
 - [需求说明](REQUIREMENTS.md)
 - [算法与代码实施方案](IMPLEMENTATION_PLAN.md)
 - [测试报告](TEST_REPORT.md)

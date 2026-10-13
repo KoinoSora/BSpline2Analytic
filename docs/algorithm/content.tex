@@ -1,0 +1,391 @@
+{\fontsize{20}{24}\selectfont\bfseries\color{ink}样条面到解析面片的转换算法}\par
+{\large 五类曲面识别、参数修正与连续误差验收}\par
+\textbf{文档范围。}本文按算法职责归纳当前实现；基线为提交 \code{3c772a7}，生产算法最近更新于 \code{c62044a}。正文共十页，先给出架构，再展开子模块，最后用案例与工程检查表收束。未引入 RANSAC 或新的求解方法。
+
+\section{整体架构与问题定义}
+输入是张量积样条面 $S:\Omega\subset\R^2\to\R^3$，满足四边对应解析参数域等参边的来源假设；节点插入、次数变化和参数反向不作为识别标签。其表示为
+\begin{equation}
+ S(u,v)=\frac{\sum_{i,j}N_{i,p}(u)M_{j,q}(v)w_{ij}P_{ij}}
+ {\sum_{i,j}N_{i,p}(u)M_{j,q}(v)w_{ij}},\qquad w_{ij}=1\ \text{时为非有理面}.
+\end{equation}
+其中 $P_{ij}$ 为控制点，$N_{i,p},M_{j,q}$ 为 $p,q$ 次 B 样条基，$w_{ij}$ 为权重。目标为平面、圆柱、圆锥、球面或圆环的有限解析面片 $A_\theta(D)$。圆环隐式式通常为四次；本文沿用项目“五类二次曲面”的业务称呼，数学上统称\textbf{五类解析面}。
+
+\begin{center}
+\begin{tikzpicture}[node distance=5mm and 16mm]
+\node[wide] (in) {输入 $S$、选项\\统一入口 Convert};
+\node[decision,below=of in] (rat) {IsRational()?};
+\node[wide,below left=7mm and 8mm of rat] (a) {有理识别\\输入与四边检查};
+\node[wide,below right=7mm and 8mm of rat] (b) {非有理转换\\输入检查、等参线拟合};
+\node[wide,below=of a] (a2) {母面重建、母面验证\\范围恢复、候选等价检查};
+\node[wide,below=of b] (b2) {候选排序、范围恢复\\先验收；不通过再优化};
+\node[wide,below=of a2] (a3) {成功 / 歧义 / 失败};
+\node[wide,below=of b2] (b3) {验收、补点与变量升级\\成功或预算内失败};
+\draw[arr] (in)--(rat);\draw[arr] (rat)-|node[lbl,pos=.25]{是}(a);
+\draw[arr] (rat)-|node[lbl,pos=.25]{否}(b);
+\draw[arr] (a)--(a2);\draw[arr] (a2)--(a3);\draw[arr] (b)--(b2);\draw[arr] (b2)--(b3);
+\end{tikzpicture}
+\flowcaption{总体流程。输入无效或边退化在所属路径提前返回；非有理反馈循环见第六页。}
+\end{center}
+
+\subsection{验收契约与模块边界}
+非有理路径默认 $\ep=10^{-5}$（模型长度单位），边界切向与曲面法向容差均为 $\alpha=0.1^\circ=\pi/1800$。须同时建立输入到有限面片的距离上界、四边一致对应的位置与方向上界，并验证边界对应单调。\textbf{法向仅参加最终验收，不参加当前优化目标。}
+
+有理路径保留母面 Bernstein 界加浮点保护量，以及边界/参数范围检查；它不等同于非有理路径的向外舍入区间证书。两条路径均不提供有限面片的双向 Hausdorff 证明、全域可逆重参数化证明或相邻拓扑面 G1 证明。距离解存在也不推出角度解存在。
+
+输出包含类型、解析参数、SGK 曲面对象、矩形域、UV 交换/反向关系、验证状态和三阶段耗时。仅 \code{Success} 可作为合格结果；非有理失败时保留的候选仅供诊断。
+\src{\code{SurfaceConversion.cpp::Convert}；\code{BSpline2Analytic.cpp::Recognize}；\code{ApproximateConversion.cpp::ConvertApproximate}。}
+
+\clearpage
+\section{边界分析与等参线拟合}
+两路先检查有限参数域、矩形控制网和有限数据；非有理路径还检查正次数、节点与重数总量一致、内部重数不超过次数（至少 $C^0$ 连续）。不满足时显式拒绝。
+四边定义为 $S(u_{\min},v),S(u_{\max},v),S(u,v_{\min}),S(u,v_{\max})$。SGK 的 \code{CalcVCurve(u)} 固定 $u$；\code{CalcUCurve(v)} 固定 $v$。本模块输出直线 $(O,d)$ 或圆 $(C,n,r,e_x)$ 及有向区间；$d,n,e_x$ 为单位向量。
+
+\subsection{有理路径：由齐次系数恢复支撑曲线}
+先平移、缩放控制网，按浮点分辨率判断共线或共面，而非直接用用户容差吞并短圆弧。正权重、有界分母与非退化范围是后续界估计的前提。对共面有理 Bézier 段，写 $x=X/W,y=Y/W$，圆方程给出线性未知量：
+\begin{equation}
+ X^2+Y^2+aXW+bYW+cW^2=0,\qquad
+ C_{2D}=(-a/2,-b/2),\quad r^2=(a^2+b^2)/4-c.
+\end{equation}
+将全部分段的 Bernstein 系数合并为三列线性系统，以带秩判断的 QR 求解。系数乘积使用
+\begin{equation}
+ B_i^p(t)B_j^q(t)=\frac{\binom pi\binom qj}{\binom{p+q}{i+j}}B_{i+j}^{p+q}(t).
+\end{equation}
+随后用实际点快速排除非圆圆锥曲线，再以控制凸包/齐次残差和正分母下界验证每段距离；必要时二分。沿节点与采样点展开角度，检查回走方向，不仅凭端点判断短弧、长弧或接缝。
+
+\subsection{非有理路径：拟合真实曲线点}
+每方向默认取四边中的两条及三条内部线，共十条。每个非零节点段八等分取得 $x_i$；段中点 $m_i$ 只参与弧长权重估计。令
+\begin{equation}
+ \ell_i=\max\{\norm{x_{i+1}-x_i},\norm{m_i-x_i}+\norm{x_{i+1}-m_i}\},\quad
+ \omega_i=\frac{\ell_{i-1}+\ell_i}{2\sum_j\ell_j},
+\end{equation}
+端点缺失项取零，故 $\sum_i\omega_i=1$。固定权重反映曲线代表弧长，并非通过降权忽略超差点。加权协方差的最大特征向量给直线方向；最小特征向量给圆平面初始法向。局部坐标内先求代数圆，再最小化
+\begin{equation}
+ \min_{C,n,r}\sum_i\omega_i\left[h_i^2+(\rho_i-r)^2\right],\quad
+ h_i=(x_i-C)\cdot n,\quad \rho_i=\norm{x_i-C-h_in},\quad \norm n=1.
+\end{equation}
+圆拟合最多八轮，局部六变量为圆心三维、法向二维和半径一维；此处\textbf{仍用中心差分 Jacobian}，归一化步长 $10^{-5}$，并有小阻尼和 QR。第七页的解析 Jacobian 用于曲面参数优化，不是本步骤。候选初筛最大点误差须不大于 $20\ep$，重建角容差为 $10^{-3}$ rad；均不代替最终验收。
+
+\begin{center}
+\begin{tikzpicture}[node distance=4mm and 4mm]
+\node[box] (a) {提取与归一化};\node[box,right=of a] (b) {有理：系数 QR\\非有理：PCA＋圆拟合};
+\node[box,right=of b] (c) {误差/秩检查\\恢复支撑与有向范围};
+\node[box,right=of c] (d) {线/圆或失败\\交候选重建};
+\draw[arr](a)--(b);\draw[arr](b)--(c);\draw[arr](c)--(d);
+\end{tikzpicture}
+\flowcaption{两种曲线分析分区共用同类输出；有理路径另做连续边界界验证。}
+\end{center}
+\src{\code{BoundaryAnalysis.cpp::AnalyzeCurve}；\code{IsoCurveAnalysis.cpp::FitCurve}。}
+
+\clearpage
+\section{五类母面重建与候选管理}
+\subsection{解析表示与几何一致性}
+统一局部正交架 $F=(O,e_x,e_y,a)$，$e_y=a\times e_x$；世界点为 $O+e_xx+e_yy+az$。下表使用解析参数 $(\xi,\eta)$，与样条 $(u,v)$ 不同；$r$ 为圆柱/球半径或圆环管半径，$R$ 为圆环主半径，$\beta$ 为半锥角。
+
+\tablecaption{五类局部表示与重建条件}
+\par{\small\begin{tabularx}{\linewidth}{@{}l l Y@{}}\toprule
+类型 & 局部参数式 $(x,y,z)$ & 重建必须满足的关系\\\midrule
+平面 & $(\xi,\eta,0)$ & 四直线共面、对边平行、两方向正交且非平行。\\
+圆柱 & $(r\cos\xi,r\sin\xi,\eta)$ & 两圆共轴等半径；母线平行于轴且轴距为 $r$。\\
+圆锥 & $(\eta\tan\beta\cos\xi,\eta\tan\beta\sin\xi,\eta)$ & 两圆共轴；母线过同一锥顶；使用同一锥瓣 $\eta>0$。\\
+球面 & $(r\sin\eta\cos\xi,r\sin\eta\sin\xi,-r\cos\eta)$ & 一组同心等半径经圆；纬圆还需满足下面的截球关系。\\
+圆环 & $((R+r\cos\eta)\cos\xi,$ & 管截面圆等半径、圆心处于同一主圆；平行圆与之相容。\\[-2pt]
+ & $\ (R+r\cos\eta)\sin\xi,r\sin\eta)$ & 普通环 $R>r>0$；带符号分支按内核约定保留。\\\bottomrule
+\end{tabularx}}
+
+圆锥旧构造：给两圆心 $C_0,C_1$ 与半径 $r_0,r_1$，
+\begin{equation}
+ h=\norm{C_1-C_0},\quad a_0=(C_1-C_0)/h,\quad
+ k=(r_1-r_0)/h,\quad O=C_0-(r_0/k)a_0,\quad\beta=\arctan|k|.
+\end{equation}
+非有理路径增加方向初值：对齐两圆法向符号后取 $a=\operatorname{unit}(n_0+n_1)$，对两条母线 $d_j$ 取
+\begin{equation}
+ \beta=\tfrac12\sum_{j=0}^1\operatorname{atan2}(\norm{d_j\times a},|d_j\cdot a|).
+\end{equation}
+保留旧锥顶，检查法向、角度、母线与圆心位置的一致性；新构造失败仍可尝试旧候选。
+
+球候选由同心等半径经圆得到 $(O,r)$；\textbf{每个}边界圆 $(C,n,r_c)$ 还须满足 $(C-O)\parallel n$ 与 $\norm{C-O}^2+r_c^2=r^2$，并检查纬圆共轴、经圆平面包含轴。圆环则尝试两种圆族分工：由平行圆轴线 $P+ta$ 和管圆中心 $M$ 得 $O=P+a[(M-P)\cdot a]$；普通环 $R=\norm{M-O}$，再用另一管圆和全部平行圆验证。代码以方向投影保留 $R$ 的符号。
+
+\subsection{先评分、后恢复范围}
+非有理每方向的曲线配对默认为 $(0,4),(1,3),(0,2),(2,4)$；枚举线/圆族后调用上述重建。一次缓存四边节点段八等分点、$5\times5$ 母面评分点及中心偏导。以 $s(\theta)=\max_{i=1}^{25}d(P_i,A_\theta)$ 排序，再恢复每类最佳可用候选及外边界候选；同类先尝试外边界候选，圆锥先方向构造、再旧构造。恢复失败继续取下一名，不重复恢复同一原始候选。
+
+\begin{center}\begin{tikzpicture}[node distance=4mm]
+\node[box](a){曲线族配对\\几何一致性};\node[box,right=of a](b){产生母面参数\\缓存点评分};
+\node[box,right=of b](c){按类型稳定排序\\恢复最佳与边界候选};\node[box,right=of c](d){范围有效则保留\\失败向后回退};
+\draw[arr](a)--(b);\draw[arr](b)--(c);\draw[arr](c)--(d);
+\end{tikzpicture}\flowcaption{候选管理。评分仅用于排序，不是全域误差证书。}\end{center}
+当已有评分小于 $\ep$ 的球候选时，将 $|R|\le\ep$ 的近退化圆环后置，仍保留回退。仅凭“某组同心”不足以判球：$R=3,r=1$ 的圆环在 $\eta=0,\pi$ 具有同心、半径分别为 $4,2$ 的平行圆。
+\src{\code{AnalyticReconstruction.cpp::Reconstruct}；\code{IsoCurveAnalysis.cpp::DirectionalCone/RecoverRankedCandidates}。}
+
+\clearpage
+\section{有限域恢复、点对应与源采样缓存}
+\subsection{恢复参数域及方向}
+有理路径通过 SDK 反参数化追踪边界；非有理路径用局部母面反参数化。对圆周期角按源遍历顺序展开，选每条边变化较小的参数分量为固定量，以其样本中位数确定边界值。两对边必须形成不同的固定参数族；由此得到 $D=[\xi_0,\xi_1]\times[\eta_0,\eta_1]$、交换标记及反向标记。零范围、多周和不规则图域被拒绝。
+
+用中心偏导 $S_u\times S_v$ 与解析法向比较，确定整张面唯一方向符号 $\sigma\in\{-1,1\}$；不能逐点翻转法向以减小角度。\code{MaterializePatch} 同步重建 SGK 对象、域与角点，避免参数与实体不一致。
+
+\subsection{内部投影与边界映射}
+对固定源点 $P_i$，内部对应 $Q_i(\theta)$ 由当前母面投影给出；若反参数落在有限域内就使用该点，否则比较四条有限解析边的投影和端点。例：锥局部点 $(x,y,z)$，$\rho=\sqrt{x^2+y^2},t=\tan\beta$，轴高投影为 $\eta=\max(0,(\rho t+z)/(1+t^2))$。不对解析面另建离散采样网格。
+
+边界先固定匹配的解析等参边 $E$。由源点到直线支撑的投影坐标或展开圆相位得到 $g(t)$，以两端锚定对应：
+\begin{equation}
+ \phi(t)=s_0+(s_1-s_0)\frac{g(t)-g_0}{g_1-g_0},\quad
+ Q(t)=E(\phi(t)),\qquad g_0\ne g_1.
+\end{equation}
+$s_0,s_1$ 是当前解析边有向端点，$g_0,g_1$ 随当前几何重算；这不是把样条参数 $t$ 线性映射为解析角度。切向按源边参数递增方向，法向按 $\sigma$ 定向，在同一 $Q(t)$ 比较三种误差。
+
+\begin{center}\begin{tikzpicture}[node distance=4mm]
+\node[box](a){反参数与角展开\\推断矩形域};\node[box,right=of a](b){内部：有限投影\\边界：端点锚定映射};
+\node[box,right=of b](c){更新解析点/切向\\同步当前参数};\node[box,right=of c](d){优化残差\\或连续验收};
+\draw[arr](a)--(b);\draw[arr](b)--(c);\draw[arr](c)--(d);
+\end{tikzpicture}\flowcaption{对应模块；“域恢复”与优化后的对应求值不是同一操作。}\end{center}
+
+\subsection{按节点矩形采样，按候选共享固定源值}
+初值连续验收失败才建立优化采样。每个非零节点矩形取 $2\times2$ Gauss 点及中心；归一化坐标为 $\frac12\pm\frac{1}{2\sqrt3}$。每条外边的每个节点段取五点，含两端；接点保留左右单侧偏导，以免掩盖导数跳变。默认基础样本量约为
+\begin{equation}
+ N=5K_uK_v+10(K_u+K_v),
+\end{equation}
+其中 $K_u,K_v$ 为非零节点段数，边界重复位置但不同单侧记录不合并。该数量不含后续补点，也不同于分类曲线采样。
+
+\begin{center}\begin{tikzpicture}[node distance=4mm]
+\node[box](a){首次需要优化\\求源点与边界偏导};\node[box,right=of a](b){只读基础缓存\\候选共享};
+\node[box,right=of b](c){失败区域反馈\\按键先去重后求值};\node[box,right=of c](d){追加候选私有样本\\更新版本与边界顺序};
+\draw[arr](a)--(b);\draw[arr](b)--(c);\draw[arr](c)--(d);
+\end{tikzpicture}\flowcaption{采样缓存。键为 $(u,v,\text{edge},\text{side}_u,\text{side}_v)$，预算默认 20000。}\end{center}
+优化迭代重算解析对应和残差，不重复求固定源样条点。验收直接处理原控制网的连续界，独立于该离散缓存。
+\src{\code{PatchRecovery.cpp}；\code{ApproximateGeometry.cpp}；\code{SurfaceSampling.cpp}。}
+
+\clearpage
+\section{参数优化：残差、自由度与平面专用解}
+\subsection{实际目标及变量层级}
+令 $T_i,\widetilde T_i$ 为边界源切向、对应解析切向单位向量，$\mathcal B$ 为边界样本集。对第 $i$ 个距离样本和边界样本分别定义
+\begin{align}
+ f_i^d&=(P_i-Q_i(\theta))/\ep,& f_i^t&=(T_i-\widetilde T_i(\theta))/(2\sin(\alpha/2)),\\
+ F(\theta)&=\sum_i\norm{f_i^d}^2+\sum_{i\in\mathcal B}\norm{f_i^t}^2,&
+ W(\theta)&=\max\left\{\max_i\frac{\norm{P_i-Q_i}}\ep,
+ \max_{i\in\mathcal B}\frac{\angle(T_i,\widetilde T_i)}\alpha\right\}.
+\end{align}
+本步骤无弧长权重；第二页的 $\omega_i$ 只用于曲线拟合。\code{current} 保存当前已接受参数的残差、$F$ 和 $W$，参数本身在 \code{p} 中；\code{best} 按较小 $W$、同 $W$ 时较小 $F$ 选取。所有值只覆盖当前采样，不构成验收证书。
+
+\tablecaption{逐级开放的变量维数}
+\par{\small\begin{tabularx}{\linewidth}{@{}l Y l l@{}}\toprule
+类型 & 一级：尺寸/偏移 & 二级：母面维数 & 三级：完整维数\\\midrule
+平面 & 法向位移 $c$，1 维 & 3（位移＋倾斜） & 8\\
+圆柱 & 半径 $r$，1 维 & 5 & 9\\
+球面 & 半径 $r$，1 维 & 4（球心＋半径） & 10\\
+圆锥 & 半锥角 $\beta$，1 维 & 6 & 10\\
+圆环 & 管半径 $r$、主半径 $R$，2 维 & 7 & 11\\\bottomrule
+\end{tabularx}}
+完整变量包括局部位姿及四个域端点；球面方向在母面级不变，在完整级影响裁剪面片。平面完整级还有面内转角。设固定尺度 $L=\max(10^{-8},\max_i\norm{P_i-O})$，长度增量乘 $L$，旋转采用局部旋转向量；$r'=r e^{\delta_r}$，$\tan\beta'=\tan\beta\,e^{\delta_\beta}$，$R'=R+L\delta_R$。域端点按长度或弧度更新，越出规则图域的试探步拒绝。
+
+\subsection{平面一级：有界一维最小最大问题}
+固定法向 $n$、面内架与域，$Q_i(c)=Q_i(0)+cn$。写 $h_i=(P_i-Q_i(0))\cdot n$，$a_i=\norm{P_i-Q_i(0)-h_in}$，则
+\begin{equation}
+ d_i(c)=\sqrt{a_i^2+(h_i-c)^2},\qquad \min_{|c|\le0.1L}\max_i d_i(c).
+\end{equation}
+先试 $c=\operatorname{clip}((\min h_i+\max h_i)/2)$；当 $a_i=0$ 且不触界时这是精确离散极小极大解。若尚未采样合格，对给定距离 $D_*$ 判定区间交非空：
+\begin{equation}
+ [-0.1L,0.1L]\cap\bigcap_i
+ [h_i-\sqrt{D_*^2-a_i^2},\,h_i+\sqrt{D_*^2-a_i^2}]\ne\varnothing,
+ \quad D_*\ge\max_i a_i.
+\end{equation}
+以可行性二分搜索，默认最多 48 次、距离区间精度 $10^{-4}\ep$。只有实际 $W$ 改善或同 $W$ 下 $F$ 降低才保留；切向/法向不随纯法向位移改变。此分支不使用 Jacobian，也不强求 $W\le0.75$。
+
+\begin{center}\begin{tikzpicture}[node distance=4mm]
+\node[box](a){平面一级\\预计算 $h_i,a_i$};\node[box,right=of a](b){试高度中点\\必要时区间交二分};
+\node[box,right=of b](c){真实残差比较\\保留改善结果};\node[box,right=of c](d){独立验收\\或进入更高变量级};
+\draw[arr](a)--(b);\draw[arr](b)--(c);\draw[arr](c)--(d);
+\end{tikzpicture}\flowcaption{平面专用解仅解决固定方向下的离散问题。一级存在解没有一般性保证。}\end{center}
+\src{\code{ApproximateEvaluation.cpp}；\code{CandidateRefinement.cpp::ParametersFor/Increment}；\code{PlaneOffsetRefinement.cpp}。}
+
+\clearpage
+\section{通用求解器与验收反馈循环}
+\subsection{预热、约束修正与实际接受}
+令 $f$ 为第五页向量残差，$c$ 为距离/切角比值逐行组成的标量约束，$J=\partial f/\partial\delta$，$C=\partial c/\partial\delta$。每次调用最多五轮阻尼最小二乘预热，使用 QR 解
+\begin{equation}
+ \min_\delta\norm{J\delta+f}^2+\lambda\norm{D\delta}^2,
+ \quad D_{jj}=\max(\norm{J_{:j}},1),\quad\lambda_0=10^{-4}.
+\end{equation}
+若 $\norm\delta_\infty>\Delta$ 则等比例缩小，$\Delta_0=0.1$。随后用线性化最大误差约束求最小范数修正：
+\begin{equation}
+ \min_\delta\tfrac12\norm\delta^2\quad\text{s.t.}\quad
+ c+C\delta\le\tau\mathbf1,\quad|\delta_j|\le\Delta,\qquad
+ \tau=\max(0.70,0.9W).
+\end{equation}
+代码将全部不等式写为 $A\delta\le b$，Hildreth 对偶坐标更新
+$\mu_i'=[\mu_i+(A_i\delta-b_i)/\norm{A_i}^2]_+$、
+$\delta\leftarrow\delta-(\mu_i'-\mu_i)A_i^T$，至多 100 扫。线性子问题可能未完全收敛，$\tau$ 不是承诺达到的真实误差；仍须真实几何回溯。
+
+最多十二次半步回溯。预热接受条件为 $F'<F$ 且 $W'<1.2W$；约束阶段要求 $W'<W-10^{-8}$。接受后减小阻尼；本轮无接受步则 $\lambda\leftarrow10\lambda,\Delta\leftarrow\Delta/2$。候选参数和评价同步更新，返回历史最佳而非最后一个试探步。
+
+\subsection{停止策略与逐级开放变量}
+\code{best.worst}$\le0.75$ 是通用求解器的采样余量退出条件。\code{forceAttempt} 为真时，先要求本次调用确实更新将返回的最佳候选，随后恢复该退出条件；并非永久禁止提前结束。
+
+从第一轮起统计默认三次尝试窗口，含初值共四条记录；失败尝试也计入。记 $B_k$ 为历史最佳 $W$，当
+\begin{equation}
+ B_{k-3}-B_k\le10^{-5}+10^{-4}B_{k-3}
+\end{equation}
+则视为最大误差停滞；若 $B_k<1$ 可结束并交验收。预热还检查相对代价改善 $\le10^{-4}$，否则最多五轮后切入约束阶段。连续三次失败、约束阶段停滞或 $\Delta\le10^{-9}$ 均可退出；小模型变化阈值 $10^{-3}$ 用于区分停滞停止原因，不能代替验收。
+
+\begin{center}\begin{tikzpicture}[node distance=4mm and 10mm]
+\node[box](a){取下一候选\\先独立验收};\node[decision,right=of a](b){通过?};
+\node[box,right=of b](ok){Success};
+\node[wide,below=6mm of b](c){建/复用源缓存并补点\\从当前变量级求解};
+\node[decision,below=5mm of c](d){再验收通过?};
+\node[wide,left=17mm of d](e){有新见证：新反馈轮\\否则可升级变量};
+\node[wide,right=17mm of d](f){无进展或预算尽\\下一候选/失败状态};
+\draw[arr](a)--(b);\draw[arr](b)--node[lbl]{是}(ok);\draw[arr](b)--node[lbl]{否}(c);
+\draw[arr](c)--(d);\draw[arr](d.east)--node[lbl,pos=.4]{否且耗尽}(f.west);
+\draw[arr](d.west)--node[lbl,pos=.4]{否且可继续}(e.east);\draw[arr](e.north)|-(c.west);
+\draw[arr](d.north east) -- ++(6mm,3mm) -| node[lbl,pos=.7]{是}(ok.south);
+\end{tikzpicture}\flowcaption{优化外循环。图中“可继续”同时受样本、轮次与剩余迭代预算限制。}\end{center}
+每反馈轮通用迭代总额 30：一级至多 6、母面级至多 10、完整级使用余量；变量升级不重置额度。最多五反馈轮，只在实际补入新样本时重启。采样可行但距离/切向验收失败且有新见证时优先重试当前级；仅法向失败不进入优化约束，仍可能最终拒绝。预算为零可关闭修正。
+\src{\code{CandidateRefinement.cpp::RefineCandidateLevel/ConstrainedStep}；\code{ApproximateConversion.cpp::RefineAndValidateCandidate}。}
+
+\clearpage
+\section{Jacobian：解析链式求导与局部回退}
+\subsection{对真实参数更新求导}
+曲面优化默认使用固定长度导数数组的前向一阶链式求导：每个标量存 $(x,\partial_1x,\ldots,\partial_nx)$，按活动增量播种，$n\le11$。这是解析表达的程序化微分，不使用扰动相减。典型规则为
+\begin{align}
+ \mathrm d(ab)&=b\,\mathrm da+a\,\mathrm db,&
+ \mathrm d(a/b)&=(\mathrm da-(a/b)\mathrm db)/b,\\
+ \mathrm d\norm v&=v^T\mathrm dv/\norm v,&
+ \mathrm d\operatorname{atan2}(y,x)&=(x\,\mathrm dy-y\,\mathrm dx)/(x^2+y^2).
+\end{align}
+在零增量处，局部旋转有 $\mathrm dv=\mathrm d\omega\times v$；位移/长度端点导数乘 $L$，指数半径种子为 $r$，锥斜率种子为 $\tan\beta$，主半径种子为 $L$。因此导数对应第五页实际 \code{Increment} 的变量尺度，而不是任意世界坐标扰动。
+
+边界对应的 $g,g_0,g_1,s_0,s_1$ 和坐标架都随参数变化，必须一并求导。令 $a=s_1-s_0,b=g-g_0,c=g_1-g_0$，则
+\begin{equation}
+ \mathrm d\phi=\mathrm ds_0+(b/c)\,\mathrm da+(a/c)\,\mathrm db-(ab/c^2)\,\mathrm dc.
+\end{equation}
+固定这些映射量会使 Jacobian 偏离实际残差。内部点则对当前选中的有限面片投影分支求导；分支切换处另行回退。
+
+\subsection{残差与约束导数}
+写 $e=P-Q$，单位切向为 $T,\widetilde T$，$z=T\cdot\widetilde T$、$s=\norm{T\times\widetilde T}$。非零光滑点上
+\begin{align}
+ J_d&=-\frac1\ep\frac{\partial Q}{\partial\delta},&
+ C_d&=-\frac{e^T}{\ep\norm e}\frac{\partial Q}{\partial\delta},\\
+ J_t&=-\frac1{2\sin(\alpha/2)}\frac{\partial\widetilde T}{\partial\delta},&
+ \mathrm d(\theta_t/\alpha)&=\frac{z\,\mathrm ds-s\,\mathrm dz}{\alpha(z^2+s^2)}.
+\end{align}
+平面法向平移、圆柱半径和球半径的单变量级另有闭式简化：对应点作法向平移或径向缩放，边界切向不变。它们不代表其他变量可以永久冻结。
+
+\subsection{不可微点、失败与缓存隔离}
+当投影落在域切换边界、不同最近点近等距、周期展开切换或导数奇异时，按样本块回退中心差分，默认 $h=2\times10^{-6}$：
+\begin{equation}
+ J_{:j}\approx\frac{f(\theta\oplus h e_j)-f(\theta\oplus(-h e_j))}{2h}.
+\end{equation}
+单侧不可用时用另一侧，两侧均不可用则线性化失败。边界回退保留整条有序样本链以维持相位分支，只覆盖被标记的导数块。距离比值小于 $10^{-8}$ 或同向切角正弦小于 $10^{-12}$ 的非活跃标量约束行取零次梯度；不宣称这些范数零点可微，向量残差导数仍保留。
+
+\begin{center}\begin{tikzpicture}[node distance=4mm]
+\node[box](a){当前参数与活动列\\构造导数上下文};\node[box,right=of a](b){光滑块：链式导数\\奇异块：标记回退};
+\node[box,right=of b](c){差分覆盖失败块\\组装 $J,C$};\node[box,right=of c](d){QR/约束修正\\真实残差回溯};
+\draw[arr](a)--(b);\draw[arr](b)--(c);\draw[arr](c)--(d);
+\end{tikzpicture}\flowcaption{Jacobian 模块。全差分模式保留为诊断对照。}\end{center}
+当前参数和采样不变、只有阻尼/信赖范围改变时可复用 Jacobian；接受步、阶段或采样版本变化后重建。导数上下文由当前参数与固定源值独立建立，拒绝试探步不会污染下一轮。局部线性化和回溯改善不构成全局收敛或找到可行解的保证。
+\src{\code{AnalyticJacobian.cpp::BuildJacobian}；\code{tests/JacobianTests.cpp}。}
+
+\clearpage
+\section{连续验收：距离、角度与对应关系}
+\subsection{Bernstein 区间基础与距离界}
+非有理验证器直接由存储的双精度控制网和节点作区间 Bézier 提取。若矩形上的多项式为 $f=\sum b_{ij}B_i^pB_j^q$，则 $f(\Omega_k)\subseteq[\min b_{ij},\max b_{ij}]$；系数本身为区间时取所有下端最小与上端最大。乘积使用第二页恒等式，二分保持连续域覆盖。
+
+在局部坐标记 $\rho^2=x^2+y^2$、$s^2=\rho^2+z^2$。下表的分子以 Bernstein 多项式保留相关性，分母用正下界，而非先把每个坐标独立取范围再相减。
+\tablecaption{母面距离的稳定因式表达}
+\par{\small\begin{tabularx}{\linewidth}{@{}l Y@{}}\toprule
+母面 & 点距离的稳定表达 / 验证使用的因式\\\midrule
+平面 & $|z|$\\
+圆柱 & $|\rho^2-r^2|/(\rho+r)$\\
+球面 & $|s^2-r^2|/(s+r)$\\
+圆锥 & $|\rho^2\cos^2\beta-z^2\sin^2\beta|/(\rho\cos\beta+z\sin\beta)$，并检查同瓣投影。\\
+圆环 & $|F|/(|q_+^2-r^2|(q_-+r))$，$q_\pm=\sqrt{(\rho\pm R)^2+z^2}$，\\
+ & $F=(s^2+R^2-r^2)^2-4R^2\rho^2=(q_-^2-r^2)(q_+^2-r^2)$。\\\bottomrule
+\end{tabularx}}
+无法把必要分母与零隔开时给宽界并细分，不直接除零。有限域还增加投影参数越界量 $\Delta\xi,\Delta\eta$ 的路径长度上界：$U_d=U_{\rm mother}+L_\xi\Delta\xi+L_\eta\Delta\eta$。例如球 $L_\xi=L_\eta=r$；圆环 $L_\xi=|R|+r,L_\eta=r$。周期角界使用旋转后的正分母 Bernstein 系数比值凸包；圆环管角使用保留 $\rho^2$ 相关性的因式表达。
+
+\subsection{边界位置、切法向与单调性}
+先对二维块求偏导，再限制到边界，保留横向偏导；源法向用 $S_u\times S_v$。对圆边的投影相位 $g$，令 $\delta=\phi-g$、支撑面离距 $h$、径向离距 $d_r$，映射位置界使用
+\begin{equation}
+ d^2\le h^2+d_r^2+\rho r\delta^2,
+ \quad\text{由 }2(1-\cos\delta)\le\delta^2.
+\end{equation}
+直线边同样由支撑距离与端点映射校正合成。角度用未归一向量的 $\operatorname{atan2}(\norm{a\times b},a\cdot b)$；点积区间严格为正时以 $\arctan$ 比值界估计，否则保守扩宽。圆边额外加入相位校正和目标法向构造误差。固定 $\sigma$ 后比较同向法向，检查相位连续分支和映射导数有向严格正，排除回走及隐含整周跳跃。
+
+\begin{center}\begin{tikzpicture}[node distance=4mm]
+\node[box](a){原控制网提取\\节点矩形/四边};\node[box,right=of a](b){连续上界＋点见证\\位置/角度/单调性};
+\node[box,right=of b](c){上界严格过关：记录\\见证下界超限：Exceeded};
+\node[box,right=of c](d){否则二分或 Unresolved\\汇总全域报告};
+\draw[arr](a)--(b);\draw[arr](b)--(c);\draw[arr](c)--(d);
+\draw[arr](d.south)--++(0,-3mm)-| (b.south);
+\end{tikzpicture}\flowcaption{全部约束及对应关系通过才接受；默认深度 18、总访问预算 40000。}\end{center}
+浮点基本运算用 \code{nextafter} 向外扩展，三角函数使用带余项界的实现，验证文件采用 \code{/fp:strict} 并检查运行环境。只对所存数据定义的数学面及规定浮点环境作保证。上界过宽不代表实际超差：点见证下界达到阈值才为 \code{Exceeded}，预算耗尽仍不确定为 \code{Unresolved}。
+
+有理路径对齐次多项式作相似的母面残差因式界，但仅加浮点保护量，不是上述区间实现；候选通过后恢复有限域，多个不等价母面通过则报告歧义。默认不允许以采样通过替代非有理连续验收。
+\src{\code{IntervalBounds.cpp}；\code{ConversionValidation.cpp}；\code{RecognitionValidation.cpp}。}
+
+\clearpage
+\section{真实案例：分支、运行状态与误差}
+\subsection{当前 500 例批次与案例 385}
+数据来自 250 个解析参考面，每个生成精确转换及非有理重拟合一对输入，最终控制点数 50--200。重拟合与来源的配对连续距离上界小于 $10^{-6}$。2026-10-13、Release、当前基线全量重测：460 个普通面成功，40 个锥顶/球极点输入按预期返回退化，非预期失败 0。每类型/实际分支预热一次，每例正式运行一次；不把来源读取与证书检查计入转换时间。
+
+385 为 14×14 控制点、双七次非有理球面，7×7 个节点矩形。来源配对距离上界 $2.0805143\times10^{-8}$。其实际分支如下：
+\begin{center}\begin{tikzpicture}[node distance=4mm]
+\node[box](a){10 条等参线\\线/圆候选拟合};\node[box,right=of a](b){32 个原始候选\\4 次参数域恢复};
+\node[box,right=of b](c){首个球面初值\\一次连续验收};\node[box,right=of c](d){77 个验收片\\通过；跳过优化};
+\draw[arr](a)--(b);\draw[arr](b)--(c);\draw[arr](c)--(d);
+\end{tikzpicture}\flowcaption{案例 385。77＝49 个内部节点矩形＋28 段外边界，无额外二分。}\end{center}
+其分类缓存只构建一次：四边 $4(7\times8+1)=228$ 个点，加 25 个评分点及一个中心点，共 254 次曲面点调用，另一次中心偏导；不含曲线拟合求值。验收切向角上界为 $3.8751099\times10^{-5}$ 度，法向角上界 $4.0590653\times10^{-5}$ 度。验收约占该例总耗时 99.72\%，不能通过优化器迭代次数解释这一开销。
+
+\subsection{同批不同路径的对照}
+表中时间为 ms，距离为模型单位；$U_d$ 是各自验证口径的上界，不是实测最大距离。有理分支不另报近似路径的切法向证书。
+\tablecaption{当前 500 例批次的代表性结果}
+\par{\small\begin{tabularx}{\linewidth}{@{}l Y r r r l@{}}\toprule
+案例 & 输入/分支 & 分类 & 优化 & 验收 & $U_d$/状态\\\midrule
+100 & 圆柱，64 控制点，有理 & .4568 & 0 & .8386 & $1.05949\!\times\!10^{-12}$\\
+249 & 圆锥，121 控制点，非有理 & 1.3862 & 0 & 282.0643 & $2.61524\!\times\!10^{-7}$\\
+385 & 球面，196 控制点，非有理 & 3.6359 & 0 & 1327.0997 & $4.16935\!\times\!10^{-8}$\\
+317 & 球极点边，64 控制点 & .5683 & 0 & 0 & Degenerate\\\bottomrule
+\end{tabularx}}
+100 的两直线、两圆族得到圆柱并通过母面验证。249 使用新增圆法向/母线方向初值后直接合格；独立专项记录亦确认零优化。317 在退化识别中返回，不将未定义的极点边切向记为零角误差。全批普通输入均零优化，因此该批只能验证直接恢复与验收路径，不能替代优化测试。
+
+\subsection{必须修正参数的扰动案例}
+\textbf{圆锥平台扰动（当前生产算法专项日志）。}从有理锥面重拟合为非有理面，保持外侧四排控制点，内部沿径向施加 $1.6\times10^{-5}z/z_{\max}$ 的平台扰动。先确认原初值验收不通过、已知可行候选通过；生产转换不接收该真实候选。解析链式与全差分两模式均经历四次通用迭代，最终距离、切向角、法向角上界分别为 $8.85156\times10^{-6}$、$0.000558025^\circ$、$0.000634119^\circ$。现有日志只有聚合计数，本文不虚构逐步轨迹。
+
+\textbf{平面平台（历史专项证据）。}内部法向平台幅度 $1.6\times10^{-5}$，边界保留。专用解取 $c\approx8\times10^{-6}$，日志中 $W\approx0.8$、一次平面求解、零标量二分、零通用迭代，验收距离上界 $8.000000074\times10^{-6}$。说明“通用迭代为零”不必然等于“未优化”；该旧批记录不与当前 500 例计时混合。
+
+\src{案例生成见 \code{tests/Dataset500.cpp}、\code{tests/ApproximateCases.cpp}；完整结果与专项日志清单见随附 \code{README.md}。}
+
+\clearpage
+\section{工程化实现与完整性核对}
+\subsection{模块定位与已实现策略}
+\tablecaption{职责与源码映射（文件名省略扩展名）}
+\par{\small\begin{tabularx}{\linewidth}{@{}l Y Y@{}}\toprule
+职责 & 主要实现文件 & 数据与工程策略\\\midrule
+统一入口/状态 & \code{SurfaceConversion}、\code{BSpline2Analytic}、\code{ApproximateConversion} & 按 \code{IsRational()} 分流；状态化异常与失败；仅成功态实体可用。\\
+曲线分析 & \code{BoundaryAnalysis}、\code{IsoCurveAnalysis} & 真正的曲线点与齐次系数各走适合路径；归一化、QR 与秩判断。\\
+重建/候选 & \code{AnalyticReconstruction}、\code{IsoCurveAnalysis} & 低成本评分、延后范围恢复、失败回退、分类采样复用。\\
+对应/样本 & \code{PatchRecovery}、\code{ApproximateGeometry}、\code{SurfaceSampling} & 基础源缓存跨候选共享，补点私有；参数、域、SDK 实体同步。\\
+残差/求解 & \code{ApproximateEvaluation}、\code{CandidateRefinement}、\code{PlaneOffsetRefinement} & 复用 current/best/trial 缓冲；先低维、后开放变量；平面直接标量求解。\\
+导数/数值核 & \code{AnalyticJacobian}、\code{ApproximateNumerics}、\code{Numerics} & 活动列链式导数，异常块差分，QR 代替正规方程。\\
+连续验收 & \code{IntervalBounds}、\code{ConversionValidation}、\code{RecognitionValidation} & 原始控制网、分母有效性、界与见证区分；严格区间与有理保护量分别报告。\\
+测试/计时 & \code{StageTimer}、\code{tests/*} & 固定输入、独立来源证书、三阶段累计时间、重复实验单列。\\\bottomrule
+\end{tabularx}}
+
+三阶段使用 \code{steady_clock} 墙钟：分类含曲线分析/重建/域恢复；优化含采样、补点与求解；验收累计初验和重验。三者互斥，另报外围时间。$\max_i(T_{{\rm cls},i}+T_{{\rm opt},i})$ 按同次运行求和；\code{jacobianMs} 已含于优化，不重复计总。
+
+源样本 $N$、活动维数 $n\le11$ 时，残差约 $O(N)$、导数 $O(Nn)$、QR $O(Nn^2)$、约束扫迭代 $O(SNn)$（$S\le100$）。串行 Bézier 验收还受次数、节点块数与二分数支配，不能仅按控制点数估时；本文未剖析其内部耗时占比。
+
+\subsection{可选工程改进（尚未实现）}
+可考虑缓存按次数确定的 Bernstein 乘积系数、复用验收的源 Bézier 提取，并按剖析结果优化圆拟合。并行验收、活跃约束压缩及跨平台浮点支持均需独立设计与回归，不能靠放宽容差或采样替代验收实现加速。
+
+\subsection{总结：已覆盖与仍待验证}
+\tablecaption{完成度与适用边界}
+\par{\small\begin{tabularx}{\linewidth}{@{}l Y Y@{}}\toprule
+核对项 & 已有实现/证据 & 适用边界或缺口\\\midrule
+五类及双路径 & 系数识别、线/圆族拟合；500 固定例 & 依赖等参矩形来源；有限候选搜索不完备。\\
+参数修正 & 低维到完整变量、解析导数、扰动专项 & 局部改善不保证找到全部可行解；法向未入优化。\\
+误差与方向 & 非有理连续界、统一边界映射 & 无双向 Hausdorff、全域双射或拓扑 G1 证明。\\
+退化/数值边界 & 退化拒绝、预算耗尽显式状态 & 极点、跨锥顶、多周、奇异环、非等参裁剪未通用支持；浅锥/短弧近似路径未专项增强。\\
+工程指标 & 计时、缓存、固定数据与导数测试 & 整体 10 ms、内存泄漏审计及下游加速指标尚未完成。\\\bottomrule
+\end{tabularx}}
+
+\textbf{来源。}基线源码、\code{DATASET500_RETEST_2026-10-13.md} 及随附 README 所列记录；默认设置见 \code{ApproximateConversion.h}、\code{BSpline2Analytic.h}。本轮仅编写文档，未调研外部论文或修改算法。

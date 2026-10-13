@@ -1,0 +1,47 @@
+% !TeX program = xelatex
+\documentclass[UTF8,a4paper,fontset=fandol,10pt]{ctexart}
+\usepackage[margin=18mm,top=17mm,bottom=18mm,headheight=14pt,headsep=7mm,footskip=9mm]{geometry}
+\usepackage{amsmath,amssymb,bm,booktabs,array,tabularx,microtype,enumitem}
+\usepackage{xcolor,tikz,fancyhdr,lastpage,xurl,hyperref}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric,calc}
+\definecolor{ink}{HTML}{163449}
+\definecolor{accent}{HTML}{176B77}
+\definecolor{pale}{HTML}{EDF5F5}
+\definecolor{muted}{HTML}{52616B}
+\hypersetup{colorlinks=true,linkcolor=accent,urlcolor=accent,pdftitle={BSpline2Analytic 算法说明},pdfauthor={BSpline2Analytic 项目}}
+\ctexset{section={format=\Large\bfseries\color{ink},beforeskip=5pt,afterskip=7pt},
+subsection={format=\large\bfseries\color{ink},beforeskip=7pt,afterskip=4pt},
+subsubsection={format=\normalsize\bfseries,beforeskip=5pt,afterskip=3pt}}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\setlength{\abovedisplayskip}{5pt}
+\setlength{\belowdisplayskip}{5pt}
+\setlist[itemize]{leftmargin=1.25em,itemsep=1pt,topsep=2pt,parsep=0pt}
+\setlist[enumerate]{leftmargin=1.65em,itemsep=1pt,topsep=2pt,parsep=0pt}
+\renewcommand{\arraystretch}{1.16}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\color{muted}BSpline2Analytic\quad 算法与实现}
+\fancyhead[R]{\small\color{muted}实现基线 3c772a7}
+\fancyfoot[L]{\footnotesize\color{muted}2026-10-13\quad SGK 1.7.11 / C++17}
+\fancyfoot[R]{\small\thepage\,/\,\pageref{LastPage}}
+\renewcommand{\headrulewidth}{0.3pt}
+\newcommand{\code}[1]{{\small\path{#1}}}
+\newcommand{\R}{\mathbb R}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\unit}[1]{\widehat{#1}}
+\newcommand{\ep}{\varepsilon}
+\newcommand{\src}[1]{\par{\footnotesize\color{muted}实现定位：#1}\par}
+\newcounter{flow}
+\newcounter{algtable}
+\newcommand{\tablecaption}[1]{\refstepcounter{algtable}\par{\small\color{muted}表 \thealgtable\quad #1}\par\vspace{1pt}}
+\newcommand{\flowcaption}[1]{\refstepcounter{flow}\par{\small\color{muted}图 \theflow\quad #1}\par}
+\tikzset{box/.style={draw=accent,rounded corners=2pt,fill=pale,align=center,font=\small,minimum height=8mm,text width=30mm,inner sep=3pt},
+wide/.style={box,text width=46mm},
+decision/.style={draw=accent,diamond,aspect=2.3,align=center,font=\small,inner sep=1.3pt},
+arr/.style={-{Stealth[length=1.6mm]},line width=.55pt,draw=ink},
+lbl/.style={font=\footnotesize,fill=white,inner sep=1pt}}
+\begin{document}
+\fontsize{10.5}{14.4}\selectfont
+\input{content.tex}
+\end{document}
