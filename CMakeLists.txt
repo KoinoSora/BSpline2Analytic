@@ -12,7 +12,7 @@ if(NOT WIN32 OR NOT MSVC)
     message(FATAL_ERROR "This SDK integration currently targets Windows x64 with MSVC")
 endif()
 add_library(BSpline2Analytic STATIC
-    BSpline2Analytic.cpp BoundaryAnalysis.cpp AnalyticReconstruction.cpp
+    BSpline2Analytic.cpp SurfaceConversion.cpp BoundaryAnalysis.cpp AnalyticReconstruction.cpp
     PatchRecovery.cpp RecognitionValidation.cpp Numerics.cpp
     IntervalBounds.cpp ApproximateGeometry.cpp ApproximateNumerics.cpp IsoCurveAnalysis.cpp
     SurfaceSampling.cpp ApproximateEvaluation.cpp AnalyticJacobian.cpp PlaneOffsetRefinement.cpp CandidateRefinement.cpp ConversionValidation.cpp ApproximateConversion.cpp)
@@ -30,6 +30,15 @@ target_link_libraries(BSpline2AnalyticSample PRIVATE BSpline2Analytic)
 option(BSPLINE2ANALYTIC_BUILD_TESTS "Build module regression tests" ON)
 if(BSPLINE2ANALYTIC_BUILD_TESTS)
     enable_testing()
+    add_executable(BSpline2AnalyticDataset500Tests tests/Dataset500.cpp tests/PairedSurfaceBounds.cpp tests/Dataset500Tests.cpp)
+    target_link_libraries(BSpline2AnalyticDataset500Tests PRIVATE BSpline2Analytic)
+    target_compile_options(BSpline2AnalyticDataset500Tests PRIVATE /W4 /utf-8)
+    set_source_files_properties(tests/PairedSurfaceBounds.cpp PROPERTIES COMPILE_OPTIONS "/fp:strict")
+    add_test(NAME BSpline2Analytic.Dataset500 COMMAND BSpline2AnalyticDataset500Tests
+        "${CMAKE_CURRENT_SOURCE_DIR}/tests/data/dataset500" "${CMAKE_CURRENT_BINARY_DIR}/dataset500-$<CONFIG>.csv")
+    set_tests_properties(BSpline2Analytic.Dataset500 PROPERTIES
+        WORKING_DIRECTORY "${SGGK_SDK_DIR}"
+        ENVIRONMENT_MODIFICATION "PATH=path_list_prepend:${SGGK_SDK_DIR}/x64-win/bin${_sgk_config}")
     add_executable(BSpline2AnalyticTests tests/RecognitionTests.cpp tests/ReferenceCases.cpp)
     target_link_libraries(BSpline2AnalyticTests PRIVATE BSpline2Analytic)
     target_compile_options(BSpline2AnalyticTests PRIVATE /W4 /utf-8)

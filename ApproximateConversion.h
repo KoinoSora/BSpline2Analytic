@@ -21,16 +21,6 @@ enum class ConversionStatus
     VerificationFailed,
     Unresolved
 };
-struct StageTiming
-{
-    double elapsedMs = 0;
-    unsigned calls = 0;
-};
-struct ConversionTiming
-{
-    StageTiming classification, optimization, validation;
-    double otherMs = 0, totalMs = 0;
-};
 struct ValidationOptions
 {
     double distanceTolerance = 1e-5;

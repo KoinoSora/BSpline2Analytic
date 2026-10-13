@@ -3,6 +3,7 @@
 #include "Numerics.h"
 #include "PatchRecovery.h"
 #include "RecognitionValidation.h"
+#include "StageTimer.h"
 
 namespace bspline2analytic
 {
@@ -68,17 +69,34 @@ static bool Equivalent(const AnalyticParameters &a, const AnalyticParameters &b,
 RecognitionResult Recognize(const sggk::BSplineSurface &s, const RecognitionOptions &o)
 {
     RecognitionResult result;
-    auto analysis = AnalyzeBoundaries(s, o);
+    const auto start = std::chrono::steady_clock::now();
+    auto finish = [&] {
+        result.timing.totalMs =
+            std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now() - start)
+                .count();
+        result.timing.otherMs = result.timing.totalMs - result.timing.classification.elapsedMs -
+                                result.timing.validation.elapsedMs;
+    };
+    BoundaryAnalysisResult analysis;
+    {
+        detail::StageTimer timer(result.timing.classification);
+        analysis = AnalyzeBoundaries(s, o);
+    }
     result.boundaries = analysis.boundaries;
     if (analysis.status != Status::Success)
     {
         result.status = analysis.status;
         result.message = analysis.message;
+        finish();
         return result;
     }
     try
     {
-        auto candidates = detail::Reconstruct(result.boundaries, o);
+        std::vector<detail::Candidate> candidates;
+        {
+            detail::StageTimer timer(result.timing.classification);
+            candidates = detail::Reconstruct(result.boundaries, o);
+        }
         if (candidates.empty())
             throw detail::Failure(Status::InconsistentBoundary,
                                   "No analytic surface satisfies the boundary relationships");
@@ -89,10 +107,17 @@ RecognitionResult Recognize(const sggk::BSplineSurface &s, const RecognitionOpti
         {
             try
             {
-                auto validation = detail::ValidateCandidate(s, c, result.boundaries, o);
+                ValidationReport validation;
+                {
+                    detail::StageTimer timer(result.timing.validation);
+                    validation = detail::ValidateCandidate(s, c, result.boundaries, o);
+                }
                 sggk::UVRange range;
                 ParameterCorrespondence mapping;
-                detail::RecoverPatch(s, c, result.boundaries, o, range, mapping);
+                {
+                    detail::StageTimer timer(result.timing.classification);
+                    detail::RecoverPatch(s, c, result.boundaries, o, range, mapping);
+                }
                 if (found)
                 {
                     if (!Equivalent(result.parameters, c.parameters, o))
@@ -135,6 +160,7 @@ RecognitionResult Recognize(const sggk::BSplineSurface &s, const RecognitionOpti
         result.surface.reset();
         result.domain.reset();
     }
+    finish();
     return result;
 }
 } // namespace bspline2analytic

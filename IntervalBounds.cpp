@@ -511,9 +511,19 @@ BV Boundary(const BV &a, BoundaryId edge)
 I AngleRange(const BPoly &x, const BPoly &y, double ref)
 {
     I c = Cos(I(ref)), s = Sin(I(ref));
-    I a = (x * c + y * s).range(), b = (y * c - x * s).range();
-    if (a.lo <= 0)
+    BPoly a = x * c + y * s, b = y * c - x * s;
+    if (a.range().lo <= 0)
         return I::Whole();
-    return I(ref) + Atan(b / a);
+    // With positive denominator Bernstein coefficients, b(t)/a(t) is a
+    // convex combination of b_i/a_i. Keep shared radial/height dependence:
+    // dividing two independent coordinate ranges was extremely loose on cones.
+    double lo = INFINITY, hi = -INFINITY;
+    for (size_t i = 0; i < a.c.size(); ++i)
+    {
+        I r = b.c[i] / a.c[i];
+        lo = std::min(lo, r.lo);
+        hi = std::max(hi, r.hi);
+    }
+    return I(ref) + Atan(I(lo, hi));
 }
 } // namespace bspline2analytic::detail

@@ -331,8 +331,24 @@ std::vector<AnalyticPatch> ClassifyApproximate(const sggk::BSplineSurface &s,
                         }
                     }
                 }
-    std::sort(best.begin(), best.end(),
-              [](const Scored &a, const Scored &b) { return a.score < b.score; });
+    // Refitted spherical meridians can have slightly different fitted centers,
+    // also creating a torus with an almost zero major radius. Its marginally
+    // smaller sampled score should not put this singular limit ahead of an
+    // already competitive sphere. Retain it as a fallback; only full validation
+    // can accept either candidate, and no provenance/type label is consulted.
+    const bool hasSphere = std::any_of(best.begin(), best.end(), [&](const Scored &c) {
+        return c.patch.parameters.type == sggk::SurfaceType::Sphere &&
+               c.score < o.validation.distanceTolerance;
+    });
+    auto deferTorus = [&](const Scored &c) {
+        return hasSphere && c.patch.parameters.type == sggk::SurfaceType::Torus &&
+               std::abs(c.patch.parameters.majorRadius) <= o.validation.distanceTolerance;
+    };
+    std::sort(best.begin(), best.end(), [&](const Scored &a, const Scored &b) {
+        if (deferTorus(a) != deferTorus(b))
+            return !deferTorus(a);
+        return a.score < b.score;
+    });
     std::vector<AnalyticPatch> result;
     for (auto &b : best)
     {

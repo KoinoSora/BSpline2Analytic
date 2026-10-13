@@ -118,7 +118,10 @@ static double Reference(double mid, double lo, double hi, bool periodic)
 {
     if (periodic)
         mid = Unwrap(mid, (lo + hi) * 0.5);
-    if (std::abs(mid - lo) < Pi / 4)
+    // When both ends are close, use the nearer one: the stable cross-coordinate
+    // formula is tight near its zero. Always selecting lo made the upper edge
+    // require excessive refinement on narrow tube-angle intervals.
+    if (std::abs(mid - lo) < Pi / 4 && std::abs(mid - lo) <= std::abs(mid - hi))
         return lo;
     if (std::abs(mid - hi) < Pi / 4)
         return hi;
@@ -129,6 +132,25 @@ static double Excess(I a, double lo, double hi)
     if (!a.finite())
         return INFINITY;
     return std::max({0.0, (I(lo) - a).hi, (a - I(hi)).hi});
+}
+static I TubeAngle(const BPoly &radial, const BPoly &z, I rho, I major, double reference)
+{
+    I c = Cos(I(reference)), s = Sin(I(reference));
+    I forward = (rho - major) * c + z.range() * s;
+    if (forward.lo <= 0)
+        return I::Whole();
+    // Rotated cross coordinate: b = z*cos(ref) + R*sin(ref) - rho*sin(ref).
+    // Squaring only the numerator retains the correlation between z and rho^2
+    // near a tube-angle boundary. Interval rotation of an independent (rho,z)
+    // box loses this correlation and needs prohibitively fine subdivision.
+    BPoly line = z * c + Constant(z, major * s);
+    I denominator = line.range() + rho * s;
+    I cross;
+    if (denominator.lo > 0 || denominator.hi < 0)
+        cross = (line * line - radial * (s * s)).range() / denominator;
+    else
+        cross = line.range() - rho * s;
+    return I(reference) + Atan(cross / forward);
 }
 static I SurfaceDistance(const BV &p, const AnalyticPatch &patch)
 {
@@ -209,7 +231,7 @@ static I SurfaceDistance(const BV &p, const AnalyticPatch &patch)
             break;
         case sggk::SurfaceType::Torus: {
             double ref = Reference(uv[1], patch.domain[2], patch.domain[3], true);
-            v = AngleRange(BPoly(0, 0, rho - I(a.majorRadius)), BPoly(0, 0, z), ref);
+            v = TubeAngle(radial, p.z, rho, I(a.majorRadius), ref);
             speedU = (I(std::abs(a.majorRadius)) + r).hi;
             speedV = a.radius;
             break;

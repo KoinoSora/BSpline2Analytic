@@ -119,6 +119,17 @@ struct ValidationReport
     std::string message;
 };
 
+struct StageTiming
+{
+    double elapsedMs = 0;
+    unsigned calls = 0;
+};
+struct ConversionTiming
+{
+    StageTiming classification, optimization, validation;
+    double otherMs = 0, totalMs = 0;
+};
+
 struct RecognitionResult
 {
     Status status = Status::InvalidInput;
@@ -128,6 +139,7 @@ struct RecognitionResult
     std::optional<sggk::UVRange> domain;
     ParameterCorrespondence mapping;
     ValidationReport validation;
+    ConversionTiming timing;
     std::string message;
 };
 

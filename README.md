@@ -2,6 +2,8 @@
 
 基于海星 SGK 1.7.11 的四边样条面片解析识别与转换模块，使用 C++17。提供精确 NURBS 识别及非有理样条近似转换两条路径。
 
+统一入口为 `SurfaceConversion.h` 中的 `Convert`：输入 `IsRational()` 为真时调用 `Recognize`，否则调用 `ConvertApproximate`。不使用案例来源标签分流，不在失败后静默切换路径。精确解析转换的平面通常权重为 1，因此也进入非有理分支。两条原接口继续保留。
+
 ## 当前功能
 
 输入来自平面、圆柱面、圆锥面、球面或圆环面的精确解析转换，四条边界对应解析面参数域的两对等参线。允许节点插入、升阶、U/V 交换及参数反向；识别不依赖来源标签或固定控制点排列。
@@ -31,13 +33,37 @@
 .\Build.ps1 -SdkDirectory 'D:\YourSdk\SGGK' -Configuration Release -Benchmark
 ```
 
-脚本构建库、示例、精确/近似回归测试及近似性能测试程序，并运行精确、近似、平台以及 Jacobian/五类扰动四组回归。`-Benchmark` 额外运行原有 1000 面片精确识别测试，记录写入 `build/benchmark-Release.csv`。`-ApproximateBenchmark` 运行 35 次近似转换计时（含优化成功和禁用优化的失败分支），记录写入 `build/approximate-benchmark-Release.csv`。数据生成、预热和日志不计入转换耗时。可用 `-BuildJobs` 指定构建并发数，默认 1。`-JacobianOnly` 单独构建并运行解析导数及五类扰动对照测试，输出 `build/perturbation-Release.csv` 和附加 `.jacobian.csv`；`-PlateauOnly` 保留平台专项入口。
+脚本构建库、示例及测试程序，并运行精确、近似、平台、Jacobian/五类扰动及 Dataset500 五组回归。`-Benchmark` 额外运行原有 1000 面片精确识别测试，记录写入 `build/benchmark-Release.csv`。`-ApproximateBenchmark` 运行 35 次近似转换计时（含优化成功和禁用优化的失败分支），记录写入 `build/approximate-benchmark-Release.csv`。数据生成、预热和日志不计入转换耗时。可用 `-BuildJobs` 指定构建并发数，默认 1。`-JacobianOnly` 单独运行解析导数及五类扰动对照测试，输出 `build/perturbation-Release.csv` 和附加 `.jacobian.csv`；`-PlateauOnly` 保留平台专项入口；`-Dataset500Only` 单独加载已保存的 500 个面片并输出 `build/dataset500-Release.csv`。专项开关互斥。
 
 直接运行程序时，需将 SDK 对应配置的 DLL 目录加入 PATH：Release 为 `x64-win/bin`，Debug 为 `x64-win/bind`，RelWithDebInfo 为 `x64-win/binw`。当前测试环境在 SDK 根目录加载许可证；测试脚本自动设置工作目录和 DLL 搜索路径。RelWithDebInfo 的目录映射已配置，本轮没有构建测试该配置。
 
 模块也可通过 `add_subdirectory` 接入宿主工程，并链接 `BSpline2Analytic`。应显式传入 `SGGK_SDK_DIR`；现有 samples 顶层工程还需使用实际 SDK 的库名前后缀配置。独立模块构建是本轮验证过的入口。
 
 ## 接口示例
+
+统一调用：
+
+```cpp
+#include "SurfaceConversion.h"
+
+bspline2analytic::SurfaceConversionOptions options;
+options.rational.distanceTolerance = 1e-5;
+options.polynomial.validation.distanceTolerance = 1e-5;
+auto result = bspline2analytic::Convert(inputSurface, options);
+if (result.Succeeded()) {
+    const auto& timing = result.Timing();
+    if (const auto* exact = std::get_if<bspline2analytic::RecognitionResult>(&result.details)) {
+        auto analytic = exact->surface;
+        auto domain = exact->domain;
+    } else {
+        const auto& approximate = std::get<bspline2analytic::ConversionResult>(result.details);
+        auto analytic = approximate.patch->surface;
+        auto domain = approximate.patch->sdkDomain;
+    }
+}
+```
+
+`path` 标识实际执行分支，`details` 保留原始状态及验证报告。成功语义依照被调用接口及其选项；统一入口不会将精确路径的母面 Bernstein 界升级为近似路径的有限面片区间证书。`RecognitionResult::timing` 同样提供三阶段时间，其中优化为零，分类包含边界识别和参数域恢复，验证记录母面候选的验证。
 
 非有理样条：
 
@@ -97,6 +123,7 @@ if (result.status == bspline2analytic::Status::Success) {
 - [需求说明](REQUIREMENTS.md)
 - [算法与代码实施方案](IMPLEMENTATION_PLAN.md)
 - [测试报告](TEST_REPORT.md)
+- [500 个固定面片的数据格式、生成与测试](DATASET500.md)
 - [非有理转换、参数对应与三阶段计时](APPROXIMATE_CONVERSION.md)
 - [原始需求 PDF](中船海舟样条转二次曲面.pdf)
 - [开发与 Git 同步约定](AGENTS.md)
