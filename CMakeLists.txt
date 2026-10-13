@@ -34,6 +34,19 @@ target_link_libraries(BSpline2AnalyticSample PRIVATE BSpline2Analytic)
 option(BSPLINE2ANALYTIC_BUILD_TESTS "Build module regression tests" ON)
 if(BSPLINE2ANALYTIC_BUILD_TESTS)
     enable_testing()
+    add_executable(BSpline2AnalyticGeneralDatasetTests tests/GeneralDataset.cpp
+        tests/GeneralDatasetCertificate.cpp tests/GeneralDatasetTests.cpp)
+    target_link_libraries(BSpline2AnalyticGeneralDatasetTests PRIVATE BSpline2Analytic)
+    target_include_directories(BSpline2AnalyticGeneralDatasetTests PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src")
+    target_compile_options(BSpline2AnalyticGeneralDatasetTests PRIVATE /W4 /utf-8)
+    set_source_files_properties(tests/GeneralDatasetCertificate.cpp PROPERTIES COMPILE_OPTIONS "/fp:strict")
+    add_test(NAME BSpline2Analytic.General600 COMMAND BSpline2AnalyticGeneralDatasetTests --run
+        "${CMAKE_CURRENT_SOURCE_DIR}/tests/data/dataset500" "${CMAKE_CURRENT_BINARY_DIR}/general600-$<CONFIG>.csv")
+    add_test(NAME BSpline2Analytic.GeneralExtra60 COMMAND BSpline2AnalyticGeneralDatasetTests --extras
+        "${CMAKE_CURRENT_SOURCE_DIR}/tests/data/dataset500" "${CMAKE_CURRENT_BINARY_DIR}/general-extra60-$<CONFIG>.csv")
+    set_tests_properties(BSpline2Analytic.General600 BSpline2Analytic.GeneralExtra60 PROPERTIES
+        WORKING_DIRECTORY "${SGGK_SDK_DIR}"
+        ENVIRONMENT_MODIFICATION "PATH=path_list_prepend:${SGGK_SDK_DIR}/x64-win/bin${_sgk_config}")
     add_executable(BSpline2AnalyticDataset500Tests tests/Dataset500.cpp tests/PairedSurfaceBounds.cpp tests/Dataset500Tests.cpp)
     target_link_libraries(BSpline2AnalyticDataset500Tests PRIVATE BSpline2Analytic)
     target_compile_options(BSpline2AnalyticDataset500Tests PRIVATE /W4 /utf-8)

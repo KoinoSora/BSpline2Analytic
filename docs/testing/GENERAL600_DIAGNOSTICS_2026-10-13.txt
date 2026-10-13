@@ -1,0 +1,111 @@
+CASE 0
+fixture=0 pair_bound=9.8903920609006742e-14
+known_mother passed=0 geometry=0 boundary=3 pcurve=3 failure=ValidationUnresolved message=PCurve endpoint coverage bound unresolved: boundary 0
+seed 0 Plane interior=9.9301366129890925e-16 boundary=9.1551335970444749e-16
+attempt 0 Plane success=0 failure=ValidationUnresolved message=PCurve endpoint coverage bound unresolved: boundary 0
+
+CASE 104
+fixture=104 pair_bound=5.292495086954579e-11
+known_mother passed=0 geometry=0 boundary=3 pcurve=3 failure=ValidationUnresolved message=PCurve endpoint coverage bound unresolved: boundary 0
+seed 0 Cylinder interior=1.4716106547519875e-11 boundary=1.4987863150667687e-11
+seed 1 Plane interior=0.0095119845033017469 boundary=0.0095119845033017469
+seed 2 Plane interior=0.0071957664542475798 boundary=0.011099256166964621
+seed 3 Plane interior=0.0061165656910981215 boundary=0.011559265617587033
+seed 4 Sphere interior=0.029685759507941986 boundary=0.029749064328118517
+seed 5 Sphere interior=0.031092757901547204 boundary=0.031042601306067941
+seed 6 Sphere interior=0.033101423210109296 boundary=0.033045944461339655
+attempt 0 Cylinder success=0 failure=ValidationUnresolved message=PCurve endpoint coverage bound unresolved: boundary 0
+attempt 1 Plane success=0 failure=NonlinearPCurve message=NonlinearPCurve: boundary 0, deviation=1.0766e-05
+attempt 2 Plane success=0 failure=NonlinearPCurve message=NonlinearPCurve: boundary 0, deviation=1.05769e-05
+attempt 3 Plane success=0 failure=NonlinearPCurve message=NonlinearPCurve: boundary 0, deviation=1.05918e-05
+attempt 4 Sphere success=0 failure=NonlinearPCurve message=NonlinearPCurve: boundary 0, deviation=0.000166583
+attempt 5 Sphere success=0 failure=NonlinearPCurve message=NonlinearPCurve: boundary 0, deviation=0.000174338
+attempt 6 Sphere success=0 failure=NonlinearPCurve message=NonlinearPCurve: boundary 0, deviation=0.000160869
+
+CASE 204
+fixture=204 pair_bound=2.7926590770340607e-10
+known_mother passed=0 geometry=0 boundary=3 pcurve=3 failure=ValidationUnresolved message=PCurve endpoint coverage bound unresolved: boundary 0
+seed 0 Sphere interior=2.2041987576717818e-10 boundary=4.2213540861488185e-10
+seed 1 Cone interior=0.0076684921367805477 boundary=0.007010703492134094
+seed 2 Cone interior=0.0079678164613928917 boundary=0.0067039134588176988
+seed 3 Cone interior=0.0069357733929010703 boundary=0.0086187766445035199
+seed 4 Cylinder interior=0.012064268964576914 boundary=0.013667562329133381
+seed 5 Cylinder interior=0.013308860186890151 boundary=0.014687235030490586
+seed 6 Cylinder interior=0.0145481875558287 boundary=0.014835263631189586
+seed 7 Plane interior=0.019965810742963146 boundary=0.01836857904984365
+seed 8 Plane interior=0.020849531137205994 boundary=0.022847386842212651
+seed 9 Plane interior=0.023375392453359598 boundary=0.022289142868444467
+attempt 0 Sphere success=0 failure=NonlinearPCurve message=NonlinearPCurve: boundary 0, deviation=0.000442902
+attempt 1 Cone success=0 failure=InconsistentPeriodicBranch message=InconsistentPeriodicBranch: boundary 0, deviation=0
+attempt 2 Cone success=0 failure=InconsistentPeriodicBranch message=InconsistentPeriodicBranch: boundary 0, deviation=0
+attempt 3 Cone success=0 failure=InconsistentPeriodicBranch message=InconsistentPeriodicBranch: boundary 0, deviation=0
+attempt 4 Cylinder success=0 failure=NonlinearPCurve message=NonlinearPCurve: boundary 0, deviation=0.000414594
+attempt 5 Cylinder success=0 failure=NonlinearPCurve message=NonlinearPCurve: boundary 0, deviation=0.00041094
+attempt 6 Cylinder success=0 failure=NonlinearPCurve message=NonlinearPCurve: boundary 0, deviation=0.00025842
+attempt 7 Plane success=0 failure=NonlinearPCurve message=NonlinearPCurve: boundary 0, deviation=0.000222017
+attempt 8 Plane success=0 failure=NonlinearPCurve message=NonlinearPCurve: boundary 0, deviation=0.000248565
+attempt 9 Plane success=0 failure=NonlinearPCurve message=NonlinearPCurve: boundary 0, deviation=0.000247861
+
+CASE 318
+fixture=318 pair_bound=5.8464275674568766e-12
+known_mother passed=0 geometry=0 boundary=3 pcurve=3 failure=ValidationUnresolved message=Linear PCurve continuous boundary bound unresolved: boundary 0
+seed 0 Cone interior=1.8800435330112733e-11 boundary=1.8800435330112733e-11
+seed 1 Cylinder interior=0.0010473307293446641 boundary=0.0011967735406718375
+seed 2 Cylinder interior=0.00094479350717995849 boundary=0.001201478051094321
+seed 3 Torus interior=0.0011661583575444051 boundary=0.0012602873927790076
+seed 4 Cylinder interior=0.0011036187000529559 boundary=0.00137732450866123
+seed 5 Torus interior=0.0017113828193530121 boundary=0.0017113828193530121
+seed 6 Torus interior=0.0017460774739146469 boundary=0.0017460774739146469
+seed 7 Plane interior=0.0022670583933187449 boundary=0.0022670583933187449
+seed 8 Plane interior=0.0024430333636222879 boundary=0.0024430333636222879
+seed 9 Plane interior=0.0025365305506053208 boundary=0.0025365305506053208
+seed 10 Sphere interior=0.14840415624847311 boundary=0.14840415624847311
+seed 11 Sphere interior=0.14992961691426182 boundary=0.14999048485556896
+seed 12 Sphere interior=0.17867755372348887 boundary=0.17870428846811864
+attempt 0 Cone success=0 failure=NonlinearPCurve message=NonlinearPCurve: boundary 2, deviation=0.250489
+attempt 1 Cylinder success=0 failure=NonlinearPCurve message=NonlinearPCurve: boundary 1, deviation=0.000248032
+attempt 2 Cylinder success=0 failure=NonlinearPCurve message=NonlinearPCurve: boundary 1, deviation=0.000248156
+attempt 3 Torus success=0 failure=NonlinearPCurve message=NonlinearPCurve: boundary 1, deviation=0.000246833
+attempt 4 Cylinder success=0 failure=NonlinearPCurve message=NonlinearPCurve: boundary 1, deviation=0.000248028
+attempt 5 Torus success=0 failure=NonlinearPCurve message=NonlinearPCurve: boundary 1, deviation=0.000242629
+attempt 6 Torus success=0 failure=NonlinearPCurve message=NonlinearPCurve: boundary 1, deviation=0.000247499
+attempt 7 Plane success=0 failure=NonlinearPCurve message=NonlinearPCurve: boundary 1, deviation=0.000247717
+attempt 8 Plane success=0 failure=NonlinearPCurve message=NonlinearPCurve: boundary 1, deviation=0.000247717
+attempt 9 Plane success=0 failure=NonlinearPCurve message=NonlinearPCurve: boundary 1, deviation=0.000247717
+attempt 10 Sphere success=0 failure=NonlinearPCurve message=NonlinearPCurve: boundary 1, deviation=6.64267e-05
+attempt 11 Sphere success=0 failure=NonlinearPCurve message=NonlinearPCurve: boundary 1, deviation=7.13422e-05
+attempt 12 Sphere success=0 failure=NonlinearPCurve message=NonlinearPCurve: boundary 1, deviation=7.03398e-05
+
+CASE 404
+fixture=404 pair_bound=3.3118109043702858e-11
+known_mother passed=0 geometry=0 boundary=3 pcurve=3 failure=ValidationUnresolved message=PCurve endpoint coverage bound unresolved: boundary 0
+seed 0 Torus interior=4.6026488734666759e-11 boundary=6.4167664842979225e-11
+seed 1 Torus interior=3.9728772505402004e-10 boundary=3.9728772505402004e-10
+seed 2 Torus interior=2.5105751355079317e-10 boundary=7.5979777592301974e-10
+seed 3 Cone interior=0.0035397590906225181 boundary=0.003889567320685074
+seed 4 Cone interior=0.0036040974756568599 boundary=0.004079930614674411
+seed 5 Cone interior=0.0026763122541717593 boundary=0.0042895384639081349
+seed 6 Sphere interior=0.0044175046788718685 boundary=0.0044175046788718685
+seed 7 Sphere interior=0.0037988396832332422 boundary=0.0044546396000418433
+seed 8 Sphere interior=0.0055129142184425547 boundary=0.0055129142184425547
+seed 9 Cylinder interior=0.0044242572975126361 boundary=0.0055852122643653638
+seed 10 Cylinder interior=0.0049206952577463313 boundary=0.005983396779570078
+seed 11 Cylinder interior=0.0056856638180839249 boundary=0.0061909191723613748
+seed 12 Plane interior=0.0056070015672208071 boundary=0.0065824722610593337
+seed 13 Plane interior=0.0070585703381514523 boundary=0.0070585703381514523
+seed 14 Plane interior=0.0078033950571203686 boundary=0.0082646522257200216
+attempt 0 Torus success=0 failure=ValidationUnresolved message=PCurve endpoint coverage bound unresolved: boundary 0
+attempt 1 Torus success=0 failure=ValidationUnresolved message=PCurve endpoint coverage bound unresolved: boundary 0
+attempt 2 Torus success=0 failure=ValidationUnresolved message=PCurve endpoint coverage bound unresolved: boundary 0
+attempt 3 Cone success=0 failure=InconsistentPeriodicBranch message=InconsistentPeriodicBranch: boundary 0, deviation=0
+attempt 4 Cone success=0 failure=InconsistentPeriodicBranch message=InconsistentPeriodicBranch: boundary 0, deviation=0
+attempt 5 Cone success=0 failure=InconsistentPeriodicBranch message=InconsistentPeriodicBranch: boundary 0, deviation=0
+attempt 6 Sphere success=0 failure=NonlinearPCurve message=NonlinearPCurve: boundary 0, deviation=2.74878e-05
+attempt 7 Sphere success=0 failure=NonlinearPCurve message=NonlinearPCurve: boundary 0, deviation=3.56337e-05
+attempt 8 Sphere success=0 failure=NonlinearPCurve message=NonlinearPCurve: boundary 0, deviation=0.000118707
+attempt 9 Cylinder success=0 failure=NonlinearPCurve message=NonlinearPCurve: boundary 0, deviation=0.000165023
+attempt 10 Cylinder success=0 failure=NonlinearPCurve message=NonlinearPCurve: boundary 0, deviation=0.000164294
+attempt 11 Cylinder success=0 failure=NonlinearPCurve message=NonlinearPCurve: boundary 0, deviation=0.000168745
+attempt 12 Plane success=0 failure=NonlinearPCurve message=NonlinearPCurve: boundary 0, deviation=0.000192195
+attempt 13 Plane success=0 failure=NonlinearPCurve message=NonlinearPCurve: boundary 0, deviation=0.000194483
+attempt 14 Plane success=0 failure=NonlinearPCurve message=NonlinearPCurve: boundary 0, deviation=0.000187942

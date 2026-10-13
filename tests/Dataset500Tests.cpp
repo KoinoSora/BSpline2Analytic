@@ -111,7 +111,7 @@ int Run(const std::filesystem::path &dir, const std::filesystem::path &csvFile,
 {
     unsigned files = 0;
     for (const auto &f : std::filesystem::directory_iterator(dir))
-        if (f.path().extension() == ".b2a")
+        if (f.path().extension() == ".b2a" && f.path().filename().string().rfind("case-", 0) == 0)
             ++files;
     Require(files == 500, "Dataset must contain exactly 500 cases");
     if (!coneOnly && !spherePolynomialOnly)

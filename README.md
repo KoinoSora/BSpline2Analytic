@@ -30,7 +30,7 @@
 - 默认进行边界和母面的 Bézier/Bernstein 误差界估计；节点区间采样用于快速检查。
 - 失败结果区分无效输入、退化、病态、边界关系不一致、歧义、验证失败和不支持。
 
-模块包含静态库、示例、回归测试和批量性能测试。一般兜底及线性 PCurve 本轮只构建 Release 库和示例，按用户要求未新增或运行测试；历史验证结果见 [测试报告](docs/testing/TEST_REPORT.md)。旧的 Dataset500 路径断言与二分支结果读取需要在恢复测试工作时更新。
+模块包含静态库、示例、回归测试和批量性能测试。一般兜底现已增加 600 个带独立证书的主案例和 60 个专项，数据与旧 500 例共存；构造方法见 [GENERAL600.md](docs/testing/GENERAL600.md)，实际未通过项见 [兜底测试报告](docs/testing/GENERAL600_REPORT_2026-10-13.md)。新测试直接调用 `ConvertGeneral`，当前不能将一般兜底视为已经通过回归。旧 Dataset500 的两分支结果读取和退化期望仍待后续调整，本轮只修正它的文件计数以兼容同目录新数据。
 
 非有理输入使用新增的 `ApproximateConversion.h`：`ConvertApproximate` 通过四边与少量内部等参线恢复五类候选，再进行参数优化和独立验收。默认距离严格小于 `1e-5`、边界切向及边界曲面法向角分别严格小于 `0.1°`。`timing.classification / optimization / validation` 分别累计类型判断、求解、验收耗时及调用次数，初值合格时优化计时为零。默认启用解析 Jacobian（非光滑分支局部差分回退），可通过 `options.refinement.jacobianMode=JacobianMode::FiniteDifference` 切换全差分对照。算法及验证口径见 [非有理转换说明](docs/algorithm/APPROXIMATE_CONVERSION.md)。
 
@@ -47,6 +47,9 @@
 
 # 单独克隆本仓库时，指定 SDK 根目录（其中含 include、x64-win）
 .\Build.ps1 -SdkDirectory 'D:\YourSdk\SGGK' -Configuration Release -Benchmark
+
+# 仅测试一般兜底：600 个主案例和 60 个专项
+.\Build.ps1 -Configuration Release -GeneralOnly
 ```
 
 脚本默认构建库、示例及测试程序，并运行精确、近似、平台、Jacobian/五类扰动、Dataset500 及两组圆锥专项回归。`-Benchmark` 额外运行原有 1000 面片精确识别测试，记录写入 `build/benchmark-Release.csv`。`-ApproximateBenchmark` 运行 35 次近似转换计时（含优化成功和禁用优化的失败分支），记录写入 `build/approximate-benchmark-Release.csv`。数据生成、预热和日志不计入转换耗时。可用 `-BuildJobs` 指定构建并发数，默认 1。`-JacobianOnly` 单独运行解析导数及五类扰动对照测试，输出 `build/perturbation-Release.csv` 和附加 `.jacobian.csv`；`-PlateauOnly` 保留平台专项入口；`-Dataset500Only` 单独加载已保存的 500 个面片并输出 `build/dataset500-Release.csv`。`-ConeOnly` 只构建并运行 100 个圆锥固定案例及圆锥专项检查，输出 `build/dataset500-cone-Release.csv` 和 `build/cone249-Release.csv`，保留原 500 例结果。专项开关互斥。
