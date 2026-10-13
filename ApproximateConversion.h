@@ -164,8 +164,17 @@ struct RefinementDiagnostics
     RefinementStopReason stopReason = RefinementStopReason::NoSamples;
     std::vector<RefinementIteration> trace; // Populated only when explicitly requested.
 };
+struct ClassificationDiagnostics
+{
+    unsigned sampleCacheBuilds = 0;
+    // Source surface calls used by the classification cache (excludes curve fits).
+    unsigned cachedPointEvaluations = 0, cachedDerivativeEvaluations = 0;
+    unsigned rawCandidateCount = 0, directionalConeCandidates = 0;
+    unsigned patchRecoveryAttempts = 0;
+};
 struct ConversionStatistics
 {
+    ClassificationDiagnostics classification;
     unsigned baseSamplingBuilds = 0, witnessSamplesAdded = 0;
     // Counts generic LM/constrained attempts; scalar work is in refinementRuns.
     unsigned candidateCount = 0, optimizationIterations = 0;

@@ -39,6 +39,17 @@ if(BSPLINE2ANALYTIC_BUILD_TESTS)
     set_tests_properties(BSpline2Analytic.Dataset500 PROPERTIES
         WORKING_DIRECTORY "${SGGK_SDK_DIR}"
         ENVIRONMENT_MODIFICATION "PATH=path_list_prepend:${SGGK_SDK_DIR}/x64-win/bin${_sgk_config}")
+    add_test(NAME BSpline2Analytic.ConeDataset COMMAND BSpline2AnalyticDataset500Tests --cone-only
+        "${CMAKE_CURRENT_SOURCE_DIR}/tests/data/dataset500" "${CMAKE_CURRENT_BINARY_DIR}/dataset500-cone-$<CONFIG>.csv")
+    add_executable(BSpline2AnalyticConeTests tests/ConeTests.cpp tests/Dataset500.cpp
+        tests/PairedSurfaceBounds.cpp tests/ApproximateCases.cpp)
+    target_link_libraries(BSpline2AnalyticConeTests PRIVATE BSpline2Analytic)
+    target_compile_options(BSpline2AnalyticConeTests PRIVATE /W4 /utf-8)
+    add_test(NAME BSpline2Analytic.Cone COMMAND BSpline2AnalyticConeTests
+        "${CMAKE_CURRENT_SOURCE_DIR}/tests/data/dataset500" "${CMAKE_CURRENT_BINARY_DIR}/cone249-$<CONFIG>.csv")
+    set_tests_properties(BSpline2Analytic.ConeDataset BSpline2Analytic.Cone PROPERTIES
+        WORKING_DIRECTORY "${SGGK_SDK_DIR}"
+        ENVIRONMENT_MODIFICATION "PATH=path_list_prepend:${SGGK_SDK_DIR}/x64-win/bin${_sgk_config}")
     add_executable(BSpline2AnalyticTests tests/RecognitionTests.cpp tests/ReferenceCases.cpp)
     target_link_libraries(BSpline2AnalyticTests PRIVATE BSpline2Analytic)
     target_compile_options(BSpline2AnalyticTests PRIVATE /W4 /utf-8)

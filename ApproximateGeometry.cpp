@@ -374,24 +374,59 @@ static double Median(std::vector<double> a)
     std::sort(a.begin(), a.end());
     return a[a.size() / 2];
 }
+ClassificationSamples BuildClassificationSamples(const sggk::BSplineSurface &s,
+                                                 ClassificationDiagnostics *diagnostics)
+{
+    ClassificationSamples cache;
+    cache.sourceDomain = {s.MinParamU(), s.MaxParamU(), s.MinParamV(), s.MaxParamV()};
+    unsigned pointCalls = 0;
+    auto point = [&](double u, double v) {
+        ++pointCalls;
+        return Get(s.CalcPoint(u, v));
+    };
+    for (unsigned k = 0; k < 4; ++k)
+    {
+        auto ts =
+            SampleParameters(k < 2 ? s.KnotsV() : s.KnotsU(), k < 2 ? s.MinParamV() : s.MinParamU(),
+                             k < 2 ? s.MaxParamV() : s.MaxParamU(), 8);
+        for (double t : ts)
+            cache.boundaries[k].push_back(
+                point(k < 2 ? (k == 0 ? s.MinParamU() : s.MaxParamU()) : t,
+                      k < 2 ? t : (k == 2 ? s.MinParamV() : s.MaxParamV())));
+    }
+    for (unsigned i = 0; i < 5; ++i)
+        for (unsigned j = 0; j < 5; ++j)
+            cache.scorePoints[5 * i + j] =
+                point(s.MinParamU() + (s.MaxParamU() - s.MinParamU()) * i / 4,
+                      s.MinParamV() + (s.MaxParamV() - s.MinParamV()) * j / 4);
+    double u = (s.MinParamU() + s.MaxParamU()) * .5, v = (s.MinParamV() + s.MaxParamV()) * .5;
+    auto d = s.CalcPartialD1(u, v);
+    cache.centerPoint = point(u, v);
+    cache.centerDu = Get(d[0]);
+    cache.centerDv = Get(d[1]);
+    if (diagnostics)
+    {
+        ++diagnostics->sampleCacheBuilds;
+        diagnostics->cachedPointEvaluations += pointCalls;
+        ++diagnostics->cachedDerivativeEvaluations;
+    }
+    return cache;
+}
 AnalyticPatch RecoverApproxPatch(const sggk::BSplineSurface &s, const AnalyticParameters &a)
+{
+    return RecoverApproxPatch(BuildClassificationSamples(s), a);
+}
+AnalyticPatch RecoverApproxPatch(const ClassificationSamples &cache, const AnalyticParameters &a)
 {
     AnalyticPatch p;
     p.parameters = a;
     auto f = FrameOf(a);
     std::array<std::vector<std::array<double, 2>>, 4> paths;
-    auto point = [&](unsigned k, double t) {
-        return Get(s.CalcPoint(k < 2 ? (k == 0 ? s.MinParamU() : s.MaxParamU()) : t,
-                               k < 2 ? t : (k == 2 ? s.MinParamV() : s.MaxParamV())));
-    };
-    auto corner = MotherParameters(a, f.local(Get(s.CalcPoint(s.MinParamU(), s.MinParamV()))));
+    auto corner = MotherParameters(a, f.local(cache.boundaries[0].front()));
     auto trace = [&](unsigned k, std::array<double, 2> last) {
-        auto ts =
-            SampleParameters(k < 2 ? s.KnotsV() : s.KnotsU(), k < 2 ? s.MinParamV() : s.MinParamU(),
-                             k < 2 ? s.MaxParamV() : s.MaxParamU(), 8);
-        for (double t : ts)
+        for (V point : cache.boundaries[k])
         {
-            auto q = MotherParameters(a, f.local(point(k, t)));
+            auto q = MotherParameters(a, f.local(point));
             if (a.type != sggk::SurfaceType::Plane)
                 q[0] = Unwrap(q[0], last[0]);
             if (a.type == sggk::SurfaceType::Torus)
@@ -450,11 +485,11 @@ AnalyticPatch RecoverApproxPatch(const sggk::BSplineSurface &s, const AnalyticPa
         uv[1 - dim] = p.domain[2 * (1 - dim) + (bool(vHigh) != p.mapping.reversedV ? 1 : 0)];
         p.mapping.analyticCorners[i] = sggk::Point2D(uv[0], uv[1]);
     }
-    double u = (s.MinParamU() + s.MaxParamU()) * 0.5, v = (s.MinParamV() + s.MaxParamV()) * 0.5;
-    auto d = s.CalcPartialD1(u, v);
-    auto uv = MotherParameters(a, f.local(Get(s.CalcPoint(u, v))));
+    auto uv = MotherParameters(a, f.local(cache.centerPoint));
     p.normalSign =
-        Dot(Cross(Get(d[0]), Get(d[1])), f.vector(CanonicalNormal(a, uv[0], uv[1]))) >= 0 ? 1 : -1;
+        Dot(Cross(cache.centerDu, cache.centerDv), f.vector(CanonicalNormal(a, uv[0], uv[1]))) >= 0
+            ? 1
+            : -1;
     MakeNative(p);
     return p;
 }

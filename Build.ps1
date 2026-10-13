@@ -6,10 +6,11 @@ param(
     [switch]$PlateauOnly,
     [switch]$JacobianOnly,
     [switch]$Dataset500Only,
+    [switch]$ConeOnly,
     [ValidateRange(1,64)][int]$BuildJobs = 1
 )
 $ErrorActionPreference = 'Stop'
-$focusedCount = [int]$PlateauOnly.IsPresent + [int]$JacobianOnly.IsPresent + [int]$Dataset500Only.IsPresent
+$focusedCount = [int]$PlateauOnly.IsPresent + [int]$JacobianOnly.IsPresent + [int]$Dataset500Only.IsPresent + [int]$ConeOnly.IsPresent
 if ($focusedCount -gt 1 -or ($focusedCount -gt 0 -and ($Benchmark -or $ApproximateBenchmark))) {
     throw 'Choose only one focused test switch and do not combine it with broader benchmarks'
 }
@@ -17,7 +18,9 @@ $sdk = (Resolve-Path -LiteralPath $SdkDirectory).Path
 $build = Join-Path $PSScriptRoot 'build'
 cmake -S $PSScriptRoot -B $build -G 'Visual Studio 17 2022' -A x64 "-DSGGK_SDK_DIR=$sdk"
 if ($LASTEXITCODE -ne 0) { throw 'CMake configure failed' }
-if ($Dataset500Only) {
+if ($ConeOnly) {
+    cmake --build $build --config $Configuration --target BSpline2AnalyticDataset500Tests BSpline2AnalyticConeTests --parallel $BuildJobs
+} elseif ($Dataset500Only) {
     cmake --build $build --config $Configuration --target BSpline2AnalyticDataset500Tests --parallel $BuildJobs
 } elseif ($JacobianOnly) {
     cmake --build $build --config $Configuration --target BSpline2AnalyticJacobianTests --parallel $BuildJobs
@@ -27,7 +30,9 @@ if ($Dataset500Only) {
     cmake --build $build --config $Configuration --parallel $BuildJobs
 }
 if ($LASTEXITCODE -ne 0) { throw 'C++ build failed' }
-if ($Dataset500Only) {
+if ($ConeOnly) {
+    ctest --test-dir $build -C $Configuration -R '^BSpline2Analytic\.(ConeDataset|Cone)$' --output-on-failure
+} elseif ($Dataset500Only) {
     ctest --test-dir $build -C $Configuration -R '^BSpline2Analytic\.Dataset500$' --output-on-failure
 } elseif ($JacobianOnly) {
     ctest --test-dir $build -C $Configuration -R '^BSpline2Analytic\.Jacobian$' --output-on-failure

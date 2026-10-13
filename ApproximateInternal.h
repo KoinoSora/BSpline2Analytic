@@ -51,6 +51,16 @@ EdgePoint MapBoundaryPointAndTangent(const Frame3 &, const EdgeGeometry &, doubl
 V ProjectInteriorPointLocal(const AnalyticPatch &, V local, const std::array<EdgeGeometry, 4> &,
                             double coneTangent);
 void MaterializePatch(AnalyticPatch &);
+struct ClassificationSamples
+{
+    std::array<std::vector<V>, 4> boundaries;
+    std::array<V, 25> scorePoints;
+    V centerPoint, centerDu, centerDv;
+    std::array<double, 4> sourceDomain;
+};
+ClassificationSamples BuildClassificationSamples(const sggk::BSplineSurface &,
+                                                 ClassificationDiagnostics * = nullptr);
+AnalyticPatch RecoverApproxPatch(const ClassificationSamples &, const AnalyticParameters &);
 AnalyticPatch RecoverApproxPatch(const sggk::BSplineSurface &, const AnalyticParameters &);
 struct Sample
 {
@@ -82,7 +92,20 @@ SampleCache SampleSurface(const sggk::BSplineSurface &, const SamplingOptions &)
 unsigned AddWitnessSamples(const sggk::BSplineSurface &, const ConversionValidationReport &,
                            const SamplingOptions &, SampleCache &);
 std::vector<AnalyticPatch> ClassifyApproximate(const sggk::BSplineSurface &,
-                                               const ConversionOptions &);
+                                               const ConversionOptions &,
+                                               ClassificationDiagnostics * = nullptr,
+                                               bool directionalCones = true);
+struct ApproximateSeed
+{
+    AnalyticParameters parameters;
+    double score = 0;
+    bool fromBoundary = false, directionalCone = false;
+};
+// Retains the legacy best/boundary candidates as fallbacks for new cone seeds.
+std::vector<AnalyticPatch> RecoverRankedCandidates(const ClassificationSamples &,
+                                                   const std::vector<ApproximateSeed> &,
+                                                   double distanceTolerance,
+                                                   ClassificationDiagnostics * = nullptr);
 struct ResidualBuffer
 {
     // Distance and boundary tangent only. Normal errors are acceptance-only.

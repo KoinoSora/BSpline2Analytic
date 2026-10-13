@@ -1,8 +1,8 @@
-"""Summarize all 500 persisted-fixture results; Python standard library only."""
+"""Summarize all 500 fixtures or the 100-cone subset; Python standard library only."""
+import argparse
 import csv
 import math
 import statistics
-import sys
 from collections import Counter, defaultdict
 
 
@@ -11,11 +11,15 @@ def classify_optimize_ms(row):
     return float(row["classify_ms"]) + float(row["optimize_ms"])
 
 
-def summarize(path):
+def summarize(path, cone_only=False):
     with open(path, newline="", encoding="utf-8-sig") as source:
         rows = list(csv.DictReader(source))
-    if len(rows) != 500 or {int(r["id"]) for r in rows} != set(range(500)):
-        raise ValueError("Expected exactly one result for every case 0..499")
+    expected = set(range(200, 300)) if cone_only else set(range(500))
+    if len(rows) != len(expected) or {int(r["id"]) for r in rows} != expected:
+        raise ValueError("Expected exactly one result for every case " +
+                         ("200..299" if cone_only else "0..499"))
+    if cone_only and any(r["type"] != "Cone" for r in rows):
+        raise ValueError("Cone-only CSV contains a different surface type")
     regular = [r for r in rows if int(r["collapsed_mask"]) == 0]
     degenerate = [r for r in rows if int(r["collapsed_mask"]) != 0]
     print(f"Cases: {len(rows)}; regular: {len(regular)}; collapsed: {len(degenerate)}")
@@ -70,6 +74,8 @@ def summarize(path):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        raise SystemExit("Usage: SummarizeDataset500.py dataset500-Release.csv")
-    summarize(sys.argv[1])
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("csv_path")
+    parser.add_argument("--cone-only", action="store_true")
+    args = parser.parse_args()
+    summarize(args.csv_path, args.cone_only)

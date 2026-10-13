@@ -230,8 +230,164 @@ static CurveFits FitCurve(const sggk::Curve3DPtr &curve, BoundaryId id, double t
     out.hasCircle = maxError <= tolerance && std::abs(last - first) > 1e-3;
     return out;
 }
+static std::optional<AnalyticParameters> DirectionalCone(const std::array<BoundaryInfo, 4> &edges,
+                                                         const AnalyticParameters &legacy,
+                                                         const RecognitionOptions &o)
+{
+    if (legacy.type != sggk::SurfaceType::Cone)
+        return {};
+    std::vector<V> normals, generators;
+    V sum{}, reference = Get(legacy.axis);
+    for (const auto &edge : edges)
+    {
+        if (edge.kind == BoundaryKind::Circle)
+        {
+            V n = Unit(Get(edge.circle.normal));
+            if (Dot(n, reference) < 0)
+                n = n * (-1);
+            normals.push_back(n);
+            sum = sum + n;
+        }
+        else if (edge.kind == BoundaryKind::Line)
+            generators.push_back(Unit(Get(edge.line.direction)));
+    }
+    if (normals.size() != 2 || generators.size() != 2 || Norm(sum) < 1e-12)
+        return {};
+    V axis = Unit(sum);
+    for (V n : normals)
+        if (Angle(n, axis) > o.angularTolerance)
+            return {};
+    double halfAngle = 0;
+    std::array<double, 2> angles;
+    for (size_t i = 0; i < generators.size(); ++i)
+    {
+        angles[i] =
+            std::atan2(Norm(Cross(generators[i], axis)), std::abs(Dot(generators[i], axis)));
+        halfAngle += .5 * angles[i];
+    }
+    if (!(halfAngle > 0 && halfAngle < Pi / 2) ||
+        std::abs(angles[0] - angles[1]) > o.angularTolerance)
+        return {};
+    V apex = Get(legacy.origin);
+    for (const auto &edge : edges)
+    {
+        if (edge.kind == BoundaryKind::Line &&
+            Norm(Cross(Get(edge.line.origin) - apex, Get(edge.line.direction))) >
+                o.distanceTolerance + Roundoff(Norm(apex)))
+            return {};
+        if (edge.kind == BoundaryKind::Circle && Norm(Cross(Get(edge.circle.center) - apex, axis)) >
+                                                     o.distanceTolerance + Roundoff(Norm(apex)))
+            return {};
+    }
+    auto candidate = legacy;
+    candidate.axis = Direction(axis);
+    candidate.halfAngle = halfAngle;
+    return candidate;
+}
+std::vector<AnalyticPatch> RecoverRankedCandidates(const ClassificationSamples &cache,
+                                                   const std::vector<ApproximateSeed> &seeds,
+                                                   double distanceTolerance,
+                                                   ClassificationDiagnostics *diagnostics)
+{
+    const size_t missing = seeds.size();
+    struct Selection
+    {
+        size_t best, boundary;
+    };
+    struct Family
+    {
+        sggk::SurfaceType type;
+        Selection legacy, directional;
+        double score;
+    };
+    std::vector<std::optional<AnalyticPatch>> patches(seeds.size());
+    std::vector<bool> attempted(seeds.size(), false);
+    auto recover = [&](size_t i) {
+        if (!attempted[i])
+        {
+            attempted[i] = true;
+            if (diagnostics)
+                ++diagnostics->patchRecoveryAttempts;
+            try
+            {
+                patches[i] = RecoverApproxPatch(cache, seeds[i].parameters);
+            }
+            catch (const std::runtime_error &)
+            {
+            }
+        }
+        return patches[i].has_value();
+    };
+    auto select = [&](sggk::SurfaceType type, bool directional) {
+        std::vector<size_t> indices;
+        for (size_t i = 0; i < seeds.size(); ++i)
+            if (seeds[i].parameters.type == type && seeds[i].directionalCone == directional &&
+                std::isfinite(seeds[i].score))
+                indices.push_back(i);
+        // Stable ties preserve the original enumeration order.
+        std::stable_sort(indices.begin(), indices.end(),
+                         [&](size_t a, size_t b) { return seeds[a].score < seeds[b].score; });
+        Selection chosen{missing, missing};
+        for (size_t i : indices)
+            if (recover(i))
+            {
+                chosen.best = i;
+                break;
+            }
+        if (chosen.best != missing && seeds[chosen.best].fromBoundary)
+            chosen.boundary = chosen.best;
+        else
+            for (size_t i : indices)
+                if (seeds[i].fromBoundary && recover(i))
+                {
+                    chosen.boundary = i;
+                    break;
+                }
+        return chosen;
+    };
+    std::vector<Family> families;
+    for (const auto &seed : seeds)
+    {
+        auto type = seed.parameters.type;
+        if (std::any_of(families.begin(), families.end(),
+                        [&](const Family &f) { return f.type == type; }))
+            continue;
+        auto legacy = select(type, false), directional = select(type, true);
+        double score = INFINITY;
+        for (auto selection : {legacy, directional})
+            if (selection.best != missing)
+                score = std::min(score, seeds[selection.best].score);
+        families.push_back({type, legacy, directional, score});
+    }
+    const bool hasSphere = std::any_of(families.begin(), families.end(), [&](const Family &f) {
+        return f.type == sggk::SurfaceType::Sphere && f.score < distanceTolerance;
+    });
+    auto deferTorus = [&](const Family &f) {
+        return hasSphere && f.type == sggk::SurfaceType::Torus && f.legacy.best != missing &&
+               std::abs(seeds[f.legacy.best].parameters.majorRadius) <= distanceTolerance;
+    };
+    std::stable_sort(families.begin(), families.end(), [&](const Family &a, const Family &b) {
+        if (deferTorus(a) != deferTorus(b))
+            return !deferTorus(a);
+        return a.score < b.score;
+    });
+    std::vector<AnalyticPatch> result;
+    for (const auto &family : families)
+        for (auto selection : {family.directional, family.legacy})
+        {
+            // New directional cone seeds are tried first; both original fallback
+            // roles survive. A failed chart never discards the next ranked seed.
+            if (selection.boundary != missing && selection.boundary != selection.best)
+                result.push_back(*patches[selection.boundary]);
+            if (selection.best != missing)
+                result.push_back(*patches[selection.best]);
+        }
+    return result;
+}
 std::vector<AnalyticPatch> ClassifyApproximate(const sggk::BSplineSurface &s,
-                                               const ConversionOptions &o)
+                                               const ConversionOptions &o,
+                                               ClassificationDiagnostics *diagnostics,
+                                               bool directionalCones)
 {
     std::array<std::vector<CurveFits>, 2> groups;
     unsigned n = o.sampling.interiorIsoCurves;
@@ -249,13 +405,21 @@ std::vector<AnalyticPatch> ClassifyApproximate(const sggk::BSplineSurface &s,
                                          static_cast<BoundaryId>(2 * g + (j == n + 1 ? 1 : 0)),
                                          tolerance, o.sampling.maxSamples));
         }
-    struct Scored
-    {
-        AnalyticPatch patch;
-        double score;
-        bool fromBoundary = false;
+    std::vector<ApproximateSeed> seeds;
+    std::optional<ClassificationSamples> cache;
+    auto add = [&](const AnalyticParameters &parameters, bool boundary, bool directional) {
+        if (!cache)
+            cache = BuildClassificationSamples(s, diagnostics);
+        double score = 0;
+        for (V point : cache->scorePoints)
+            score = std::max(score, Distance(parameters, Point(point)));
+        seeds.push_back({parameters, score, boundary, directional});
+        if (diagnostics)
+        {
+            ++diagnostics->rawCandidateCount;
+            diagnostics->directionalConeCandidates += directional ? 1 : 0;
+        }
     };
-    std::vector<Scored> best, boundarySeeds;
     std::vector<std::pair<unsigned, unsigned>> pairs{{0, n + 1}};
     if (n >= 2)
         pairs.push_back({1, n});
@@ -287,81 +451,26 @@ std::vector<AnalyticPatch> ClassifyApproximate(const sggk::BSplineSurface &s,
                     }
                     if (!valid)
                         continue;
+                    const bool boundary = pair0 == pairs.front() && pair1 == pairs.front();
                     for (const auto &c : Reconstruct(edges, ro))
                     {
-                        try
+                        add(c.parameters, boundary, false);
+                        if (directionalCones)
                         {
-                            auto patch = RecoverApproxPatch(s, c.parameters);
-                            double score = 0;
-                            for (unsigned i = 0; i < 5; ++i)
-                                for (unsigned j = 0; j < 5; ++j)
-                                    score = std::max(
-                                        score,
-                                        Distance(c.parameters,
-                                                 s.CalcPoint(
-                                                     s.MinParamU() +
-                                                         (s.MaxParamU() - s.MinParamU()) * i / 4,
-                                                     s.MinParamV() +
-                                                         (s.MaxParamV() - s.MinParamV()) * j / 4)));
-                            const bool fromBoundary =
-                                pair0 == pairs.front() && pair1 == pairs.front();
-                            if (fromBoundary)
+                            try
                             {
-                                auto seed = std::find_if(boundarySeeds.begin(), boundarySeeds.end(),
-                                                         [&](const Scored &x) {
-                                                             return x.patch.parameters.type ==
-                                                                    c.parameters.type;
-                                                         });
-                                if (seed == boundarySeeds.end())
-                                    boundarySeeds.push_back({patch, score, true});
-                                else if (score < seed->score)
-                                    *seed = {patch, score, true};
+                                if (auto cone = DirectionalCone(edges, c.parameters, ro))
+                                    add(*cone, boundary, true);
                             }
-                            auto found =
-                                std::find_if(best.begin(), best.end(), [&](const Scored &x) {
-                                    return x.patch.parameters.type == c.parameters.type;
-                                });
-                            if (found == best.end())
-                                best.push_back({patch, score, fromBoundary});
-                            else if (score < found->score)
-                                *found = {patch, score, fromBoundary};
-                        }
-                        catch (const Failure &)
-                        {
+                            catch (const std::runtime_error &)
+                            {
+                                // The legacy seed remains available when the new frame fails.
+                            }
                         }
                     }
                 }
-    // Refitted spherical meridians can have slightly different fitted centers,
-    // also creating a torus with an almost zero major radius. Its marginally
-    // smaller sampled score should not put this singular limit ahead of an
-    // already competitive sphere. Retain it as a fallback; only full validation
-    // can accept either candidate, and no provenance/type label is consulted.
-    const bool hasSphere = std::any_of(best.begin(), best.end(), [&](const Scored &c) {
-        return c.patch.parameters.type == sggk::SurfaceType::Sphere &&
-               c.score < o.validation.distanceTolerance;
-    });
-    auto deferTorus = [&](const Scored &c) {
-        return hasSphere && c.patch.parameters.type == sggk::SurfaceType::Torus &&
-               std::abs(c.patch.parameters.majorRadius) <= o.validation.distanceTolerance;
-    };
-    std::sort(best.begin(), best.end(), [&](const Scored &a, const Scored &b) {
-        if (deferTorus(a) != deferTorus(b))
-            return !deferTorus(a);
-        return a.score < b.score;
-    });
-    std::vector<AnalyticPatch> result;
-    for (auto &b : best)
-    {
-        // A low mother-surface score on internal isocurves can hide a poor
-        // finite boundary chart. Retain the four-boundary initialization rather
-        // than permanently replacing it with that scored alternative.
-        auto seed = std::find_if(boundarySeeds.begin(), boundarySeeds.end(), [&](const Scored &x) {
-            return x.patch.parameters.type == b.patch.parameters.type;
-        });
-        if (!b.fromBoundary && seed != boundarySeeds.end())
-            result.push_back(std::move(seed->patch));
-        result.push_back(std::move(b.patch));
-    }
-    return result;
+    return cache
+               ? RecoverRankedCandidates(*cache, seeds, o.validation.distanceTolerance, diagnostics)
+               : std::vector<AnalyticPatch>{};
 }
 } // namespace bspline2analytic::detail

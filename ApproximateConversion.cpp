@@ -180,8 +180,8 @@ bool RefineAndValidateCandidate(const sggk::BSplineSurface &s, AnalyticPatch &ca
                 level = level == ParameterLevel::SizeOrOffset ? ParameterLevel::MotherSurface
                                                               : ParameterLevel::FullPatch;
                 reason = RefinementEntryReason::MoreVariables;
-                // A failed independent check must not be bypassed by the old
-                // sampled margin exit. Normals remain acceptance-only.
+                // Require an updated best candidate before restoring the
+                // sampled-margin exit. Normals remain acceptance-only.
                 forceAttempt = true;
                 continue;
             }
@@ -232,7 +232,7 @@ ConversionResult ConvertApproximate(const sggk::BSplineSurface &s, const Convers
         std::vector<AnalyticPatch> candidates;
         {
             StageTimer timer(result.timing.classification);
-            candidates = ClassifyApproximate(s, o);
+            candidates = ClassifyApproximate(s, o, &result.statistics.classification);
         }
         result.statistics.candidateCount = static_cast<unsigned>(candidates.size());
         result.status = ConversionStatus::NoCandidate;

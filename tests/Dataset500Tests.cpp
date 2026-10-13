@@ -106,25 +106,29 @@ void Inspect(const std::filesystem::path &file)
         std::cout << std::endl;
     }
 }
-int Run(const std::filesystem::path &dir, const std::filesystem::path &csvFile)
+int Run(const std::filesystem::path &dir, const std::filesystem::path &csvFile,
+        bool coneOnly = false)
 {
     unsigned files = 0;
     for (const auto &f : std::filesystem::directory_iterator(dir))
         if (f.path().extension() == ".b2a")
             ++files;
     Require(files == 500, "Dataset must contain exactly 500 cases");
-    Probe(dir);
+    if (!coneOnly)
+        Probe(dir);
     std::ofstream csv(csvFile);
     Require(bool(csv), "Cannot open benchmark CSV");
     csv << std::setprecision(17);
     csv << "id,pair,type,source_kind,path,controls,degree_u,degree_v,spans_u,spans_v,collapsed_"
            "mask,fixture_bound,status,classify_ms,optimize_ms,validate_ms,total_ms,geometry_bound,"
-           "tangent_deg,normal_deg,message\n";
+           "tangent_deg,normal_deg,message,class_cache_builds,class_cached_points,"
+           "class_cached_derivatives,class_raw_candidates,class_recoveries,opt_iterations\n";
     unsigned bins[5][5][2]{}, collapsed[5]{}, success = 0, degenerate = 0, failed = 0, rational = 0,
                                               polynomial = 0;
     bool warmed[5][2]{};
     std::map<std::string, std::vector<double>> times;
-    for (unsigned id = 0; id < 500; ++id)
+    const unsigned first = coneOnly ? 200 : 0, last = coneOnly ? 300 : 500;
+    for (unsigned id = first; id < last; ++id)
     {
         auto c = ReadDatasetCase(dir / CaseFilename(id));
         Require(c.id == id && c.pair == id / 2 && c.type == id / 100 &&
@@ -232,16 +236,28 @@ int Run(const std::filesystem::path &dir, const std::filesystem::path &csvFile)
         csv << ',';
         if (path)
             csv << normal;
-        csv << ',' << Quote(result.Message()) << '\n';
+        csv << ',' << Quote(result.Message());
+        if (const auto *approx = std::get_if<ConversionResult>(&result.details))
+        {
+            const auto &counters = approx->statistics.classification;
+            csv << ',' << counters.sampleCacheBuilds << ',' << counters.cachedPointEvaluations
+                << ',' << counters.cachedDerivativeEvaluations << ',' << counters.rawCandidateCount
+                << ',' << counters.patchRecoveryAttempts << ','
+                << approx->statistics.optimizationIterations;
+        }
+        else
+            csv << ",0,0,0,0,0,0";
+        csv << '\n';
         csv.flush();
         if (!c.collapsedMask)
             times[std::string(TypeName(c.truth.type)) + "/" + ConversionPathName(result.path)]
                 .push_back(t.classification.elapsedMs);
         if (id % 20 == 19)
-            std::cout << "Tested " << id + 1 << "/500; success=" << success
-                      << " degenerate=" << degenerate << " failures=" << failed << std::endl;
+            std::cout << "Tested " << id - first + 1 << '/' << last - first
+                      << "; success=" << success << " degenerate=" << degenerate
+                      << " failures=" << failed << std::endl;
     }
-    for (unsigned type = 0; type < 5; ++type)
+    for (unsigned type = first / 100; type < last / 100; ++type)
     {
         Require(collapsed[type] == ((type == 2 || type == 3) ? 20u : 0u),
                 "Degenerate quota mismatch");
@@ -249,7 +265,8 @@ int Run(const std::filesystem::path &dir, const std::filesystem::path &csvFile)
             for (unsigned k = 0; k < 2; ++k)
                 Require(bins[type][b][k] == 10, "Dataset quota mismatch");
     }
-    Require(rational == 200 && polynomial == 300, "Unexpected dispatch distribution");
+    Require(rational == (coneOnly ? 50u : 200u) && polynomial == (coneOnly ? 50u : 300u),
+            "Unexpected dispatch distribution");
     for (auto &[name, values] : times)
     {
         std::sort(values.begin(), values.end());
@@ -257,9 +274,9 @@ int Run(const std::filesystem::path &dir, const std::filesystem::path &csvFile)
                   << std::accumulate(values.begin(), values.end(), 0.0) / values.size()
                   << " p95=" << values[(values.size() * 95 + 99) / 100 - 1] << " ms\n";
     }
-    std::cout << "500 fixtures certified; regular=" << success << " degenerate=" << degenerate
-              << " unexpected=" << failed << "; rational=" << rational
-              << " polynomial=" << polynomial << std::endl;
+    std::cout << last - first << " fixtures certified; regular=" << success
+              << " degenerate=" << degenerate << " unexpected=" << failed
+              << "; rational=" << rational << " polynomial=" << polynomial << std::endl;
     Require(bool(csv), "CSV write failed");
     return failed ? 1 : 0;
 }
@@ -270,8 +287,15 @@ int main(int argc, char **argv)
     int result = 1;
     try
     {
-        Require(argc >= 3, "Usage: Dataset500Tests --generate directory | directory results.csv");
-        if (std::string(argv[1]) == "--inspect")
+        Require(
+            argc >= 3,
+            "Usage: Dataset500Tests --generate directory | [--cone-only] directory results.csv");
+        if (std::string(argv[1]) == "--cone-only")
+        {
+            Require(argc == 4, "Expected --cone-only directory results.csv");
+            result = Run(argv[2], argv[3], true);
+        }
+        else if (std::string(argv[1]) == "--inspect")
         {
             Inspect(argv[2]);
             result = 0;

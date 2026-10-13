@@ -207,6 +207,10 @@ RefinementResult RefineCandidateLevel(AnalyticPatch &p, const SampleCache &sampl
     evaluate(p, current);
     best = current;
     AnalyticPatch bestPatch = p;
+    // A failed independent check requires a new returned candidate, not a
+    // permanent ban on the sampled-margin exit for this variable level.
+    bool bestUpdated = false;
+    auto marginReached = [&]() { return best.worst <= 0.75 && (!forceAttempt || bestUpdated); };
     diagnostic.initialWorst = current.worst;
     diagnostic.stopReason = RefinementStopReason::IterationLimit;
     double lambda = 1e-4, trust = 0.1;
@@ -234,7 +238,7 @@ RefinementResult RefineCandidateLevel(AnalyticPatch &p, const SampleCache &sampl
     for (unsigned iteration = 0; iteration < std::min(iterationBudget, options.maxIterations);
          ++iteration)
     {
-        if (!forceAttempt && best.worst <= 0.75)
+        if (marginReached())
         {
             diagnostic.stopReason = RefinementStopReason::MarginReached;
             break;
@@ -328,6 +332,7 @@ RefinementResult RefineCandidateLevel(AnalyticPatch &p, const SampleCache &sampl
                         {
                             best = current;
                             bestPatch = p;
+                            bestUpdated = true;
                         }
                         break;
                     }
@@ -372,7 +377,7 @@ RefinementResult RefineCandidateLevel(AnalyticPatch &p, const SampleCache &sampl
             diagnostic.trace.push_back(record);
         // Every failure path reaches these checks, including a failed constrained
         // solve.
-        if (!forceAttempt && best.worst <= 0.75)
+        if (marginReached())
         {
             diagnostic.stopReason = RefinementStopReason::MarginReached;
             break;
@@ -410,7 +415,7 @@ RefinementResult RefineCandidateLevel(AnalyticPatch &p, const SampleCache &sampl
             }
         }
     }
-    if (!forceAttempt && best.worst <= 0.75)
+    if (marginReached())
         diagnostic.stopReason = RefinementStopReason::MarginReached;
     p = std::move(bestPatch);
     diagnostic.bestWorst = best.worst;
