@@ -190,6 +190,7 @@ struct ConversionResult
     ConversionStatistics statistics;
     ConversionTiming timing;
     std::string message;
+    ClassificationFailureReason classificationFailure = ClassificationFailureReason::None;
 };
 ConversionResult ConvertApproximate(const sggk::BSplineSurface &input,
                                     const ConversionOptions &options = {});

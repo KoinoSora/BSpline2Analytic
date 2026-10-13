@@ -74,7 +74,7 @@ namespace detail
 bool RefineAndValidateCandidate(const sggk::BSplineSurface &s, AnalyticPatch &candidate,
                                 const ConversionOptions &o, ConversionResult &result,
                                 std::shared_ptr<const SourceSampleCache> &base,
-                                unsigned candidateIndex)
+                                unsigned candidateIndex,SurfaceSampleContext *shared)
 {
     auto validate = [&]() {
         StageTimer timer(result.timing.validation);
@@ -89,7 +89,7 @@ bool RefineAndValidateCandidate(const sggk::BSplineSurface &s, AnalyticPatch &ca
         StageTimer timer(result.timing.optimization);
         if (!base)
         {
-            auto initial = SampleSurface(s, o.sampling);
+            auto initial = SampleSurface(s, o.sampling,shared);
             auto source = std::make_shared<SourceSampleCache>();
             source->points = std::move(initial.points);
             source->boundaryOrder = std::move(initial.boundaryOrder);
@@ -101,7 +101,7 @@ bool RefineAndValidateCandidate(const sggk::BSplineSurface &s, AnalyticPatch &ca
     }
     auto addWitnesses = [&]() {
         StageTimer timer(result.timing.optimization);
-        unsigned count = AddWitnessSamples(s, result.validation, o.sampling, samples);
+        unsigned count = AddWitnessSamples(s, result.validation, o.sampling, samples,shared);
         result.statistics.witnessSamplesAdded += count;
         result.statistics.sampleCount =
             std::max(result.statistics.sampleCount, static_cast<unsigned>(samples.size()));
@@ -198,6 +198,13 @@ bool RefineAndValidateCandidate(const sggk::BSplineSurface &s, AnalyticPatch &ca
 } // namespace detail
 ConversionResult ConvertApproximate(const sggk::BSplineSurface &s, const ConversionOptions &o)
 {
+    detail::SurfaceSampleContext samples(s, o.sampling.maxSamples);
+    return detail::ConvertApproximateWithSamples(s, o, samples);
+}
+ConversionResult detail::ConvertApproximateWithSamples(const sggk::BSplineSurface &s,
+                                                       const ConversionOptions &o,
+                                                       SurfaceSampleContext &samples)
+{
     using namespace detail;
     using Clock = std::chrono::steady_clock;
     auto start = Clock::now();
@@ -232,10 +239,23 @@ ConversionResult ConvertApproximate(const sggk::BSplineSurface &s, const Convers
         std::vector<AnalyticPatch> candidates;
         {
             StageTimer timer(result.timing.classification);
-            candidates = ClassifyApproximate(s, o, &result.statistics.classification);
+            try
+            {
+                candidates = ClassifyApproximate(s, o, &result.statistics.classification, true, &samples);
+            }
+            catch (const Failure &e)
+            {
+                if (e.status == Status::Degenerate)
+                    result.classificationFailure = ClassificationFailureReason::DegenerateBoundary;
+                else if (e.status == Status::InconsistentBoundary)
+                    result.classificationFailure = ClassificationFailureReason::NonLineOrCircleBoundary;
+                throw;
+            }
         }
         result.statistics.candidateCount = static_cast<unsigned>(candidates.size());
         result.status = ConversionStatus::NoCandidate;
+        if (candidates.empty())
+            result.classificationFailure = ClassificationFailureReason::NoCandidate;
         result.message = "No analytic candidate could be initialized from line/circle families";
         unsigned candidateIndex = 0;
         std::shared_ptr<const SourceSampleCache> baseSamples;
@@ -243,7 +263,7 @@ ConversionResult ConvertApproximate(const sggk::BSplineSurface &s, const Convers
         {
             ++candidateIndex;
             bool progressed =
-                RefineAndValidateCandidate(s, candidate, o, result, baseSamples, candidateIndex);
+                RefineAndValidateCandidate(s, candidate, o, result, baseSamples, candidateIndex,&samples);
             const auto &report = result.validation;
             result.patch = candidate;
             result.validation = report;

@@ -56,7 +56,7 @@ struct CurveFits
     bool hasLine = false, hasCircle = false;
 };
 static CurveFits FitCurve(const sggk::Curve3DPtr &curve, BoundaryId id, double tolerance,
-                          unsigned maxSamples)
+                          unsigned maxSamples, const std::function<V(double)> &sample = {})
 {
     auto bc = std::dynamic_pointer_cast<sggk::BSplineCurve3D>(curve);
     if (!bc)
@@ -66,13 +66,14 @@ static CurveFits FitCurve(const sggk::Curve3DPtr &curve, BoundaryId id, double t
         throw Failure(Status::VerificationFailed, "Isocurve sample budget exceeded");
     std::vector<V> points;
     for (double t : ts)
-        points.push_back(Get(curve->CalcPoint(t)));
+        points.push_back(sample ? sample(t) : Get(curve->CalcPoint(t)));
     std::vector<double> weights(points.size(), 0);
     for (size_t i = 1; i < points.size(); ++i)
     {
         double length = Norm(points[i] - points[i - 1]);
         // Midpoint chord quadrature is representation-independent to sampling accuracy.
-        V mid = Get(curve->CalcPoint((ts[i] + ts[i - 1]) * 0.5));
+        double parameter=(ts[i]+ts[i-1])*.5;
+        V mid=sample ? sample(parameter) : Get(curve->CalcPoint(parameter));
         length = std::max(length, Norm(mid - points[i - 1]) + Norm(points[i] - mid));
         weights[i - 1] += length * 0.5;
         weights[i] += length * 0.5;
@@ -387,29 +388,48 @@ std::vector<AnalyticPatch> RecoverRankedCandidates(const ClassificationSamples &
 std::vector<AnalyticPatch> ClassifyApproximate(const sggk::BSplineSurface &s,
                                                const ConversionOptions &o,
                                                ClassificationDiagnostics *diagnostics,
-                                               bool directionalCones)
+                                               bool directionalCones,
+                                               SurfaceSampleContext *shared)
 {
     std::array<std::vector<CurveFits>, 2> groups;
     unsigned n = o.sampling.interiorIsoCurves;
     if (n > 5)
         throw Failure(Status::InvalidInput, "At most five internal isocurves per direction");
     double tolerance = o.validation.distanceTolerance * o.refinement.candidateToleranceFactor;
-    for (unsigned g = 0; g < 2; ++g)
-        for (unsigned j = 0; j < n + 2; ++j)
+    for (auto &group:groups) group.resize(n+2);
+    auto fit=[&](unsigned g,unsigned j,bool boundary) {
         {
             double a = g == 0 ? s.MinParamU() : s.MinParamV(),
                    b = g == 0 ? s.MaxParamU() : s.MaxParamV();
             double t = a + (b - a) * double(j) / (n + 1);
             auto curve = g == 0 ? s.CalcVCurve(t) : s.CalcUCurve(t);
-            groups[g].push_back(FitCurve(curve,
+            std::function<V(double)> point;
+            if (shared) point=[&,g,t](double varying) {
+                return shared->At(g==0?t:varying,g==0?varying:t,
+                    sggk::DerivType::NONE,sggk::DerivType::NONE,false).point;
+            };
+            try { groups[g][j]=FitCurve(curve,
                                          static_cast<BoundaryId>(2 * g + (j == n + 1 ? 1 : 0)),
-                                         tolerance, o.sampling.maxSamples));
+                                         tolerance, o.sampling.maxSamples,point); }
+            catch (const Failure &e)
+            {
+                if (boundary || e.status==Status::InvalidInput || e.status==Status::VerificationFailed) throw;
+                return;
+            }
+            // Interior families must never bypass an unsupported outer edge.
+            if (boundary && !groups[g][j].hasLine && !groups[g][j].hasCircle)
+                throw Failure(Status::InconsistentBoundary,
+                              "Classification failed: outer boundary is neither line nor circle");
         }
+    };
+    // Gate all four outside edges before sampling any internal families.
+    for (unsigned g=0;g<2;++g) {fit(g,0,true);fit(g,n+1,true);}
+    for (unsigned g=0;g<2;++g) for (unsigned j=1;j<=n;++j) fit(g,j,false);
     std::vector<ApproximateSeed> seeds;
     std::optional<ClassificationSamples> cache;
     auto add = [&](const AnalyticParameters &parameters, bool boundary, bool directional) {
         if (!cache)
-            cache = BuildClassificationSamples(s, diagnostics);
+            cache = BuildClassificationSamples(s, diagnostics, shared);
         double score = 0;
         for (V point : cache->scorePoints)
             score = std::max(score, Distance(parameters, Point(point)));

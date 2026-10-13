@@ -216,13 +216,26 @@ BoundaryAnalysisResult AnalyzeBoundaries(const sggk::BSplineSurface &s, const Re
             s.CalcVCurve(s.MinParamU()), s.CalcVCurve(s.MaxParamU()), s.CalcUCurve(s.MinParamV()),
             s.CalcUCurve(s.MaxParamV())};
         for (unsigned i = 0; i < 4; ++i)
-            r.boundaries[i] = detail::AnalyzeCurve(curves[i], static_cast<BoundaryId>(i), o);
+        {
+            try {r.boundaries[i] = detail::AnalyzeCurve(curves[i], static_cast<BoundaryId>(i), o);}
+            catch (const detail::Failure &e)
+            {
+                r.boundaries[i].id=static_cast<BoundaryId>(i);r.boundaries[i].curve=curves[i];
+                r.boundaries[i].kind=e.status==Status::Degenerate ? BoundaryKind::Degenerate : BoundaryKind::Unknown;
+                r.boundaries[i].message=e.what();throw;
+            }
+        }
         r.status = Status::Success;
     }
     catch (const detail::Failure &e)
     {
         r.status = e.status;
         r.message = e.what();
+        r.failureReason = e.status == Status::Degenerate
+                              ? ClassificationFailureReason::DegenerateBoundary
+                              : (e.status == Status::InvalidInput
+                                     ? ClassificationFailureReason::None
+                                     : ClassificationFailureReason::NonLineOrCircleBoundary);
     }
     catch (const std::exception &e)
     {

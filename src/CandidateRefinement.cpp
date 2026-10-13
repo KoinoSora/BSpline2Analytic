@@ -183,7 +183,8 @@ RefinementResult RefineCandidate(const sggk::BSplineSurface &, AnalyticPatch &p,
 RefinementResult RefineCandidateLevel(AnalyticPatch &p, const SampleCache &samples,
                                       const ConversionOptions &o, ConversionStatistics &statistics,
                                       ParameterLevel level, unsigned iterationBudget,
-                                      bool forceAttempt, EvaluationWorkspace &workspace)
+                                      bool forceAttempt, EvaluationWorkspace &workspace,
+                                      const RefinementProblem *problem)
 {
     RefinementDiagnostics diagnostic;
     diagnostic.level = level;
@@ -199,7 +200,8 @@ RefinementResult RefineCandidateLevel(AnalyticPatch &p, const SampleCache &sampl
     double scale = SampleScale(p, samples);
     const unsigned initialEvaluations = workspace.evaluations, initialResizes = workspace.resizes;
     auto evaluate = [&](const AnalyticPatch &patch, ResidualBuffer &out) {
-        EvaluateResiduals(patch, samples, o.validation, workspace, out);
+        if (problem) problem->evaluate(patch, workspace, out);
+        else EvaluateResiduals(patch, samples, o.validation, workspace, out);
     };
     auto &current = workspace.current;
     auto &best = workspace.best;
@@ -260,7 +262,8 @@ RefinementResult RefineCandidateLevel(AnalyticPatch &p, const SampleCache &sampl
         if (!jacobianValid)
         {
             ++diagnostic.jacobianEvaluations;
-            if (!BuildJacobian(p, samples, o, active, scale, workspace, diagnostic))
+            if (!(problem ? problem->jacobian(p, active, scale, workspace, diagnostic)
+                          : BuildJacobian(p, samples, o, active, scale, workspace, diagnostic)))
             {
                 diagnostic.stopReason = RefinementStopReason::SolverFailure;
                 break;
@@ -309,7 +312,8 @@ RefinementResult RefineCandidateLevel(AnalyticPatch &p, const SampleCache &sampl
                     std::fill(delta.begin(), delta.end(), 0.0);
                     for (unsigned j = 0; j < n; ++j)
                         delta[active.indices[j]] = step[j];
-                    auto trial = Increment(p, delta, scale);
+                    auto trial = problem ? problem->increment(p, delta, scale)
+                                         : Increment(p, delta, scale);
                     ++diagnostic.lineSearchEvaluations;
                     evaluate(trial, next);
                     record.modelChange = ModelChange(current, next);
@@ -422,7 +426,8 @@ RefinementResult RefineCandidateLevel(AnalyticPatch &p, const SampleCache &sampl
     diagnostic.bestCost = best.cost;
     diagnostic.finalTrust = trust;
     RefinementResult result{best.worst < diagnostic.initialWorst, diagnostic.stopReason};
-    MaterializePatch(p);
+    if (problem) problem->materialize(p);
+    else MaterializePatch(p);
     diagnostic.residualEvaluations = workspace.evaluations - initialEvaluations;
     diagnostic.workspaceResizes = workspace.resizes - initialResizes;
     statistics.refinementRuns.push_back(std::move(diagnostic));

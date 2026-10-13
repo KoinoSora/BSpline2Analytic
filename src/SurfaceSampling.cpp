@@ -45,7 +45,8 @@ void SampleCache::RebuildIndices()
 }
 static Sample At(const sggk::BSplineSurface &s, double u, double v, int edge,
                  sggk::DerivType du = sggk::DerivType::NONE,
-                 sggk::DerivType dv = sggk::DerivType::NONE)
+                 sggk::DerivType dv = sggk::DerivType::NONE,
+                 SurfaceSampleContext *shared = nullptr)
 {
     Sample x;
     x.u = u;
@@ -53,7 +54,7 @@ static Sample At(const sggk::BSplineSurface &s, double u, double v, int edge,
     x.edge = edge;
     if (edge < 0)
     {
-        x.point = Get(s.CalcPoint(u, v));
+        x.point = shared ? shared->At(u,v,du,dv,false).point : Get(s.CalcPoint(u, v));
         return x;
     }
     if (du == sggk::DerivType::NONE)
@@ -63,12 +64,21 @@ static Sample At(const sggk::BSplineSurface &s, double u, double v, int edge,
     x.sideU = du;
     x.sideV = dv;
     sggk::Point3D p;
-    auto d = s.CalcPartialD1(u, v, du, dv, p);
-    x.point = Get(p);
+    V tangentU,tangentV;
+    if (shared)
+    {
+        const auto &sample=shared->At(u,v,du,dv);
+        x.point=sample.point;tangentU=sample.du;tangentV=sample.dv;
+    }
+    else
+    {
+        auto d=s.CalcPartialD1(u,v,du,dv,p);
+        x.point=Get(p);tangentU=Get(d[0]);tangentV=Get(d[1]);
+    }
     if (edge >= 0)
     {
-        x.tangent = Unit(Get(d[edge < 2 ? 1 : 0]));
-        x.normal = Unit(Cross(Get(d[0]), Get(d[1])));
+        x.tangent = Unit(edge<2?tangentV:tangentU);
+        x.normal = Unit(Cross(tangentU,tangentV));
         x.fraction = edge < 2 ? (v - s.MinParamV()) / (s.MaxParamV() - s.MinParamV())
                               : (u - s.MinParamU()) / (s.MaxParamU() - s.MinParamU());
     }
@@ -87,7 +97,8 @@ static std::vector<std::pair<double, double>> Spans(const sggk::RealArray &k, do
             r.push_back({ends[i - 1], ends[i]});
     return r;
 }
-SampleCache SampleSurface(const sggk::BSplineSurface &s, const SamplingOptions &o)
+SampleCache SampleSurface(const sggk::BSplineSurface &s, const SamplingOptions &o,
+                          SurfaceSampleContext *shared)
 {
     if (!o.interiorPointsPerSpan || o.interiorPointsPerSpan > 8 || o.boundaryPointsPerSpan < 3 ||
         o.boundaryPointsPerSpan > 32 || !o.maxSamples)
@@ -113,9 +124,11 @@ SampleCache SampleSurface(const sggk::BSplineSurface &s, const SamplingOptions &
                                    ? (j ? 0.7886751345948129 : 0.2113248654051871)
                                    : (j + 0.5) / o.interiorPointsPerSpan;
                     add(At(s, u.first + (u.second - u.first) * x,
-                           v.first + (v.second - v.first) * y, -1));
+                           v.first + (v.second - v.first) * y, -1,
+                           sggk::DerivType::NONE,sggk::DerivType::NONE,shared));
                 }
-            add(At(s, (u.first + u.second) * 0.5, (v.first + v.second) * 0.5, -1));
+            add(At(s, (u.first + u.second) * 0.5, (v.first + v.second) * 0.5, -1,
+                   sggk::DerivType::NONE,sggk::DerivType::NONE,shared));
         }
     for (int edge = 0; edge < 4; ++edge)
     {
@@ -130,14 +143,14 @@ SampleCache SampleSurface(const sggk::BSplineSurface &s, const SamplingOptions &
                 auto fixed = edge % 2 ? sggk::DerivType::LEFT : sggk::DerivType::RIGHT;
                 add(At(s, edge < 2 ? (edge == 0 ? s.MinParamU() : s.MaxParamU()) : t,
                        edge < 2 ? t : (edge == 2 ? s.MinParamV() : s.MaxParamV()), edge,
-                       edge < 2 ? fixed : side, edge < 2 ? side : fixed));
+                       edge < 2 ? fixed : side, edge < 2 ? side : fixed,shared));
             }
     }
     cache.RebuildIndices();
     return cache;
 }
 unsigned AddWitnessSamples(const sggk::BSplineSurface &s, const ConversionValidationReport &r,
-                           const SamplingOptions &o, SampleCache &cache)
+                           const SamplingOptions &o, SampleCache &cache,SurfaceSampleContext *shared)
 {
     unsigned added = 0;
     auto insert = [&](double u, double v, int edge) {
@@ -151,7 +164,7 @@ unsigned AddWitnessSamples(const sggk::BSplineSurface &s, const ConversionValida
         if (cache.keys.count(key))
             return;
         // Evaluate only after deduplication. One-sided boundary records stay distinct.
-        auto sample = At(s, u, v, edge, du, dv);
+        auto sample = At(s, u, v, edge, du, dv,shared);
         cache.points.push_back(sample);
         cache.keys.insert(key);
         ++added;

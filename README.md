@@ -1,14 +1,14 @@
 # BSpline2Analytic
 
-基于海星 SGK 1.7.11 的四边样条面片解析识别与转换模块，使用 C++17。提供精确 NURBS 识别及非有理样条近似转换两条路径。
+基于海星 SGK 1.7.11 的四边样条面片解析识别与转换模块，使用 C++17。提供精确 NURBS 识别、非有理等参线近似转换及一般情况兜底。
 
-统一入口为 `SurfaceConversion.h` 中的 `Convert`：输入 `IsRational()` 为真时调用 `Recognize`，否则调用 `ConvertApproximate`。不使用案例来源标签分流，不在失败后静默切换路径。精确解析转换的平面通常权重为 1，因此也进入非有理分支。两条原接口继续保留。
+统一入口为 `SurfaceConversion.h` 中的 `Convert`：首先尝试适用的专用模块，失败后进入 `ConvertGeneral`；`attempts` 记录尝试、跳过及分类失败原因。精确有理模块和非有理专用模块仍按输入表示选择，两个原接口继续保留。边界退化、非直线或圆弧时专用分类失败，不表示整张曲面退化。共享源采样上下文按需构造边界、Greville 初值/评分集及优化样本。
 
 ## 仓库目录
 
 | 目录/入口 | 内容 |
 | --- | --- |
-| [`include/`](include/) | 三个公开接口头文件，供调用方包含。 |
+| [`include/`](include/) | 公开接口头文件，含 `GeneralConversion.h`。 |
 | [`src/`](src/) | 算法实现与内部头文件。 |
 | [`examples/`](examples/) | 使用统一转换接口的示例。 |
 | [`tests/`](tests/README.md) | 回归、专项、性能测试及汇总脚本；固定输入在 `tests/data/`。 |
@@ -30,7 +30,7 @@
 - 默认进行边界和母面的 Bézier/Bernstein 误差界估计；节点区间采样用于快速检查。
 - 失败结果区分无效输入、退化、病态、边界关系不一致、歧义、验证失败和不支持。
 
-模块包含静态库、示例、回归测试和批量性能测试。本轮已验证 Release，历史 Debug 结果及各轮范围见 [测试报告](docs/testing/TEST_REPORT.md)。
+模块包含静态库、示例、回归测试和批量性能测试。一般兜底及线性 PCurve 本轮只构建 Release 库和示例，按用户要求未新增或运行测试；历史验证结果见 [测试报告](docs/testing/TEST_REPORT.md)。旧的 Dataset500 路径断言与二分支结果读取需要在恢复测试工作时更新。
 
 非有理输入使用新增的 `ApproximateConversion.h`：`ConvertApproximate` 通过四边与少量内部等参线恢复五类候选，再进行参数优化和独立验收。默认距离严格小于 `1e-5`、边界切向及边界曲面法向角分别严格小于 `0.1°`。`timing.classification / optimization / validation` 分别累计类型判断、求解、验收耗时及调用次数，初值合格时优化计时为零。默认启用解析 Jacobian（非光滑分支局部差分回退），可通过 `options.refinement.jacobianMode=JacobianMode::FiniteDifference` 切换全差分对照。算法及验证口径见 [非有理转换说明](docs/algorithm/APPROXIMATE_CONVERSION.md)。
 
@@ -65,21 +65,32 @@
 bspline2analytic::SurfaceConversionOptions options;
 options.rational.distanceTolerance = 1e-5;
 options.polynomial.validation.distanceTolerance = 1e-5;
+options.general.fitting.validation.distanceTolerance = 1e-5;
 auto result = bspline2analytic::Convert(inputSurface, options);
 if (result.Succeeded()) {
     const auto& timing = result.Timing();
-    if (const auto* exact = std::get_if<bspline2analytic::RecognitionResult>(&result.details)) {
-        auto analytic = exact->surface;
-        auto domain = exact->domain;
-    } else {
-        const auto& approximate = std::get<bspline2analytic::ConversionResult>(result.details);
-        auto analytic = approximate.patch->surface;
-        auto domain = approximate.patch->sdkDomain;
-    }
+    const auto& finitePatch = *result.patch;
+    auto analytic = finitePatch.MotherSurface();
+    const auto& fourPCurves = finitePatch.PCurves();
+    auto boundaryBound = result.pcurveValidation.boundaryHausdorffUpperBound;
+    // fourPCurves[k].sdkCurve 是母面 SDK 参数空间中的有界一次样条。
+    // start/end 是模块规范参数空间中的端点，两种参数约定不能混用。
 }
 ```
 
-`path` 标识实际执行分支，`details` 保留原始状态及验证报告。成功语义依照被调用接口及其选项；统一入口不会将精确路径的母面 Bernstein 界升级为近似路径的有限面片区间证书。`RecognitionResult::timing` 同样提供三阶段时间，其中优化为零，分类包含边界识别和参数域恢复，验证记录母面候选的验证。
+`path` 标识最终尝试分支，`details` 为三种结果之一，保留该模块报告；`Timing()` 汇总所有尝试。统一入口在专用模块成功后同样恢复并验证线性 PCurve，成功才发布 `result.patch`。母面对象本身不包含裁剪；有限域由四条 PCurve 围成的简单参数四边形定义，允许退化为三角形。失败统一返回 `ConversionFailed`，并保留模块及候选的诊断信息。原独立接口仍遵循各自历史验收合同。
+
+## 一般情况与线性 PCurve
+
+`ConvertGeneral` 支持有理（正权重）与非有理连续样条，采用平面 3、球 4、圆柱 5、圆锥 6、圆环 7 个母面自由度生成少量候选。Greville 参数按完整带重数节点计算；缺少内部覆盖时补点。内部点交错划分为生成集和独立评分集，边界另行评估；无效法向不生成初值。球与圆环评分接近且边界表现接近时先尝试球，失败后保留独立圆环候选。圆环初值以多起点数值求解四条点法向直线的公共交线初始化，不提供候选枚举完备性保证。
+
+求解器复用原阻尼最小二乘、约束修正、信赖域和停滞处理，通过 `RefinementProblem` 替换几何评价；一般母面导数当前使用中心差分及单侧回退。边界见证点反馈到母面距离优化；PCurve 恢复和有限面片验证在每轮后重新执行。边界不满足线性要求时可能失败，局部优化失败不表示不存在可行解。
+
+四个源参数角点只投影一次，相邻边复用端点。投影参数沿边连续展开周期分支，生成二维直线段，不要求它是等参线；原边界参数到直线段的对应可非线性。球面另外尝试边界支持的坐标系。极点、锥顶及退化边使用邻边参数极限协调角度，不把相同三维点的不同参数角点直接合并。
+
+采样初筛检查偏离、越界及回走。最终使用严格浮点模式的向外舍入区间运算与有理 Bernstein 提取，验证源面到有限域的距离，以及源边界与线性 PCurve 三维像的双向 Hausdorff 上界。边界位移、投影像偏离和端点覆盖都使用最终几何容差；参数距离不能直接套用长度容差。达到预算或遇到无法解析的参数奇异性时返回失败，不降级为采样验收。此实现不提供整个有限面片的双向 Hausdorff 或全局可逆重参数化证明。
+
+`GeneralValidationReport::pcurveFailure` 区分 `NonlinearPCurve`、`PCurveOutOfRange`、`NonMonotonePCurve`、周期分支不一致、退化参数未解决、无效边界环、几何超差和连续验证未解决。`GeneralConversionResult::attempts` 保留各候选信息。一般圆环当前限定为规则环形圆环（大半径大于小半径）；自交、尖点及 Lemon 类型不会被该兜底路径接受。
 
 非有理样条：
 

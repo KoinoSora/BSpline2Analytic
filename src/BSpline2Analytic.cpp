@@ -4,6 +4,7 @@
 #include "PatchRecovery.h"
 #include "RecognitionValidation.h"
 #include "StageTimer.h"
+#include "SurfaceSampleContext.h"
 
 namespace bspline2analytic
 {
@@ -68,6 +69,13 @@ static bool Equivalent(const AnalyticParameters &a, const AnalyticParameters &b,
 }
 RecognitionResult Recognize(const sggk::BSplineSurface &s, const RecognitionOptions &o)
 {
+    detail::SurfaceSampleContext samples(s);
+    return detail::RecognizeWithSamples(s, o, samples);
+}
+RecognitionResult detail::RecognizeWithSamples(const sggk::BSplineSurface &s,
+                                              const RecognitionOptions &o,
+                                              SurfaceSampleContext &samples)
+{
     RecognitionResult result;
     const auto start = std::chrono::steady_clock::now();
     auto finish = [&] {
@@ -83,6 +91,7 @@ RecognitionResult Recognize(const sggk::BSplineSurface &s, const RecognitionOpti
         analysis = AnalyzeBoundaries(s, o);
     }
     result.boundaries = analysis.boundaries;
+    result.classificationFailure = analysis.failureReason;
     if (analysis.status != Status::Success)
     {
         result.status = analysis.status;
@@ -98,8 +107,11 @@ RecognitionResult Recognize(const sggk::BSplineSurface &s, const RecognitionOpti
             candidates = detail::Reconstruct(result.boundaries, o);
         }
         if (candidates.empty())
+        {
+            result.classificationFailure = ClassificationFailureReason::NoCandidate;
             throw detail::Failure(Status::InconsistentBoundary,
                                   "No analytic surface satisfies the boundary relationships");
+        }
         bool found = false;
         Status failureStatus = Status::VerificationFailed;
         std::string failures;
@@ -110,7 +122,7 @@ RecognitionResult Recognize(const sggk::BSplineSurface &s, const RecognitionOpti
                 ValidationReport validation;
                 {
                     detail::StageTimer timer(result.timing.validation);
-                    validation = detail::ValidateCandidate(s, c, result.boundaries, o);
+                    validation = detail::ValidateCandidate(s, c, result.boundaries, o, &samples);
                 }
                 sggk::UVRange range;
                 ParameterCorrespondence mapping;

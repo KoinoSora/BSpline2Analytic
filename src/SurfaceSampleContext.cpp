@@ -1,0 +1,140 @@
+#include "SurfaceSampleContext.h"
+#include <set>
+namespace bspline2analytic::detail
+{
+static std::vector<double> GrevilleParameters(const sggk::RealArray &knots,
+    const sggk::UIntArray &mults, unsigned degree, size_t count, double lo, double hi)
+{
+    if (!degree || knots.size() != mults.size())
+        throw Failure(Status::InvalidInput, "Invalid Greville knot data");
+    std::vector<double> full;
+    for (size_t i = 0; i < knots.size(); ++i)
+    {
+        if (!std::isfinite(knots[i]) || !mults[i] || mults[i] > degree + 1 ||
+            (i && knots[i] <= knots[i - 1]))
+            throw Failure(Status::InvalidInput, "Invalid Greville knots/multiplicities");
+        full.insert(full.end(), mults[i], knots[i]);
+    }
+    if (full.size() != count + degree + 1)
+        throw Failure(Status::InvalidInput, "Invalid full knot count");
+    std::set<double> out{lo, hi};
+    for (size_t i = 0; i < count; ++i)
+    {
+        double t = 0;
+        for (unsigned k = 1; k <= degree; ++k)
+            t += full[i + k] / degree;
+        out.insert(std::clamp(t, lo, hi));
+    }
+    // Every nonzero span gets an interior witness, including degree-one inputs.
+    for (size_t i = 1; i < knots.size(); ++i)
+    {
+        double a = std::max(lo, knots[i - 1]), b = std::min(hi, knots[i]);
+        if (a < b)
+            out.insert(a + (b - a) * .5);
+    }
+    // Ensure enough interior pairs for four-point torus seeds and a held-out set.
+    for (unsigned i = 1; i < 6; ++i)
+        if (out.size() < 7)
+            out.insert(lo + (hi - lo) * i / 6);
+    return {out.begin(), out.end()};
+}
+const SurfaceSample &SurfaceSampleContext::At(double u, double v,
+    sggk::DerivType sideU, sggk::DerivType sideV, bool needDerivatives)
+{
+    if (sideU == sggk::DerivType::NONE)
+        sideU = u == source.MaxParamU() ? sggk::DerivType::LEFT : sggk::DerivType::RIGHT;
+    if (sideV == sggk::DerivType::NONE)
+        sideV = v == source.MaxParamV() ? sggk::DerivType::LEFT : sggk::DerivType::RIGHT;
+    auto key = std::make_tuple(u, v, int(sideU), int(sideV));
+    auto found = values.find(key);
+    if (found != values.end() && (!needDerivatives || found->second.derivativesReady))
+        return found->second;
+    if (found == values.end() && values.size() >= budget)
+        throw Failure(Status::VerificationFailed, "Shared source sampling budget exhausted");
+    SurfaceSample x;
+    x.u = u; x.v = v;
+    if (found != values.end()) x=found->second;
+    if (!needDerivatives)
+    {
+        x.point=Get(source.CalcPoint(u,v));
+        if (!Finite(x.point)) throw Failure(Status::InvalidInput,"Nonfinite sampled surface point");
+        return values.emplace(key,x).first->second;
+    }
+    sggk::Point3D p;
+    auto d = source.CalcPartialD1(u, v, sideU, sideV, p);
+    if (found==values.end()) x.point=Get(p);
+    x.du = Get(d[0]); x.dv = Get(d[1]);x.derivativesReady=true;
+    if (!Finite(x.point) || !Finite(x.du) || !Finite(x.dv))
+        throw Failure(Status::InvalidInput, "Nonfinite sampled surface data");
+    V cross = Cross(x.du, x.dv);
+    x.area = Norm(cross);
+    x.normalValid = x.area > 0 && x.area > 1e-12 * Norm(x.du) * Norm(x.dv);
+    if (x.normalValid)
+        x.normal = cross / x.area;
+    if (found!=values.end()) {found->second=x;return found->second;}
+    return values.emplace(key, x).first->second;
+}
+const std::vector<SurfaceSample> &SurfaceSampleContext::Greville(bool needNormals)
+{
+    if (grevilleReady)
+    {
+        if (needNormals && !grevilleNormalsReady)
+        {
+            for (size_t i=0;i<greville.size();++i)
+            {
+                auto x=At(greville[i].u,greville[i].v);
+                x.area*=grevilleWeights[i];greville[i]=x;
+            }
+            seeds.clear();
+            for (size_t i:seedPartition) if (greville[i].normalValid) seeds.push_back(i);
+            grevilleNormalsReady=true;
+        }
+        return greville;
+    }
+    auto us = GrevilleParameters(source.KnotsU(), source.MultsU(), source.DegreeU(),
+        source.ControlPoints().size(), source.MinParamU(), source.MaxParamU());
+    auto vs = GrevilleParameters(source.KnotsV(), source.MultsV(), source.DegreeV(),
+        source.ControlPoints().front().size(), source.MinParamV(), source.MaxParamV());
+    if (us.size() > budget / vs.size())
+        throw Failure(Status::VerificationFailed, "Greville grid exceeds sample budget");
+    greville.clear(); seeds.clear(); scores.clear();seedPartition.clear();grevilleWeights.clear();
+    for (size_t i = 1; i + 1 < us.size(); ++i)
+        for (size_t j = 1; j + 1 < vs.size(); ++j)
+        {
+            auto x = At(us[i], vs[j],sggk::DerivType::NONE,sggk::DerivType::NONE,needNormals);
+            // Approximate area represented by this parameter cell.
+            double weight=(us[i + 1] - us[i - 1]) * (vs[j + 1] - vs[j - 1]) * .25;
+            grevilleWeights.push_back(weight);x.area*=weight;
+            size_t index = greville.size();
+            greville.push_back(x);
+            if ((i + j) % 2) scores.push_back(index);
+            else {seedPartition.push_back(index);if (x.normalValid) seeds.push_back(index);}
+        }
+    grevilleReady = true;
+    grevilleNormalsReady=needNormals;
+    return greville;
+}
+const std::vector<size_t> &SurfaceSampleContext::Seeds() { Greville(); return seeds; }
+const std::vector<size_t> &SurfaceSampleContext::Scores() { Greville(false); return scores; }
+const std::array<std::vector<SurfaceSample>, 4> &SurfaceSampleContext::Boundaries()
+{
+    if (boundariesReady) return boundaries;
+    for (unsigned edge = 0; edge < 4; ++edge)
+    {
+        boundaries[edge].clear();
+        bool uFixed = edge < 2;
+        auto ts = GrevilleParameters(uFixed ? source.KnotsV() : source.KnotsU(),
+            uFixed ? source.MultsV() : source.MultsU(),
+            uFixed ? source.DegreeV() : source.DegreeU(),
+            uFixed ? source.ControlPoints().front().size() : source.ControlPoints().size(),
+            uFixed ? source.MinParamV() : source.MinParamU(),
+            uFixed ? source.MaxParamV() : source.MaxParamU());
+        for (double t : ts)
+            boundaries[edge].push_back(At(uFixed ? (edge == 0 ? source.MinParamU() : source.MaxParamU()) : t,
+                uFixed ? t : (edge == 2 ? source.MinParamV() : source.MaxParamV()),
+                sggk::DerivType::NONE,sggk::DerivType::NONE,false));
+    }
+    boundariesReady = true;
+    return boundaries;
+}
+}

@@ -89,6 +89,8 @@ struct BezierCell
 {
     BV p;
     double u0 = 0, u1 = 1, v0 = 0, v1 = 1;
+    // For rational input p is the homogeneous numerator; polynomial input has w=1.
+    BPoly w{0, 0, I(1)};
 };
 std::vector<BezierCell> ExtractCells(const sggk::BSplineSurface &);
 std::pair<BezierCell, BezierCell> Split(const BezierCell &, bool);

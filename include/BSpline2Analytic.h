@@ -34,6 +34,14 @@ enum class BoundaryKind
     Circle,
     Degenerate
 };
+enum class ClassificationFailureReason
+{
+    None,
+    DegenerateBoundary,
+    NonLineOrCircleBoundary,
+    InconsistentGeometry,
+    NoCandidate
+};
 enum class VerificationLevel
 {
     None,
@@ -84,6 +92,7 @@ struct BoundaryAnalysisResult
     Status status = Status::InvalidInput;
     std::array<BoundaryInfo, 4> boundaries;
     std::string message;
+    ClassificationFailureReason failureReason = ClassificationFailureReason::None;
 };
 
 // A canonical geometric frame; it need not reproduce the source parameter origin.
@@ -141,6 +150,7 @@ struct RecognitionResult
     ValidationReport validation;
     ConversionTiming timing;
     std::string message;
+    ClassificationFailureReason classificationFailure = ClassificationFailureReason::None;
 };
 
 BoundaryAnalysisResult AnalyzeBoundaries(const sggk::BSplineSurface &surface,

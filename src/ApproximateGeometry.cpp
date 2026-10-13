@@ -375,14 +375,17 @@ static double Median(std::vector<double> a)
     return a[a.size() / 2];
 }
 ClassificationSamples BuildClassificationSamples(const sggk::BSplineSurface &s,
-                                                 ClassificationDiagnostics *diagnostics)
+                                                 ClassificationDiagnostics *diagnostics,
+                                                 SurfaceSampleContext *shared)
 {
+    SurfaceSampleContext local(s);
+    auto &samples = shared ? *shared : local;
     ClassificationSamples cache;
     cache.sourceDomain = {s.MinParamU(), s.MaxParamU(), s.MinParamV(), s.MaxParamV()};
     unsigned pointCalls = 0;
     auto point = [&](double u, double v) {
         ++pointCalls;
-        return Get(s.CalcPoint(u, v));
+        return samples.At(u, v,sggk::DerivType::NONE,sggk::DerivType::NONE,false).point;
     };
     for (unsigned k = 0; k < 4; ++k)
     {
@@ -394,16 +397,14 @@ ClassificationSamples BuildClassificationSamples(const sggk::BSplineSurface &s,
                 point(k < 2 ? (k == 0 ? s.MinParamU() : s.MaxParamU()) : t,
                       k < 2 ? t : (k == 2 ? s.MinParamV() : s.MaxParamV())));
     }
-    for (unsigned i = 0; i < 5; ++i)
-        for (unsigned j = 0; j < 5; ++j)
-            cache.scorePoints[5 * i + j] =
-                point(s.MinParamU() + (s.MaxParamU() - s.MinParamU()) * i / 4,
-                      s.MinParamV() + (s.MaxParamV() - s.MinParamV()) * j / 4);
+    const auto &greville = samples.Greville(false);
+    for (size_t i : samples.Scores())
+        cache.scorePoints.push_back(greville[i].point);
     double u = (s.MinParamU() + s.MaxParamU()) * .5, v = (s.MinParamV() + s.MaxParamV()) * .5;
-    auto d = s.CalcPartialD1(u, v);
+    const auto &d = samples.At(u, v);
     cache.centerPoint = point(u, v);
-    cache.centerDu = Get(d[0]);
-    cache.centerDv = Get(d[1]);
+    cache.centerDu = d.du;
+    cache.centerDv = d.dv;
     if (diagnostics)
     {
         ++diagnostics->sampleCacheBuilds;

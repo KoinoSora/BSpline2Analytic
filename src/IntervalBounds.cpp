@@ -430,21 +430,29 @@ std::vector<BezierCell> ExtractCells(const sggk::BSplineSurface &s)
                                     ku[a + 1],
                                     kv[b],
                                     kv[b + 1]};
+                    if (s.IsRational()) cell.w = BPoly(p, q);
                     for (unsigned i = 0; i <= p; ++i)
                         for (unsigned j = 0; j <= q; ++j)
                         {
                             IV sum{I(0), I(0), I(0)};
+                            I denominator(0);
                             for (unsigned k = 0; k <= p; ++k)
                                 for (unsigned l = 0; l <= q; ++l)
                                 {
                                     I weight = eu[i][k] * ev[j][l];
                                     if (weight.lo == 0 && weight.hi == 0)
                                         continue;
+                                    if (s.IsRational())
+                                    {
+                                        weight = weight * I(s.Weights()[a - p + k][b - q + l]);
+                                        denominator = denominator + weight;
+                                    }
                                     sum = sum + Exact(Get(cp[a - p + k][b - q + l])) * weight;
                                 }
                             cell.p.x.at(i, j) = sum.x;
                             cell.p.y.at(i, j) = sum.y;
                             cell.p.z.at(i, j) = sum.z;
+                            if (s.IsRational()) cell.w.at(i, j) = denominator;
                         }
                     // SGK may retain an endpoint one ulp inside the reversed knot
                     // domain. Restrict the polynomial itself, not only its UV labels.
@@ -456,6 +464,8 @@ std::vector<BezierCell> ExtractCells(const sggk::BSplineSurface &s)
                                  z = SplitAt(cell.p.z, along, t);
                             cell.p = keepRight ? BV{x.second, y.second, z.second}
                                                : BV{x.first, y.first, z.first};
+                            auto w = SplitAt(cell.w, along, t);
+                            cell.w = keepRight ? w.second : w.first;
                         };
                         if (start < lo)
                         {
@@ -481,6 +491,9 @@ std::pair<BezierCell, BezierCell> Split(const BezierCell &p, bool u)
     BezierCell a = p, b = p;
     a.p = {x.first, y.first, z.first};
     b.p = {x.second, y.second, z.second};
+    auto w = Split(p.w, u);
+    a.w = w.first;
+    b.w = w.second;
     if (u)
     {
         double t = (p.u0 + p.u1) * 0.5;

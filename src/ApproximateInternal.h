@@ -2,6 +2,8 @@
 #include "AnalyticReconstruction.h"
 #include "ApproximateConversion.h"
 #include "IntervalBounds.h"
+#include "SurfaceSampleContext.h"
+#include <functional>
 #include <set>
 #include <tuple>
 namespace bspline2analytic::detail
@@ -54,12 +56,13 @@ void MaterializePatch(AnalyticPatch &);
 struct ClassificationSamples
 {
     std::array<std::vector<V>, 4> boundaries;
-    std::array<V, 25> scorePoints;
+    std::vector<V> scorePoints;
     V centerPoint, centerDu, centerDv;
     std::array<double, 4> sourceDomain;
 };
 ClassificationSamples BuildClassificationSamples(const sggk::BSplineSurface &,
-                                                 ClassificationDiagnostics * = nullptr);
+                                                 ClassificationDiagnostics * = nullptr,
+                                                 SurfaceSampleContext * = nullptr);
 AnalyticPatch RecoverApproxPatch(const ClassificationSamples &, const AnalyticParameters &);
 AnalyticPatch RecoverApproxPatch(const sggk::BSplineSurface &, const AnalyticParameters &);
 struct Sample
@@ -88,13 +91,15 @@ struct SampleCache : SourceSampleCache
     const Sample &operator[](size_t) const;
     void RebuildIndices();
 };
-SampleCache SampleSurface(const sggk::BSplineSurface &, const SamplingOptions &);
+SampleCache SampleSurface(const sggk::BSplineSurface &, const SamplingOptions &,
+                          SurfaceSampleContext * = nullptr);
 unsigned AddWitnessSamples(const sggk::BSplineSurface &, const ConversionValidationReport &,
-                           const SamplingOptions &, SampleCache &);
+                           const SamplingOptions &, SampleCache &, SurfaceSampleContext * = nullptr);
 std::vector<AnalyticPatch> ClassifyApproximate(const sggk::BSplineSurface &,
                                                const ConversionOptions &,
                                                ClassificationDiagnostics * = nullptr,
-                                               bool directionalCones = true);
+                                               bool directionalCones = true,
+                                               SurfaceSampleContext * = nullptr);
 struct ApproximateSeed
 {
     AnalyticParameters parameters;
@@ -133,6 +138,16 @@ struct ActiveParameters
 {
     std::vector<unsigned> indices;
 };
+// Geometry adapters supply residuals, derivatives and parameter updates; the
+// iteration/acceptance/stagnation algorithm remains shared with the legacy path.
+struct RefinementProblem
+{
+    std::function<void(const AnalyticPatch &, EvaluationWorkspace &, ResidualBuffer &)> evaluate;
+    std::function<bool(const AnalyticPatch &, const ActiveParameters &, double,
+                       EvaluationWorkspace &, RefinementDiagnostics &)> jacobian;
+    std::function<AnalyticPatch(const AnalyticPatch &, const std::vector<double> &, double)> increment;
+    std::function<void(AnalyticPatch &)> materialize;
+};
 ActiveParameters ParametersFor(sggk::SurfaceType, ParameterLevel);
 // Linearizes at p, independently of mutable trial geometry in the workspace.
 // Returns false if neither side of a required difference can be evaluated.
@@ -151,15 +166,17 @@ RefinementResult RefineCandidate(const sggk::BSplineSurface &, AnalyticPatch &, 
 RefinementResult RefineCandidateLevel(AnalyticPatch &, const SampleCache &,
                                       const ConversionOptions &, ConversionStatistics &,
                                       ParameterLevel, unsigned iterationBudget, bool forceAttempt,
-                                      EvaluationWorkspace &);
+                                      EvaluationWorkspace &, const RefinementProblem * = nullptr);
 RefinementResult RefinePlaneOffset(AnalyticPatch &, const SampleCache &, const ConversionOptions &,
                                    ConversionStatistics &, EvaluationWorkspace &);
 bool RefineAndValidateCandidate(const sggk::BSplineSurface &, AnalyticPatch &,
                                 const ConversionOptions &, ConversionResult &,
                                 std::shared_ptr<const SourceSampleCache> &,
-                                unsigned candidateIndex);
+                                unsigned candidateIndex, SurfaceSampleContext * = nullptr);
 bool SolveLeastSquares(std::vector<std::vector<double>>, std::vector<double>,
                        std::vector<double> &);
 void CheckApproximateInput(const sggk::BSplineSurface &, const ValidationOptions &);
+ConversionResult ConvertApproximateWithSamples(const sggk::BSplineSurface &,
+                                               const ConversionOptions &, SurfaceSampleContext &);
 double Angle(V, V);
 } // namespace bspline2analytic::detail

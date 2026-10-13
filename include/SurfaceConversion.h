@@ -1,5 +1,6 @@
 #pragma once
 #include "ApproximateConversion.h"
+#include "GeneralConversion.h"
 #include <variant>
 
 namespace bspline2analytic
@@ -7,18 +8,35 @@ namespace bspline2analytic
 enum class ConversionPath
 {
     RationalRecognition,
-    PolynomialApproximation
+    PolynomialApproximation,
+    GeneralFallback
+};
+enum class SurfaceConversionStatus { Success, InvalidInput, ConversionFailed };
+struct ConversionAttempt
+{
+    ConversionPath path;
+    bool skipped = false;
+    bool succeeded = false;
+    ClassificationFailureReason classificationFailure = ClassificationFailureReason::None;
+    std::string message;
 };
 struct SurfaceConversionOptions
 {
     RecognitionOptions rational;
     ConversionOptions polynomial;
+    GeneralConversionOptions general;
 };
-// Preserve the two verification contracts rather than fabricating a shared certificate.
+// Stage-specific reports stay in details; patch is the common finite result with
+// explicit linear PCurves, published only on final success.
 struct SurfaceConversionResult
 {
     ConversionPath path = ConversionPath::RationalRecognition;
-    std::variant<RecognitionResult, ConversionResult> details;
+    std::variant<RecognitionResult, ConversionResult, GeneralConversionResult> details;
+    SurfaceConversionStatus status = SurfaceConversionStatus::ConversionFailed;
+    std::vector<ConversionAttempt> attempts;
+    ConversionTiming timing;
+    std::optional<GeneralAnalyticPatch> patch;
+    GeneralValidationReport pcurveValidation;
     bool Succeeded() const;
     bool IsDegenerate() const;
     const char *StatusText() const;
@@ -26,8 +44,8 @@ struct SurfaceConversionResult
     const ConversionTiming &Timing() const;
     std::string Message() const;
 };
-// Routing uses the SDK representation, not fixture provenance. Unit-weight planes
-// therefore use the polynomial path. Neither path silently falls back to the other.
+// Applicable specialized paths are attempted first; failures continue to general
+// fitting. Sampling views are constructed only when first requested by a path.
 SurfaceConversionResult Convert(const sggk::BSplineSurface &input,
                                 const SurfaceConversionOptions &options = {});
 const char *ConversionPathName(ConversionPath path);

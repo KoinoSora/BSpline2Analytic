@@ -88,27 +88,29 @@ static double ValidatePiece(const Homogeneous &h, const AnalyticParameters &p, d
 }
 ValidationReport ValidateCandidate(const sggk::BSplineSurface &s, const Candidate &c,
                                    const std::array<BoundaryInfo, 4> &b,
-                                   const RecognitionOptions &o)
+                                   const RecognitionOptions &o, SurfaceSampleContext *shared)
 {
+    SurfaceSampleContext local(s);
+    auto &samples = shared ? *shared : local;
     ValidationReport report;
     for (const auto &edge : b)
     {
         report.maxBoundaryBound = std::max(report.maxBoundaryBound, edge.errorBound);
         auto bc = std::dynamic_pointer_cast<sggk::BSplineCurve3D>(edge.curve);
         for (double t : SampleParameters(*bc, o.samplesPerSpan))
-            if (Distance(c.parameters, bc->CalcPoint(t)) > o.distanceTolerance)
+        {
+            unsigned id=static_cast<unsigned>(edge.id);
+            V p=samples.At(id<2?(id?s.MaxParamU():s.MinParamU()):t,
+                id<2?t:(id==2?s.MinParamV():s.MaxParamV()),sggk::DerivType::NONE,
+                sggk::DerivType::NONE,false).point;
+            if (Distance(c.parameters, Point(p)) > o.distanceTolerance)
                 throw Failure(Status::VerificationFailed,
                               "Recovered analytic surface does not contain a boundary");
+        }
     }
-    const auto us = SampleParameters(s.KnotsU(), s.MinParamU(), s.MaxParamU(), o.samplesPerSpan);
-    const auto vs = SampleParameters(s.KnotsV(), s.MinParamV(), s.MaxParamV(), o.samplesPerSpan);
-    if (us.size() > o.maxValidationPieces || vs.size() > o.maxValidationPieces ||
-        us.size() * vs.size() > o.maxValidationPieces * 16ull)
-        throw Failure(Status::VerificationFailed, "Sampling budget exceeded");
-    for (double u : us)
-        for (double v : vs)
+    for (const auto &sample : samples.Greville(false))
         {
-            double d = Distance(c.parameters, s.CalcPoint(u, v));
+            double d = Distance(c.parameters, Point(sample.point));
             if (!std::isfinite(d))
                 throw Failure(Status::VerificationFailed, "Nonfinite surface distance");
             report.maxSampledDistance = std::max(report.maxSampledDistance, d);

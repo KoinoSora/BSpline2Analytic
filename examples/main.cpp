@@ -16,10 +16,16 @@ static void Print(const bspline2analytic::SurfaceConversionResult &result)
     if (const auto *exact = std::get_if<RecognitionResult>(&result.details))
         std::cout << "Bernstein mother-surface bound: " << exact->validation.surfaceDistanceBound
                   << '\n';
-    else
+    else if (const auto *approximate=std::get_if<ConversionResult>(&result.details))
         std::cout << "Finite-patch interval bound: "
-                  << std::get<ConversionResult>(result.details).validation.geometry.upperBound
+                  << approximate->validation.geometry.upperBound
                   << '\n';
+    else
+        std::cout << "General finite-trim bound: "
+                  << std::get<GeneralConversionResult>(result.details).validation.distanceUpperBound << '\n';
+    if (result.patch)
+        std::cout << "Linear PCurves: " << result.patch->PCurves().size()
+                  << "; boundary Hausdorff bound: " << result.pcurveValidation.boundaryHausdorffUpperBound << '\n';
 }
 
 static int Run()
