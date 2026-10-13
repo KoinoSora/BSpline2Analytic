@@ -6,6 +6,11 @@ import sys
 from collections import Counter, defaultdict
 
 
+def classify_optimize_ms(row):
+    """Sum stages for one case before taking a group maximum."""
+    return float(row["classify_ms"]) + float(row["optimize_ms"])
+
+
 def summarize(path):
     with open(path, newline="", encoding="utf-8-sig") as source:
         rows = list(csv.DictReader(source))
@@ -27,14 +32,18 @@ def summarize(path):
         for row in regular:
             groups[grouping(row)].append(row)
         print("\n" + title)
-        print("| Group | N | Classification ms | Optimization ms | Validation ms | Total ms | Total P95 ms |")
-        print("| --- | ---: | ---: | ---: | ---: | ---: | ---: |")
+        print("| Group | N | Classification ms | Optimization ms | Validation ms | Total ms | Total P95 ms | Classification + optimization max ms | Max case |")
+        print("| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |")
         for key, group in sorted(groups.items()):
             means = [statistics.mean(float(r[k]) for r in group)
                      for k in ("classify_ms", "optimize_ms", "validate_ms", "total_ms")]
             values = sorted(float(r["total_ms"]) for r in group)
             p95 = values[math.ceil(.95 * len(values)) - 1]
-            print(f"| {key} | {len(group)} | " + " | ".join(f"{v:.4f}" for v in [*means, p95]) + " |")
+            # Resolve equal maxima by case id so CSV row order cannot change the report.
+            slowest = max(group, key=lambda r: (classify_optimize_ms(r), -int(r["id"])))
+            print(f"| {key} | {len(group)} | " + " | ".join(
+                f"{v:.4f}" for v in [*means, p95, classify_optimize_ms(slowest)])
+                + f" | case-{int(slowest['id']):03}.b2a |")
 
     table(lambda r: r["type"] + "/" + r["path"], "By type and executed path (regular cases only)")
     limits = [(50, 79), (80, 109), (110, 139), (140, 169), (170, 200)]
@@ -47,8 +56,11 @@ def summarize(path):
     table(band, "By control count and executed path (regular cases only)")
     for path_name in ("rational", "polynomial"):
         group = [r for r in degenerate if r["path"] == path_name]
+        slowest = max(group, key=lambda r: (classify_optimize_ms(r), -int(r["id"])))
         print(f"Collapsed/{path_name}: n={len(group)}, mean total="
-              f"{statistics.mean(float(r['total_ms']) for r in group):.4f} ms")
+              f"{statistics.mean(float(r['total_ms']) for r in group):.4f} ms, "
+              f"classification + optimization max={classify_optimize_ms(slowest):.4f} ms "
+              f"(case-{int(slowest['id']):03}.b2a)")
     successful = [r for r in regular if r["status"] == "Success" and r["path"] == "polynomial"]
     for name in ("geometry_bound", "tangent_deg", "normal_deg"):
         if successful:
