@@ -1,0 +1,30 @@
+{
+  "algorithm_commit": "288e500ebc44632da7d786ffc95a210e60d2b3eb",
+  "configuration": "Windows x64 / Visual Studio 2022 / Release / SGK 1.7.11",
+  "distance_tolerance": 1e-05,
+  "boundary_tangent_tolerance_deg": 0.1,
+  "boundary_normal_tolerance_deg": 0.1,
+  "external_per_case_watchdog_seconds": 300,
+  "first_binary_sha256": "3C083FA56DF40A5ED03EB809F003544E142032074950507719643A2BF931A177",
+  "final_binary_sha256": "aa5a6e3ea6a76cd7c63b0eaa57723d08fd18f0c930da723eaa1fe133ccfe04df",
+  "algorithm_library_sha256": "38b52609742871d78f0bcb21a3ff9c225c18db895d4c1a813ab95866746ef3d9",
+  "run_protocol": [
+    "IDs 0..146: one serial process; default Convert options; no dedicated warm-up.",
+    "First attempt at 147 externally stopped after more than five minutes; no result published.",
+    "IDs 147..199: serial isolated processes; per-case 300-second watchdog; 147 timed out.",
+    "Only test harness logging/formatting/watchdog changed at resume; production library and files unchanged.",
+    "Case 87 repeated five additional times after main batch; stored separately, not averaged into main results.",
+    "Seven new module probes run separately; all passed.",
+    "No legacy 500/General600/regression suite executed by this task."
+  ],
+  "regeneration": {
+    "files_compared": 201,
+    "hash_mismatches": 0
+  },
+  "completeness": {
+    "main_rows": 200,
+    "module_rows": 7,
+    "known_stage_timings": 199,
+    "unknown_stage_timings": 1
+  }
+}

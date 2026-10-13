@@ -19,4 +19,9 @@ void GenerateDataset500(const std::filesystem::path &directory);
 DatasetCase ReadDatasetCase(const std::filesystem::path &file);
 unsigned CollapsedMask(const sggk::BSplineSurface &s);
 sggk::BSplineSurfacePtr RebuildDatasetSource(unsigned type, unsigned bucket, unsigned variant);
+// Shared fixture utilities. These do not load or run the legacy 500-case suite.
+void SaveDatasetCase(const DatasetCase &, const std::filesystem::path &);
+sggk::BSplineSurfacePtr NormalizeDatasetSurface(const sggk::BSplineSurface &);
+sggk::BSplineSurfacePtr FitDatasetPolynomial(const sggk::BSplineSurface &, unsigned, unsigned);
+void PadDatasetSurface(sggk::BSplineSurface &, unsigned, unsigned, unsigned);
 } // namespace bspline2analytic::tests

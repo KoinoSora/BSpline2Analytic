@@ -362,6 +362,10 @@ DatasetCase Reference(unsigned type, unsigned bucket, unsigned variant)
     return c;
 }
 } // namespace
+void SaveDatasetCase(const DatasetCase &c, const std::filesystem::path &file) { Save(c, file); }
+sggk::BSplineSurfacePtr NormalizeDatasetSurface(const sggk::BSplineSurface &s) { return Normalize(s); }
+sggk::BSplineSurfacePtr FitDatasetPolynomial(const sggk::BSplineSurface &s, unsigned p, unsigned q) { return Fit(s, p, q); }
+void PadDatasetSurface(sggk::BSplineSurface &s, unsigned nu, unsigned nv, unsigned variant) { Pad(s, nu, nv, variant); }
 unsigned CollapsedMask(const sggk::BSplineSurface &s)
 {
     const auto &cp = s.ControlPoints();

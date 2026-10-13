@@ -165,3 +165,8 @@ if (result.status == bspline2analytic::Status::Success) {
 - [开发与 Git 同步约定](AGENTS.md)
 
 本仓库仅管理模块代码与文档。SGK SDK、运行库、许可证及构建产物不上传。SGK 及原始需求材料的权利归各自权利人；本项目不另行授予第三方材料的使用或分发许可。
+
+## 极端场景专项
+
+新增 [200 个极端面片](docs/testing/EXTREME200.md)，覆盖大半径小弧长、浅锥、极端圆环比例、大坐标、参数节点与方向变化等情况。运行 `.\Build.ps1 -Configuration Release -ExtremeBoundaryOnly` 只执行新数据及 7 个模块诊断，需要 Python 3.8 或以上。单例进程隔离，外部看护上限 300 秒；超时不伪造阶段耗时。结果记录分类、优化、验证，以及每组 `max(分类+优化)`。
+本批结果及已知限制见 [极端测试报告](docs/testing/EXTREME200_REPORT_2026-10-13.md)；未将验证失败或超时改写为通过。
