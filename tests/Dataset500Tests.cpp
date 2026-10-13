@@ -107,14 +107,14 @@ void Inspect(const std::filesystem::path &file)
     }
 }
 int Run(const std::filesystem::path &dir, const std::filesystem::path &csvFile,
-        bool coneOnly = false)
+        bool coneOnly = false, bool spherePolynomialOnly = false)
 {
     unsigned files = 0;
     for (const auto &f : std::filesystem::directory_iterator(dir))
         if (f.path().extension() == ".b2a")
             ++files;
     Require(files == 500, "Dataset must contain exactly 500 cases");
-    if (!coneOnly)
+    if (!coneOnly && !spherePolynomialOnly)
         Probe(dir);
     std::ofstream csv(csvFile);
     Require(bool(csv), "Cannot open benchmark CSV");
@@ -127,8 +127,11 @@ int Run(const std::filesystem::path &dir, const std::filesystem::path &csvFile,
                                               polynomial = 0;
     bool warmed[5][2]{};
     std::map<std::string, std::vector<double>> times;
-    const unsigned first = coneOnly ? 200 : 0, last = coneOnly ? 300 : 500;
-    for (unsigned id = first; id < last; ++id)
+    const unsigned first = spherePolynomialOnly ? 301 : (coneOnly ? 200 : 0),
+                   last = spherePolynomialOnly ? 400 : (coneOnly ? 300 : 500),
+                   stride = spherePolynomialOnly ? 2 : 1,
+                   count = (last - first + stride - 1) / stride;
+    for (unsigned id = first; id < last; id += stride)
     {
         auto c = ReadDatasetCase(dir / CaseFilename(id));
         Require(c.id == id && c.pair == id / 2 && c.type == id / 100 &&
@@ -253,19 +256,22 @@ int Run(const std::filesystem::path &dir, const std::filesystem::path &csvFile,
             times[std::string(TypeName(c.truth.type)) + "/" + ConversionPathName(result.path)]
                 .push_back(t.classification.elapsedMs);
         if (id % 20 == 19)
-            std::cout << "Tested " << id - first + 1 << '/' << last - first
+            std::cout << "Tested " << (id - first) / stride + 1 << '/' << count
                       << "; success=" << success << " degenerate=" << degenerate
                       << " failures=" << failed << std::endl;
     }
     for (unsigned type = first / 100; type < last / 100; ++type)
     {
-        Require(collapsed[type] == ((type == 2 || type == 3) ? 20u : 0u),
+        Require(collapsed[type] ==
+                    ((type == 2 || type == 3) ? (spherePolynomialOnly ? 10u : 20u) : 0u),
                 "Degenerate quota mismatch");
         for (unsigned b = 0; b < 5; ++b)
             for (unsigned k = 0; k < 2; ++k)
-                Require(bins[type][b][k] == 10, "Dataset quota mismatch");
+                Require(bins[type][b][k] == (spherePolynomialOnly && k == 0 ? 0u : 10u),
+                        "Dataset quota mismatch");
     }
-    Require(rational == (coneOnly ? 50u : 200u) && polynomial == (coneOnly ? 50u : 300u),
+    Require(rational == (spherePolynomialOnly ? 0u : (coneOnly ? 50u : 200u)) &&
+                polynomial == (coneOnly || spherePolynomialOnly ? 50u : 300u),
             "Unexpected dispatch distribution");
     for (auto &[name, values] : times)
     {
@@ -274,9 +280,9 @@ int Run(const std::filesystem::path &dir, const std::filesystem::path &csvFile,
                   << std::accumulate(values.begin(), values.end(), 0.0) / values.size()
                   << " p95=" << values[(values.size() * 95 + 99) / 100 - 1] << " ms\n";
     }
-    std::cout << last - first << " fixtures certified; regular=" << success
-              << " degenerate=" << degenerate << " unexpected=" << failed
-              << "; rational=" << rational << " polynomial=" << polynomial << std::endl;
+    std::cout << count << " fixtures certified; regular=" << success << " degenerate=" << degenerate
+              << " unexpected=" << failed << "; rational=" << rational
+              << " polynomial=" << polynomial << std::endl;
     Require(bool(csv), "CSV write failed");
     return failed ? 1 : 0;
 }
@@ -287,10 +293,14 @@ int main(int argc, char **argv)
     int result = 1;
     try
     {
-        Require(
-            argc >= 3,
-            "Usage: Dataset500Tests --generate directory | [--cone-only] directory results.csv");
-        if (std::string(argv[1]) == "--cone-only")
+        Require(argc >= 3, "Usage: Dataset500Tests --generate directory | [--cone-only | "
+                           "--sphere-polynomial-only] directory results.csv");
+        if (std::string(argv[1]) == "--sphere-polynomial-only")
+        {
+            Require(argc == 4, "Expected --sphere-polynomial-only directory results.csv");
+            result = Run(argv[2], argv[3], false, true);
+        }
+        else if (std::string(argv[1]) == "--cone-only")
         {
             Require(argc == 4, "Expected --cone-only directory results.csv");
             result = Run(argv[2], argv[3], true);

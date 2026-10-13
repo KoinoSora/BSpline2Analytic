@@ -1,4 +1,4 @@
-"""Summarize all 500 fixtures or the 100-cone subset; Python standard library only."""
+"""Summarize all 500 fixtures, cones, or polynomial spheres; Python standard library only."""
 import argparse
 import csv
 import math
@@ -11,15 +11,23 @@ def classify_optimize_ms(row):
     return float(row["classify_ms"]) + float(row["optimize_ms"])
 
 
-def summarize(path, cone_only=False):
+def summarize(path, cone_only=False, sphere_polynomial_only=False):
     with open(path, newline="", encoding="utf-8-sig") as source:
         rows = list(csv.DictReader(source))
-    expected = set(range(200, 300)) if cone_only else set(range(500))
+    if cone_only and sphere_polynomial_only:
+        raise ValueError("Choose only one subset")
+    expected = (set(range(301, 400, 2)) if sphere_polynomial_only else
+                set(range(200, 300)) if cone_only else set(range(500)))
     if len(rows) != len(expected) or {int(r["id"]) for r in rows} != expected:
         raise ValueError("Expected exactly one result for every case " +
-                         ("200..299" if cone_only else "0..499"))
+                         ("301,303,..399" if sphere_polynomial_only else
+                          "200..299" if cone_only else "0..499"))
     if cone_only and any(r["type"] != "Cone" for r in rows):
         raise ValueError("Cone-only CSV contains a different surface type")
+    if sphere_polynomial_only and any(r["type"] != "Sphere" or
+                                     r["path"] != "polynomial" or
+                                     r["source_kind"] != "refitted" for r in rows):
+        raise ValueError("Polynomial-sphere CSV contains a different type or input kind")
     regular = [r for r in rows if int(r["collapsed_mask"]) == 0]
     degenerate = [r for r in rows if int(r["collapsed_mask"]) != 0]
     print(f"Cases: {len(rows)}; regular: {len(regular)}; collapsed: {len(degenerate)}")
@@ -60,6 +68,8 @@ def summarize(path, cone_only=False):
     table(band, "By control count and executed path (regular cases only)")
     for path_name in ("rational", "polynomial"):
         group = [r for r in degenerate if r["path"] == path_name]
+        if not group:
+            continue
         slowest = max(group, key=lambda r: (classify_optimize_ms(r), -int(r["id"])))
         print(f"Collapsed/{path_name}: n={len(group)}, mean total="
               f"{statistics.mean(float(r['total_ms']) for r in group):.4f} ms, "
@@ -76,6 +86,8 @@ def summarize(path, cone_only=False):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("csv_path")
-    parser.add_argument("--cone-only", action="store_true")
+    selection = parser.add_mutually_exclusive_group()
+    selection.add_argument("--cone-only", action="store_true")
+    selection.add_argument("--sphere-polynomial-only", action="store_true")
     args = parser.parse_args()
-    summarize(args.csv_path, args.cone_only)
+    summarize(args.csv_path, args.cone_only, args.sphere_polynomial_only)

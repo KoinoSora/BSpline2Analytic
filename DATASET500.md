@@ -62,6 +62,10 @@ python tests/SummarizeDataset500.py build/dataset500-Release.csv
 # 仅圆锥：加载 200–299，并运行圆锥停止行为、候选回退及扰动检查
 .\Build.ps1 -Configuration Release -ConeOnly
 python tests/SummarizeDataset500.py --cone-only build/dataset500-cone-Release.csv
+
+# 仅非有理球面：301、303、…、399，共 50 个（40 个普通、10 个退化）
+.\Build.ps1 -Configuration Release -SpherePolynomialOnly
+python tests/SummarizeDataset500.py --sphere-polynomial-only build/dataset500-sphere-polynomial-Release.csv
 ```
 
 全部 CTest 默认也包含此测试。准备数据、读取文件、独立配对验证、每类型/实际分支首次预热及日志均在转换计时之外。每个输入正式转换一次，均值和 P95 是不同输入间的统计，不是同一案例多次重复测量；没有绑定 CPU 或排除系统负载影响。退化输入的提前返回时间单列，不能混入普通转换速度。
@@ -69,6 +73,10 @@ python tests/SummarizeDataset500.py --cone-only build/dataset500-cone-Release.cs
 CSV 保留每个案例的 `classify_ms` 与 `optimize_ms`，汇总脚本在“类型/实际分支”和“控制点档/实际分支”两组表中同时输出 `max_i(classify_ms[i] + optimize_ms[i])` 及对应案例文件名。先对同一案例的两个阶段求和，再取组内最大值，不将两个阶段各自的最大值相加；不含验收或计时外围开销。并列时列出编号最小的案例。退化分支另行输出相同指标。完整的旧 CSV 可直接重新汇总，无需重新运行转换。
 
 `-ConeOnly` 只运行 `ConeDataset` 和 `Cone` 两组：前者读取 100 个已有圆锥输入（80 个普通、20 个退化），后者独立检查案例 249 的旧初值强制优化、新初值零优化、失败候选回退及圆锥平台扰动。前者写入 `build/dataset500-cone-Release.csv`；后者预热一次后对 249 测量五次，写入 `build/cone249-Release.csv`。不覆盖原 500 例 CSV。也可直接使用 `BSpline2AnalyticDataset500Tests --cone-only <数据目录> <结果.csv>`。
+
+`-SpherePolynomialOnly` 只运行 `SpherePolynomialDataset`，跳过涉及其他类型的 `Probe`，但保留该子集全部来源、控制点档、退化配额、真实分支及成功验收检查。独立输出 `build/dataset500-sphere-polynomial-Release.csv`，不覆盖全量结果。命令行也可使用 `BSpline2AnalyticDataset500Tests --sphere-polynomial-only <数据目录> <结果.csv>`。汇总脚本在此模式下要求编号完整且类型、来源、实际分支全部匹配；不将缺行 CSV 视为完整结果。
+
+最新完整重测见 [2026-10-13 报告](DATASET500_RETEST_2026-10-13.md)，独立 CSV 为 `build/dataset500-20261013-current-Release.csv`。
 
 新增的 CSV 尾部字段记录分类缓存构建次数、缓存中的曲面点及偏导求值次数、原始候选数、参数域恢复次数和优化迭代数。有理路径这些近似分类计数为零；`class_cached_points` 只统计分类缓存的 `CalcPoint` 调用，不含等参曲线拟合、优化采样和验收求值。旧 CSV 无需补列即可继续汇总。
 
