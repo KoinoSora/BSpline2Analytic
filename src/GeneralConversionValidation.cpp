@@ -387,18 +387,18 @@ static double FiniteDistance(const BezierCell &cell, const GeneralTrim &trim, I 
     }
     return std::min((motherDistance+Sqrt(I(2))*I(outside)).hi,fallback());
 }
-GeneralValidationReport ValidateGeneral(const sggk::BSplineSurface &s, const AnalyticParameters &a,
+static GeneralValidationReport ValidateTrim(const sggk::BSplineSurface &s, const GeneralTrim &trim,
                                         const GeneralConversionOptions &options, SurfaceSampleContext &samples,
-                                        GeneralTrim *outputTrim)
+                                        unsigned consumed)
 {
     GeneralValidationReport report;
+    report.pcurveLinearity=CheckState::Passed;
+    report.piecesVisited=consumed;
     const auto &o=options.fitting.validation;
     if (!(o.distanceTolerance>0 && std::isfinite(o.distanceTolerance)) ||
         o.maxSubdivisionDepth>30 || !o.maxValidationPieces ||
         options.boundarySamplesPerSpan<3 || options.boundarySamplesPerSpan>64)
         throw Failure(Status::InvalidInput,"Invalid general PCurve validation options");
-    GeneralTrim trim;
-    if (!RecoverLinearPCurves(samples,options,a,trim,report)) return report;
     const auto &parameters=trim.parameters;
     if (!IntervalEnvironmentSupported())
     {
@@ -407,6 +407,8 @@ GeneralValidationReport ValidateGeneral(const sggk::BSplineSurface &s, const Ana
         return report;
     }
     const auto cells = ExtractCells(s);
+    if(TryPairedTrimBound(s,cells,trim,o,report))
+        return report;
     report.boundaryHausdorffUpperBound=0;
     for (unsigned edge=0;edge<4;++edge)
     {
@@ -418,11 +420,7 @@ GeneralValidationReport ValidateGeneral(const sggk::BSplineSurface &s, const Ana
             bool onEdge=edge==0 ? cell.u0==s.MinParamU() : edge==1 ? cell.u1==s.MaxParamU() :
                         edge==2 ? cell.v0==s.MinParamV() : cell.v1==s.MaxParamV();
             if (!onEdge) continue;
-            BezierCell boundary=cell;
-            boundary.p=Boundary(cell.p,static_cast<BoundaryId>(edge));
-            boundary.w=Boundary(BV{cell.w,cell.w,cell.w},static_cast<BoundaryId>(edge)).x;
-            if (edge<2) boundary.u0=boundary.u1=edge==0?s.MinParamU():s.MaxParamU();
-            else boundary.v0=boundary.v1=edge==2?s.MinParamV():s.MaxParamV();
+            BezierCell boundary=BoundaryCell(cell,static_cast<BoundaryId>(edge));
             double begin=edge<2?cell.v0:cell.u0,end=edge<2?cell.v1:cell.u1;
             if (begin==(edge<2?s.MinParamV():s.MinParamU()))
                 startCoordinate=EndpointCoordinate(boundary,edge,true,trim);
@@ -494,10 +492,31 @@ GeneralValidationReport ValidateGeneral(const sggk::BSplineSurface &s, const Ana
         // values 0 and 1. Its image covers the entire linear PCurve, so the same
         // displacement bound controls both directed boundary distances.
         report.message = "Continuous source-to-finite-trim distance and bidirectional boundary Hausdorff bounds; four linear PCurves";
-        if (outputTrim) *outputTrim=trim;
     }
     else report.message = exceeded ? "General geometric constraint exceeded" :
         "General continuous bound or projection regularity unresolved within budget";
+    return report;
+}
+GeneralValidationReport ValidateGeneral(const sggk::BSplineSurface &s,const AnalyticParameters &a,
+    const GeneralConversionOptions &options,SurfaceSampleContext &samples,GeneralTrim *outputTrim)
+{
+    GeneralValidationReport report;
+    const auto &o=options.fitting.validation;
+    if(!(o.distanceTolerance>0 && std::isfinite(o.distanceTolerance)) ||
+       o.maxSubdivisionDepth>30 || !o.maxValidationPieces ||
+       options.boundarySamplesPerSpan<3 || options.boundarySamplesPerSpan>64)
+        throw Failure(Status::InvalidInput,"Invalid general PCurve validation options");
+    GeneralTrim trim;
+    unsigned consumed=0;
+    auto accept=[&](const GeneralTrim &candidate,GeneralValidationReport &attempt) {
+        double sampled=attempt.maxSampledPCurveDeviation;
+        attempt=ValidateTrim(s,candidate,options,samples,consumed);
+        attempt.maxSampledPCurveDeviation=sampled;
+        consumed=attempt.piecesVisited;
+        return attempt.Passed();
+    };
+    if(RecoverLinearPCurves(samples,options,a,trim,report,accept) && outputTrim) *outputTrim=trim;
+    report.piecesVisited=consumed;
     return report;
 }
 }

@@ -17,8 +17,8 @@ add_library(BSpline2Analytic STATIC
     src/IntervalBounds.cpp src/ApproximateGeometry.cpp src/ApproximateNumerics.cpp src/IsoCurveAnalysis.cpp
     src/SurfaceSampling.cpp src/SurfaceSampleContext.cpp src/ApproximateEvaluation.cpp src/AnalyticJacobian.cpp src/PlaneOffsetRefinement.cpp src/CandidateRefinement.cpp src/ConversionValidation.cpp src/ApproximateConversion.cpp
     src/GeneralClassification.cpp src/GeneralConversion.cpp src/GeneralConversionValidation.cpp
-    src/GeneralGeometry.cpp src/GeneralPCurve.cpp src/GeneralRefinement.cpp)
-set_source_files_properties(src/IntervalBounds.cpp src/ConversionValidation.cpp src/GeneralConversionValidation.cpp PROPERTIES COMPILE_OPTIONS "/fp:strict")
+    src/GeneralGeometry.cpp src/GeneralPCurve.cpp src/GeneralRefinement.cpp src/GeneralPairedBounds.cpp src/GeneralSphereChart.cpp)
+set_source_files_properties(src/IntervalBounds.cpp src/ConversionValidation.cpp src/GeneralConversionValidation.cpp src/GeneralPairedBounds.cpp PROPERTIES COMPILE_OPTIONS "/fp:strict")
 target_compile_features(BSpline2Analytic PUBLIC cxx_std_17)
 target_compile_options(BSpline2Analytic PRIVATE /W4 /utf-8 /permissive-)
 target_compile_definitions(BSpline2Analytic PUBLIC NOMINMAX)
@@ -42,9 +42,11 @@ if(BSPLINE2ANALYTIC_BUILD_TESTS)
     set_source_files_properties(tests/GeneralDatasetCertificate.cpp PROPERTIES COMPILE_OPTIONS "/fp:strict")
     add_test(NAME BSpline2Analytic.General600 COMMAND BSpline2AnalyticGeneralDatasetTests --run
         "${CMAKE_CURRENT_SOURCE_DIR}/tests/data/dataset500" "${CMAKE_CURRENT_BINARY_DIR}/general600-$<CONFIG>.csv")
+    add_test(NAME BSpline2Analytic.GeneralPositive500 COMMAND BSpline2AnalyticGeneralDatasetTests --run
+        "${CMAKE_CURRENT_SOURCE_DIR}/tests/data/dataset500" "${CMAKE_CURRENT_BINARY_DIR}/general-positive500-$<CONFIG>.csv" 0 500)
     add_test(NAME BSpline2Analytic.GeneralExtra60 COMMAND BSpline2AnalyticGeneralDatasetTests --extras
         "${CMAKE_CURRENT_SOURCE_DIR}/tests/data/dataset500" "${CMAKE_CURRENT_BINARY_DIR}/general-extra60-$<CONFIG>.csv")
-    set_tests_properties(BSpline2Analytic.General600 BSpline2Analytic.GeneralExtra60 PROPERTIES
+    set_tests_properties(BSpline2Analytic.General600 BSpline2Analytic.GeneralExtra60 BSpline2Analytic.GeneralPositive500 PROPERTIES
         WORKING_DIRECTORY "${SGGK_SDK_DIR}"
         ENVIRONMENT_MODIFICATION "PATH=path_list_prepend:${SGGK_SDK_DIR}/x64-win/bin${_sgk_config}")
     add_executable(BSpline2AnalyticDataset500Tests tests/Dataset500.cpp tests/PairedSurfaceBounds.cpp tests/Dataset500Tests.cpp)

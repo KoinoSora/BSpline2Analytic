@@ -90,6 +90,8 @@ GeneralConversionResult ConvertGeneralWithSamples(const sggk::BSplineSurface &s,
                 StageTimer timer(result.timing.validation);
                 result.validation = ValidateGeneral(s, candidate.parameters, o, context, &trim);
                 result.statistics.validationPieces += result.validation.piecesVisited;
+                result.chartAttempts += result.validation.chartAttempts;
+                result.chartIterations += result.validation.chartIterations;
             };
             try
             {
@@ -125,7 +127,7 @@ GeneralConversionResult ConvertGeneralWithSamples(const sggk::BSplineSurface &s,
                             StageTimer timer(result.timing.optimization);
                             EvaluationWorkspace workspace;
                             auto problem = MotherRefinementProblem(samples, o.fitting);
-                            RefineCandidateLevel(candidate, samples, o.fitting, result.statistics,
+                            auto refined=RefineCandidateLevel(candidate, samples, o.fitting, result.statistics,
                                 ParameterLevel::MotherSurface, o.fitting.refinement.maxIterations,
                                 true, workspace, &problem);
                             auto &diagnostic = result.statistics.refinementRuns.back();
@@ -134,6 +136,9 @@ GeneralConversionResult ConvertGeneralWithSamples(const sggk::BSplineSurface &s,
                             ++result.statistics.refinementRounds;
                             result.statistics.sampleCount = std::max(result.statistics.sampleCount,
                                 static_cast<unsigned>(samples.size()));
+                            // The same mother and same validation options cannot
+                            // repair a chart failure by repeating the same check.
+                            if(!refined.improved) break;
                         }
                         validate();
                         if (result.validation.Passed()) break;

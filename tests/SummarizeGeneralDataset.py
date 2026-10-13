@@ -9,7 +9,9 @@ from pathlib import Path
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("csv", nargs="+", type=Path)
-    parser.add_argument("--extras", action="store_true")
+    selection = parser.add_mutually_exclusive_group()
+    selection.add_argument("--extras", action="store_true")
+    selection.add_argument("--positives", action="store_true")
     parser.add_argument("--merge", type=Path)
     args = parser.parse_args()
     rows = []
@@ -17,18 +19,18 @@ def main():
         with path.open(encoding="utf-8-sig", newline="") as source:
             rows.extend(csv.DictReader(source))
     rows.sort(key=lambda r: int(r["id"]))
-    count = 60 if args.extras else 600
+    count = 60 if args.extras else 500 if args.positives else 600
     if [int(r["id"]) for r in rows] != list(range(count)):
         raise SystemExit(f"Expected exactly IDs 0..{count-1}, without gaps or duplicates")
     if any(int(r["extra"]) != args.extras or r["fixture_certified"] != "1" for r in rows):
         raise SystemExit("Dataset identity or independent input certificate mismatch")
     if not args.extras:
-        expected = ["feasible"] * 500 + ["infeasible"] * 100
+        expected = ["feasible"] * 500 + ([] if args.positives else ["infeasible"] * 100)
         if [r["group"] for r in rows] != expected:
-            raise SystemExit("Expected 500 certified positives and 100 certified negatives")
+            raise SystemExit("Fixture groups do not match the requested dataset")
         if sum(int(r["rational"]) for r in rows[:500]) != 250:
             raise SystemExit("Positive rational quota mismatch")
-        if sum(int(r["rational"]) for r in rows[500:]) != 50:
+        if not args.positives and sum(int(r["rational"]) for r in rows[500:]) != 50:
             raise SystemExit("Negative rational quota mismatch")
         if any(not 50 <= int(r["controls"]) <= 200 for r in rows[:500]):
             raise SystemExit("Positive control budget violated")
@@ -61,7 +63,7 @@ def main():
         print(f"- {group} / {reason}: {len(files)}; first={files[0]}")
     print(f"Checks passed: {sum(int(r['passed']) for r in rows)}/{count}")
     false_accepts = [r["file"] for r in rows if r["group"] == "infeasible" and r["success"] == "1"]
-    print(f"Certified-negative false accepts: {len(false_accepts)}")
+    print("Certified negatives: not run" if args.positives else f"Certified-negative false accepts: {len(false_accepts)}")
     for filename in false_accepts:
         print(filename)
 

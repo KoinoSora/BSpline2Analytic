@@ -79,6 +79,9 @@
 
 ```powershell
 .\Build.ps1 -Configuration Release -GeneralOnly
+
+# 仅一般兜底的 500 个正例；本轮修复采用此入口
+.\Build.ps1 -Configuration Release -GeneralPositiveOnly
 ```
 
 该命令仅构建 `BSpline2AnalyticGeneralDatasetTests` 并运行 `General600`、`GeneralExtra60` 两项测试；没有调用 `Convert`、`Recognize` 或 `ConvertApproximate`。每个正式案例只向 `ConvertGeneral` 提供输入面和选项。来源标签、已知母面及证书不传入转换器。指定母面的专项/诊断调用独立进行，不影响黑盒转换。
@@ -88,6 +91,7 @@
 ```powershell
 python tests/SummarizeGeneralDataset.py build/general600-Release.csv
 python tests/SummarizeGeneralDataset.py --extras build/general-extra60-Release.csv
+python tests/SummarizeGeneralDataset.py --positives build/general-positive500-Release.csv
 ```
 
 汇总要求编号完整、无重复、证书和配额一致。支持多个分段 CSV 及 `--merge`，但缺行不能冒充完成。每组的分类加优化最大值按同一案例求和后取最大，不将两个阶段各自的最大值相加。
@@ -103,6 +107,8 @@ python tests/SummarizeGeneralDataset.py --extras build/general-extra60-Release.c
 ```
 
 当前真实结果见 [2026-10-13 测试报告](GENERAL600_REPORT_2026-10-13.md)。测试失败会保留非零退出码，不放宽生产容差或修改期望以获得绿色结果。
+
+边界方向与参数坐标系修复后的正例结果见 [正例修复报告](GENERAL_POSITIVE500_FIX_REPORT_2026-10-13.md)。该轮只复测主集 000–499；原负例和额外专项的历史结果不能视为本轮结果。新增 `chart_attempts`、`chart_iterations` 分别记录参数图验证候选次数和球极轴优化迭代次数，与母曲面候选及优化迭代分开统计。
 
 ## B2A_GENERAL_V1 格式
 

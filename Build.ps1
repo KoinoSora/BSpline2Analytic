@@ -7,12 +7,13 @@ param(
     [switch]$JacobianOnly,
     [switch]$Dataset500Only,
     [switch]$GeneralOnly,
+    [switch]$GeneralPositiveOnly,
     [switch]$ConeOnly,
     [switch]$SpherePolynomialOnly,
     [ValidateRange(1,64)][int]$BuildJobs = 1
 )
 $ErrorActionPreference = 'Stop'
-$focusedCount = [int]$PlateauOnly.IsPresent + [int]$JacobianOnly.IsPresent + [int]$Dataset500Only.IsPresent + [int]$GeneralOnly.IsPresent + [int]$ConeOnly.IsPresent + [int]$SpherePolynomialOnly.IsPresent
+$focusedCount = [int]$PlateauOnly.IsPresent + [int]$JacobianOnly.IsPresent + [int]$Dataset500Only.IsPresent + [int]$GeneralOnly.IsPresent + [int]$GeneralPositiveOnly.IsPresent + [int]$ConeOnly.IsPresent + [int]$SpherePolynomialOnly.IsPresent
 if ($focusedCount -gt 1 -or ($focusedCount -gt 0 -and ($Benchmark -or $ApproximateBenchmark))) {
     throw 'Choose only one focused test switch and do not combine it with broader benchmarks'
 }
@@ -20,7 +21,7 @@ $sdk = (Resolve-Path -LiteralPath $SdkDirectory).Path
 $build = Join-Path $PSScriptRoot 'build'
 cmake -S $PSScriptRoot -B $build -G 'Visual Studio 17 2022' -A x64 "-DSGGK_SDK_DIR=$sdk"
 if ($LASTEXITCODE -ne 0) { throw 'CMake configure failed' }
-if ($GeneralOnly) {
+if ($GeneralOnly -or $GeneralPositiveOnly) {
     cmake --build $build --config $Configuration --target BSpline2AnalyticGeneralDatasetTests --parallel $BuildJobs
 } elseif ($ConeOnly) {
     cmake --build $build --config $Configuration --target BSpline2AnalyticDataset500Tests BSpline2AnalyticConeTests --parallel $BuildJobs
@@ -34,7 +35,9 @@ if ($GeneralOnly) {
     cmake --build $build --config $Configuration --parallel $BuildJobs
 }
 if ($LASTEXITCODE -ne 0) { throw 'C++ build failed' }
-if ($GeneralOnly) {
+if ($GeneralPositiveOnly) {
+    ctest --test-dir $build -C $Configuration -R '^BSpline2Analytic\.GeneralPositive500$' --output-on-failure
+} elseif ($GeneralOnly) {
     ctest --test-dir $build -C $Configuration -R '^BSpline2Analytic\.General(600|Extra60)$' --output-on-failure
 } elseif ($ConeOnly) {
     ctest --test-dir $build -C $Configuration -R '^BSpline2Analytic\.(ConeDataset|Cone)$' --output-on-failure

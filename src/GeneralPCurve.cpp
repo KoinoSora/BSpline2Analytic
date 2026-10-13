@@ -17,6 +17,7 @@ const char *PCurveFailureName(PCurveFailure f)
     case PCurveFailure::InvalidBoundaryLoop: return "InvalidBoundaryLoop";
     case PCurveFailure::BoundaryGeometryExceeded: return "BoundaryGeometryExceeded";
     case PCurveFailure::ValidationUnresolved: return "ValidationUnresolved";
+    case PCurveFailure::ChartRecoveryUnresolved: return "ChartRecoveryUnresolved";
     }
     return "Unknown";
 }
@@ -144,6 +145,18 @@ static bool RecoverChart(SurfaceSampleContext &samples, const GeneralConversionO
             world = std::max(world, Norm(q)); extent = std::max(extent, Norm(q-first));
             bool validU = a.type == sggk::SurfaceType::Plane ||
                 std::hypot(local.x,local.y) > Roundoff(Norm(local));
+            // A fitted pole/apex can miss an exact source corner by a few ulps
+            // or by the fitting residual. Its azimuth is ill-conditioned. Use
+            // the adjacent regular limit as a chart proposal; the continuous
+            // 3D certificate, not this threshold, decides acceptance.
+            // Include samples arbitrarily close to an endpoint (e.g. a knot
+            // one ulp below it), not only parameters exactly equal to lo/hi.
+            {
+                double singularTolerance=std::max(Roundoff(world)*4,o.fitting.validation.distanceTolerance*.01);
+                if((a.type==sggk::SurfaceType::Cone && Norm(local)<singularTolerance) ||
+                   (a.type==sggk::SurfaceType::Sphere && std::hypot(local.x,local.y)<singularTolerance))
+                    validU=false;
+            }
             regular.push_back(validU);
             trim.walks[edge].push_back({(t-lo)/(hi-lo), MotherParameters(a,local)});
         }
@@ -307,7 +320,8 @@ static bool RecoverChart(SurfaceSampleContext &samples, const GeneralConversionO
             // Singular angle is fixed by an interior chart probe, not arbitrary
             // CalcParam output at a sphere pole or cone apex.
             V local=frame.local(point);
-            if (std::hypot(local.x,local.y)<=Roundoff(Norm(local)) &&
+            if (std::hypot(local.x,local.y)<=std::max(Roundoff(Norm(point))*4,
+                    o.fitting.validation.distanceTolerance*.01) &&
                 (a.type == sggk::SurfaceType::Sphere || a.type == sggk::SurfaceType::Cone))
             {
                 auto probe = mother.surface->CalcParam(Point(frame.global(CanonicalPoint(a,uv[0],.8))));
@@ -364,7 +378,8 @@ static bool RecoverChart(SurfaceSampleContext &samples, const GeneralConversionO
     return true;
 }
 bool RecoverLinearPCurves(SurfaceSampleContext &samples, const GeneralConversionOptions &o,
-    const AnalyticParameters &a, GeneralTrim &trim, GeneralValidationReport &report)
+    const AnalyticParameters &a, GeneralTrim &trim, GeneralValidationReport &report,
+    const std::function<bool(const GeneralTrim &,GeneralValidationReport &)> &accept)
 {
     std::vector<AnalyticParameters> charts{a};
     if (a.type == sggk::SurfaceType::Sphere)
@@ -384,12 +399,22 @@ bool RecoverLinearPCurves(SurfaceSampleContext &samples, const GeneralConversion
                 add(edge.front().point-center);
         }
     }
-    for (const auto &chart : charts)
+    bool recovered=false;
+    unsigned attempts=0,iterations=0;
+    GeneralValidationReport continuous;
+    auto attemptChart=[&](const AnalyticParameters &chart)
     {
+        ++attempts;
         GeneralValidationReport attempt;
         try
         {
-            if (RecoverChart(samples,o,chart,trim,attempt)) { report = attempt; return true; }
+            if (RecoverChart(samples,o,chart,trim,attempt))
+            {
+                recovered=true;
+                if(!accept || accept(trim,attempt))
+                {report=attempt;report.chartAttempts=attempts;report.chartIterations=iterations;return true;}
+                continuous=attempt;
+            }
         }
         catch (const std::exception &e)
         {
@@ -397,7 +422,21 @@ bool RecoverLinearPCurves(SurfaceSampleContext &samples, const GeneralConversion
             attempt.pcurveLinearity = CheckState::Unresolved; attempt.message = e.what();
         }
         report = attempt;
+        return false;
+    };
+    for(const auto &chart:charts) if(attemptChart(chart)) return true;
+    if(a.type==sggk::SurfaceType::Sphere)
+    {
+        for(const auto &chart:RefinedSphereCharts(samples,o,a,charts,iterations)) if(attemptChart(chart)) return true;
+        if(!recovered)
+        {
+            report.pcurveLinearity=CheckState::Unresolved;
+            report.pcurveFailure=PCurveFailure::ChartRecoveryUnresolved;
+            report.message="Sphere chart recovery exhausted; no global nonlinearity claim";
+        }
     }
+    if(recovered) report=continuous;
+    report.chartAttempts=attempts;report.chartIterations=iterations;
     return false;
 }
 }

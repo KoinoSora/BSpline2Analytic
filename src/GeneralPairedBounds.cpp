@@ -1,0 +1,104 @@
+#include "GeneralInternal.h"
+#include <functional>
+namespace bspline2analytic::detail
+{
+namespace
+{
+BPoly Constant(I x) { return BPoly(0,0,x); }
+// Product-to-sum formulas keep the degree bounded when both angles vary.
+// The interval constant encloses the eighth-order Lagrange remainder.
+BPoly Trig(const BPoly &angle, bool cosine)
+{
+    I range=angle.range();
+    if (!range.finite()) return Constant(I::Whole());
+    double center=range.lo+(range.hi-range.lo)*.5;
+    BPoly d=angle-Constant(I(center)), power=Constant(I(1)), out;
+    I sn=Sin(I(center)),cs=Cos(I(center)),factorial(1);
+    for (unsigned k=0;k<8;++k)
+    {
+        I coefficient;
+        switch ((k+unsigned(cosine))%4)
+        { case 0: coefficient=sn;break;case 1:coefficient=cs;break;case 2:coefficient=-sn;break;default:coefficient=-cs; }
+        out=out+power*(coefficient/factorial);
+        if(k<7) power=power*d;
+        factorial=factorial*I(k+1);
+    }
+    I remainder(1);
+    for(unsigned k=1;k<=8;++k) remainder=remainder*I(d.range().absMax())/I(k);
+    return out+Constant(I(-remainder.hi,remainder.hi));
+}
+BV Reference(const sggk::BSplineSurface &s,const BezierCell &cell,const GeneralTrim &trim)
+{
+    BPoly u(1,1),v(1,1);
+    for(unsigned i=0;i<2;++i) for(unsigned j=0;j<2;++j)
+    {
+        I x=(I(i?cell.u1:cell.u0)-I(s.MinParamU()))/(I(s.MaxParamU())-I(s.MinParamU()));
+        I y=(I(j?cell.v1:cell.v0)-I(s.MinParamV()))/(I(s.MaxParamV())-I(s.MinParamV()));
+        std::array<I,4> w{(I(1)-x)*(I(1)-y),x*(I(1)-y),(I(1)-x)*y,x*y};
+        for(unsigned k=0;k<4;++k) {u.at(i,j)=u.at(i,j)+w[k]*I(trim.corners[k].X());v.at(i,j)=v.at(i,j)+w[k]*I(trim.corners[k].Y());}
+    }
+    const auto &a=trim.parameters;
+    BV p;
+    switch(a.type)
+    {
+    case sggk::SurfaceType::Plane:p={u,v,Constant(I(0))};break;
+    case sggk::SurfaceType::Cylinder:p={Trig(u,true)*I(a.radius),Trig(u,false)*I(a.radius),v};break;
+    case sggk::SurfaceType::Cone:{I t=Sin(I(a.halfAngle))/Cos(I(a.halfAngle));p={v*Trig(u,true)*t,v*Trig(u,false)*t,v};break;}
+    case sggk::SurfaceType::Sphere:
+        p={(Trig(v+u,false)+Trig(v-u,false))*I(a.radius*.5),
+           (Trig(v-u,true)-Trig(v+u,true))*I(a.radius*.5),Trig(v,true)*I(-a.radius)};break;
+    default:
+        p={Trig(u,true)*I(a.majorRadius)+(Trig(u+v,true)+Trig(u-v,true))*I(a.radius*.5),
+           Trig(u,false)*I(a.majorRadius)+(Trig(u+v,false)+Trig(u-v,false))*I(a.radius*.5),Trig(v,false)*I(a.radius)};
+    }
+    IV z=Normalize(Exact(Get(a.axis))),x=Exact(Get(a.xDirection));
+    x=Normalize(x-z*Dot(x,z));IV y=Cross(z,x),o=Exact(Get(a.origin));
+    return {Constant(o.x)+p.x*x.x+p.y*y.x+p.z*z.x,
+            Constant(o.y)+p.x*x.y+p.y*y.y+p.z*z.y,
+            Constant(o.z)+p.x*x.z+p.y*y.z+p.z*z.z};
+}
+bool RegularQuad(const GeneralTrim &trim)
+{
+    int sign=0;
+    for(unsigned u=0;u<2;++u) for(unsigned v=0;v<2;++v)
+    {
+        const auto &a=trim.corners[2*v],&b=trim.corners[2*v+1];
+        const auto &c=trim.corners[u],&d=trim.corners[u+2];
+        I det=(I(b.X())-I(a.X()))*(I(d.Y())-I(c.Y()))-(I(b.Y())-I(a.Y()))*(I(d.X())-I(c.X()));
+        int current=det.lo>0?1:det.hi<0?-1:0;
+        if(!current || (sign && current!=sign)) return false;
+        sign=current;
+    }
+    return true;
+}
+}
+bool TryPairedTrimBound(const sggk::BSplineSurface &s,const std::vector<BezierCell> &cells,
+                       const GeneralTrim &trim,const ValidationOptions &options,GeneralValidationReport &report)
+{
+    // Sufficient certificate only: a general source reparameterization may fail
+    // this test and still pass the projection-based validator.
+    if(cells.empty() || !RegularQuad(trim)) return false;
+    double upper=0;
+    unsigned visited=0;
+    std::function<bool(const BezierCell &,unsigned)> visit=[&](const BezierCell &cell,unsigned depth) {
+        ++visited;++report.piecesVisited;
+        if(report.piecesVisited>options.maxValidationPieces || visited>512) return false;
+        I weight=cell.w.range();
+        if(weight.lo<=0) return false;
+        IV error=Range(cell.p-Reference(s,cell,trim)*cell.w);
+        I bound=Sqrt(Sqr(error.x)+Sqr(error.y)+Sqr(error.z))/weight;
+        // Distance from the nearest mother projection to the PCurve is <=2d.
+        if(bound.finite() && (I(2)*bound).hi<options.distanceTolerance)
+        {upper=std::max(upper,bound.hi);return true;}
+        if(depth>=std::min(8u,options.maxSubdivisionDepth)) return false;
+        auto halves=Split(cell,depth%2==0);
+        return visit(halves.first,depth+1)&&visit(halves.second,depth+1);
+    };
+    for(const auto &cell:cells) if(!visit(cell,0)) return false;
+    report.geometry=report.boundaryHausdorff=report.pcurveLinearity=CheckState::Passed;
+    report.pcurveFailure=PCurveFailure::None;report.hasWitness=false;
+    report.distanceUpperBound=report.boundaryHausdorffUpperBound=upper;
+    report.message="Continuous bilinear trim correspondence: surface and bidirectional boundary bounds; projected boundary deviation <= twice the bound";
+    return true;
+}
+}

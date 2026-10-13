@@ -15,4 +15,6 @@
 
 新文件 `general-*.b2a`、`general-extra-*.b2a` 与旧 `case-*.b2a` 共存于 `data/dataset500/`，各自使用独立清单；旧测试按 `case-` 前缀统计。构造、证书和运行方式见 [GENERAL600.md](../docs/testing/GENERAL600.md)。
 
+仅复测一般兜底的 500 个正例：`./Build.ps1 -GeneralPositiveOnly`。结果为 `build/general-positive500-Release.csv`，使用 `python tests/SummarizeGeneralDataset.py --positives <csv>` 汇总。测试仍校验来源证书和独立输出证书，并检查边界提取后的端点、导数及细分方向；不执行负例转换。
+
 构建和复现命令从仓库根目录执行，见 [Build.ps1 用法](../README.md#构建与运行)及[数据集说明](../docs/testing/DATASET500.md)。测试通过 CMake 私有引用 `src/` 内部头文件，调用方只依赖 `include/`。

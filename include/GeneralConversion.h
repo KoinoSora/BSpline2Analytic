@@ -18,7 +18,7 @@ enum class PCurveFailure
 {
     None, NonlinearPCurve, PCurveOutOfRange, NonMonotonePCurve,
     InconsistentPeriodicBranch, UnresolvedDegeneratePCurve,
-    InvalidBoundaryLoop, BoundaryGeometryExceeded, ValidationUnresolved
+    InvalidBoundaryLoop, BoundaryGeometryExceeded, ValidationUnresolved, ChartRecoveryUnresolved
 };
 const char *PCurveFailureName(PCurveFailure);
 struct LinearPCurve
@@ -74,6 +74,8 @@ struct GeneralValidationReport
     double distanceUpperBound = std::numeric_limits<double>::infinity();
     double boundaryHausdorffUpperBound = std::numeric_limits<double>::infinity();
     unsigned piecesVisited = 0;
+    unsigned chartAttempts = 0;
+    unsigned chartIterations = 0;
     bool hasWitness = false;
     std::array<double, 2> witness{};
     std::string message;
@@ -101,6 +103,8 @@ struct GeneralConversionResult
     std::vector<Attempt> attempts;
     ConversionStatistics statistics;
     ConversionTiming timing;
+    unsigned chartAttempts = 0;
+    unsigned chartIterations = 0;
     std::string message;
 };
 GeneralConversionResult ConvertGeneral(const sggk::BSplineSurface &,

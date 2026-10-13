@@ -91,21 +91,56 @@ void CacheChecks(const GeneralFixture &c)
     Require(count==context.Evaluations(),"Repeated boundary view evaluates again");
     Require(!CertifyNoQuartic(*c.input,2e-5).passed,"Negative oracle excluded a certified positive");
 }
+void BoundaryAxisChecks(const GeneralFixture &c)
+{
+    using namespace detail;
+    const auto &s=*c.input;
+    auto cells=ExtractCells(s);
+    auto check=[&](const BezierCell &b,unsigned edge,double t) {
+        bool along=edge>=2;
+        double u=along?b.u0+(b.u1-b.u0)*t:b.u0;
+        double v=along?b.v0:b.v0+(b.v1-b.v0)*t;
+        auto p=Range(Evaluate(b.p,along?t:0,along?0:t));
+        I w=Evaluate(b.w,along?t:0,along?0:t).range();
+        auto center=[](I a) {return (a.lo+a.hi)*.5;};
+        V actual{center(p.x/w),center(p.y/w),center(p.z/w)};
+        sggk::Point3D point;
+        auto d=s.CalcPartialD1(u,v,u==s.MaxParamU()?sggk::DerivType::LEFT:sggk::DerivType::RIGHT,
+            v==s.MaxParamV()?sggk::DerivType::LEFT:sggk::DerivType::RIGHT,point);
+        Require(Norm(actual-Get(point))<1e-9,"Boundary endpoint/subdivision parameter mismatch");
+        auto dp=Range(Evaluate(Derivative(b.p,along),along?t:0,along?0:t));
+        I dw=Evaluate(Derivative(b.w,along),along?t:0,along?0:t).range();
+        V derivative{center((dp.x*w-p.x*dw)/Sqr(w)),center((dp.y*w-p.y*dw)/Sqr(w)),center((dp.z*w-p.z*dw)/Sqr(w))};
+        V expected=Get(d[along?0:1])*(along?b.u1-b.u0:b.v1-b.v0);
+        Require(Norm(derivative-expected)<1e-8,"Boundary derivative uses wrong parameter axis");
+    };
+    for(const auto &cell:cells) for(unsigned edge=0;edge<4;++edge)
+    {
+        auto b=BoundaryCell(cell,BoundaryId(edge));
+        check(b,edge,0);check(b,edge,1);check(b,edge,.37);
+        auto children=Split(b,edge>=2);
+        check(children.first,edge,.37);check(children.second,edge,.63);
+    }
+}
 int Run(const std::filesystem::path &dir,const std::filesystem::path &csvPath,bool extra,unsigned first,unsigned last,bool certificatesOnly)
 {
     Require(first<last&&last<=(extra?60u:600u),"Invalid test range");CheckMembership(dir,extra);
     if(!extra&&first==0)
     {
         CacheChecks(ReadGeneralFixture(dir/GeneralFixtureFilename(0)));
+        BoundaryAxisChecks(ReadGeneralFixture(dir/GeneralFixtureFilename(0)));
         for(unsigned type=1;type<5;++type)
         {
             auto positive=ReadGeneralFixture(dir/GeneralFixtureFilename(type*100));
+            BoundaryAxisChecks(positive);
             Require(!CertifyNoQuartic(*positive.input,2e-5).passed,"Negative oracle excluded a curved positive");
         }
+        for(unsigned id:{216u,217u,218u,219u,316u,317u,318u,319u})
+            BoundaryAxisChecks(ReadGeneralFixture(dir/GeneralFixtureFilename(id)));
     }
     std::ofstream csv(csvPath);Require(bool(csv),"Cannot open test CSV");csv<<std::setprecision(17);
     if(certificatesOnly)csv<<"id,extra,file,certificate_passed,pair_bound,rank_margin,message\n";
-    else csv<<"id,extra,file,group,source_type,rational,controls,collapsed_mask,fixture_certified,fixture_bound,rank_margin,expected,success,passed,output_type,output_audit,output_bound,status,pcurve_failure,candidates,attempts,iterations,validation_pieces,classify_ms,optimize_ms,validate_ms,total_ms,sphere_attempted,torus_attempted,known_candidate_passed,message\n";
+    else csv<<"id,extra,file,group,source_type,rational,controls,collapsed_mask,fixture_certified,fixture_bound,rank_margin,expected,success,passed,output_type,output_audit,output_bound,status,pcurve_failure,candidates,attempts,iterations,validation_pieces,classify_ms,optimize_ms,validate_ms,total_ms,sphere_attempted,torus_attempted,known_candidate_passed,chart_attempts,chart_iterations,message\n";
     unsigned passed=0,success=0,failures=0;
     for(unsigned i=first;i<last;++i)
     {
@@ -165,7 +200,7 @@ int Run(const std::filesystem::path &dir,const std::filesystem::path &csvPath,bo
         if(ok)++passed;else ++failures;
         std::string message=result.message;if(succeeded&&!audit.passed)message+="; independent output audit: "+audit.message;
         const auto &time=result.timing;const auto &statistics=result.statistics;
-        csv<<i<<','<<extra<<','<<GeneralFixtureFilename(i,extra)<<','<<FixtureGroupName(c.group)<<','<<(c.type<5?TypeName(GeneralDatasetType(c.type)):"Freeform")<<','<<c.rational<<','<<c.input->ControlPoints().size()*c.input->ControlPoints()[0].size()<<','<<c.collapsedMask<<",1,"<<certificate.upper<<','<<certificate.rankMargin<<','<<(expectedSuccess?"success":c.group==GeneralFixtureGroup::NonlinearPCurve?"reject_known_pcurve":"failure")<<','<<succeeded<<','<<ok<<','<<(succeeded?TypeName(result.patch->Parameters().type):"Unknown")<<','<<audit.passed<<','<<audit.upper<<','<<unsigned(result.status)<<','<<PCurveFailureName(result.validation.pcurveFailure)<<','<<result.candidates.size()<<','<<result.attempts.size()<<','<<statistics.optimizationIterations<<','<<statistics.validationPieces<<','<<time.classification.elapsedMs<<','<<time.optimization.elapsedMs<<','<<time.validation.elapsedMs<<','<<time.totalMs<<','<<sphere<<','<<torus<<','<<known<<','<<Quote(message)<<'\n';csv.flush();
+        csv<<i<<','<<extra<<','<<GeneralFixtureFilename(i,extra)<<','<<FixtureGroupName(c.group)<<','<<(c.type<5?TypeName(GeneralDatasetType(c.type)):"Freeform")<<','<<c.rational<<','<<c.input->ControlPoints().size()*c.input->ControlPoints()[0].size()<<','<<c.collapsedMask<<",1,"<<certificate.upper<<','<<certificate.rankMargin<<','<<(expectedSuccess?"success":c.group==GeneralFixtureGroup::NonlinearPCurve?"reject_known_pcurve":"failure")<<','<<succeeded<<','<<ok<<','<<(succeeded?TypeName(result.patch->Parameters().type):"Unknown")<<','<<audit.passed<<','<<audit.upper<<','<<unsigned(result.status)<<','<<PCurveFailureName(result.validation.pcurveFailure)<<','<<result.candidates.size()<<','<<result.attempts.size()<<','<<statistics.optimizationIterations<<','<<statistics.validationPieces<<','<<time.classification.elapsedMs<<','<<time.optimization.elapsedMs<<','<<time.validation.elapsedMs<<','<<time.totalMs<<','<<sphere<<','<<torus<<','<<known<<','<<result.chartAttempts<<','<<result.chartIterations<<','<<Quote(message)<<'\n';csv.flush();
         std::cout<<"END "<<i<<" expected="<<expectedSuccess<<" success="<<succeeded<<" passed="<<ok<<" ms="<<time.totalMs<<" "<<message<<std::endl;
     }
     Require(bool(csv),"CSV write failed");std::cout<<"Completed "<<last-first<<"; passed="<<passed<<"; successes="<<success<<"; mismatches="<<failures<<std::endl;
@@ -184,6 +219,24 @@ void Diagnose(const std::filesystem::path &dir,unsigned id)
         std::cout<<"known_mother passed="<<known.Passed()<<" geometry="<<unsigned(known.geometry)<<" boundary="<<unsigned(known.boundaryHausdorff)<<" pcurve="<<unsigned(known.pcurveLinearity)<<" failure="<<PCurveFailureName(known.pcurveFailure)<<" message="<<known.message<<'\n';
     }
     // Separate black-box call. The known mother above is never supplied to it.
+    {
+        detail::SurfaceSampleContext context(*c.input);
+        auto seeds=detail::ClassifyGeneral(context,options);
+        if(!seeds.empty())
+        {
+            detail::GeneralTrim trim;GeneralValidationReport report;
+            bool recovered=detail::RecoverLinearPCurves(context,options,seeds.front().parameters,trim,report);
+            std::cout<<"initial_chart="<<recovered<<" message="<<report.message<<'\n';
+            if(!recovered) for(unsigned edge=0;edge<4;++edge)
+            {
+                const auto &line=trim.edges[edge];
+                std::cout<<"edge "<<edge<<" collapsed="<<line.collapsed3D<<" start="<<line.start.X()<<','<<line.start.Y()<<" end="<<line.end.X()<<','<<line.end.Y()<<'\n';
+                const auto &walk=trim.walks[edge];
+                if(!walk.empty()) for(size_t j:{size_t(0),walk.size()/2,walk.size()-1})
+                    std::cout<<"  uv "<<walk[j].first<<' '<<walk[j].second[0]<<','<<walk[j].second[1]<<'\n';
+            }
+        }
+    }
     auto result=ConvertGeneral(*c.input,options);
     for(size_t i=0;i<result.candidates.size();++i)
     {

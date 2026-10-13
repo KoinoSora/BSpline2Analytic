@@ -521,6 +521,25 @@ BV Boundary(const BV &a, BoundaryId edge)
     };
     return {get(a.x), get(a.y), get(a.z)};
 }
+BezierCell BoundaryCell(const BezierCell &cell, BoundaryId edge)
+{
+    BezierCell out = cell;
+    out.p = Boundary(cell.p, edge);
+    out.w = Boundary(BV{cell.w, cell.w, cell.w}, edge).x;
+    if (edge == BoundaryId::Umin || edge == BoundaryId::Umax)
+    {
+        auto transpose = [](const BPoly &p) {
+            BPoly q(0, p.u);
+            for (unsigned i = 0; i <= p.u; ++i) q.at(0, i) = p.at(i, 0);
+            return q;
+        };
+        out.p = {transpose(out.p.x), transpose(out.p.y), transpose(out.p.z)};
+        out.w = transpose(out.w);
+        out.u0 = out.u1 = edge == BoundaryId::Umin ? cell.u0 : cell.u1;
+    }
+    else out.v0 = out.v1 = edge == BoundaryId::Vmin ? cell.v0 : cell.v1;
+    return out;
+}
 I AngleRange(const BPoly &x, const BPoly &y, double ref)
 {
     I c = Cos(I(ref)), s = Sin(I(ref));

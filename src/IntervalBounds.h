@@ -95,5 +95,7 @@ struct BezierCell
 std::vector<BezierCell> ExtractCells(const sggk::BSplineSurface &);
 std::pair<BezierCell, BezierCell> Split(const BezierCell &, bool);
 BV Boundary(const BV &, BoundaryId);
+// Unlike Boundary's packed 1D result, preserve the source U/V axes and domain.
+BezierCell BoundaryCell(const BezierCell &, BoundaryId);
 I AngleRange(const BPoly &x, const BPoly &y, double reference);
 } // namespace bspline2analytic::detail
