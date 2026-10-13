@@ -10,6 +10,7 @@
 | 测试 | [500 例测试集](testing/DATASET500.md) | 数据来源、配额、格式、生成与执行方式。 |
 | 测试 | [2026-10-13 全量重测](testing/DATASET500_RETEST_2026-10-13.md) | 固定批次统计、慢例与误差上界。 |
 | 测试 | [一般兜底正例修复报告](testing/GENERAL_POSITIVE500_FIX_REPORT_2026-10-13.md) | 边界参数方向、球参数图与奇异端点修复；500 个正例及性能对比。 |
+| 测试 | [一般兜底评分前去重报告](testing/GENERAL_POSITIVE500_DEDUP_REPORT_2026-10-13.md) | 重复候选免于评分；500 个正例的前后比较及评分次数。 |
 | 需求 | [需求说明](requirements/REQUIREMENTS.md) | 输入约束、验收目标与阶段范围。 |
 | 需求 | [原始需求 PDF](requirements/中船海舟样条转二次曲面.pdf) | 原始项目材料。 |
 

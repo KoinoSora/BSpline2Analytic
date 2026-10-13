@@ -70,7 +70,7 @@ GeneralConversionResult ConvertGeneralWithSamples(const sggk::BSplineSurface &s,
         std::vector<GeneralSeed> seeds;
         {
             StageTimer timer(result.timing.classification);
-            seeds = ClassifyGeneral(context, o);
+            seeds = ClassifyGeneral(context, o, &result.classification);
         }
         for (const auto &seed : seeds) result.candidates.push_back(seed.score);
         result.statistics.candidateCount = static_cast<unsigned>(seeds.size());

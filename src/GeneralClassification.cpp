@@ -219,8 +219,10 @@ static bool Similar(double a, double b, const GeneralConversionOptions &o)
     return std::abs(a - b) <= o.similarScoreAbsoluteRatio * o.fitting.validation.distanceTolerance +
         o.similarScoreRelativeTolerance * std::max(a, b);
 }
-std::vector<GeneralSeed> ClassifyGeneral(SurfaceSampleContext &context, const GeneralConversionOptions &o)
+std::vector<GeneralSeed> ClassifyGeneral(SurfaceSampleContext &context, const GeneralConversionOptions &o,
+                                       GeneralClassificationDiagnostics *diagnostics)
 {
+    if (diagnostics) *diagnostics = {};
     const auto &points = context.Greville();
     const auto &indices = context.Seeds();
     if (indices.size() < 4 || context.Scores().empty())
@@ -270,9 +272,9 @@ std::vector<GeneralSeed> ClassifyGeneral(SurfaceSampleContext &context, const Ge
                 }
                 for (const auto &a : seeds)
                 {
+                    if (diagnostics) ++diagnostics->rawCandidateCount;
                     try
                     {
-                        auto score = Score(a, context);
                         bool duplicate = false;
                         for (const auto &c : family)
                         {
@@ -288,7 +290,16 @@ std::vector<GeneralSeed> ClassifyGeneral(SurfaceSampleContext &context, const Ge
                                 std::abs(a.halfAngle - c.parameters.halfAngle) < 1e-6 &&
                                 (type == Type::Sphere || Parallel(Get(a.axis), Get(c.parameters.axis), 1e-6));
                         }
-                        if (!duplicate) family.push_back({a, score});
+                        // Compare with retained, successfully scored candidates
+                        // before traversing the interior and boundary samples.
+                        if (duplicate)
+                        {
+                            if (diagnostics) ++diagnostics->duplicateCandidateCount;
+                            continue;
+                        }
+                        if (diagnostics) ++diagnostics->scoreEvaluationCount;
+                        auto score = Score(a, context);
+                        family.push_back({a, score});
                     }
                     catch (const Failure &) {}
                 }

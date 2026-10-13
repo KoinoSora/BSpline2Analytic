@@ -63,6 +63,14 @@ struct GeneralCandidateScore
     unsigned degreesOfFreedom = 0;
     double interiorMax = 0, interiorRms = 0, boundaryMax = 0, normalMax = 0;
 };
+struct GeneralClassificationDiagnostics
+{
+    // Generated mother candidates, before deduplication and per-type truncation.
+    unsigned rawCandidateCount = 0;
+    unsigned duplicateCandidateCount = 0;
+    // Actual Score calls, including calls rejected by a scoring failure.
+    unsigned scoreEvaluationCount = 0;
+};
 struct GeneralValidationReport
 {
     CheckState geometry = CheckState::NotChecked;
@@ -106,6 +114,7 @@ struct GeneralConversionResult
     unsigned chartAttempts = 0;
     unsigned chartIterations = 0;
     std::string message;
+    GeneralClassificationDiagnostics classification;
 };
 GeneralConversionResult ConvertGeneral(const sggk::BSplineSurface &,
                                        const GeneralConversionOptions & = {});

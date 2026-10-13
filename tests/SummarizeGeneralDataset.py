@@ -40,6 +40,14 @@ def main():
             writer.writeheader()
             writer.writerows(rows)
     print(f"{count} complete rows, all input certificates verified")
+    if all("score_evaluations" in row for row in rows):
+        if any(int(r["raw_candidates"]) != int(r["duplicate_candidates"]) +
+               int(r["score_evaluations"]) for r in rows):
+            raise SystemExit("Candidate deduplication/scoring counters are inconsistent")
+        raw = sum(int(r["raw_candidates"]) for r in rows)
+        duplicates = sum(int(r["duplicate_candidates"]) for r in rows)
+        scored = sum(int(r["score_evaluations"]) for r in rows)
+        print(f"Generated candidates: {raw}; duplicates skipped: {duplicates}; score calls: {scored}")
     groups = defaultdict(list)
     for row in rows:
         groups[(row["group"], row["source_type"])].append(row)

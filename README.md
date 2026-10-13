@@ -32,6 +32,8 @@
 
 模块包含静态库、示例、回归测试和批量性能测试。一般兜底包含 600 个带独立证书的主案例和 60 个专项，数据与旧 500 例共存；构造方法见 [GENERAL600.md](docs/testing/GENERAL600.md)，首次结果见 [兜底测试报告](docs/testing/GENERAL600_REPORT_2026-10-13.md)，边界与参数坐标系修复后的结果见 [正例修复报告](docs/testing/GENERAL_POSITIVE500_FIX_REPORT_2026-10-13.md)。本轮仅复测直接调用 `ConvertGeneral` 的 500 个正例，不代表负例、额外专项和统一入口均已通过回归。旧 Dataset500 的两分支结果读取和退化期望仍待后续调整。
 
+候选评分前去重的最新结果见 [评分去重报告](docs/testing/GENERAL_POSITIVE500_DEDUP_REPORT_2026-10-13.md)，包含本轮重新测得的 500 个正例基线、修改后结果与实际评分次数。
+
 非有理输入使用新增的 `ApproximateConversion.h`：`ConvertApproximate` 通过四边与少量内部等参线恢复五类候选，再进行参数优化和独立验收。默认距离严格小于 `1e-5`、边界切向及边界曲面法向角分别严格小于 `0.1°`。`timing.classification / optimization / validation` 分别累计类型判断、求解、验收耗时及调用次数，初值合格时优化计时为零。默认启用解析 Jacobian（非光滑分支局部差分回退），可通过 `options.refinement.jacobianMode=JacobianMode::FiniteDifference` 切换全差分对照。算法及验证口径见 [非有理转换说明](docs/algorithm/APPROXIMATE_CONVERSION.md)。
 
 ## 构建与运行

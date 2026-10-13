@@ -31,7 +31,8 @@ std::vector<std::array<sggk::Point2D,3>> TrimTriangles(const GeneralTrim &);
 std::array<double, 2> NearestTrimUV(const GeneralTrim &, std::array<double, 2>);
 std::array<double, 2> EdgeUV(const LinearPCurve &, double);
 double EdgeReference(const GeneralTrim &, unsigned, double, unsigned);
-std::vector<GeneralSeed> ClassifyGeneral(SurfaceSampleContext &, const GeneralConversionOptions &);
+std::vector<GeneralSeed> ClassifyGeneral(SurfaceSampleContext &, const GeneralConversionOptions &,
+                                       GeneralClassificationDiagnostics * = nullptr);
 GeneralValidationReport ValidateGeneral(const sggk::BSplineSurface &, const AnalyticParameters &,
                                         const GeneralConversionOptions &, SurfaceSampleContext &,
                                         GeneralTrim * = nullptr);
