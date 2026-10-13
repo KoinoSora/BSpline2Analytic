@@ -12,20 +12,22 @@ if(NOT WIN32 OR NOT MSVC)
     message(FATAL_ERROR "This SDK integration currently targets Windows x64 with MSVC")
 endif()
 add_library(BSpline2Analytic STATIC
-    BSpline2Analytic.cpp SurfaceConversion.cpp BoundaryAnalysis.cpp AnalyticReconstruction.cpp
-    PatchRecovery.cpp RecognitionValidation.cpp Numerics.cpp
-    IntervalBounds.cpp ApproximateGeometry.cpp ApproximateNumerics.cpp IsoCurveAnalysis.cpp
-    SurfaceSampling.cpp ApproximateEvaluation.cpp AnalyticJacobian.cpp PlaneOffsetRefinement.cpp CandidateRefinement.cpp ConversionValidation.cpp ApproximateConversion.cpp)
-set_source_files_properties(IntervalBounds.cpp ConversionValidation.cpp PROPERTIES COMPILE_OPTIONS "/fp:strict")
+    src/BSpline2Analytic.cpp src/SurfaceConversion.cpp src/BoundaryAnalysis.cpp src/AnalyticReconstruction.cpp
+    src/PatchRecovery.cpp src/RecognitionValidation.cpp src/Numerics.cpp
+    src/IntervalBounds.cpp src/ApproximateGeometry.cpp src/ApproximateNumerics.cpp src/IsoCurveAnalysis.cpp
+    src/SurfaceSampling.cpp src/ApproximateEvaluation.cpp src/AnalyticJacobian.cpp src/PlaneOffsetRefinement.cpp src/CandidateRefinement.cpp src/ConversionValidation.cpp src/ApproximateConversion.cpp)
+set_source_files_properties(src/IntervalBounds.cpp src/ConversionValidation.cpp PROPERTIES COMPILE_OPTIONS "/fp:strict")
 target_compile_features(BSpline2Analytic PUBLIC cxx_std_17)
 target_compile_options(BSpline2Analytic PRIVATE /W4 /utf-8 /permissive-)
 target_compile_definitions(BSpline2Analytic PUBLIC NOMINMAX)
-target_include_directories(BSpline2Analytic PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
+target_include_directories(BSpline2Analytic
+    PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include"
+    PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src")
 target_include_directories(BSpline2Analytic SYSTEM PUBLIC "${SGGK_SDK_DIR}/include")
 set(_sgk_config "$<IF:$<CONFIG:Debug>,d,$<IF:$<CONFIG:RelWithDebInfo>,w,>>")
 target_link_directories(BSpline2Analytic PUBLIC "${SGGK_SDK_DIR}/x64-win/lib${_sgk_config}")
 target_link_libraries(BSpline2Analytic PUBLIC SGGK_Foundation SGGK_Math SGGK_GeomBase SGGK_Geometry SGGK_BSplineAlgo)
-add_executable(BSpline2AnalyticSample main.cpp)
+add_executable(BSpline2AnalyticSample examples/main.cpp)
 target_link_libraries(BSpline2AnalyticSample PRIVATE BSpline2Analytic)
 option(BSPLINE2ANALYTIC_BUILD_TESTS "Build module regression tests" ON)
 if(BSPLINE2ANALYTIC_BUILD_TESTS)
@@ -86,4 +88,11 @@ if(BSPLINE2ANALYTIC_BUILD_TESTS)
     set_tests_properties(BSpline2Analytic.Regression PROPERTIES
         WORKING_DIRECTORY "${SGGK_SDK_DIR}"
         ENVIRONMENT_MODIFICATION "PATH=path_list_prepend:${SGGK_SDK_DIR}/x64-win/bin${_sgk_config}")
+    # White-box regression helpers use private implementation headers.
+    foreach(_test_target IN ITEMS
+        BSpline2AnalyticDataset500Tests BSpline2AnalyticConeTests BSpline2AnalyticTests
+        BSpline2AnalyticApproximateTests BSpline2AnalyticApproximateBenchmark
+        BSpline2AnalyticPlateauTests BSpline2AnalyticJacobianTests)
+        target_include_directories(${_test_target} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src")
+    endforeach()
 endif()

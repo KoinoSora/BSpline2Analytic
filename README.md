@@ -4,6 +4,22 @@
 
 统一入口为 `SurfaceConversion.h` 中的 `Convert`：输入 `IsRational()` 为真时调用 `Recognize`，否则调用 `ConvertApproximate`。不使用案例来源标签分流，不在失败后静默切换路径。精确解析转换的平面通常权重为 1，因此也进入非有理分支。两条原接口继续保留。
 
+## 仓库目录
+
+| 目录/入口 | 内容 |
+| --- | --- |
+| [`include/`](include/) | 三个公开接口头文件，供调用方包含。 |
+| [`src/`](src/) | 算法实现与内部头文件。 |
+| [`examples/`](examples/) | 使用统一转换接口的示例。 |
+| [`tests/`](tests/README.md) | 回归、专项、性能测试及汇总脚本；固定输入在 `tests/data/`。 |
+| [`docs/algorithm/`](docs/algorithm/README.md) | 算法 PDF、LaTeX 源文件、设计与实现说明。 |
+| [`docs/testing/`](docs/testing/TEST_REPORT.md) | 测试报告、固定测试集说明与批次报告。 |
+| [`docs/requirements/`](docs/requirements/REQUIREMENTS.md) | 需求说明及原始需求 PDF。 |
+| [`.agents/skills/`](.agents/skills/README.md) | 项目 Git 同步与算法文档编写 Skill。 |
+| `CMakeLists.txt`、`Build.ps1` | 根目录构建入口。 |
+
+[文档索引](docs/README.md)列出各说明书。`build/` 仅保存本机构建和运行结果，不进入 Git。
+
 ## 当前功能
 
 输入来自平面、圆柱面、圆锥面、球面或圆环面的精确解析转换，四条边界对应解析面参数域的两对等参线。允许节点插入、升阶、U/V 交换及参数反向；识别不依赖来源标签或固定控制点排列。
@@ -14,9 +30,9 @@
 - 默认进行边界和母面的 Bézier/Bernstein 误差界估计；节点区间采样用于快速检查。
 - 失败结果区分无效输入、退化、病态、边界关系不一致、歧义、验证失败和不支持。
 
-模块包含静态库、示例、回归测试和批量性能测试。本轮已验证 Release，历史 Debug 结果及各轮范围见 [测试报告](TEST_REPORT.md)。
+模块包含静态库、示例、回归测试和批量性能测试。本轮已验证 Release，历史 Debug 结果及各轮范围见 [测试报告](docs/testing/TEST_REPORT.md)。
 
-非有理输入使用新增的 `ApproximateConversion.h`：`ConvertApproximate` 通过四边与少量内部等参线恢复五类候选，再进行参数优化和独立验收。默认距离严格小于 `1e-5`、边界切向及边界曲面法向角分别严格小于 `0.1°`。`timing.classification / optimization / validation` 分别累计类型判断、求解、验收耗时及调用次数，初值合格时优化计时为零。默认启用解析 Jacobian（非光滑分支局部差分回退），可通过 `options.refinement.jacobianMode=JacobianMode::FiniteDifference` 切换全差分对照。算法及验证口径见 [非有理转换说明](APPROXIMATE_CONVERSION.md)。
+非有理输入使用新增的 `ApproximateConversion.h`：`ConvertApproximate` 通过四边与少量内部等参线恢复五类候选，再进行参数优化和独立验收。默认距离严格小于 `1e-5`、边界切向及边界曲面法向角分别严格小于 `0.1°`。`timing.classification / optimization / validation` 分别累计类型判断、求解、验收耗时及调用次数，初值合格时优化计时为零。默认启用解析 Jacobian（非光滑分支局部差分回退），可通过 `options.refinement.jacobianMode=JacobianMode::FiniteDifference` 切换全差分对照。算法及验证口径见 [非有理转换说明](docs/algorithm/APPROXIMATE_CONVERSION.md)。
 
 ## 构建与运行
 
@@ -37,7 +53,7 @@
 
 直接运行程序时，需将 SDK 对应配置的 DLL 目录加入 PATH：Release 为 `x64-win/bin`，Debug 为 `x64-win/bind`，RelWithDebInfo 为 `x64-win/binw`。当前测试环境在 SDK 根目录加载许可证；测试脚本自动设置工作目录和 DLL 搜索路径。RelWithDebInfo 的目录映射已配置，本轮没有构建测试该配置。
 
-模块也可通过 `add_subdirectory` 接入宿主工程，并链接 `BSpline2Analytic`。应显式传入 `SGGK_SDK_DIR`；现有 samples 顶层工程还需使用实际 SDK 的库名前后缀配置。独立模块构建是本轮验证过的入口。
+模块也可通过 `add_subdirectory` 接入宿主工程，并链接 `BSpline2Analytic`。CMake 自动向调用方传递 `include/` 路径，原有 `#include "SurfaceConversion.h"` 等写法不变；手动集成时将头文件搜索目录设为模块的 `include/`。`src/` 只供库实现和内部测试使用。应显式传入 `SGGK_SDK_DIR`；现有 samples 顶层工程还需使用实际 SDK 的库名前后缀配置。独立模块构建是本轮验证过的入口。
 
 ## 接口示例
 
@@ -121,12 +137,12 @@ if (result.status == bspline2analytic::Status::Success) {
 ## 文档及仓库约定
 
 - [当前实现算法说明书（10 页 PDF）](docs/algorithm/BSpline2Analytic-algorithm.pdf)：总体与子模块流程图、数学推导、真实案例和工程化边界；[可编辑源文件、编译与证据清单](docs/algorithm/README.md)。
-- [需求说明](REQUIREMENTS.md)
-- [算法与代码实施方案](IMPLEMENTATION_PLAN.md)
-- [测试报告](TEST_REPORT.md)
-- [500 个固定面片的数据格式、生成与测试](DATASET500.md)
-- [非有理转换、参数对应与三阶段计时](APPROXIMATE_CONVERSION.md)
-- [原始需求 PDF](中船海舟样条转二次曲面.pdf)
+- [需求说明](docs/requirements/REQUIREMENTS.md)
+- [算法与代码实施方案](docs/algorithm/IMPLEMENTATION_PLAN.md)
+- [测试报告](docs/testing/TEST_REPORT.md)
+- [500 个固定面片的数据格式、生成与测试](docs/testing/DATASET500.md)
+- [非有理转换、参数对应与三阶段计时](docs/algorithm/APPROXIMATE_CONVERSION.md)
+- [原始需求 PDF](docs/requirements/中船海舟样条转二次曲面.pdf)
 - [开发与 Git 同步约定](AGENTS.md)
 
 本仓库仅管理模块代码与文档。SGK SDK、运行库、许可证及构建产物不上传。SGK 及原始需求材料的权利归各自权利人；本项目不另行授予第三方材料的使用或分发许可。

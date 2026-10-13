@@ -1,0 +1,4 @@
+interface:
+  display_name: "算法文档编写"
+  short_description: "将现有算法整理为含数学推导、流程图与真实案例的精炼技术文档"
+  default_prompt: "请使用 $algorithm-documentation，依据当前项目的实现与测试结果，编写总分总结构、十页以内的数学化算法文档，包含整体及子模块流程图、案例分析与工程化说明。"

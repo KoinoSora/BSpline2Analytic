@@ -5,3 +5,9 @@
 用户已持续授权：每次完成一轮代码修改及相关测试、构建或配套文档修改后，执行相应验证，提交到当前工作分支并推送至本项目 Git 远端，核验推送结果后再汇报完成。正常提交与推送无需重复询问；用户后续明确指示优先。
 
 仓库为 https://github.com/KoinoSora/BSpline2Analytic，保持私有。SDK、许可证、凭据及构建产物不进入仓库。完整流程和失败处理以所链接的 Skill 为准。
+
+## 文件分类
+
+公开接口放在 `include/`，算法实现和内部头文件放在 `src/`，示例放在 `examples/`，测试代码与固定数据放在 `tests/`。算法、测试和需求文档分别放在 `docs/algorithm/`、`docs/testing/`、`docs/requirements/`；根目录保留构建入口与导航。路径调整时同步更新 CMake 和相对文档链接。
+
+项目可复用 Skill 集中保存于 [.agents/skills/](.agents/skills/README.md)。编写算法说明书时，使用 [algorithm-documentation Skill](.agents/skills/algorithm-documentation/SKILL.md)。

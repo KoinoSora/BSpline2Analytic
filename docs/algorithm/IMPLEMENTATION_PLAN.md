@@ -2,7 +2,7 @@
 
 2026-10-12 增补：非有理样条的线/圆拟合、少量内部等参线、受约束参数修正、距离及边界切法向验收和三阶段计时已实现，详见 [增补实现说明](APPROXIMATE_CONVERSION.md)。下文保留精确有理识别路径的设计。
 
-更新日期：2026-10-08。本文记录首版实现的算法与文件组织。五类母面恢复、边界分析、参数范围恢复、数值验证、构建和测试入口均已实现；实际验证结果与未完成项见 [测试报告](TEST_REPORT.md)。
+更新日期：2026-10-08。本文记录首版实现的算法与文件组织。五类母面恢复、边界分析、参数范围恢复、数值验证、构建和测试入口均已实现；实际验证结果与未完成项见 [测试报告](../testing/TEST_REPORT.md)。
 
 ## 1. 总体流程
 
@@ -14,13 +14,13 @@
 
 | 文件 | 职责 |
 | --- | --- |
-| BSpline2Analytic.h/.cpp | 对外接口、结果类型及流程调度 |
-| BoundaryAnalysis.h/.cpp | 四边提取、直线／圆弧识别及范围恢复 |
-| AnalyticReconstruction.h/.cpp | 五类解析母面的候选恢复及关系检查 |
-| PatchRecovery.h/.cpp | 解析面片范围、方向及周期关系 |
-| RecognitionValidation.h/.cpp | 边界一致性、曲面残差及误差界验证 |
-| Numerics.h/.cpp | 局部归一化、小规模秩判断与最小二乘、Bernstein 运算 |
-| main.cpp | 示例程序 |
+| include/BSpline2Analytic.h、src/BSpline2Analytic.cpp | 对外接口、结果类型及流程调度 |
+| src/BoundaryAnalysis.h、src/BoundaryAnalysis.cpp | 四边提取、直线／圆弧识别及范围恢复 |
+| src/AnalyticReconstruction.h、src/AnalyticReconstruction.cpp | 五类解析母面的候选恢复及关系检查 |
+| src/PatchRecovery.h、src/PatchRecovery.cpp | 解析面片范围、方向及周期关系 |
+| src/RecognitionValidation.h、src/RecognitionValidation.cpp | 边界一致性、曲面残差及误差界验证 |
+| src/Numerics.h、src/Numerics.cpp | 局部归一化、小规模秩判断与最小二乘、Bernstein 运算 |
+| examples/main.cpp | 示例程序 |
 | tests/ReferenceCases.h/.cpp | 已知解析母面的测试数据生成 |
 | tests/RecognitionTests.cpp | 回归测试入口 |
 | CMakeLists.txt、Build.ps1 | 算法库、示例与测试的构建入口 |
@@ -145,4 +145,4 @@ SDK 和许可证在本地配置，不进入仓库。
 
 验收比较几何等价性；轴向正负、参数零点等不要求逐字段相同。性能与稳定性指标以实际测试结果记录，不预先宣称达标。
 
-上述五步已完成首版代码。Release、Debug 回归通过，批量性能数据见 [测试报告](TEST_REPORT.md)。圆锥按同锥瓣规则处理；坍缩边报告退化。Apple/Lemon 仅验证规则区域，奇异区通用处理、严格区间算术、内存泄漏审计、G1 与下游性能仍是后续工作。
+上述五步已完成首版代码。Release、Debug 回归通过，批量性能数据见 [测试报告](../testing/TEST_REPORT.md)。圆锥按同锥瓣规则处理；坍缩边报告退化。Apple/Lemon 仅验证规则区域，奇异区通用处理、严格区间算术、内存泄漏审计、G1 与下游性能仍是后续工作。

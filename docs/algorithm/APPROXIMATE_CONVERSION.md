@@ -23,18 +23,18 @@
 
 | 文件 | 工作 |
 | --- | --- |
-| ApproximateConversion.h/.cpp | 公共结果、预算、流程调度和累计计时 |
-| IsoCurveAnalysis.cpp | 实际等参线点、弧长权重、直线/圆拟合、候选生成 |
-| ApproximateGeometry.cpp | 五类解析表达、有限域投影、边界对应及原生对象 |
-| SurfaceSampling.cpp | 节点区间采样、源曲面缓存、失败区域反馈 |
-| ApproximateEvaluation.cpp | 单次几何上下文、局部坐标/相位缓存、可复用残差缓冲区 |
-| PlaneOffsetRefinement.cpp | 平面法向平移的直接中点解及有界标量区间搜索 |
-| AnalyticJacobian.cpp | 解析链式求导、单变量闭式导数、局部差分回退 |
-| CandidateRefinement.cpp | 活动变量映射、阻尼最小二乘、最大归一化误差约束修正 |
-| ApproximateNumerics.cpp | 小规模列主元 QR |
-| IntervalBounds.h/.cpp | 向外舍入区间运算、三角函数界、Bernstein 提取和细分 |
-| ConversionValidation.cpp | 有限域距离、边界切/法向及映射的独立连续验证 |
-| StageTimer.h | steady_clock 阶段计时器 |
+| include/ApproximateConversion.h、src/ApproximateConversion.cpp | 公共结果、预算、流程调度和累计计时 |
+| src/IsoCurveAnalysis.cpp | 实际等参线点、弧长权重、直线/圆拟合、候选生成 |
+| src/ApproximateGeometry.cpp | 五类解析表达、有限域投影、边界对应及原生对象 |
+| src/SurfaceSampling.cpp | 节点区间采样、源曲面缓存、失败区域反馈 |
+| src/ApproximateEvaluation.cpp | 单次几何上下文、局部坐标/相位缓存、可复用残差缓冲区 |
+| src/PlaneOffsetRefinement.cpp | 平面法向平移的直接中点解及有界标量区间搜索 |
+| src/AnalyticJacobian.cpp | 解析链式求导、单变量闭式导数、局部差分回退 |
+| src/CandidateRefinement.cpp | 活动变量映射、阻尼最小二乘、最大归一化误差约束修正 |
+| src/ApproximateNumerics.cpp | 小规模列主元 QR |
+| src/IntervalBounds.h、src/IntervalBounds.cpp | 向外舍入区间运算、三角函数界、Bernstein 提取和细分 |
+| src/ConversionValidation.cpp | 有限域距离、边界切/法向及映射的独立连续验证 |
+| src/StageTimer.h | steady_clock 阶段计时器 |
 | tests/ApproximateCases.* | 从有理面的实际点作张量三次插值，生成非有理测试面 |
 | tests/ApproximateConversionTests.cpp | 成功、失败、优化、参数变换、区间提取回归 |
 | tests/ApproximateBenchmark.cpp | 三阶段时间、调用次数、状态与误差 CSV |

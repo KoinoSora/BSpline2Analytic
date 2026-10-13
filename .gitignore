@@ -25,7 +25,8 @@ CMakeFiles/
 CMakeCache.txt
 cmake_install.cmake
 CTestTestfile.cmake
-Testing/
+# Root-level CTest output only; docs/testing contains versioned reports.
+/Testing/
 *.obj
 *.o
 *.pdb

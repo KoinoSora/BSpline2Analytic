@@ -1,6 +1,22 @@
 # 测试报告
 
-## 2026-10-13 当前算法完整重测 500 例（最新）
+文中代码、数据与 `build/` 路径均相对于仓库根目录；复现命令也从仓库根目录运行。
+
+## 2026-10-13 仓库目录整理验证
+
+源码、公开接口、示例和文档分类迁移，更新 CMake 及文档相对路径；未修改算法实现。迁移前后逐文件 SHA-256 校验通过，共 549 个源码、测试数据与 PDF 文件内容一致。58 个本地 Markdown 链接目标有效；项目内两项 Skill 结构校验通过。
+
+独立目录 `build/repository-layout` 完成全目标 Release 构建。`Regression`、`Approximate`、`Plateau`、`Jacobian`、`Cone` 五组回归全部通过（5/5，CTest 总墙钟 65.82 s）；示例的有理圆环和非有理平面均返回成功。确认区间验证源文件仍按 `/fp:strict` 编译。CMake 注册的八项测试均可发现；本轮没有重跑完整 500 例及两个批量子集，也没有执行 Debug 验证。原 `build/` 下已有批次结果保持原位，此次构建、CSV 和运行日志均落在独立子目录。
+
+```powershell
+cmake -S . -B build/repository-layout -G 'Visual Studio 17 2022' -A x64
+cmake --build build/repository-layout --config Release --parallel 2
+ctest --test-dir build/repository-layout -C Release -R '^BSpline2Analytic\.(Regression|Approximate|Plateau|Jacobian|Cone)$' --output-on-failure
+```
+
+本地日志：`build/repository-layout/build-release.log`、`build/repository-layout/Testing/Temporary/LastTest.log`。该验证确认目录和依赖调整后的构建及回归，不将本轮耗时作为算法性能改进结论。
+
+## 2026-10-13 当前算法完整重测 500 例（最新全量批次）
 
 详细分组、误差上界、慢例、单例复测和复现命令见 [500 例重测报告](DATASET500_RETEST_2026-10-13.md)。本轮 Release 重新构建后加载 0–499 全部固定输入，460 个普通面全部成功、40 个退化输入按预期拒绝、非预期失败 0；实际分支为有理 200 / 非有理 300。全部普通面均零优化迭代，非有理成功最大距离上界 `1.6971574078172394e-6`、边界切向角上界 `0.003627390651576°`、法向角上界 `0.004193016522072974°`。
 
@@ -285,7 +301,7 @@ Jacobian 构建减少了重复几何评价，但不保证整段优化按相同�
 
 ## 2026-10-12 非有理转换增补
 
-本轮实现与计时口径见 [非有理转换说明](APPROXIMATE_CONVERSION.md)。下面的初版报告保留为精确有理路径的历史记录，其性能数据不代表本轮近似路径。
+本轮实现与计时口径见 [非有理转换说明](../algorithm/APPROXIMATE_CONVERSION.md)。下面的初版报告保留为精确有理路径的历史记录，其性能数据不代表本轮近似路径。
 
 正式目录使用 SGK 1.7.11、Windows x64、Visual Studio 2022/MSVC 19.42；默认几何阈值 1e-5，边界切向和法向阈值分别为 0.1 度。区间验证文件使用 /fp:strict，并检查最近舍入及渐进下溢模式。数据生成、预热、SDK 初始化和日志不计入转换时间。
 
