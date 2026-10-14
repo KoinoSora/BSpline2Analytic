@@ -1,6 +1,7 @@
 #include "AnalyticReconstruction.h"
 #include "Numerics.h"
 #include "ReferenceCases.h"
+#include "SpecializedTimingChecks.h"
 #include <Foundation/init.h>
 #include <Geometry/3D/Surface/SphereSurface.h>
 #include <chrono>
@@ -21,6 +22,8 @@ static void Check(const bspline2analytic::tests::ReferenceCase &reference,
                   const sggk::BSplineSurface &s, const std::string &suffix)
 {
     auto r = Recognize(s);
+    tests::CheckSpecializedTiming(r.timing);
+    Require(r.timing.optimization.calls == 0, "Exact recognition entered optimization");
     Require(r.status == Status::Success,
             reference.name + suffix + ": " + StatusName(r.status) + " " + r.message);
     Require(r.parameters.type == reference.analytic->SurfaceType(),

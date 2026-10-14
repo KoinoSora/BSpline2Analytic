@@ -35,3 +35,9 @@
 `ClassificationGateTests.cpp` 检查短圆弧、数值共线、双候选保留、失败状态与通用回退，并读取原先返回 `InvalidInput` 的 8 个固定输入检查边界拟合。构建目标为 `BSpline2AnalyticClassificationGateTests`；定向运行：`ctest --test-dir build -C Release -R '^BSpline2Analytic\.ClassificationGate$' --output-on-failure`。
 
 极端测试运行器支持 `--first 96 --last 128`，只运行角跨度门槛组（右端不含）。在 SDK 工作目录并配置其 DLL 路径后，执行 `python <repo>/tests/RunExtremeDataset.py --exe <repo>/build/Release/BSpline2AnalyticExtremeTests.exe --data <repo>/tests/data/extreme200 --output <result.csv> --first 96 --last 128`。`--resume` 仅接受同一选定范围的连续前缀。每个子进程额外保存 `case-NNN-fits.csv`，保留专用分支的逐等参线拟合诊断，包括回退前的拒绝原因；采样拟合误差不等于连续界。32 例的几何转换仍有未通过结果时，运行器返回 1，不能把定向单元测试通过等同于整组转换通过。结果见 [门槛修复报告](../docs/testing/CLASSIFICATION_GATE_REPORT_2026-10-14.md)。
+
+## 等参专用路径计时
+
+`Build.ps1 -Dataset500Only` 当前直接调用 `Recognize`（200 个有理输入）及 `ConvertApproximate`（300 个非有理输入），不进入一般兜底。固定 500 例全部重载并核验来源证书，40 个退化案例保留退化预期。
+
+CSV 标记 `timing_schema=specialized-v2`，分别输出分类计算、初值验证、优化计算、优化后验证及其调用次数。分类总计和优化总计分别包含对应验证；`validate_ms` 为零，不能再把四项明细加到阶段总计上。用 `python tests/SummarizeSpecializedDataset500.py <csv> <目录>` 校验、生成 `summary.json` 与按类型/分支、控制点档分组的 `groups.csv`。旧报告使用旧计时定义，不能直接比较 `classify_ms` 和 `optimize_ms`。

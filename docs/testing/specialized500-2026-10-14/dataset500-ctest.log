@@ -1,0 +1,70 @@
+[OUTPUT]
+Internal ctest changing into directory: D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-specialized-timing
+
+[HANDLER_OUTPUT]
+Test project D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-specialized-timing
+
+    Start 8: BSpline2Analytic.Dataset500
+1/1 Test #8: BSpline2Analytic.Dataset500 ......***Failed   67.05 sec
+Failed to open log output file.
+Failed to open log output file.
+Tested 20/500; success=20 degenerate=0 failures=0
+Tested 40/500; success=40 degenerate=0 failures=0
+Tested 60/500; success=60 degenerate=0 failures=0
+Tested 80/500; success=80 degenerate=0 failures=0
+Tested 100/500; success=100 degenerate=0 failures=0
+Tested 120/500; success=120 degenerate=0 failures=0
+Tested 140/500; success=140 degenerate=0 failures=0
+Tested 160/500; success=160 degenerate=0 failures=0
+Tested 180/500; success=180 degenerate=0 failures=0
+Tested 200/500; success=200 degenerate=0 failures=0
+Tested 220/500; success=216 degenerate=4 failures=0
+FAIL 237 Unresolved Unresolved isocurve normalization
+FAIL 239 Unresolved Unresolved isocurve normalization
+Tested 240/500; success=232 degenerate=6 failures=2
+FAIL 257 InvalidInput Zero direction
+Tested 260/500; success=248 degenerate=9 failures=3
+FAIL 277 Unresolved Unresolved isocurve normalization
+Tested 280/500; success=264 degenerate=12 failures=4
+FAIL 297 InvalidInput Zero direction
+FAIL 299 InvalidInput Zero direction
+Tested 300/500; success=280 degenerate=14 failures=6
+FAIL 317 NoCandidate No analytic candidate could be initialized from line/circle families
+FAIL 319 Unresolved Unresolved isocurve normalization
+Tested 320/500; success=296 degenerate=16 failures=8
+FAIL 337 NoCandidate No analytic candidate could be initialized from line/circle families
+FAIL 339 InvalidInput Zero direction
+Tested 340/500; success=312 degenerate=18 failures=10
+FAIL 357 NoCandidate No analytic candidate could be initialized from line/circle families
+FAIL 359 InvalidInput Zero direction
+Tested 360/500; success=328 degenerate=20 failures=12
+FAIL 377 NoCandidate No analytic candidate could be initialized from line/circle families
+FAIL 379 InvalidInput Zero direction
+Tested 380/500; success=344 degenerate=22 failures=14
+FAIL 397 NoCandidate No analytic candidate could be initialized from line/circle families
+Tested 400/500; success=360 degenerate=25 failures=15
+Tested 420/500; success=380 degenerate=25 failures=15
+Tested 440/500; success=400 degenerate=25 failures=15
+Tested 460/500; success=420 degenerate=25 failures=15
+Tested 480/500; success=440 degenerate=25 failures=15
+Tested 500/500; success=460 degenerate=25 failures=15
+Cone/polynomial classify mean=148.984 p95=274.017 ms
+Cone/rational classify mean=1.34971 p95=2.8798 ms
+Cylinder/polynomial classify mean=141.046 p95=356.133 ms
+Cylinder/rational classify mean=1.26121 p95=3.2125 ms
+Plane/polynomial classify mean=32.3682 p95=70.67 ms
+Sphere/polynomial classify mean=313.417 p95=682.391 ms
+Sphere/rational classify mean=1.28255 p95=2.5871 ms
+Torus/polynomial classify mean=430.524 p95=1104.03 ms
+Torus/rational classify mean=4.64747 p95=18.0409 ms
+500 fixtures certified; regular=460 degenerate=25 unexpected=15; rational=200 polynomial=300
+
+
+0% tests passed, 1 tests failed out of 1
+
+Total Test time (real) =  67.06 sec
+
+The following tests FAILED:
+	  8 - BSpline2Analytic.Dataset500 (Failed)
+[ERROR_MESSAGE]
+Errors while running CTest

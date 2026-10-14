@@ -11,7 +11,11 @@ SurfaceConversionResult Convert(const sggk::BSplineSurface &s, const SurfaceConv
     auto addTiming=[&](const ConversionTiming &timing) {
         for (auto pair:{std::make_pair(&result.timing.classification,&timing.classification),
                        std::make_pair(&result.timing.optimization,&timing.optimization),
-                       std::make_pair(&result.timing.validation,&timing.validation)})
+                       std::make_pair(&result.timing.validation,&timing.validation),
+                       std::make_pair(&result.timing.classificationCompute,&timing.classificationCompute),
+                       std::make_pair(&result.timing.classificationValidation,&timing.classificationValidation),
+                       std::make_pair(&result.timing.optimizationCompute,&timing.optimizationCompute),
+                       std::make_pair(&result.timing.optimizationValidation,&timing.optimizationValidation)})
         { pair.first->elapsedMs+=pair.second->elapsedMs;pair.first->calls+=pair.second->calls; }
     };
     auto finish=[&] {

@@ -1,0 +1,46 @@
+[OUTPUT]
+Internal ctest changing into directory: D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-specialized-timing
+
+[HANDLER_OUTPUT]
+Test project D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-specialized-timing
+
+    Start  1: BSpline2Analytic.ClassificationGate
+1/5 Test  #1: BSpline2Analytic.ClassificationGate ...   Passed    0.59 sec
+    Start 12: BSpline2Analytic.Regression
+2/5 Test #12: BSpline2Analytic.Regression ...........   Passed    0.15 sec
+    Start 13: BSpline2Analytic.Approximate
+3/5 Test #13: BSpline2Analytic.Approximate ..........***Failed    4.87 sec
+Failed to open log output file.
+Failed to open log output file.
+plane Success Outward interval/Bernstein bounds passed for finite-patch distance and both boundary angles geometry=Passed:9.56419e-14 tangent=Passed:2.10213e-11 normal=Passed:1.37862e-11 pieces=192 times=76.0255,0,0
+refine plane iterations=1 passed=1 bounds=5.79732e-08,3.92727e-07,5.55392e-07
+plane transformed Success Outward interval/Bernstein bounds passed for finite-patch distance and both boundary angles bounds=2.48468e-13,1.73002e-10,1.57356e-10 pieces=206 iterations=0 times=75.4305,0,0
+cylinder Success Outward interval/Bernstein bounds passed for finite-patch distance and both boundary angles geometry=Passed:1.53711e-06 tangent=Passed:0.00174049 normal=Passed:0.00174049 pieces=192 times=105.54,0,0
+refine cylinder iterations=1 passed=1 bounds=1.58872e-06,0.00174115,0.00174115
+cylinder transformed Success Outward interval/Bernstein bounds passed for finite-patch distance and both boundary angles bounds=1.53711e-06,0.00174049,0.00174049 pieces=206 iterations=0 times=110.499,0,0
+cone Success Outward interval/Bernstein bounds passed for finite-patch distance and both boundary angles geometry=Passed:1.0365e-06 tangent=Passed:0.00132173 normal=Passed:0.00122545 pieces=192 times=119.513,0,0
+refine cone iterations=1 passed=1 bounds=3.32068e-06,0.00132929,0.00123433
+cone transformed Success Outward interval/Bernstein bounds passed for finite-patch distance and both boundary angles bounds=1.0365e-06,0.00132173,0.00122545 pieces=206 iterations=0 times=125.33,0,0
+sphere Success Outward interval/Bernstein bounds passed for finite-patch distance and both boundary angles geometry=Passed:2.99429e-06 tangent=Passed:0.0017412 normal=Passed:0.00150212 pieces=360 times=247.574,0,0
+refine sphere iterations=1 passed=1 bounds=3.09768e-06,0.00174036,0.0015004
+sphere transformed Success Outward interval/Bernstein bounds passed for finite-patch distance and both boundary angles bounds=2.99461e-06,0.0017412,0.00150212 pieces=374 iterations=0 times=251.118,0,0
+torus Success Outward interval/Bernstein bounds passed for finite-patch distance and both boundary angles geometry=Passed:2.97604e-06 tangent=Passed:0.00224977 normal=Passed:0.00241278 pieces=360 times=369.295,0,0
+refine torus iterations=1 passed=1 bounds=3.3482e-06,0.00227723,0.00243571
+torus transformed Success Outward interval/Bernstein bounds passed for finite-patch distance and both boundary angles bounds=2.98707e-06,0.0022498,0.0024131 pieces=374 iterations=0 times=394.125,0,0
+torus-concentric Success Outward interval/Bernstein bounds passed for finite-patch distance and both boundary angles bounds=1.88896e-07,0.0005977,0.000620813 pieces=896 iterations=0 times=936.267,0,0
+sphere-antipodal-meridians Unresolved Greville grid exceeds sample budget bounds=inf,inf,inf pieces=0 iterations=0 times=7.8015,0,0
+FAIL sphere-antipodal-meridians extended chart failed
+
+    Start 14: BSpline2Analytic.Plateau
+4/5 Test #14: BSpline2Analytic.Plateau ..............   Passed   17.66 sec
+    Start 15: BSpline2Analytic.Jacobian
+5/5 Test #15: BSpline2Analytic.Jacobian .............   Passed   27.45 sec
+
+80% tests passed, 1 tests failed out of 5
+
+Total Test time (real) =  50.76 sec
+
+The following tests FAILED:
+	 13 - BSpline2Analytic.Approximate (Failed)
+[ERROR_MESSAGE]
+Errors while running CTest

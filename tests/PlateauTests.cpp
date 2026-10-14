@@ -1,4 +1,5 @@
 #include "ApproximateCases.h"
+#include "SpecializedTimingChecks.h"
 #include "ApproximateInternal.h"
 #include <Foundation/init.h>
 #include <fstream>
@@ -24,7 +25,8 @@ static void Check(const ConversionResult &r, bool fast = true)
             "Plateau tolerance exceeded");
     Require((r.statistics.optimizationIterations > 0 ||
              r.statistics.refinementRuns.front().planeOffsetSolves > 0) &&
-                r.timing.validation.calls >= 2,
+                (r.timing.classificationValidation.calls >= 1 &&
+                 r.timing.optimizationValidation.calls >= 1),
             "Plateau did not exercise optimization and revalidation");
     Require(r.statistics.optimizationIterations < 30, "Plateau still exhausted 30 iterations");
     Require(r.statistics.refinementRuns.size() == 1 && r.statistics.refinementRounds == 1,
@@ -43,6 +45,7 @@ static void Check(const ConversionResult &r, bool fast = true)
                 d.stopReason != RefinementStopReason::IterationLimit,
             "Plateau did not stop with a feasible sampled candidate");
     const auto &t = r.timing;
+    tests::CheckSpecializedTiming(t);
     Require(std::abs(t.classification.elapsedMs + t.optimization.elapsedMs +
                      t.validation.elapsedMs + t.otherMs - t.totalMs) < 1e-6,
             "Stage timing accounting mismatch");
@@ -210,6 +213,7 @@ static int Run(const char *path)
         auto r = ConvertApproximate(*surface);
         Check(r);
         const auto &t = r.timing;
+        tests::CheckSpecializedTiming(t);
         sums[0] += t.classification.elapsedMs;
         sums[1] += t.optimization.elapsedMs;
         sums[2] += t.validation.elapsedMs;
@@ -273,7 +277,8 @@ static int Run(const char *path)
     auto unoptimized = ConvertApproximate(*surface, disabled);
     Require(unoptimized.status != ConversionStatus::Success && !unoptimized.validation.Passed() &&
                 unoptimized.statistics.optimizationIterations == 0 &&
-                unoptimized.timing.validation.calls >= 2 &&
+                (unoptimized.timing.classificationValidation.calls >= 1 &&
+                 unoptimized.timing.optimizationValidation.calls >= 1) &&
                 unoptimized.statistics.refinementRounds <= unoptimized.statistics.candidateCount &&
                 std::all_of(unoptimized.statistics.refinementRuns.begin(),
                             unoptimized.statistics.refinementRuns.end(),

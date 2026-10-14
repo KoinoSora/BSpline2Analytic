@@ -1,0 +1,6 @@
+{
+  "baseline": "f636845e1fa65c207759efac0982dd007bed5d3d",
+  "collapsed_cases": 40,
+  "status_mismatches": [],
+  "approximate_failure_reproduced": "sphere-antipodal-meridians: Greville grid exceeds sample budget"
+}

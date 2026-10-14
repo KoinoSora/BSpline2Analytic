@@ -136,8 +136,16 @@ struct StageTiming
 };
 struct ConversionTiming
 {
+    // Disjoint stage totals. For the specialized paths, classification includes
+    // initial-candidate validation; optimization includes post-solve validation.
+    // validation is reserved for checks outside those phases (e.g. Convert's
+    // final PCurve check). General fallback retains its existing partition.
     StageTiming classification, optimization, validation;
     double otherMs = 0, totalMs = 0;
+    // Specialized-path detail: these are subsets of the totals above and
+    // must not be added to them again. Also propagated by Convert.
+    StageTiming classificationCompute, classificationValidation;
+    StageTiming optimizationCompute, optimizationValidation;
 };
 
 struct RecognitionResult

@@ -1,4 +1,5 @@
 #include "ApproximateCases.h"
+#include "SpecializedTimingChecks.h"
 #include "ApproximateInternal.h"
 #include <Foundation/init.h>
 #include <fstream>
@@ -299,6 +300,7 @@ static void Perturbations(const std::vector<tests::ReferenceCase> &references, c
                 Require(mode == JacobianMode::FiniteDifference || ab > 0,
                         "Analytic mode not exercised");
                 const auto &t = r.timing;
+                tests::CheckSpecializedTiming(t);
                 Require(std::abs(t.classification.elapsedMs + t.optimization.elapsedMs +
                                  t.validation.elapsedMs + t.otherMs - t.totalMs) < 1e-6,
                         "Stage timing mismatch");

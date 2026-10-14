@@ -1,4 +1,5 @@
 #include "ApproximateCases.h"
+#include "SpecializedTimingChecks.h"
 #include "ApproximateInternal.h"
 #include <Foundation/init.h>
 #include <iomanip>
@@ -14,6 +15,7 @@ static void Require(bool condition, const std::string &message)
 static void Timing(const ConversionResult &r)
 {
     const auto &t = r.timing;
+    tests::CheckSpecializedTiming(t);
     Require(t.totalMs >= 0 && t.otherMs >= -1e-9, "Negative timing");
     double sum =
         t.classification.elapsedMs + t.optimization.elapsedMs + t.validation.elapsedMs + t.otherMs;
@@ -286,13 +288,15 @@ int main()
                     (optimized.statistics.optimizationIterations > 0 ||
                      optimized.statistics.refinementRuns.front().planeOffsetSolves > 0),
                 "Full conversion did not time optimizer");
-        Require(optimized.timing.validation.calls >= 2, "Validation retry not timed");
+        Require((optimized.timing.classificationValidation.calls >= 1 &&
+                 optimized.timing.optimizationValidation.calls >= 1), "Validation retry not timed");
         ConversionOptions disabled;
         disabled.refinement.maxIterations = 0;
         auto failed = ConvertApproximate(*bump, disabled);
         Timing(failed);
         Require(failed.status != ConversionStatus::Success, "Unoptimized plateau falsely accepted");
-        Require(failed.timing.optimization.calls > 0 && failed.timing.validation.calls >= 2,
+        Require(failed.timing.optimization.calls > 0 && (failed.timing.classificationValidation.calls >= 1 &&
+                 failed.timing.optimizationValidation.calls >= 1),
                 "Failed attempt timings lost");
         auto rational = ConvertApproximate(*cases[1].spline);
         Timing(rational);

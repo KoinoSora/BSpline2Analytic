@@ -1,0 +1,2889 @@
+{
+  "timing_schema": "specialized-v2",
+  "input": "results.csv",
+  "all": {
+    "count": 500,
+    "statuses": {
+      "Success": 460,
+      "Degenerate": 25,
+      "Unresolved": 4,
+      "InvalidInput": 6,
+      "NoCandidate": 5
+    },
+    "classify_compute_ms": {
+      "sum": 523.311,
+      "mean": 1.0466220000000002,
+      "p95": 2.668,
+      "max": 4.102,
+      "max_id": 385
+    },
+    "classify_validate_ms": {
+      "sum": 50276.3715,
+      "mean": 100.552743,
+      "p95": 462.453,
+      "max": 1103.7084,
+      "max_id": 491
+    },
+    "optimize_compute_ms": {
+      "sum": 1.2372,
+      "mean": 0.0024744000000000003,
+      "p95": 0.0,
+      "max": 0.4955,
+      "max_id": 297
+    },
+    "optimize_validate_ms": {
+      "sum": 0.0,
+      "mean": 0.0,
+      "p95": 0.0,
+      "max": 0.0,
+      "max_id": 0
+    },
+    "classify_ms": {
+      "sum": 50799.6825,
+      "mean": 101.599365,
+      "p95": 465.15909999999997,
+      "max": 1107.5333,
+      "max_id": 491
+    },
+    "optimize_ms": {
+      "sum": 1.2372,
+      "mean": 0.0024744000000000003,
+      "p95": 0.0,
+      "max": 0.4955,
+      "max_id": 297
+    },
+    "classify_optimize_ms": {
+      "sum": 50800.9197,
+      "mean": 101.6018394,
+      "p95": 465.15909999999997,
+      "max": 1107.5333,
+      "max_id": 491
+    },
+    "other_ms": {
+      "sum": 2.9695999999997333,
+      "mean": 0.005939199999999467,
+      "p95": 0.014299999999991542,
+      "max": 0.030700000000024374,
+      "max_id": 295
+    },
+    "total_ms": {
+      "sum": 50803.8893,
+      "mean": 101.6077786,
+      "p95": 465.1692,
+      "max": 1107.5496,
+      "max_id": 491
+    },
+    "iterations": 0,
+    "optimized_cases": 6
+  },
+  "unexpected_ids": [
+    237,
+    239,
+    257,
+    277,
+    297,
+    299,
+    317,
+    319,
+    337,
+    339,
+    357,
+    359,
+    377,
+    379,
+    397
+  ],
+  "groups": {
+    "degenerate": {
+      "count": 40,
+      "statuses": {
+        "Degenerate": 25,
+        "Unresolved": 4,
+        "InvalidInput": 6,
+        "NoCandidate": 5
+      },
+      "classify_compute_ms": {
+        "sum": 23.9006,
+        "mean": 0.597515,
+        "p95": 1.7957,
+        "max": 2.6256,
+        "max_id": 297
+      },
+      "classify_validate_ms": {
+        "sum": 63.721000000000004,
+        "mean": 1.5930250000000001,
+        "p95": 12.3518,
+        "max": 15.914,
+        "max_id": 297
+      },
+      "optimize_compute_ms": {
+        "sum": 1.2372,
+        "mean": 0.030930000000000003,
+        "p95": 0.1848,
+        "max": 0.4955,
+        "max_id": 297
+      },
+      "optimize_validate_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 216
+      },
+      "classify_ms": {
+        "sum": 87.6216,
+        "mean": 2.19054,
+        "p95": 13.9944,
+        "max": 18.5396,
+        "max_id": 297
+      },
+      "optimize_ms": {
+        "sum": 1.2372,
+        "mean": 0.030930000000000003,
+        "p95": 0.1848,
+        "max": 0.4955,
+        "max_id": 297
+      },
+      "classify_optimize_ms": {
+        "sum": 88.8588,
+        "mean": 2.22147,
+        "p95": 14.136600000000001,
+        "max": 19.0351,
+        "max_id": 297
+      },
+      "other_ms": {
+        "sum": 0.1222999999999987,
+        "mean": 0.0030574999999999674,
+        "p95": 0.007999999999998952,
+        "max": 0.010099999999999998,
+        "max_id": 279
+      },
+      "total_ms": {
+        "sum": 88.9811,
+        "mean": 2.2245274999999998,
+        "p95": 14.1428,
+        "max": 19.0431,
+        "max_id": 297
+      },
+      "iterations": 0,
+      "optimized_cases": 6
+    },
+    "degenerate/Cone/polynomial": {
+      "count": 10,
+      "statuses": {
+        "Degenerate": 4,
+        "Unresolved": 3,
+        "InvalidInput": 3
+      },
+      "classify_compute_ms": {
+        "sum": 7.3858999999999995,
+        "mean": 0.73859,
+        "p95": 2.6256,
+        "max": 2.6256,
+        "max_id": 297
+      },
+      "classify_validate_ms": {
+        "sum": 31.912599999999998,
+        "mean": 3.1912599999999998,
+        "p95": 15.914,
+        "max": 15.914,
+        "max_id": 297
+      },
+      "optimize_compute_ms": {
+        "sum": 0.906,
+        "mean": 0.0906,
+        "p95": 0.4955,
+        "max": 0.4955,
+        "max_id": 297
+      },
+      "optimize_validate_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 217
+      },
+      "classify_ms": {
+        "sum": 39.2985,
+        "mean": 3.9298499999999996,
+        "p95": 18.5396,
+        "max": 18.5396,
+        "max_id": 297
+      },
+      "optimize_ms": {
+        "sum": 0.906,
+        "mean": 0.0906,
+        "p95": 0.4955,
+        "max": 0.4955,
+        "max_id": 297
+      },
+      "classify_optimize_ms": {
+        "sum": 40.2045,
+        "mean": 4.02045,
+        "p95": 19.0351,
+        "max": 19.0351,
+        "max_id": 297
+      },
+      "other_ms": {
+        "sum": 0.060399999999998816,
+        "mean": 0.006039999999999881,
+        "p95": 0.010099999999999998,
+        "max": 0.010099999999999998,
+        "max_id": 279
+      },
+      "total_ms": {
+        "sum": 40.2649,
+        "mean": 4.02649,
+        "p95": 19.0431,
+        "max": 19.0431,
+        "max_id": 297
+      },
+      "iterations": 0,
+      "optimized_cases": 3
+    },
+    "degenerate/Cone/rational": {
+      "count": 10,
+      "statuses": {
+        "Degenerate": 10
+      },
+      "classify_compute_ms": {
+        "sum": 1.422,
+        "mean": 0.1422,
+        "p95": 0.1962,
+        "max": 0.1962,
+        "max_id": 278
+      },
+      "classify_validate_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 216
+      },
+      "optimize_compute_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 216
+      },
+      "optimize_validate_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 216
+      },
+      "classify_ms": {
+        "sum": 1.422,
+        "mean": 0.1422,
+        "p95": 0.1962,
+        "max": 0.1962,
+        "max_id": 278
+      },
+      "optimize_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 216
+      },
+      "classify_optimize_ms": {
+        "sum": 1.422,
+        "mean": 0.1422,
+        "p95": 0.1962,
+        "max": 0.1962,
+        "max_id": 278
+      },
+      "other_ms": {
+        "sum": 0.007099999999999981,
+        "mean": 0.0007099999999999982,
+        "p95": 0.0009000000000000119,
+        "max": 0.0009000000000000119,
+        "max_id": 276
+      },
+      "total_ms": {
+        "sum": 1.4291,
+        "mean": 0.14291,
+        "p95": 0.1969,
+        "max": 0.1969,
+        "max_id": 278
+      },
+      "iterations": 0,
+      "optimized_cases": 0
+    },
+    "degenerate/Sphere/polynomial": {
+      "count": 10,
+      "statuses": {
+        "NoCandidate": 5,
+        "Unresolved": 1,
+        "InvalidInput": 3,
+        "Degenerate": 1
+      },
+      "classify_compute_ms": {
+        "sum": 12.8011,
+        "mean": 1.28011,
+        "p95": 2.4887,
+        "max": 2.4887,
+        "max_id": 397
+      },
+      "classify_validate_ms": {
+        "sum": 31.8084,
+        "mean": 3.18084,
+        "p95": 13.035,
+        "max": 13.035,
+        "max_id": 379
+      },
+      "optimize_compute_ms": {
+        "sum": 0.3312,
+        "mean": 0.03312,
+        "p95": 0.1422,
+        "max": 0.1422,
+        "max_id": 359
+      },
+      "optimize_validate_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 317
+      },
+      "classify_ms": {
+        "sum": 44.6095,
+        "mean": 4.4609499999999995,
+        "p95": 14.7503,
+        "max": 14.7503,
+        "max_id": 379
+      },
+      "optimize_ms": {
+        "sum": 0.3312,
+        "mean": 0.03312,
+        "p95": 0.1422,
+        "max": 0.1422,
+        "max_id": 359
+      },
+      "classify_optimize_ms": {
+        "sum": 44.9407,
+        "mean": 4.49407,
+        "p95": 14.8675,
+        "max": 14.8675,
+        "max_id": 379
+      },
+      "other_ms": {
+        "sum": 0.04809999999999989,
+        "mean": 0.00480999999999999,
+        "p95": 0.009099999999999997,
+        "max": 0.009099999999999997,
+        "max_id": 399
+      },
+      "total_ms": {
+        "sum": 44.9888,
+        "mean": 4.49888,
+        "p95": 14.8736,
+        "max": 14.8736,
+        "max_id": 379
+      },
+      "iterations": 0,
+      "optimized_cases": 3
+    },
+    "degenerate/Sphere/rational": {
+      "count": 10,
+      "statuses": {
+        "Degenerate": 10
+      },
+      "classify_compute_ms": {
+        "sum": 2.2916,
+        "mean": 0.22915999999999997,
+        "p95": 0.3182,
+        "max": 0.3182,
+        "max_id": 396
+      },
+      "classify_validate_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 316
+      },
+      "optimize_compute_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 316
+      },
+      "optimize_validate_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 316
+      },
+      "classify_ms": {
+        "sum": 2.2916,
+        "mean": 0.22915999999999997,
+        "p95": 0.3182,
+        "max": 0.3182,
+        "max_id": 396
+      },
+      "optimize_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 316
+      },
+      "classify_optimize_ms": {
+        "sum": 2.2916,
+        "mean": 0.22915999999999997,
+        "p95": 0.3182,
+        "max": 0.3182,
+        "max_id": 396
+      },
+      "other_ms": {
+        "sum": 0.0067000000000000115,
+        "mean": 0.0006700000000000011,
+        "p95": 0.0007999999999999952,
+        "max": 0.0007999999999999952,
+        "max_id": 316
+      },
+      "total_ms": {
+        "sum": 2.2983000000000002,
+        "mean": 0.22983000000000003,
+        "p95": 0.3188,
+        "max": 0.3188,
+        "max_id": 396
+      },
+      "iterations": 0,
+      "optimized_cases": 0
+    },
+    "degenerate/bucket-0/polynomial": {
+      "count": 4,
+      "statuses": {
+        "Degenerate": 2,
+        "NoCandidate": 1,
+        "Unresolved": 1
+      },
+      "classify_compute_ms": {
+        "sum": 0.9411,
+        "mean": 0.235275,
+        "p95": 0.4461,
+        "max": 0.4461,
+        "max_id": 317
+      },
+      "classify_validate_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 217
+      },
+      "optimize_compute_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 217
+      },
+      "optimize_validate_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 217
+      },
+      "classify_ms": {
+        "sum": 0.9411,
+        "mean": 0.235275,
+        "p95": 0.4461,
+        "max": 0.4461,
+        "max_id": 317
+      },
+      "optimize_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 217
+      },
+      "classify_optimize_ms": {
+        "sum": 0.9411,
+        "mean": 0.235275,
+        "p95": 0.4461,
+        "max": 0.4461,
+        "max_id": 317
+      },
+      "other_ms": {
+        "sum": 0.012500000000000011,
+        "mean": 0.0031250000000000028,
+        "p95": 0.005400000000000016,
+        "max": 0.005400000000000016,
+        "max_id": 217
+      },
+      "total_ms": {
+        "sum": 0.9536,
+        "mean": 0.2384,
+        "p95": 0.4479,
+        "max": 0.4479,
+        "max_id": 317
+      },
+      "iterations": 0,
+      "optimized_cases": 0
+    },
+    "degenerate/bucket-0/rational": {
+      "count": 4,
+      "statuses": {
+        "Degenerate": 4
+      },
+      "classify_compute_ms": {
+        "sum": 0.6005,
+        "mean": 0.150125,
+        "p95": 0.225,
+        "max": 0.225,
+        "max_id": 316
+      },
+      "classify_validate_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 216
+      },
+      "optimize_compute_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 216
+      },
+      "optimize_validate_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 216
+      },
+      "classify_ms": {
+        "sum": 0.6005,
+        "mean": 0.150125,
+        "p95": 0.225,
+        "max": 0.225,
+        "max_id": 316
+      },
+      "optimize_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 216
+      },
+      "classify_optimize_ms": {
+        "sum": 0.6005,
+        "mean": 0.150125,
+        "p95": 0.225,
+        "max": 0.225,
+        "max_id": 316
+      },
+      "other_ms": {
+        "sum": 0.002799999999999983,
+        "mean": 0.0006999999999999958,
+        "p95": 0.0007999999999999952,
+        "max": 0.0007999999999999952,
+        "max_id": 316
+      },
+      "total_ms": {
+        "sum": 0.6033,
+        "mean": 0.150825,
+        "p95": 0.2258,
+        "max": 0.2258,
+        "max_id": 316
+      },
+      "iterations": 0,
+      "optimized_cases": 0
+    },
+    "degenerate/bucket-1/polynomial": {
+      "count": 4,
+      "statuses": {
+        "Unresolved": 2,
+        "NoCandidate": 1,
+        "InvalidInput": 1
+      },
+      "classify_compute_ms": {
+        "sum": 2.957,
+        "mean": 0.73925,
+        "p95": 1.2993,
+        "max": 1.2993,
+        "max_id": 337
+      },
+      "classify_validate_ms": {
+        "sum": 6.4216,
+        "mean": 1.6054,
+        "p95": 6.4216,
+        "max": 6.4216,
+        "max_id": 339
+      },
+      "optimize_compute_ms": {
+        "sum": 0.0718,
+        "mean": 0.01795,
+        "p95": 0.0718,
+        "max": 0.0718,
+        "max_id": 339
+      },
+      "optimize_validate_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 237
+      },
+      "classify_ms": {
+        "sum": 9.378599999999999,
+        "mean": 2.3446499999999997,
+        "p95": 7.6270999999999995,
+        "max": 7.6270999999999995,
+        "max_id": 339
+      },
+      "optimize_ms": {
+        "sum": 0.0718,
+        "mean": 0.01795,
+        "p95": 0.0718,
+        "max": 0.0718,
+        "max_id": 339
+      },
+      "classify_optimize_ms": {
+        "sum": 9.450399999999998,
+        "mean": 2.3625999999999996,
+        "p95": 7.698899999999999,
+        "max": 7.698899999999999,
+        "max_id": 339
+      },
+      "other_ms": {
+        "sum": 0.0191000000000007,
+        "mean": 0.004775000000000175,
+        "p95": 0.006099999999999994,
+        "max": 0.006099999999999994,
+        "max_id": 237
+      },
+      "total_ms": {
+        "sum": 9.4695,
+        "mean": 2.367375,
+        "p95": 7.7038,
+        "max": 7.7038,
+        "max_id": 339
+      },
+      "iterations": 0,
+      "optimized_cases": 1
+    },
+    "degenerate/bucket-1/rational": {
+      "count": 4,
+      "statuses": {
+        "Degenerate": 4
+      },
+      "classify_compute_ms": {
+        "sum": 0.6631,
+        "mean": 0.165775,
+        "p95": 0.215,
+        "max": 0.215,
+        "max_id": 336
+      },
+      "classify_validate_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 236
+      },
+      "optimize_compute_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 236
+      },
+      "optimize_validate_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 236
+      },
+      "classify_ms": {
+        "sum": 0.6631,
+        "mean": 0.165775,
+        "p95": 0.215,
+        "max": 0.215,
+        "max_id": 336
+      },
+      "optimize_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 236
+      },
+      "classify_optimize_ms": {
+        "sum": 0.6631,
+        "mean": 0.165775,
+        "p95": 0.215,
+        "max": 0.215,
+        "max_id": 336
+      },
+      "other_ms": {
+        "sum": 0.002899999999999986,
+        "mean": 0.0007249999999999965,
+        "p95": 0.0007999999999999952,
+        "max": 0.0007999999999999952,
+        "max_id": 236
+      },
+      "total_ms": {
+        "sum": 0.6659999999999999,
+        "mean": 0.16649999999999998,
+        "p95": 0.2157,
+        "max": 0.2157,
+        "max_id": 336
+      },
+      "iterations": 0,
+      "optimized_cases": 0
+    },
+    "degenerate/bucket-2/polynomial": {
+      "count": 4,
+      "statuses": {
+        "InvalidInput": 2,
+        "Degenerate": 1,
+        "NoCandidate": 1
+      },
+      "classify_compute_ms": {
+        "sum": 5.1502,
+        "mean": 1.28755,
+        "p95": 1.6995,
+        "max": 1.6995,
+        "max_id": 257
+      },
+      "classify_validate_ms": {
+        "sum": 21.9723,
+        "mean": 5.493075,
+        "p95": 12.3518,
+        "max": 12.3518,
+        "max_id": 359
+      },
+      "optimize_compute_ms": {
+        "sum": 0.3679,
+        "mean": 0.091975,
+        "p95": 0.2257,
+        "max": 0.2257,
+        "max_id": 257
+      },
+      "optimize_validate_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 257
+      },
+      "classify_ms": {
+        "sum": 27.122500000000002,
+        "mean": 6.780625000000001,
+        "p95": 13.9944,
+        "max": 13.9944,
+        "max_id": 359
+      },
+      "optimize_ms": {
+        "sum": 0.3679,
+        "mean": 0.091975,
+        "p95": 0.2257,
+        "max": 0.2257,
+        "max_id": 257
+      },
+      "classify_optimize_ms": {
+        "sum": 27.4904,
+        "mean": 6.8726,
+        "p95": 14.136600000000001,
+        "max": 14.136600000000001,
+        "max_id": 359
+      },
+      "other_ms": {
+        "sum": 0.021999999999998937,
+        "mean": 0.005499999999999734,
+        "p95": 0.00670000000000015,
+        "max": 0.00670000000000015,
+        "max_id": 257
+      },
+      "total_ms": {
+        "sum": 27.5124,
+        "mean": 6.8781,
+        "p95": 14.1428,
+        "max": 14.1428,
+        "max_id": 359
+      },
+      "iterations": 0,
+      "optimized_cases": 2
+    },
+    "degenerate/bucket-2/rational": {
+      "count": 4,
+      "statuses": {
+        "Degenerate": 4
+      },
+      "classify_compute_ms": {
+        "sum": 0.6844,
+        "mean": 0.1711,
+        "p95": 0.2488,
+        "max": 0.2488,
+        "max_id": 356
+      },
+      "classify_validate_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 256
+      },
+      "optimize_compute_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 256
+      },
+      "optimize_validate_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 256
+      },
+      "classify_ms": {
+        "sum": 0.6844,
+        "mean": 0.1711,
+        "p95": 0.2488,
+        "max": 0.2488,
+        "max_id": 356
+      },
+      "optimize_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 256
+      },
+      "classify_optimize_ms": {
+        "sum": 0.6844,
+        "mean": 0.1711,
+        "p95": 0.2488,
+        "max": 0.2488,
+        "max_id": 356
+      },
+      "other_ms": {
+        "sum": 0.0025000000000000022,
+        "mean": 0.0006250000000000006,
+        "p95": 0.0007000000000000062,
+        "max": 0.0007000000000000062,
+        "max_id": 356
+      },
+      "total_ms": {
+        "sum": 0.6869,
+        "mean": 0.171725,
+        "p95": 0.2495,
+        "max": 0.2495,
+        "max_id": 356
+      },
+      "iterations": 0,
+      "optimized_cases": 0
+    },
+    "degenerate/bucket-3/polynomial": {
+      "count": 4,
+      "statuses": {
+        "Unresolved": 1,
+        "Degenerate": 1,
+        "NoCandidate": 1,
+        "InvalidInput": 1
+      },
+      "classify_compute_ms": {
+        "sum": 3.9669000000000003,
+        "mean": 0.9917250000000001,
+        "p95": 1.7957,
+        "max": 1.7957,
+        "max_id": 377
+      },
+      "classify_validate_ms": {
+        "sum": 13.035,
+        "mean": 3.25875,
+        "p95": 13.035,
+        "max": 13.035,
+        "max_id": 379
+      },
+      "optimize_compute_ms": {
+        "sum": 0.1172,
+        "mean": 0.0293,
+        "p95": 0.1172,
+        "max": 0.1172,
+        "max_id": 379
+      },
+      "optimize_validate_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 277
+      },
+      "classify_ms": {
+        "sum": 17.0019,
+        "mean": 4.250475,
+        "p95": 14.7503,
+        "max": 14.7503,
+        "max_id": 379
+      },
+      "optimize_ms": {
+        "sum": 0.1172,
+        "mean": 0.0293,
+        "p95": 0.1172,
+        "max": 0.1172,
+        "max_id": 379
+      },
+      "classify_optimize_ms": {
+        "sum": 17.1191,
+        "mean": 4.279775,
+        "p95": 14.8675,
+        "max": 14.8675,
+        "max_id": 379
+      },
+      "other_ms": {
+        "sum": 0.025100000000000317,
+        "mean": 0.006275000000000079,
+        "p95": 0.010099999999999998,
+        "max": 0.010099999999999998,
+        "max_id": 279
+      },
+      "total_ms": {
+        "sum": 17.1442,
+        "mean": 4.28605,
+        "p95": 14.8736,
+        "max": 14.8736,
+        "max_id": 379
+      },
+      "iterations": 0,
+      "optimized_cases": 1
+    },
+    "degenerate/bucket-3/rational": {
+      "count": 4,
+      "statuses": {
+        "Degenerate": 4
+      },
+      "classify_compute_ms": {
+        "sum": 0.9394,
+        "mean": 0.23485,
+        "p95": 0.2986,
+        "max": 0.2986,
+        "max_id": 378
+      },
+      "classify_validate_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 276
+      },
+      "optimize_compute_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 276
+      },
+      "optimize_validate_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 276
+      },
+      "classify_ms": {
+        "sum": 0.9394,
+        "mean": 0.23485,
+        "p95": 0.2986,
+        "max": 0.2986,
+        "max_id": 378
+      },
+      "optimize_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 276
+      },
+      "classify_optimize_ms": {
+        "sum": 0.9394,
+        "mean": 0.23485,
+        "p95": 0.2986,
+        "max": 0.2986,
+        "max_id": 378
+      },
+      "other_ms": {
+        "sum": 0.0028000000000000247,
+        "mean": 0.0007000000000000062,
+        "p95": 0.0009000000000000119,
+        "max": 0.0009000000000000119,
+        "max_id": 276
+      },
+      "total_ms": {
+        "sum": 0.9422,
+        "mean": 0.23555,
+        "p95": 0.2992,
+        "max": 0.2992,
+        "max_id": 378
+      },
+      "iterations": 0,
+      "optimized_cases": 0
+    },
+    "degenerate/bucket-4/polynomial": {
+      "count": 4,
+      "statuses": {
+        "InvalidInput": 2,
+        "NoCandidate": 1,
+        "Degenerate": 1
+      },
+      "classify_compute_ms": {
+        "sum": 7.1718,
+        "mean": 1.79295,
+        "p95": 2.6256,
+        "max": 2.6256,
+        "max_id": 297
+      },
+      "classify_validate_ms": {
+        "sum": 22.292099999999998,
+        "mean": 5.5730249999999995,
+        "p95": 15.914,
+        "max": 15.914,
+        "max_id": 297
+      },
+      "optimize_compute_ms": {
+        "sum": 0.6803,
+        "mean": 0.170075,
+        "p95": 0.4955,
+        "max": 0.4955,
+        "max_id": 297
+      },
+      "optimize_validate_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 297
+      },
+      "classify_ms": {
+        "sum": 29.4639,
+        "mean": 7.365975,
+        "p95": 18.5396,
+        "max": 18.5396,
+        "max_id": 297
+      },
+      "optimize_ms": {
+        "sum": 0.6803,
+        "mean": 0.170075,
+        "p95": 0.4955,
+        "max": 0.4955,
+        "max_id": 297
+      },
+      "classify_optimize_ms": {
+        "sum": 30.1442,
+        "mean": 7.53605,
+        "p95": 19.0351,
+        "max": 19.0351,
+        "max_id": 297
+      },
+      "other_ms": {
+        "sum": 0.029799999999998744,
+        "mean": 0.007449999999999686,
+        "p95": 0.009099999999999997,
+        "max": 0.009099999999999997,
+        "max_id": 399
+      },
+      "total_ms": {
+        "sum": 30.174,
+        "mean": 7.5435,
+        "p95": 19.0431,
+        "max": 19.0431,
+        "max_id": 297
+      },
+      "iterations": 0,
+      "optimized_cases": 2
+    },
+    "degenerate/bucket-4/rational": {
+      "count": 4,
+      "statuses": {
+        "Degenerate": 4
+      },
+      "classify_compute_ms": {
+        "sum": 0.8262,
+        "mean": 0.20655,
+        "p95": 0.3182,
+        "max": 0.3182,
+        "max_id": 396
+      },
+      "classify_validate_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 296
+      },
+      "optimize_compute_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 296
+      },
+      "optimize_validate_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 296
+      },
+      "classify_ms": {
+        "sum": 0.8262,
+        "mean": 0.20655,
+        "p95": 0.3182,
+        "max": 0.3182,
+        "max_id": 396
+      },
+      "optimize_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 296
+      },
+      "classify_optimize_ms": {
+        "sum": 0.8262,
+        "mean": 0.20655,
+        "p95": 0.3182,
+        "max": 0.3182,
+        "max_id": 396
+      },
+      "other_ms": {
+        "sum": 0.002799999999999997,
+        "mean": 0.0006999999999999992,
+        "p95": 0.0007999999999999952,
+        "max": 0.0007999999999999952,
+        "max_id": 398
+      },
+      "total_ms": {
+        "sum": 0.829,
+        "mean": 0.20725,
+        "p95": 0.3188,
+        "max": 0.3188,
+        "max_id": 396
+      },
+      "iterations": 0,
+      "optimized_cases": 0
+    },
+    "degenerate/polynomial": {
+      "count": 20,
+      "statuses": {
+        "Degenerate": 5,
+        "Unresolved": 4,
+        "InvalidInput": 6,
+        "NoCandidate": 5
+      },
+      "classify_compute_ms": {
+        "sum": 20.187,
+        "mean": 1.00935,
+        "p95": 2.4887,
+        "max": 2.6256,
+        "max_id": 297
+      },
+      "classify_validate_ms": {
+        "sum": 63.721000000000004,
+        "mean": 3.1860500000000003,
+        "p95": 13.035,
+        "max": 15.914,
+        "max_id": 297
+      },
+      "optimize_compute_ms": {
+        "sum": 1.2372,
+        "mean": 0.061860000000000005,
+        "p95": 0.2257,
+        "max": 0.4955,
+        "max_id": 297
+      },
+      "optimize_validate_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 217
+      },
+      "classify_ms": {
+        "sum": 83.908,
+        "mean": 4.1954,
+        "p95": 14.7503,
+        "max": 18.5396,
+        "max_id": 297
+      },
+      "optimize_ms": {
+        "sum": 1.2372,
+        "mean": 0.061860000000000005,
+        "p95": 0.2257,
+        "max": 0.4955,
+        "max_id": 297
+      },
+      "classify_optimize_ms": {
+        "sum": 85.1452,
+        "mean": 4.2572600000000005,
+        "p95": 14.8675,
+        "max": 19.0351,
+        "max_id": 297
+      },
+      "other_ms": {
+        "sum": 0.10849999999999871,
+        "mean": 0.005424999999999935,
+        "p95": 0.009099999999999997,
+        "max": 0.010099999999999998,
+        "max_id": 279
+      },
+      "total_ms": {
+        "sum": 85.2537,
+        "mean": 4.262684999999999,
+        "p95": 14.8736,
+        "max": 19.0431,
+        "max_id": 297
+      },
+      "iterations": 0,
+      "optimized_cases": 6
+    },
+    "degenerate/rational": {
+      "count": 20,
+      "statuses": {
+        "Degenerate": 20
+      },
+      "classify_compute_ms": {
+        "sum": 3.7136,
+        "mean": 0.18568,
+        "p95": 0.2986,
+        "max": 0.3182,
+        "max_id": 396
+      },
+      "classify_validate_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 216
+      },
+      "optimize_compute_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 216
+      },
+      "optimize_validate_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 216
+      },
+      "classify_ms": {
+        "sum": 3.7136,
+        "mean": 0.18568,
+        "p95": 0.2986,
+        "max": 0.3182,
+        "max_id": 396
+      },
+      "optimize_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 216
+      },
+      "classify_optimize_ms": {
+        "sum": 3.7136,
+        "mean": 0.18568,
+        "p95": 0.2986,
+        "max": 0.3182,
+        "max_id": 396
+      },
+      "other_ms": {
+        "sum": 0.013799999999999993,
+        "mean": 0.0006899999999999996,
+        "p95": 0.0007999999999999952,
+        "max": 0.0009000000000000119,
+        "max_id": 276
+      },
+      "total_ms": {
+        "sum": 3.7274,
+        "mean": 0.18636999999999998,
+        "p95": 0.2992,
+        "max": 0.3188,
+        "max_id": 396
+      },
+      "iterations": 0,
+      "optimized_cases": 0
+    },
+    "regular": {
+      "count": 460,
+      "statuses": {
+        "Success": 460
+      },
+      "classify_compute_ms": {
+        "sum": 499.4104,
+        "mean": 1.0856747826086957,
+        "p95": 2.6766,
+        "max": 4.102,
+        "max_id": 385
+      },
+      "classify_validate_ms": {
+        "sum": 50212.6505,
+        "mean": 109.15793586956522,
+        "p95": 484.084,
+        "max": 1103.7084,
+        "max_id": 491
+      },
+      "optimize_compute_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 0
+      },
+      "optimize_validate_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 0
+      },
+      "classify_ms": {
+        "sum": 50712.0609,
+        "mean": 110.2436106521739,
+        "p95": 486.1731,
+        "max": 1107.5333,
+        "max_id": 491
+      },
+      "optimize_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 0
+      },
+      "classify_optimize_ms": {
+        "sum": 50712.0609,
+        "mean": 110.2436106521739,
+        "p95": 486.1731,
+        "max": 1107.5333,
+        "max_id": 491
+      },
+      "other_ms": {
+        "sum": 2.8472999999997346,
+        "mean": 0.006189782608695075,
+        "p95": 0.0146000000000015,
+        "max": 0.030700000000024374,
+        "max_id": 295
+      },
+      "total_ms": {
+        "sum": 50714.9082,
+        "mean": 110.2498004347826,
+        "p95": 486.1934,
+        "max": 1107.5496,
+        "max_id": 491
+      },
+      "iterations": 0,
+      "optimized_cases": 0
+    },
+    "regular/Cone/polynomial": {
+      "count": 40,
+      "statuses": {
+        "Success": 40
+      },
+      "classify_compute_ms": {
+        "sum": 63.5247,
+        "mean": 1.5881175,
+        "p95": 2.681,
+        "max": 2.9287,
+        "max_id": 291
+      },
+      "classify_validate_ms": {
+        "sum": 5895.8183,
+        "mean": 147.3954575,
+        "p95": 272.0226,
+        "max": 404.6874,
+        "max_id": 295
+      },
+      "optimize_compute_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 201
+      },
+      "optimize_validate_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 201
+      },
+      "classify_ms": {
+        "sum": 5959.343,
+        "mean": 148.983575,
+        "p95": 274.017,
+        "max": 407.3211,
+        "max_id": 295
+      },
+      "optimize_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 201
+      },
+      "classify_optimize_ms": {
+        "sum": 5959.343,
+        "mean": 148.983575,
+        "p95": 274.017,
+        "max": 407.3211,
+        "max_id": 295
+      },
+      "other_ms": {
+        "sum": 0.42710000000002424,
+        "mean": 0.010677500000000607,
+        "p95": 0.016999999999995907,
+        "max": 0.030700000000024374,
+        "max_id": 295
+      },
+      "total_ms": {
+        "sum": 5959.7701,
+        "mean": 148.9942525,
+        "p95": 274.0296,
+        "max": 407.3518,
+        "max_id": 295
+      },
+      "iterations": 0,
+      "optimized_cases": 0
+    },
+    "regular/Cone/rational": {
+      "count": 40,
+      "statuses": {
+        "Success": 40
+      },
+      "classify_compute_ms": {
+        "sum": 12.675699999999999,
+        "mean": 0.31689249999999997,
+        "p95": 0.4854,
+        "max": 0.5177,
+        "max_id": 294
+      },
+      "classify_validate_ms": {
+        "sum": 41.3129,
+        "mean": 1.0328225,
+        "p95": 2.4065,
+        "max": 3.5968,
+        "max_id": 290
+      },
+      "optimize_compute_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 200
+      },
+      "optimize_validate_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 200
+      },
+      "classify_ms": {
+        "sum": 53.9886,
+        "mean": 1.349715,
+        "p95": 2.8798,
+        "max": 4.0822,
+        "max_id": 290
+      },
+      "optimize_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 200
+      },
+      "classify_optimize_ms": {
+        "sum": 53.9886,
+        "mean": 1.349715,
+        "p95": 2.8798,
+        "max": 4.0822,
+        "max_id": 290
+      },
+      "other_ms": {
+        "sum": 0.059600000000000763,
+        "mean": 0.001490000000000019,
+        "p95": 0.0020999999999999908,
+        "max": 0.0027000000000001467,
+        "max_id": 222
+      },
+      "total_ms": {
+        "sum": 54.0482,
+        "mean": 1.351205,
+        "p95": 2.8818,
+        "max": 4.0842,
+        "max_id": 290
+      },
+      "iterations": 0,
+      "optimized_cases": 0
+    },
+    "regular/Cylinder/polynomial": {
+      "count": 50,
+      "statuses": {
+        "Success": 50
+      },
+      "classify_compute_ms": {
+        "sum": 74.4238,
+        "mean": 1.488476,
+        "p95": 2.674,
+        "max": 2.8636,
+        "max_id": 185
+      },
+      "classify_validate_ms": {
+        "sum": 6977.8744,
+        "mean": 139.557488,
+        "p95": 353.6449,
+        "max": 362.7497,
+        "max_id": 191
+      },
+      "optimize_compute_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 101
+      },
+      "optimize_validate_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 101
+      },
+      "classify_ms": {
+        "sum": 7052.2982,
+        "mean": 141.045964,
+        "p95": 356.1334,
+        "max": 365.33070000000004,
+        "max_id": 191
+      },
+      "optimize_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 101
+      },
+      "classify_optimize_ms": {
+        "sum": 7052.2982,
+        "mean": 141.045964,
+        "p95": 356.1334,
+        "max": 365.33070000000004,
+        "max_id": 191
+      },
+      "other_ms": {
+        "sum": 0.41009999999990043,
+        "mean": 0.00820199999999801,
+        "p95": 0.013700000000000045,
+        "max": 0.016199999999997772,
+        "max_id": 175
+      },
+      "total_ms": {
+        "sum": 7052.7083,
+        "mean": 141.054166,
+        "p95": 356.1451,
+        "max": 365.3433,
+        "max_id": 191
+      },
+      "iterations": 0,
+      "optimized_cases": 0
+    },
+    "regular/Cylinder/rational": {
+      "count": 50,
+      "statuses": {
+        "Success": 50
+      },
+      "classify_compute_ms": {
+        "sum": 15.4107,
+        "mean": 0.308214,
+        "p95": 0.4901,
+        "max": 0.5521,
+        "max_id": 190
+      },
+      "classify_validate_ms": {
+        "sum": 47.6497,
+        "mean": 0.952994,
+        "p95": 2.7812,
+        "max": 3.3125,
+        "max_id": 190
+      },
+      "optimize_compute_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 100
+      },
+      "optimize_validate_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 100
+      },
+      "classify_ms": {
+        "sum": 63.0604,
+        "mean": 1.261208,
+        "p95": 3.2125000000000004,
+        "max": 3.8646000000000003,
+        "max_id": 190
+      },
+      "optimize_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 100
+      },
+      "classify_optimize_ms": {
+        "sum": 63.0604,
+        "mean": 1.261208,
+        "p95": 3.2125000000000004,
+        "max": 3.8646000000000003,
+        "max_id": 190
+      },
+      "other_ms": {
+        "sum": 0.07149999999999918,
+        "mean": 0.0014299999999999836,
+        "p95": 0.0020999999999997687,
+        "max": 0.0026000000000001577,
+        "max_id": 198
+      },
+      "total_ms": {
+        "sum": 63.1319,
+        "mean": 1.262638,
+        "p95": 3.214,
+        "max": 3.866,
+        "max_id": 190
+      },
+      "iterations": 0,
+      "optimized_cases": 0
+    },
+    "regular/Plane/polynomial": {
+      "count": 100,
+      "statuses": {
+        "Success": 100
+      },
+      "classify_compute_ms": {
+        "sum": 121.5873,
+        "mean": 1.215873,
+        "p95": 1.9731,
+        "max": 3.3591,
+        "max_id": 85
+      },
+      "classify_validate_ms": {
+        "sum": 3115.2336999999998,
+        "mean": 31.152337,
+        "p95": 67.7366,
+        "max": 69.3887,
+        "max_id": 83
+      },
+      "optimize_compute_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 0
+      },
+      "optimize_validate_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 0
+      },
+      "classify_ms": {
+        "sum": 3236.821,
+        "mean": 32.36821,
+        "p95": 70.67,
+        "max": 71.3663,
+        "max_id": 83
+      },
+      "optimize_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 0
+      },
+      "classify_optimize_ms": {
+        "sum": 3236.821,
+        "mean": 32.36821,
+        "p95": 70.67,
+        "max": 71.3663,
+        "max_id": 83
+      },
+      "other_ms": {
+        "sum": 0.7398000000000184,
+        "mean": 0.007398000000000185,
+        "p95": 0.011800000000008026,
+        "max": 0.03059999999999974,
+        "max_id": 73
+      },
+      "total_ms": {
+        "sum": 3237.5608,
+        "mean": 32.375608,
+        "p95": 70.6812,
+        "max": 71.3764,
+        "max_id": 83
+      },
+      "iterations": 0,
+      "optimized_cases": 0
+    },
+    "regular/Sphere/polynomial": {
+      "count": 40,
+      "statuses": {
+        "Success": 40
+      },
+      "classify_compute_ms": {
+        "sum": 81.0798,
+        "mean": 2.0269950000000003,
+        "p95": 3.9907,
+        "max": 4.102,
+        "max_id": 385
+      },
+      "classify_validate_ms": {
+        "sum": 12455.6185,
+        "mean": 311.3904625,
+        "p95": 678.3999,
+        "max": 681.636,
+        "max_id": 385
+      },
+      "optimize_compute_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 301
+      },
+      "optimize_validate_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 301
+      },
+      "classify_ms": {
+        "sum": 12536.6983,
+        "mean": 313.4174575,
+        "p95": 682.3906,
+        "max": 685.7379999999999,
+        "max_id": 385
+      },
+      "optimize_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 301
+      },
+      "classify_optimize_ms": {
+        "sum": 12536.6983,
+        "mean": 313.4174575,
+        "p95": 682.3906,
+        "max": 685.7379999999999,
+        "max_id": 385
+      },
+      "other_ms": {
+        "sum": 0.4438999999999709,
+        "mean": 0.011097499999999271,
+        "p95": 0.015600000000006276,
+        "max": 0.016500000000064574,
+        "max_id": 369
+      },
+      "total_ms": {
+        "sum": 12537.1422,
+        "mean": 313.428555,
+        "p95": 682.4056,
+        "max": 685.751,
+        "max_id": 385
+      },
+      "iterations": 0,
+      "optimized_cases": 0
+    },
+    "regular/Sphere/rational": {
+      "count": 40,
+      "statuses": {
+        "Success": 40
+      },
+      "classify_compute_ms": {
+        "sum": 14.9694,
+        "mean": 0.374235,
+        "p95": 0.6361,
+        "max": 0.6699,
+        "max_id": 382
+      },
+      "classify_validate_ms": {
+        "sum": 36.3324,
+        "mean": 0.90831,
+        "p95": 1.9796,
+        "max": 2.924,
+        "max_id": 390
+      },
+      "optimize_compute_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 300
+      },
+      "optimize_validate_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 300
+      },
+      "classify_ms": {
+        "sum": 51.3018,
+        "mean": 1.282545,
+        "p95": 2.5871000000000004,
+        "max": 3.561,
+        "max_id": 390
+      },
+      "optimize_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 300
+      },
+      "classify_optimize_ms": {
+        "sum": 51.3018,
+        "mean": 1.282545,
+        "p95": 2.5871000000000004,
+        "max": 3.561,
+        "max_id": 390
+      },
+      "other_ms": {
+        "sum": 0.056700000000000195,
+        "mean": 0.001417500000000005,
+        "p95": 0.0020999999999999908,
+        "max": 0.0024000000000001798,
+        "max_id": 362
+      },
+      "total_ms": {
+        "sum": 51.3585,
+        "mean": 1.2839625,
+        "p95": 2.5889,
+        "max": 3.5631,
+        "max_id": 390
+      },
+      "iterations": 0,
+      "optimized_cases": 0
+    },
+    "regular/Torus/polynomial": {
+      "count": 50,
+      "statuses": {
+        "Success": 50
+      },
+      "classify_compute_ms": {
+        "sum": 97.3269,
+        "mean": 1.9465379999999999,
+        "p95": 3.8249,
+        "max": 3.9261,
+        "max_id": 483
+      },
+      "classify_validate_ms": {
+        "sum": 21428.8491,
+        "mean": 428.576982,
+        "p95": 1100.1093,
+        "max": 1103.7084,
+        "max_id": 491
+      },
+      "optimize_compute_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 401
+      },
+      "optimize_validate_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 401
+      },
+      "classify_ms": {
+        "sum": 21526.176,
+        "mean": 430.52351999999996,
+        "p95": 1104.0346000000002,
+        "max": 1107.5333,
+        "max_id": 491
+      },
+      "optimize_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 401
+      },
+      "classify_optimize_ms": {
+        "sum": 21526.176,
+        "mean": 430.52351999999996,
+        "p95": 1104.0346000000002,
+        "max": 1107.5333,
+        "max_id": 491
+      },
+      "other_ms": {
+        "sum": 0.5584999999998246,
+        "mean": 0.011169999999996492,
+        "p95": 0.019000000000005457,
+        "max": 0.020400000000108776,
+        "max_id": 489
+      },
+      "total_ms": {
+        "sum": 21526.7345,
+        "mean": 430.53468999999996,
+        "p95": 1104.0473,
+        "max": 1107.5496,
+        "max_id": 491
+      },
+      "iterations": 0,
+      "optimized_cases": 0
+    },
+    "regular/Torus/rational": {
+      "count": 50,
+      "statuses": {
+        "Success": 50
+      },
+      "classify_compute_ms": {
+        "sum": 18.4121,
+        "mean": 0.36824199999999996,
+        "p95": 0.6324000000000001,
+        "max": 0.6934,
+        "max_id": 484
+      },
+      "classify_validate_ms": {
+        "sum": 213.9615,
+        "mean": 4.27923,
+        "p95": 17.3475,
+        "max": 17.98,
+        "max_id": 490
+      },
+      "optimize_compute_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 400
+      },
+      "optimize_validate_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 400
+      },
+      "classify_ms": {
+        "sum": 232.3736,
+        "mean": 4.6474720000000005,
+        "p95": 18.0409,
+        "max": 18.6719,
+        "max_id": 490
+      },
+      "optimize_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 400
+      },
+      "classify_optimize_ms": {
+        "sum": 232.3736,
+        "mean": 4.6474720000000005,
+        "p95": 18.0409,
+        "max": 18.6719,
+        "max_id": 490
+      },
+      "other_ms": {
+        "sum": 0.08009999999999601,
+        "mean": 0.0016019999999999201,
+        "p95": 0.0030999999999998806,
+        "max": 0.003999999999997783,
+        "max_id": 490
+      },
+      "total_ms": {
+        "sum": 232.4537,
+        "mean": 4.649074,
+        "p95": 18.044,
+        "max": 18.6759,
+        "max_id": 490
+      },
+      "iterations": 0,
+      "optimized_cases": 0
+    },
+    "regular/bucket-0/polynomial": {
+      "count": 56,
+      "statuses": {
+        "Success": 56
+      },
+      "classify_compute_ms": {
+        "sum": 41.5754,
+        "mean": 0.7424178571428571,
+        "p95": 1.0406,
+        "max": 1.2043,
+        "max_id": 305
+      },
+      "classify_validate_ms": {
+        "sum": 3131.3538,
+        "mean": 55.91703214285714,
+        "p95": 146.2867,
+        "max": 147.3176,
+        "max_id": 401
+      },
+      "optimize_compute_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 0
+      },
+      "optimize_validate_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 0
+      },
+      "classify_ms": {
+        "sum": 3172.9292,
+        "mean": 56.65945,
+        "p95": 146.9445,
+        "max": 148.0171,
+        "max_id": 401
+      },
+      "optimize_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 0
+      },
+      "classify_optimize_ms": {
+        "sum": 3172.9292,
+        "mean": 56.65945,
+        "p95": 146.9445,
+        "max": 148.0171,
+        "max_id": 401
+      },
+      "other_ms": {
+        "sum": 0.37219999999995146,
+        "mean": 0.006646428571427705,
+        "p95": 0.01120000000000232,
+        "max": 0.011900000000011346,
+        "max_id": 301
+      },
+      "total_ms": {
+        "sum": 3173.3014,
+        "mean": 56.66609642857143,
+        "p95": 146.952,
+        "max": 148.0283,
+        "max_id": 401
+      },
+      "iterations": 0,
+      "optimized_cases": 0
+    },
+    "regular/bucket-0/rational": {
+      "count": 36,
+      "statuses": {
+        "Success": 36
+      },
+      "classify_compute_ms": {
+        "sum": 8.1526,
+        "mean": 0.2264611111111111,
+        "p95": 0.3186,
+        "max": 0.39120000000000005,
+        "max_id": 304
+      },
+      "classify_validate_ms": {
+        "sum": 24.6679,
+        "mean": 0.6852194444444444,
+        "p95": 2.8847,
+        "max": 2.9568,
+        "max_id": 410
+      },
+      "optimize_compute_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 100
+      },
+      "optimize_validate_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 100
+      },
+      "classify_ms": {
+        "sum": 32.8205,
+        "mean": 0.9116805555555556,
+        "p95": 3.1668000000000003,
+        "max": 3.2146,
+        "max_id": 410
+      },
+      "optimize_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 100
+      },
+      "classify_optimize_ms": {
+        "sum": 32.8205,
+        "mean": 0.9116805555555556,
+        "p95": 3.1668000000000003,
+        "max": 3.2146,
+        "max_id": 410
+      },
+      "other_ms": {
+        "sum": 0.04359999999999997,
+        "mean": 0.0012111111111111103,
+        "p95": 0.0016999999999998128,
+        "max": 0.0017000000000000348,
+        "max_id": 304
+      },
+      "total_ms": {
+        "sum": 32.8641,
+        "mean": 0.9128916666666667,
+        "p95": 3.168,
+        "max": 3.2159,
+        "max_id": 410
+      },
+      "iterations": 0,
+      "optimized_cases": 0
+    },
+    "regular/bucket-1/polynomial": {
+      "count": 56,
+      "statuses": {
+        "Success": 56
+      },
+      "classify_compute_ms": {
+        "sum": 71.184,
+        "mean": 1.2711428571428571,
+        "p95": 1.8381,
+        "max": 1.9171,
+        "max_id": 325
+      },
+      "classify_validate_ms": {
+        "sum": 6845.1194,
+        "mean": 122.234275,
+        "p95": 342.8899,
+        "max": 344.7265,
+        "max_id": 425
+      },
+      "optimize_compute_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 20
+      },
+      "optimize_validate_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 20
+      },
+      "classify_ms": {
+        "sum": 6916.3034,
+        "mean": 123.50541785714286,
+        "p95": 344.5258,
+        "max": 346.3515,
+        "max_id": 425
+      },
+      "optimize_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 20
+      },
+      "classify_optimize_ms": {
+        "sum": 6916.3034,
+        "mean": 123.50541785714286,
+        "p95": 344.5258,
+        "max": 346.3515,
+        "max_id": 425
+      },
+      "other_ms": {
+        "sum": 0.4749999999999055,
+        "mean": 0.00848214285714117,
+        "p95": 0.014999999999986358,
+        "max": 0.027599999999999625,
+        "max_id": 23
+      },
+      "total_ms": {
+        "sum": 6916.7784,
+        "mean": 123.5139,
+        "p95": 344.535,
+        "max": 346.3631,
+        "max_id": 425
+      },
+      "iterations": 0,
+      "optimized_cases": 0
+    },
+    "regular/bucket-1/rational": {
+      "count": 36,
+      "statuses": {
+        "Success": 36
+      },
+      "classify_compute_ms": {
+        "sum": 11.0093,
+        "mean": 0.3058138888888889,
+        "p95": 0.40509999999999996,
+        "max": 0.4235,
+        "max_id": 328
+      },
+      "classify_validate_ms": {
+        "sum": 48.8423,
+        "mean": 1.3567305555555556,
+        "p95": 6.5012,
+        "max": 6.5222,
+        "max_id": 424
+      },
+      "optimize_compute_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 120
+      },
+      "optimize_validate_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 120
+      },
+      "classify_ms": {
+        "sum": 59.8516,
+        "mean": 1.6625444444444444,
+        "p95": 6.8888,
+        "max": 6.9093,
+        "max_id": 424
+      },
+      "optimize_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 120
+      },
+      "classify_optimize_ms": {
+        "sum": 59.8516,
+        "mean": 1.6625444444444444,
+        "p95": 6.8888,
+        "max": 6.9093,
+        "max_id": 424
+      },
+      "other_ms": {
+        "sum": 0.055799999999999794,
+        "mean": 0.0015499999999999943,
+        "p95": 0.0022999999999999687,
+        "max": 0.0027000000000001467,
+        "max_id": 222
+      },
+      "total_ms": {
+        "sum": 59.9074,
+        "mean": 1.6640944444444445,
+        "p95": 6.8904,
+        "max": 6.9111,
+        "max_id": 424
+      },
+      "iterations": 0,
+      "optimized_cases": 0
+    },
+    "regular/bucket-2/polynomial": {
+      "count": 56,
+      "statuses": {
+        "Success": 56
+      },
+      "classify_compute_ms": {
+        "sum": 89.9233,
+        "mean": 1.6057732142857142,
+        "p95": 2.3118,
+        "max": 2.538,
+        "max_id": 457
+      },
+      "classify_validate_ms": {
+        "sum": 9409.2782,
+        "mean": 168.022825,
+        "p95": 484.084,
+        "max": 499.3291,
+        "max_id": 455
+      },
+      "optimize_compute_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 40
+      },
+      "optimize_validate_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 40
+      },
+      "classify_ms": {
+        "sum": 9499.2015,
+        "mean": 169.6285982142857,
+        "p95": 486.1731,
+        "max": 501.563,
+        "max_id": 455
+      },
+      "optimize_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 40
+      },
+      "classify_optimize_ms": {
+        "sum": 9499.2015,
+        "mean": 169.6285982142857,
+        "p95": 486.1731,
+        "max": 501.563,
+        "max_id": 455
+      },
+      "other_ms": {
+        "sum": 0.4941999999997897,
+        "mean": 0.008824999999996244,
+        "p95": 0.015800000000012915,
+        "max": 0.02030000000002019,
+        "max_id": 451
+      },
+      "total_ms": {
+        "sum": 9499.6957,
+        "mean": 169.63742321428572,
+        "p95": 486.1934,
+        "max": 501.5731,
+        "max_id": 455
+      },
+      "iterations": 0,
+      "optimized_cases": 0
+    },
+    "regular/bucket-2/rational": {
+      "count": 36,
+      "statuses": {
+        "Success": 36
+      },
+      "classify_compute_ms": {
+        "sum": 12.273200000000001,
+        "mean": 0.34092222222222224,
+        "p95": 0.5109,
+        "max": 0.5801,
+        "max_id": 442
+      },
+      "classify_validate_ms": {
+        "sum": 64.7822,
+        "mean": 1.7995055555555557,
+        "p95": 8.8162,
+        "max": 8.8335,
+        "max_id": 456
+      },
+      "optimize_compute_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 140
+      },
+      "optimize_validate_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 140
+      },
+      "classify_ms": {
+        "sum": 77.0554,
+        "mean": 2.140427777777778,
+        "p95": 9.2795,
+        "max": 9.299299999999999,
+        "max_id": 450
+      },
+      "optimize_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 140
+      },
+      "classify_optimize_ms": {
+        "sum": 77.0554,
+        "mean": 2.140427777777778,
+        "p95": 9.2795,
+        "max": 9.299299999999999,
+        "max_id": 450
+      },
+      "other_ms": {
+        "sum": 0.05119999999999908,
+        "mean": 0.0014222222222221967,
+        "p95": 0.0019000000000000128,
+        "max": 0.002000000000000668,
+        "max_id": 450
+      },
+      "total_ms": {
+        "sum": 77.1066,
+        "mean": 2.14185,
+        "p95": 9.2811,
+        "max": 9.3013,
+        "max_id": 450
+      },
+      "iterations": 0,
+      "optimized_cases": 0
+    },
+    "regular/bucket-3/polynomial": {
+      "count": 56,
+      "statuses": {
+        "Success": 56
+      },
+      "classify_compute_ms": {
+        "sum": 100.0095,
+        "mean": 1.7858839285714285,
+        "p95": 2.7177,
+        "max": 2.7831,
+        "max_id": 465
+      },
+      "classify_validate_ms": {
+        "sum": 12376.7562,
+        "mean": 221.01350357142857,
+        "p95": 667.9116,
+        "max": 675.4698,
+        "max_id": 465
+      },
+      "optimize_compute_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 60
+      },
+      "optimize_validate_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 60
+      },
+      "classify_ms": {
+        "sum": 12476.7657,
+        "mean": 222.7993875,
+        "p95": 670.4629,
+        "max": 678.2529,
+        "max_id": 465
+      },
+      "optimize_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 60
+      },
+      "classify_optimize_ms": {
+        "sum": 12476.7657,
+        "mean": 222.7993875,
+        "p95": 670.4629,
+        "max": 678.2529,
+        "max_id": 465
+      },
+      "other_ms": {
+        "sum": 0.602799999999867,
+        "mean": 0.01076428571428334,
+        "p95": 0.018799999999941974,
+        "max": 0.03059999999999974,
+        "max_id": 73
+      },
+      "total_ms": {
+        "sum": 12477.3685,
+        "mean": 222.81015178571428,
+        "p95": 670.4735,
+        "max": 678.2719,
+        "max_id": 465
+      },
+      "iterations": 0,
+      "optimized_cases": 0
+    },
+    "regular/bucket-3/rational": {
+      "count": 36,
+      "statuses": {
+        "Success": 36
+      },
+      "classify_compute_ms": {
+        "sum": 13.6076,
+        "mean": 0.3779888888888889,
+        "p95": 0.5526,
+        "max": 0.6075,
+        "max_id": 370
+      },
+      "classify_validate_ms": {
+        "sum": 80.2758,
+        "mean": 2.2298833333333334,
+        "p95": 11.3091,
+        "max": 11.3862,
+        "max_id": 470
+      },
+      "optimize_compute_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 160
+      },
+      "optimize_validate_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 160
+      },
+      "classify_ms": {
+        "sum": 93.8834,
+        "mean": 2.607872222222222,
+        "p95": 11.8617,
+        "max": 11.9329,
+        "max_id": 470
+      },
+      "optimize_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 160
+      },
+      "classify_optimize_ms": {
+        "sum": 93.8834,
+        "mean": 2.607872222222222,
+        "p95": 11.8617,
+        "max": 11.9329,
+        "max_id": 470
+      },
+      "other_ms": {
+        "sum": 0.05600000000000194,
+        "mean": 0.0015555555555556095,
+        "p95": 0.0024000000000001798,
+        "max": 0.0036000000000004917,
+        "max_id": 470
+      },
+      "total_ms": {
+        "sum": 93.9394,
+        "mean": 2.609427777777778,
+        "p95": 11.8641,
+        "max": 11.9365,
+        "max_id": 470
+      },
+      "iterations": 0,
+      "optimized_cases": 0
+    },
+    "regular/bucket-4/polynomial": {
+      "count": 56,
+      "statuses": {
+        "Success": 56
+      },
+      "classify_compute_ms": {
+        "sum": 135.2503,
+        "mean": 2.415183928571429,
+        "p95": 3.9907,
+        "max": 4.102,
+        "max_id": 385
+      },
+      "classify_validate_ms": {
+        "sum": 18110.8864,
+        "mean": 323.4086857142857,
+        "p95": 1100.1093,
+        "max": 1103.7084,
+        "max_id": 491
+      },
+      "optimize_compute_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 80
+      },
+      "optimize_validate_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 80
+      },
+      "classify_ms": {
+        "sum": 18246.1367,
+        "mean": 325.8238696428571,
+        "p95": 1104.0346000000002,
+        "max": 1107.5333,
+        "max_id": 491
+      },
+      "optimize_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 80
+      },
+      "classify_optimize_ms": {
+        "sum": 18246.1367,
+        "mean": 325.8238696428571,
+        "p95": 1104.0346000000002,
+        "max": 1107.5333,
+        "max_id": 491
+      },
+      "other_ms": {
+        "sum": 0.6352000000002249,
+        "mean": 0.01134285714286116,
+        "p95": 0.01630000000000109,
+        "max": 0.030700000000024374,
+        "max_id": 295
+      },
+      "total_ms": {
+        "sum": 18246.7719,
+        "mean": 325.8352125,
+        "p95": 1104.0473,
+        "max": 1107.5496,
+        "max_id": 491
+      },
+      "iterations": 0,
+      "optimized_cases": 0
+    },
+    "regular/bucket-4/rational": {
+      "count": 36,
+      "statuses": {
+        "Success": 36
+      },
+      "classify_compute_ms": {
+        "sum": 16.4252,
+        "mean": 0.4562555555555556,
+        "p95": 0.6919,
+        "max": 0.6934,
+        "max_id": 484
+      },
+      "classify_validate_ms": {
+        "sum": 120.6883,
+        "mean": 3.3524527777777777,
+        "p95": 17.6826,
+        "max": 17.98,
+        "max_id": 490
+      },
+      "optimize_compute_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 180
+      },
+      "optimize_validate_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 180
+      },
+      "classify_ms": {
+        "sum": 137.11350000000002,
+        "mean": 3.8087083333333336,
+        "p95": 18.315,
+        "max": 18.6719,
+        "max_id": 490
+      },
+      "optimize_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 180
+      },
+      "classify_optimize_ms": {
+        "sum": 137.11350000000002,
+        "mean": 3.8087083333333336,
+        "p95": 18.315,
+        "max": 18.6719,
+        "max_id": 490
+      },
+      "other_ms": {
+        "sum": 0.06129999999999536,
+        "mean": 0.0017027777777776489,
+        "p95": 0.0030999999999998806,
+        "max": 0.003999999999997783,
+        "max_id": 490
+      },
+      "total_ms": {
+        "sum": 137.1748,
+        "mean": 3.810411111111111,
+        "p95": 18.3174,
+        "max": 18.6759,
+        "max_id": 490
+      },
+      "iterations": 0,
+      "optimized_cases": 0
+    },
+    "regular/polynomial": {
+      "count": 280,
+      "statuses": {
+        "Success": 280
+      },
+      "classify_compute_ms": {
+        "sum": 437.9425,
+        "mean": 1.5640803571428572,
+        "p95": 2.8259,
+        "max": 4.102,
+        "max_id": 385
+      },
+      "classify_validate_ms": {
+        "sum": 49873.394,
+        "mean": 178.11926428571428,
+        "p95": 665.3763,
+        "max": 1103.7084,
+        "max_id": 491
+      },
+      "optimize_compute_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 0
+      },
+      "optimize_validate_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 0
+      },
+      "classify_ms": {
+        "sum": 50311.3365,
+        "mean": 179.68334464285712,
+        "p95": 668.0903000000001,
+        "max": 1107.5333,
+        "max_id": 491
+      },
+      "optimize_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 0
+      },
+      "classify_optimize_ms": {
+        "sum": 50311.3365,
+        "mean": 179.68334464285712,
+        "p95": 668.0903000000001,
+        "max": 1107.5333,
+        "max_id": 491
+      },
+      "other_ms": {
+        "sum": 2.5793999999997386,
+        "mean": 0.009212142857141923,
+        "p95": 0.015800000000012915,
+        "max": 0.030700000000024374,
+        "max_id": 295
+      },
+      "total_ms": {
+        "sum": 50313.9159,
+        "mean": 179.6925567857143,
+        "p95": 668.1091,
+        "max": 1107.5496,
+        "max_id": 491
+      },
+      "iterations": 0,
+      "optimized_cases": 0
+    },
+    "regular/rational": {
+      "count": 180,
+      "statuses": {
+        "Success": 180
+      },
+      "classify_compute_ms": {
+        "sum": 61.4679,
+        "mean": 0.34148833333333334,
+        "p95": 0.6,
+        "max": 0.6934,
+        "max_id": 484
+      },
+      "classify_validate_ms": {
+        "sum": 339.2565,
+        "mean": 1.8847583333333335,
+        "p95": 7.2166,
+        "max": 17.98,
+        "max_id": 490
+      },
+      "optimize_compute_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 100
+      },
+      "optimize_validate_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 100
+      },
+      "classify_ms": {
+        "sum": 400.7244,
+        "mean": 2.2262466666666665,
+        "p95": 7.8266,
+        "max": 18.6719,
+        "max_id": 490
+      },
+      "optimize_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "max_id": 100
+      },
+      "classify_optimize_ms": {
+        "sum": 400.7244,
+        "mean": 2.2262466666666665,
+        "p95": 7.8266,
+        "max": 18.6719,
+        "max_id": 490
+      },
+      "other_ms": {
+        "sum": 0.26789999999999614,
+        "mean": 0.0014883333333333118,
+        "p95": 0.0022999999999999687,
+        "max": 0.003999999999997783,
+        "max_id": 490
+      },
+      "total_ms": {
+        "sum": 400.9923,
+        "mean": 2.227735,
+        "p95": 7.8278,
+        "max": 18.6759,
+        "max_id": 490
+      },
+      "iterations": 0,
+      "optimized_cases": 0
+    }
+  }
+}

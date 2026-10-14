@@ -93,17 +93,18 @@ bool RefineAndValidateCandidate(const sggk::BSplineSurface &s, AnalyticPatch &ca
                                 std::shared_ptr<const SourceSampleCache> &base,
                                 unsigned candidateIndex,SurfaceSampleContext *shared)
 {
-    auto validate = [&]() {
-        StageTimer timer(result.timing.validation);
+    auto validate = [&](bool initial) {
+        StageTimer timer(initial ? result.timing.classificationValidation : result.timing.optimizationValidation,
+                         initial ? &result.timing.classification : &result.timing.optimization);
         result.validation = ValidateConversion(s, candidate, o.validation);
         result.statistics.validationPieces += result.validation.piecesVisited;
     };
-    validate();
+    validate(true);
     if (result.validation.Passed() || !o.refinement.maxRounds)
         return false;
     SampleCache samples;
     {
-        StageTimer timer(result.timing.optimization);
+        StageTimer timer(result.timing.optimizationCompute, &result.timing.optimization);
         if (!base)
         {
             auto initial = SampleSurface(s, o.sampling,shared);
@@ -117,7 +118,7 @@ bool RefineAndValidateCandidate(const sggk::BSplineSurface &s, AnalyticPatch &ca
         samples = SampleCache(base);
     }
     auto addWitnesses = [&]() {
-        StageTimer timer(result.timing.optimization);
+        StageTimer timer(result.timing.optimizationCompute, &result.timing.optimization);
         unsigned count = AddWitnessSamples(s, result.validation, o.sampling, samples,shared);
         result.statistics.witnessSamplesAdded += count;
         result.statistics.sampleCount =
@@ -139,7 +140,7 @@ bool RefineAndValidateCandidate(const sggk::BSplineSurface &s, AnalyticPatch &ca
         {
             unsigned before = result.statistics.optimizationIterations;
             {
-                StageTimer timer(result.timing.optimization);
+                StageTimer timer(result.timing.optimizationCompute, &result.timing.optimization);
                 RefinementResult refinement;
                 if (level == ParameterLevel::SizeOrOffset &&
                     candidate.parameters.type == sggk::SurfaceType::Plane &&
@@ -162,7 +163,7 @@ bool RefineAndValidateCandidate(const sggk::BSplineSurface &s, AnalyticPatch &ca
                 d.entryReason = reason;
             }
             remaining -= result.statistics.optimizationIterations - before;
-            validate();
+            validate(false);
             if (result.validation.Passed())
                 return progressed;
             if (!o.refinement.maxIterations || o.refinement.minTrustRadius >= .1)
@@ -255,7 +256,7 @@ ConversionResult detail::ConvertApproximateWithSamples(const sggk::BSplineSurfac
             throw Failure(Status::InvalidInput, "Invalid refinement stopping options");
         std::vector<AnalyticPatch> candidates;
         {
-            StageTimer timer(result.timing.classification);
+            StageTimer timer(result.timing.classificationCompute, &result.timing.classification);
             try
             {
                 candidates = ClassifyApproximate(s, o, &result.statistics.classification, true, &samples);

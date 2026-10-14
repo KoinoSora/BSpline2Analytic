@@ -3,6 +3,7 @@
 #include "IntervalBounds.h"
 #include "Numerics.h"
 #include "SurfaceConversion.h"
+#include "SpecializedTimingChecks.h"
 #include <Foundation/init.h>
 #include <fstream>
 #include <iomanip>
@@ -29,6 +30,49 @@ std::string Quote(std::string s)
     }
     return out + '"';
 }
+// Exercise only the representation-appropriate isoparametric API. In
+// particular, no General fallback or additional unified PCurve check runs.
+struct SpecializedResult
+{
+    ConversionPath path;
+    std::variant<RecognitionResult, ConversionResult> details;
+    explicit SpecializedResult(const sggk::BSplineSurface &s)
+        : path(s.IsRational() ? ConversionPath::RationalRecognition
+                              : ConversionPath::PolynomialApproximation)
+    {
+        if (s.IsRational()) details = Recognize(s);
+        else details = ConvertApproximate(s);
+    }
+    bool Succeeded() const
+    {
+        if (const auto *r = std::get_if<RecognitionResult>(&details))
+            return r->status == Status::Success && r->surface && r->domain;
+        const auto &r = std::get<ConversionResult>(details);
+        return r.status == ConversionStatus::Success && r.patch.has_value();
+    }
+    bool IsDegenerate() const
+    {
+        if (const auto *r = std::get_if<RecognitionResult>(&details))
+            return r->status == Status::Degenerate;
+        return std::get<ConversionResult>(details).status == ConversionStatus::Degenerate;
+    }
+    sggk::SurfaceType Type() const
+    {
+        if (const auto *r = std::get_if<RecognitionResult>(&details)) return r->parameters.type;
+        const auto &r = std::get<ConversionResult>(details);
+        return r.patch ? r.patch->parameters.type : sggk::SurfaceType::Unknown;
+    }
+    const char *StatusText() const
+    {
+        if (const auto *r = std::get_if<RecognitionResult>(&details)) return StatusName(r->status);
+        return ConversionStatusName(std::get<ConversionResult>(details).status);
+    }
+    const ConversionTiming &Timing() const
+    {
+        return std::visit([](const auto &r) -> const ConversionTiming & { return r.timing; }, details);
+    }
+    std::string Message() const { return std::visit([](const auto &r) { return r.message; }, details); }
+};
 void Probe(const std::filesystem::path &dir)
 {
     detail::BPoly x(1, 1), y(1, 1);
@@ -122,7 +166,11 @@ int Run(const std::filesystem::path &dir, const std::filesystem::path &csvFile,
     csv << "id,pair,type,source_kind,path,controls,degree_u,degree_v,spans_u,spans_v,collapsed_"
            "mask,fixture_bound,status,classify_ms,optimize_ms,validate_ms,total_ms,geometry_bound,"
            "tangent_deg,normal_deg,message,class_cache_builds,class_cached_points,"
-           "class_cached_derivatives,class_raw_candidates,class_recoveries,opt_iterations\n";
+           "class_cached_derivatives,class_raw_candidates,class_recoveries,opt_iterations,"
+           "classify_compute_ms,classify_validate_ms,optimize_compute_ms,optimize_validate_ms,"
+           "classify_optimize_ms,other_ms,classify_compute_calls,classify_validate_calls,"
+           "optimize_compute_calls,optimize_validate_calls,jacobian_ms,residual_evaluations,"
+           "line_search_evaluations,validation_pieces,timing_schema\n";
     unsigned bins[5][5][2]{}, collapsed[5]{}, success = 0, degenerate = 0, failed = 0, rational = 0,
                                               polynomial = 0;
     bool warmed[5][2]{};
@@ -177,10 +225,10 @@ int Run(const std::filesystem::path &dir, const std::filesystem::path &csvFile,
         unsigned path = c.input->IsRational() ? 0 : 1;
         if (!warmed[c.type][path] && !c.collapsedMask)
         {
-            (void)Convert(*c.input);
+            (void)SpecializedResult(*c.input);
             warmed[c.type][path] = true;
         }
-        auto result = Convert(*c.input);
+        SpecializedResult result(*c.input);
         Require(result.path == (path == 0 ? ConversionPath::RationalRecognition
                                           : ConversionPath::PolynomialApproximation),
                 "Dispatch path mismatch");
@@ -204,6 +252,7 @@ int Run(const std::filesystem::path &dir, const std::filesystem::path &csvFile,
                       << std::endl;
         }
         const auto &t = result.Timing();
+        CheckSpecializedTiming(t);
         Require(t.classification.elapsedMs >= 0 && t.optimization.elapsedMs >= 0 &&
                     t.validation.elapsedMs >= 0 && t.totalMs >= 0,
                 "Negative stage timing");
@@ -250,7 +299,26 @@ int Run(const std::filesystem::path &dir, const std::filesystem::path &csvFile,
         }
         else
             csv << ",0,0,0,0,0,0";
-        csv << '\n';
+        double jacobianMs = 0;
+        unsigned residuals = 0, lineSearches = 0, pieces = 0;
+        if (const auto *approx = std::get_if<ConversionResult>(&result.details))
+        {
+            pieces = approx->statistics.validationPieces;
+            for (const auto &run : approx->statistics.refinementRuns)
+            {
+                jacobianMs += run.jacobianMs;
+                residuals += run.residualEvaluations;
+                lineSearches += run.lineSearchEvaluations;
+            }
+        }
+        else pieces = std::get<RecognitionResult>(result.details).validation.piecesVisited;
+        csv << ',' << t.classificationCompute.elapsedMs << ',' << t.classificationValidation.elapsedMs
+            << ',' << t.optimizationCompute.elapsedMs << ',' << t.optimizationValidation.elapsedMs
+            << ',' << t.classification.elapsedMs + t.optimization.elapsedMs << ',' << t.otherMs
+            << ',' << t.classificationCompute.calls << ',' << t.classificationValidation.calls
+            << ',' << t.optimizationCompute.calls << ',' << t.optimizationValidation.calls
+            << ',' << jacobianMs << ',' << residuals << ',' << lineSearches << ',' << pieces
+            << ",specialized-v2\n";
         csv.flush();
         if (!c.collapsedMask)
             times[std::string(TypeName(c.truth.type)) + "/" + ConversionPathName(result.path)]

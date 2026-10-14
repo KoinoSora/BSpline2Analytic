@@ -87,7 +87,7 @@ RecognitionResult detail::RecognizeWithSamples(const sggk::BSplineSurface &s,
     };
     BoundaryAnalysisResult analysis;
     {
-        detail::StageTimer timer(result.timing.classification);
+        detail::StageTimer timer(result.timing.classificationCompute, &result.timing.classification);
         analysis = AnalyzeBoundaries(s, o);
     }
     result.boundaries = analysis.boundaries;
@@ -103,7 +103,7 @@ RecognitionResult detail::RecognizeWithSamples(const sggk::BSplineSurface &s,
     {
         std::vector<detail::Candidate> candidates;
         {
-            detail::StageTimer timer(result.timing.classification);
+            detail::StageTimer timer(result.timing.classificationCompute, &result.timing.classification);
             candidates = detail::Reconstruct(result.boundaries, o);
         }
         if (candidates.empty())
@@ -121,13 +121,13 @@ RecognitionResult detail::RecognizeWithSamples(const sggk::BSplineSurface &s,
             {
                 ValidationReport validation;
                 {
-                    detail::StageTimer timer(result.timing.validation);
+                    detail::StageTimer timer(result.timing.classificationValidation, &result.timing.classification);
                     validation = detail::ValidateCandidate(s, c, result.boundaries, o, &samples);
                 }
                 sggk::UVRange range;
                 ParameterCorrespondence mapping;
                 {
-                    detail::StageTimer timer(result.timing.classification);
+                    detail::StageTimer timer(result.timing.classificationCompute, &result.timing.classification);
                     detail::RecoverPatch(s, c, result.boundaries, o, range, mapping);
                 }
                 if (found)

@@ -30,13 +30,13 @@
 - 默认进行边界和母面的 Bézier/Bernstein 误差界估计；节点区间采样用于快速检查。
 - 失败结果区分无效输入、退化、病态、边界关系不一致、歧义、验证失败和不支持。
 
-模块包含静态库、示例、回归测试和批量性能测试。一般兜底包含 600 个带独立证书的主案例和 60 个专项，数据与旧 500 例共存；构造方法见 [GENERAL600.md](docs/testing/GENERAL600.md)，首次结果见 [兜底测试报告](docs/testing/GENERAL600_REPORT_2026-10-13.md)，边界与参数坐标系修复后的结果见 [正例修复报告](docs/testing/GENERAL_POSITIVE500_FIX_REPORT_2026-10-13.md)。本轮仅复测直接调用 `ConvertGeneral` 的 500 个正例，不代表负例、额外专项和统一入口均已通过回归。旧 Dataset500 的两分支结果读取和退化期望仍待后续调整。
+模块包含静态库、示例、回归测试和批量性能测试。一般兜底包含 600 个带独立证书的主案例和 60 个专项，数据与旧 500 例共存；构造方法见 [GENERAL600.md](docs/testing/GENERAL600.md)，首次结果见 [兜底测试报告](docs/testing/GENERAL600_REPORT_2026-10-13.md)，边界与参数坐标系修复后的结果见 [正例修复报告](docs/testing/GENERAL_POSITIVE500_FIX_REPORT_2026-10-13.md)。本轮仅复测直接调用 `ConvertGeneral` 的 500 个正例，不代表负例、额外专项和统一入口均已通过回归。Dataset500 已改为直接调用两条等参专用接口，保留 40 个退化预期；不通过统一入口进入一般兜底。
 
 候选评分前去重的最新结果见 [评分去重报告](docs/testing/GENERAL_POSITIVE500_DEDUP_REPORT_2026-10-13.md)，包含本轮重新测得的 500 个正例基线、修改后结果与实际评分次数。
 
 8 次初值尝试与分阶段评分的历史对比见 [分类加速报告](docs/testing/GENERAL_POSITIVE500_STAGED_REPORT_2026-10-14.md)，当时 8 个圆环因没有圆环候选而失败。最新[圆环初值修复报告](docs/testing/GENERAL_POSITIVE500_TORUS_REPORT_2026-10-14.md)改用四法线直接求轴及双候选比较，在相同 8 次预算下达到 **500/500**，原失败 8 例全部修复；分类累计 0.419 秒，转换累计 37.097 秒。相对历史批次分类约减少 76.76%，该比较并非同进程配对基准。
 
-非有理输入使用新增的 `ApproximateConversion.h`：`ConvertApproximate` 通过四边与少量内部等参线恢复五类候选，再进行参数优化和独立验收。默认距离严格小于 `1e-5`、边界切向及边界曲面法向角分别严格小于 `0.1°`。`timing.classification / optimization / validation` 分别累计类型判断、求解、验收耗时及调用次数，初值合格时优化计时为零。默认启用解析 Jacobian（非光滑分支局部差分回退），可通过 `options.refinement.jacobianMode=JacobianMode::FiniteDifference` 切换全差分对照。算法及验证口径见 [非有理转换说明](docs/algorithm/APPROXIMATE_CONVERSION.md)。
+非有理输入使用新增的 `ApproximateConversion.h`：`ConvertApproximate` 通过四边与少量内部等参线恢复五类候选，再进行参数优化和独立验收。默认距离严格小于 `1e-5`、边界切向及边界曲面法向角分别严格小于 `0.1°`。等参专用路径采用 `specialized-v2` 计时口径：`timing.classification` 包含分类计算与初始候选验证，`timing.optimization` 包含优化计算与优化后验证；四项明细为 `classificationCompute`、`classificationValidation`、`optimizationCompute`、`optimizationValidation`。初值合格时两项优化计时为零。独立专用接口的 `timing.validation` 为零；统一入口追加 PCurve 验证和一般兜底仍使用各自的计时。明细是阶段总计的组成部分，不能再次累加。默认启用解析 Jacobian（非光滑分支局部差分回退），可通过 `options.refinement.jacobianMode=JacobianMode::FiniteDifference` 切换全差分对照。算法及验证口径见 [非有理转换说明](docs/algorithm/APPROXIMATE_CONVERSION.md)。
 
 ## 构建与运行
 
@@ -174,3 +174,5 @@ if (result.status == bspline2analytic::Status::Success) {
 
 当前专项使用[业务尺寸极端集 200 例](docs/testing/BUSINESS_EXTREME200.md)，主要半径与长度在 0.01–1000，包含短弧、点边、大坐标与参数表示变化；[旧极限压力集](docs/testing/EXTREME200.md)保留作历史参考。运行 `.\Build.ps1 -Configuration Release -ExtremeBoundaryOnly` 只执行新数据及 7 个模块诊断，需要 Python 3.8 或以上。单例进程隔离，外部看护上限 300 秒；超时不伪造阶段耗时。结果记录分类、优化、验证，以及每组 `max(分类+优化)`。
 新矩阵结果见[业务尺寸极端测试报告](docs/testing/BUSINESS_EXTREME200_REPORT_2026-10-14.md)。旧数据结果见[历史极端测试报告](docs/testing/EXTREME200_REPORT_2026-10-13.md)；两批编号或均值不直接比较。
+
+等参专用路径的新四项计时与固定 500 例复测见[2026-10-14 报告](docs/testing/SPECIALIZED500_TIMING_REPORT_2026-10-14.md)：包含分类计算、分类验证、优化计算及优化验证，以及退化状态失败和未修改基线核对。
