@@ -71,13 +71,43 @@ bool RegularQuad(const GeneralTrim &trim)
     }
     return true;
 }
+bool CollapsedSideTriangle(const GeneralTrim &trim)
+{
+    const auto &corners=trim.corners;
+    auto equal=[&](unsigned a,unsigned b) {
+        return corners[a].X()==corners[b].X() && corners[a].Y()==corners[b].Y();
+    };
+    // Count UV collapses, not 3D poles or short edges. Never snap nearby UVs.
+    constexpr unsigned ends[4][2]={{0,2},{1,3},{0,1},{2,3}};
+    unsigned collapsed=0;
+    for(const auto &edge:ends) collapsed+=equal(edge[0],edge[1]);
+    if(collapsed!=1) return false;
+    std::array<unsigned,3> unique{};
+    unsigned count=0;
+    for(unsigned i=0;i<4;++i)
+    {
+        bool seen=false;
+        for(unsigned j=0;j<count;++j) seen|=equal(i,unique[j]);
+        if(seen) continue;
+        if(count==unique.size()) return false;
+        unique[count++]=i;
+    }
+    if(count!=3) return false;
+    const auto &a=corners[unique[0]],&b=corners[unique[1]],&c=corners[unique[2]];
+    I ax=I(b.X())-I(a.X()),ay=I(b.Y())-I(a.Y());
+    I bx=I(c.X())-I(a.X()),by=I(c.Y())-I(a.Y());
+    I det=ax*by-ay*bx;
+    // Up to corner orientation, the bilinear Jacobian is det times s, 1-s,
+    // t or 1-t: nonzero in the interior, zero only on the collapsed side.
+    return det.lo>0 || det.hi<0;
+}
 }
 bool TryPairedTrimBound(const sggk::BSplineSurface &s,const std::vector<BezierCell> &cells,
                        const GeneralTrim &trim,const ValidationOptions &options,GeneralValidationReport &report)
 {
     // Sufficient certificate only: a general source reparameterization may fail
     // this test and still pass the projection-based validator.
-    if(cells.empty() || !RegularQuad(trim)) return false;
+    if(cells.empty() || (!RegularQuad(trim) && !CollapsedSideTriangle(trim))) return false;
     double upper=0;
     unsigned visited=0;
     std::function<bool(const BezierCell &,unsigned)> visit=[&](const BezierCell &cell,unsigned depth) {

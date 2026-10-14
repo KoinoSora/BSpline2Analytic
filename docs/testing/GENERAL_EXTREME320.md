@@ -4,6 +4,8 @@
 
 本轮完整结果见 [2026-10-14 测试报告](GENERAL_EXTREME320_REPORT_2026-10-14.md)及[逐例 CSV](GENERAL_EXTREME320_RESULTS_2026-10-14.csv)。
 
+退化 UV 三角域补丁后的专项结果见 [球面三角片 48 例报告](GENERAL_SPHERE_TRIANGLE48_REPORT_2026-10-14.md)及[逐例 CSV](GENERAL_SPHERE_TRIANGLE48_RESULTS_2026-10-14.csv)，该轮仅重测 ID 128–175。
+
 ## 矩阵与尺寸
 
 | ID（含端点） | 组 | 输入数 | 配置 |

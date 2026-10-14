@@ -89,16 +89,48 @@ void CertificateChecks(const std::filesystem::path &dir)
     }
     std::cout<<"Certificate checks passed on new triangle, pole and translated-plane fixtures"<<std::endl;
 }
+void SphereTriangleChecks(const std::filesystem::path &dir)
+{
+    // Only inputs from the sphere_triangle group participate in these checks.
+    for(unsigned id:{128u,144u,160u})
+    {
+        auto c=ReadGeneralFixture(dir/GeneralExtremeFilename(id));
+        auto cells=ExtractCells(*c.input);
+        GeneralTrim trim;trim.parameters=c.truth;trim.corners=c.corners;
+        GeneralValidationReport report;
+        Require(TryPairedTrimBound(*c.input,cells,trim,GeneralConversionOptions{}.fitting.validation,report),
+            "Paired certificate rejected a valid sphere triangle/pole chart");
+        Require(report.Passed(),"Paired sphere certificate did not pass all checks");
+        using UV=sggk::Point2D;
+        const double tiny=std::ldexp(1.0,-40);
+        const std::array<UV,4> invalid[]={
+            {UV{0,0},UV{0,0},UV{0,0},UV{0,0}}, // Entire domain is a point.
+            {UV{0,0},UV{1,1},UV{2,2},UV{2,2}}, // Collapsed side, collinear vertices.
+            {UV{0,0},UV{1,0},UV{1,1},UV{0,1}}, // Folded quadrilateral.
+            {UV{0,0},UV{1,0},UV{0,1},UV{0,0}}, // Nonadjacent duplicate corners.
+            {UV{0,0},UV{1,0},UV{tiny,1},UV{0,1}} // Near collapse, with a fold.
+        };
+        for(const auto &corners:invalid)
+        {
+            trim.corners=corners;report={};
+            Require(!TryPairedTrimBound(*c.input,cells,trim,GeneralConversionOptions{}.fitting.validation,report),
+                "Paired certificate accepted an invalid UV domain");
+            Require(report.piecesVisited==0,"Invalid UV domain entered geometric subdivision");
+        }
+    }
+    std::cout<<"Sphere triangle checks passed: 3 valid domains and 15 invalid-domain checks"<<std::endl;
+}
 }
 int main(int argc,char **argv)
 {
     sggk::init();int code=2;
     try
     {
-        Require(argc>=3,"Usage: --generate dir [first last] | --run dir csv id | --checks dir");
+        Require(argc>=3,"Usage: --generate dir [first last] | --run dir csv id | --checks dir | --sphere-triangle-checks dir");
         if(std::string(argv[1])=="--generate")
         {GenerateGeneralExtreme(argv[2],argc>3?unsigned(std::stoul(argv[3])):0,argc>4?unsigned(std::stoul(argv[4])):320);code=0;}
         else if(std::string(argv[1])=="--checks"){CertificateChecks(argv[2]);code=0;}
+        else if(std::string(argv[1])=="--sphere-triangle-checks"){SphereTriangleChecks(argv[2]);code=0;}
         else {Require(argc==5&&std::string(argv[1])=="--run","Invalid command");code=Run(argv[2],argv[3],unsigned(std::stoul(argv[4])));}
     }
     catch(const std::exception &e){std::cerr<<"GENERAL EXTREME ERROR: "<<e.what()<<std::endl;}
