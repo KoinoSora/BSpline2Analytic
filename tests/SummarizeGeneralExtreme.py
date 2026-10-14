@@ -11,6 +11,7 @@ QUOTAS = dict(radius_arc=64, cylinder_helix=32, slender_cylinder_helix=32,
               sphere_triangle=48, cone_helix=32, slender_cone=32,
               torus_extreme=32, world_coordinates=48)
 SUCCESS = {"same_type_success", "alternate_type_success"}
+WORLD_COORDINATE_LIMIT = 1e6
 
 
 def read(path):
@@ -46,7 +47,9 @@ def fixture(path):
     assert 50 <= nu*nv <= 200 and 0 < p < nu and 0 < q < nv
     return dict(metadata=metadata, origin=origin, axis=axis, xdir=xdir, kind=kind,
                 radius=radius, major=major, angle=angle, uv=uv, extra=extra,
-                count=nu*nv, ulp=max(math.ulp(v) for point in points for v in point))
+                count=nu*nv, ulp=max(math.ulp(v) for point in points for v in point),
+                coordinate_min=[min(point[d] for point in points) for d in range(3)],
+                coordinate_max=[max(point[d] for point in points) for d in range(3)])
 
 
 def audit_data(data):
@@ -59,6 +62,16 @@ def audit_data(data):
         path = data/row["file"]
         assert path.name == f"extreme-{int(row['id']):03}.b2a"
         f = fixture(path)
+        # Positive weights were checked by fixture(): the control hull bounds
+        # the full surface, including its boundary, without sampling.
+        assert all(-WORLD_COORDINATE_LIMIT <= lo <= hi <= WORLD_COORDINATE_LIMIT
+                   for lo, hi in zip(f["coordinate_min"], f["coordinate_max"])), (row["id"], "world bounds")
+        if row["group"] == "world_coordinates":
+            kind, slot = divmod(int(row["id"])-272, 8)
+            near_limit = (1 if kind % 2 == 0 else -1)*(WORLD_COORDINATE_LIMIT-2000)
+            translation = (0.0, 1e3, 1e5, near_limit)[slot//2]
+            assert float(row["translation"]) == translation, (row["id"], "outdated translation")
+            assert f["origin"] == [translation, -.73*translation, .41*translation], (row["id"], "origin mismatch")
         assert f["metadata"][0] == int(row["id"]) and f["count"] == int(row["controls"])
         assert f["metadata"][8] == int(row["collapsed_mask"])
         if row["type"] in {"Cylinder", "Sphere", "Torus"}:

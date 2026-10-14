@@ -10,6 +10,17 @@ using namespace detail;
 namespace
 {
 void Require(bool ok,const std::string &message){if(!ok)throw std::runtime_error(message);}
+void RequireWorldBounds(const GeneralFixture &c)
+{
+    const std::string label="Extreme fixture "+std::to_string(c.id);
+    // Positive weights put the entire finite patch inside its control hull.
+    for(const auto &row:c.input->Weights())for(double weight:row)
+        Require(std::isfinite(weight)&&weight>0,label+" has a nonpositive or nonfinite weight");
+    for(const auto &row:c.input->ControlPoints())for(const auto &point:row)
+        for(double x:{point.X(),point.Y(),point.Z()})
+            Require(std::isfinite(x)&&std::abs(x)<=GeneralExtremeWorldLimit,
+                label+" control hull exceeds [-1e6, 1e6]");
+}
 using UV=sggk::Point2D;
 GeneralExtremeSpec Base(unsigned type,const std::string &group)
 {
@@ -232,7 +243,10 @@ std::vector<GeneralExtremeSpec> GeneralExtremeSpecs()
         if(kind==0){base=Base(0,"world_coordinates");Quad(base,0,0,1000,.01);base.length=1000;base.width=.01;Directions(base,300);}
         else {unsigned from=std::array<unsigned,5>{40,55,66,96,123}[kind-1];base=geometry[from];}
         base.group="world_coordinates";base.variant="geometry_"+std::to_string(kind);
-        for(double d:{0.,1e3,1e6,1e9})
+        // Leave room for the local patch; check the actual translated hull below.
+        // Alternate the near-limit sign to cover both sides of the world cube.
+        const double nearLimit=(kind%2?-1.:1.)*(GeneralExtremeWorldLimit-2000.);
+        for(double d:{0.,1e3,1e5,nearLimit})
         {
             auto s=base;s.translation=d;s.fixture.truth.origin=Point(V{d,-.73*d,.41*d});geometry.push_back(s);
         }
@@ -275,6 +289,7 @@ void GenerateGeneralExtreme(const std::filesystem::path &dir,unsigned first,unsi
         V offset=Get(c.truth.origin);
         for(unsigned u=0;u<c.input->ControlPoints().size();++u)for(unsigned v=0;v<c.input->ControlPoints()[0].size();++v)
             c.input->SetControlPoint(Point(Get(c.input->ControlPoints()[u][v])+offset),u,v);
+        RequireWorldBounds(c);
         c.collapsedMask=FixtureCollapsedMask(*c.input);c.storedUpper=certificate.passed?certificate.upper:-1;
         WriteGeneralFixture(c,path);
         auto loaded=ReadGeneralFixture(path);auto disk=CertifyGeneralExtremePair(loaded,spec.sag>0?tolerance:1e-6);
@@ -288,6 +303,10 @@ void GenerateGeneralExtreme(const std::filesystem::path &dir,unsigned first,unsi
     for(const auto &spec:specs)
     {
         auto c=ReadGeneralFixture(dir/GeneralExtremeFilename(spec.fixture.id));const auto &s=*c.input;
+        RequireWorldBounds(c);
+        Require(c.truth.origin.X()==spec.fixture.truth.origin.X()&&
+            c.truth.origin.Y()==spec.fixture.truth.origin.Y()&&c.truth.origin.Z()==spec.fixture.truth.origin.Z(),
+            "Stored origin does not match current spec for fixture "+std::to_string(c.id));
         double ulp=0,lo=INFINITY,hi=0,change=0;
         for(const auto &row:s.ControlPoints())for(auto point:row)for(double x:{point.X(),point.Y(),point.Z()})ulp=std::max(ulp,std::nextafter(std::abs(x),INFINITY)-std::abs(x));
         for(unsigned e=0;e<4;++e)

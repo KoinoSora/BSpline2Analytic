@@ -2,6 +2,7 @@
 #include "GeneralDataset.h"
 namespace bspline2analytic::tests
 {
+inline constexpr double GeneralExtremeWorldLimit=1e6;
 struct GeneralExtremeSpec
 {
     GeneralFixture fixture;
