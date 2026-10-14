@@ -92,12 +92,20 @@ struct ConstraintReport
     std::array<double, 4> parameterRegion{};
     bool hasWitness = false;
 };
+// Exclusive wall-clock stages within ValidateConversion. The five stages sum
+// to totalMs; nested/recursive work is never charged to two stages at once.
+struct ValidationTiming
+{
+    StageTiming preparation, surfaceBounds, subdivision, boundaryChecks, reporting;
+    double totalMs = 0;
+};
 struct ConversionValidationReport
 {
     ConstraintReport geometry, boundaryTangent, boundaryNormal;
     CheckState correspondence = CheckState::NotChecked;
     unsigned piecesVisited = 0;
     std::string message;
+    ValidationTiming timing;
     bool Passed() const noexcept
     {
         return geometry.state == CheckState::Passed &&
@@ -203,6 +211,8 @@ struct ConversionStatistics
     unsigned candidateCount = 0, optimizationIterations = 0;
     unsigned refinementRounds = 0, sampleCount = 0, validationPieces = 0;
     std::vector<RefinementDiagnostics> refinementRuns;
+    // Accumulate every candidate/round, not only the last validation report.
+    ValidationTiming initialValidationTiming, refinementValidationTiming;
 };
 struct ConversionResult
 {

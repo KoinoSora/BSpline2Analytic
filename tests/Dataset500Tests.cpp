@@ -170,7 +170,14 @@ int Run(const std::filesystem::path &dir, const std::filesystem::path &csvFile,
            "classify_compute_ms,classify_validate_ms,optimize_compute_ms,optimize_validate_ms,"
            "classify_optimize_ms,other_ms,classify_compute_calls,classify_validate_calls,"
            "optimize_compute_calls,optimize_validate_calls,jacobian_ms,residual_evaluations,"
-           "line_search_evaluations,validation_pieces,timing_schema\n";
+           "line_search_evaluations,validation_pieces,timing_schema";
+    for (const char *phase : {"initial", "refined"})
+    {
+        for (const char *step : {"prepare", "surface_bounds", "subdivide", "boundary", "report"})
+            csv << ',' << phase << '_' << step << "_ms," << phase << '_' << step << "_calls";
+        csv << ',' << phase << "_validation_total_ms";
+    }
+    csv << ",validation_timing_schema\n";
     unsigned bins[5][5][2]{}, collapsed[5]{}, success = 0, degenerate = 0, failed = 0, rational = 0,
                                               polynomial = 0;
     bool warmed[5][2]{};
@@ -268,6 +275,7 @@ int Run(const std::filesystem::path &dir, const std::filesystem::path &csvFile,
         else
         {
             const auto &approx = std::get<ConversionResult>(result.details);
+            CheckValidationTimings(approx);
             geometry = approx.validation.geometry.upperBound;
             tangent = approx.validation.boundaryTangent.upperBound;
             normal = approx.validation.boundaryNormal.upperBound;
@@ -318,7 +326,21 @@ int Run(const std::filesystem::path &dir, const std::filesystem::path &csvFile,
             << ',' << t.classificationCompute.calls << ',' << t.classificationValidation.calls
             << ',' << t.optimizationCompute.calls << ',' << t.optimizationValidation.calls
             << ',' << jacobianMs << ',' << residuals << ',' << lineSearches << ',' << pieces
-            << ",specialized-v2\n";
+            << ",specialized-v2";
+        ValidationTiming initial, refined;
+        if (const auto *approx = std::get_if<ConversionResult>(&result.details))
+        {
+            initial = approx->statistics.initialValidationTiming;
+            refined = approx->statistics.refinementValidationTiming;
+        }
+        for (const auto *phase : {&initial, &refined})
+        {
+            for (const auto *step : {&phase->preparation, &phase->surfaceBounds, &phase->subdivision,
+                                     &phase->boundaryChecks, &phase->reporting})
+                csv << ',' << step->elapsedMs << ',' << step->calls;
+            csv << ',' << phase->totalMs;
+        }
+        csv << ",exclusive-validation-v1\n";
         csv.flush();
         if (!c.collapsedMask)
             times[std::string(TypeName(c.truth.type)) + "/" + ConversionPathName(result.path)]

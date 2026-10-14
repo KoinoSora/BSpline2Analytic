@@ -1,4 +1,5 @@
 #include "ApproximateInternal.h"
+#include "ValidationTiming.h"
 #include <functional>
 namespace bspline2analytic::detail
 {
@@ -397,6 +398,12 @@ ConversionValidationReport ValidateConversion(const sggk::BSplineSurface &s,
 {
     using namespace detail;
     ConversionValidationReport report;
+    ValidationTimer timer(report.timing);
+    auto record = [&](ConstraintReport &r, I value, double tolerance,
+                      const std::array<double, 4> &region, BoundaryId edge, bool witness) {
+        ValidationTimer::Scope stage(timer, report.timing.reporting);
+        Record(r, value, tolerance, region, edge, witness);
+    };
     try
     {
         if (!IntervalEnvironmentSupported())
@@ -454,13 +461,17 @@ ConversionValidationReport ValidateConversion(const sggk::BSplineSurface &s,
                                   " (references " + std::to_string(edges[k].g0) + ", " +
                                   std::to_string(edges[k].g1) + ")");
         }
-        for (auto *r : {&report.geometry, &report.boundaryTangent, &report.boundaryNormal})
         {
-            r->state = CheckState::Passed;
-            r->upperBound = 0;
+            ValidationTimer::Scope stage(timer, report.timing.reporting);
+            for (auto *r : {&report.geometry, &report.boundaryTangent, &report.boundaryNormal})
+            {
+                r->state = CheckState::Passed;
+                r->upperBound = 0;
+            }
+            report.correspondence = CheckState::Passed;
         }
-        report.correspondence = CheckState::Passed;
         const I degree = I(180) / IPi();
+        timer.Switch(report.timing.subdivision);
         auto region = [](const BezierCell &c) {
             return std::array<double, 4>{c.u0, c.u1, c.v0, c.v1};
         };
@@ -468,28 +479,35 @@ ConversionValidationReport ValidateConversion(const sggk::BSplineSurface &s,
         surface = [&](const BezierCell &c, unsigned depth) {
             if (report.piecesVisited >= o.maxValidationPieces)
             {
-                Record(report.geometry, I(0, INFINITY), o.distanceTolerance, region(c),
+                record(report.geometry, I(0, INFINITY), o.distanceTolerance, region(c),
                        BoundaryId::Umin, false);
                 return;
             }
             ++report.piecesVisited;
-            BV p = Local(c.p, patch.parameters);
-            I distance = SurfaceDistance(p, patch);
-            I witness = SurfaceDistance(Evaluate(p, 0.5, 0.5), patch);
-            report.geometry.maxSampledUpperBound =
-                std::max(report.geometry.maxSampledUpperBound, witness.hi);
+            I distance, witness;
+            {
+                ValidationTimer::Scope stage(timer, report.timing.surfaceBounds);
+                BV p = Local(c.p, patch.parameters);
+                distance = SurfaceDistance(p, patch);
+                witness = SurfaceDistance(Evaluate(p, 0.5, 0.5), patch);
+            }
+            {
+                ValidationTimer::Scope stage(timer, report.timing.reporting);
+                report.geometry.maxSampledUpperBound =
+                    std::max(report.geometry.maxSampledUpperBound, witness.hi);
+            }
             if (distance.hi < o.distanceTolerance)
-                Record(report.geometry, distance, o.distanceTolerance, region(c), BoundaryId::Umin,
+                record(report.geometry, distance, o.distanceTolerance, region(c), BoundaryId::Umin,
                        false);
             else if (witness.lo >= o.distanceTolerance)
-                Record(report.geometry, I(witness.lo, distance.hi), o.distanceTolerance,
+                record(report.geometry, I(witness.lo, distance.hi), o.distanceTolerance,
                        {(c.u0 + c.u1) / 2, (c.u0 + c.u1) / 2, (c.v0 + c.v1) / 2, (c.v0 + c.v1) / 2},
                        BoundaryId::Umin, true);
             else if (depth >= o.maxSubdivisionDepth)
-                Record(report.geometry, distance, o.distanceTolerance, region(c), BoundaryId::Umin,
+                record(report.geometry, distance, o.distanceTolerance, region(c), BoundaryId::Umin,
                        false);
             else if (report.geometry.state == CheckState::Exceeded)
-                Record(report.geometry, distance, o.distanceTolerance, region(c), BoundaryId::Umin,
+                record(report.geometry, distance, o.distanceTolerance, region(c), BoundaryId::Umin,
                        false);
             else
             {
@@ -500,6 +518,7 @@ ConversionValidationReport ValidateConversion(const sggk::BSplineSurface &s,
         };
         for (const auto &cell : cells)
             surface(cell, 0);
+        timer.Switch(report.timing.boundaryChecks);
         std::function<void(const BezierCell &, unsigned, unsigned)> boundary;
         boundary = [&](const BezierCell &c, unsigned edge, unsigned depth) {
             auto area = region(c);
@@ -510,7 +529,7 @@ ConversionValidationReport ValidateConversion(const sggk::BSplineSurface &s,
             if (report.piecesVisited >= o.maxValidationPieces)
             {
                 for (auto *r : {&report.geometry, &report.boundaryTangent, &report.boundaryNormal})
-                    Record(*r, I(0, INFINITY), r == &report.geometry ? o.distanceTolerance : 0,
+                    record(*r, I(0, INFINITY), r == &report.geometry ? o.distanceTolerance : 0,
                            area, static_cast<BoundaryId>(edge), false);
                 report.correspondence = CheckState::Unresolved;
                 return;
@@ -537,12 +556,15 @@ ConversionValidationReport ValidateConversion(const sggk::BSplineSurface &s,
             value.normal = value.normal * degree;
             point.tangent = point.tangent * degree;
             point.normal = point.normal * degree;
-            report.geometry.maxSampledUpperBound =
-                std::max(report.geometry.maxSampledUpperBound, point.distance.hi);
-            report.boundaryTangent.maxSampledUpperBound =
-                std::max(report.boundaryTangent.maxSampledUpperBound, point.tangent.hi);
-            report.boundaryNormal.maxSampledUpperBound =
-                std::max(report.boundaryNormal.maxSampledUpperBound, point.normal.hi);
+            {
+                ValidationTimer::Scope stage(timer, report.timing.reporting);
+                report.geometry.maxSampledUpperBound =
+                    std::max(report.geometry.maxSampledUpperBound, point.distance.hi);
+                report.boundaryTangent.maxSampledUpperBound =
+                    std::max(report.boundaryTangent.maxSampledUpperBound, point.tangent.hi);
+                report.boundaryNormal.maxSampledUpperBound =
+                    std::max(report.boundaryNormal.maxSampledUpperBound, point.normal.hi);
+            }
             bool pass = (report.geometry.state == CheckState::Exceeded ||
                          value.distance.hi < o.distanceTolerance) &&
                         (report.boundaryTangent.state == CheckState::Exceeded ||
@@ -569,10 +591,10 @@ ConversionValidationReport ValidateConversion(const sggk::BSplineSurface &s,
                 witness[0] = witness[1] = t;
             auto save = [&](ConstraintReport &r, I bound, I pt, double tol) {
                 if (pt.lo >= tol)
-                    Record(r, I(pt.lo, bound.hi), tol, witness, static_cast<BoundaryId>(edge),
+                    record(r, I(pt.lo, bound.hi), tol, witness, static_cast<BoundaryId>(edge),
                            true);
                 else
-                    Record(r, bound, tol, area, static_cast<BoundaryId>(edge), false);
+                    record(r, bound, tol, area, static_cast<BoundaryId>(edge), false);
             };
             save(report.geometry, value.distance, point.distance, o.distanceTolerance);
             save(report.boundaryTangent, value.tangent, point.tangent,
@@ -590,6 +612,7 @@ ConversionValidationReport ValidateConversion(const sggk::BSplineSurface &s,
             if (c.v1 == s.MaxParamV())
                 boundary(c, 3, 0);
         }
+        timer.Switch(report.timing.reporting);
         report.message = report.Passed() ? "Outward interval/Bernstein bounds passed for "
                                            "finite-patch distance and both boundary angles"
                                          : "A constraint exceeded its limit or could not be "
@@ -597,6 +620,7 @@ ConversionValidationReport ValidateConversion(const sggk::BSplineSurface &s,
     }
     catch (const std::exception &e)
     {
+        timer.Switch(report.timing.reporting);
         for (auto *r : {&report.geometry, &report.boundaryTangent, &report.boundaryNormal})
             if (r->state != CheckState::Exceeded)
             {
@@ -606,6 +630,7 @@ ConversionValidationReport ValidateConversion(const sggk::BSplineSurface &s,
         report.correspondence = CheckState::Unresolved;
         report.message = e.what();
     }
+    timer.Finish();
     return report;
 }
 } // namespace bspline2analytic

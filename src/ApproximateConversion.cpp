@@ -1,5 +1,6 @@
 #include "ApproximateInternal.h"
 #include "StageTimer.h"
+#include "ValidationTiming.h"
 namespace bspline2analytic::detail
 {
 ConversionStatus ApproximateFailureStatus(Status status) noexcept
@@ -98,6 +99,9 @@ bool RefineAndValidateCandidate(const sggk::BSplineSurface &s, AnalyticPatch &ca
                          initial ? &result.timing.classification : &result.timing.optimization);
         result.validation = ValidateConversion(s, candidate, o.validation);
         result.statistics.validationPieces += result.validation.piecesVisited;
+        AddValidationTiming(initial ? result.statistics.initialValidationTiming
+                                    : result.statistics.refinementValidationTiming,
+                            result.validation.timing);
     };
     validate(true);
     if (result.validation.Passed() || !o.refinement.maxRounds)

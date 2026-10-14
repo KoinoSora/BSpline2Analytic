@@ -41,3 +41,5 @@
 `Build.ps1 -Dataset500Only` 当前直接调用 `Recognize`（200 个有理输入）及 `ConvertApproximate`（300 个非有理输入），不进入一般兜底。固定 500 例全部重载并核验来源证书，40 个退化案例保留退化预期。
 
 CSV 标记 `timing_schema=specialized-v2`，分别输出分类计算、初值验证、优化计算、优化后验证及其调用次数。分类总计和优化总计分别包含对应验证；`validate_ms` 为零，不能再把四项明细加到阶段总计上。用 `python tests/SummarizeSpecializedDataset500.py <csv> <目录>` 校验、生成 `summary.json` 与按类型/分支、控制点档分组的 `groups.csv`。旧报告使用旧计时定义，不能直接比较 `classify_ms` 和 `optimize_ms`。
+
+验证内部五步计时标记为 `validation_timing_schema=exclusive-validation-v1`，`initial_*` 和 `refined_*` 分别累计初始候选及优化后验证。后缀为 `prepare`、`surface_bounds`、`subdivide`、`boundary`、`report`，每项输出 `_ms` 与 `_calls`，五项之和为对应 `*_validation_total_ms`。有理路径这些内部明细为零。`SummarizeSphereValidationTiming.py <一轮或多轮 CSV> --baseline <旧完整 CSV> --output <目录>` 仅接受完整的 50 个非有理球面，校验计时分解并比较状态、误差界及工作量；保留既有状态异常的非零退出码。见[三轮测量报告](../docs/testing/SPHERE_VALIDATION_TIMING_2026-10-14.md)。

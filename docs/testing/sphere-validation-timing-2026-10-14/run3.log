@@ -1,0 +1,31 @@
+Internal ctest changing into directory: D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-specialized-timing
+Test project D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-specialized-timing
+    Start 10: BSpline2Analytic.SpherePolynomialDataset
+1/1 Test #10: BSpline2Analytic.SpherePolynomialDataset ...***Failed   19.31 sec
+Failed to open log output file.
+Failed to open log output file.
+FAIL 317 NoCandidate No analytic candidate could be initialized from line/circle families
+FAIL 319 Unresolved Unresolved isocurve normalization
+Tested 10/50; success=8 degenerate=0 failures=2
+FAIL 337 NoCandidate No analytic candidate could be initialized from line/circle families
+FAIL 339 InvalidInput Zero direction
+Tested 20/50; success=16 degenerate=0 failures=4
+FAIL 357 NoCandidate No analytic candidate could be initialized from line/circle families
+FAIL 359 InvalidInput Zero direction
+Tested 30/50; success=24 degenerate=0 failures=6
+FAIL 377 NoCandidate No analytic candidate could be initialized from line/circle families
+FAIL 379 InvalidInput Zero direction
+Tested 40/50; success=32 degenerate=0 failures=8
+FAIL 397 NoCandidate No analytic candidate could be initialized from line/circle families
+Tested 50/50; success=40 degenerate=1 failures=9
+Sphere/polynomial classify mean=423.073 p95=908.285 ms
+50 fixtures certified; regular=40 degenerate=1 unexpected=9; rational=0 polynomial=50
+
+
+0% tests passed, 1 tests failed out of 1
+
+Total Test time (real) =  19.32 sec
+
+The following tests FAILED:
+	 10 - BSpline2Analytic.SpherePolynomialDataset (Failed)
+Errors while running CTest

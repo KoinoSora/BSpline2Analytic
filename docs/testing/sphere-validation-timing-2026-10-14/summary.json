@@ -1,0 +1,738 @@
+{
+  "runs": 3,
+  "cases": 50,
+  "baseline": "results.csv",
+  "statuses_per_run": {
+    "Success": 40,
+    "NoCandidate": 5,
+    "Unresolved": 1,
+    "InvalidInput": 3,
+    "Degenerate": 1
+  },
+  "unexpected_ids": [
+    317,
+    319,
+    337,
+    339,
+    357,
+    359,
+    377,
+    379,
+    397
+  ],
+  "baseline_mismatches": [],
+  "all": {
+    "cases_per_run": 50,
+    "measurements": 150,
+    "validation_calls": 129,
+    "validation_ms_per_run": 17363.4145,
+    "validation_mean_ms_per_case": 347.26829,
+    "steps": {
+      "prepare": {
+        "total_ms": 3390.5511,
+        "ms_per_run": 1130.1837,
+        "mean_ms_per_case": 22.603674,
+        "percent": 6.5089945298489535
+      },
+      "surface_bounds": {
+        "total_ms": 4446.6756,
+        "ms_per_run": 1482.2251999999999,
+        "mean_ms_per_case": 29.644503999999998,
+        "percent": 8.536484572202086
+      },
+      "subdivide": {
+        "total_ms": 0.7045999999999999,
+        "ms_per_run": 0.23486666666666664,
+        "mean_ms_per_case": 0.004697333333333333,
+        "percent": 0.0013526525365541821
+      },
+      "boundary": {
+        "total_ms": 44247.614299999994,
+        "ms_per_run": 14749.204766666664,
+        "mean_ms_per_case": 294.9840953333333,
+        "percent": 84.9441494739797
+      },
+      "report": {
+        "total_ms": 4.6979,
+        "ms_per_run": 1.5659666666666665,
+        "mean_ms_per_case": 0.03131933333333333,
+        "percent": 0.009018771432696412
+      }
+    },
+    "initial_validation_ms_per_run": 17363.4145,
+    "refined_validation_ms_per_run": 0.0,
+    "outer_validation_ms_per_run": 17363.451933333334,
+    "classification_compute_ms_per_run": 122.8941,
+    "optimization_compute_ms_per_run": 0.4876666666666667,
+    "optimization_iterations": 0,
+    "surface_nodes": 1875,
+    "validation_pieces": 3567,
+    "input_surface_cells": 2292,
+    "input_boundary_cells": 2088
+  },
+  "regular": {
+    "cases_per_run": 40,
+    "measurements": 120,
+    "validation_calls": 120,
+    "validation_ms_per_run": 17321.3532,
+    "validation_mean_ms_per_case": 433.03383,
+    "steps": {
+      "prepare": {
+        "total_ms": 3264.3816,
+        "ms_per_run": 1088.1272000000001,
+        "mean_ms_per_case": 27.20318,
+        "percent": 6.281998799031475
+      },
+      "surface_bounds": {
+        "total_ms": 4446.6756,
+        "ms_per_run": 1482.2251999999999,
+        "mean_ms_per_case": 37.055629999999994,
+        "percent": 8.557213647718932
+      },
+      "subdivide": {
+        "total_ms": 0.7045999999999999,
+        "ms_per_run": 0.23486666666666664,
+        "mean_ms_per_case": 0.005871666666666666,
+        "percent": 0.001355937171621595
+      },
+      "boundary": {
+        "total_ms": 44247.614299999994,
+        "ms_per_run": 14749.204766666664,
+        "mean_ms_per_case": 368.7301191666666,
+        "percent": 85.15041865589731
+      },
+      "report": {
+        "total_ms": 4.6834999999999996,
+        "ms_per_run": 1.5611666666666666,
+        "mean_ms_per_case": 0.03902916666666666,
+        "percent": 0.009012960180655323
+      }
+    },
+    "initial_validation_ms_per_run": 17321.3532,
+    "refined_validation_ms_per_run": 0.0,
+    "outer_validation_ms_per_run": 17321.388166666668,
+    "classification_compute_ms_per_run": 107.08670000000001,
+    "optimization_compute_ms_per_run": 0.0,
+    "optimization_iterations": 0,
+    "surface_nodes": 1875,
+    "validation_pieces": 3567,
+    "input_surface_cells": 1875,
+    "input_boundary_cells": 1692
+  },
+  "collapsed": {
+    "cases_per_run": 10,
+    "measurements": 30,
+    "validation_calls": 9,
+    "validation_ms_per_run": 42.061299999999996,
+    "validation_mean_ms_per_case": 4.20613,
+    "steps": {
+      "prepare": {
+        "total_ms": 126.1695,
+        "ms_per_run": 42.0565,
+        "mean_ms_per_case": 4.20565,
+        "percent": 99.98858808453377
+      },
+      "surface_bounds": {
+        "total_ms": 0.0,
+        "ms_per_run": 0.0,
+        "mean_ms_per_case": 0.0,
+        "percent": 0.0
+      },
+      "subdivide": {
+        "total_ms": 0.0,
+        "ms_per_run": 0.0,
+        "mean_ms_per_case": 0.0,
+        "percent": 0.0
+      },
+      "boundary": {
+        "total_ms": 0.0,
+        "ms_per_run": 0.0,
+        "mean_ms_per_case": 0.0,
+        "percent": 0.0
+      },
+      "report": {
+        "total_ms": 0.0144,
+        "ms_per_run": 0.0048,
+        "mean_ms_per_case": 0.00048,
+        "percent": 0.011411915466236183
+      }
+    },
+    "initial_validation_ms_per_run": 42.061299999999996,
+    "refined_validation_ms_per_run": 0.0,
+    "outer_validation_ms_per_run": 42.063766666666666,
+    "classification_compute_ms_per_run": 15.8074,
+    "optimization_compute_ms_per_run": 0.4876666666666667,
+    "optimization_iterations": 0,
+    "surface_nodes": 0,
+    "validation_pieces": 0,
+    "input_surface_cells": 417,
+    "input_boundary_cells": 396
+  },
+  "per_run": [
+    {
+      "run": 1,
+      "file": "sphere-validation-run1.csv",
+      "all": {
+        "cases_per_run": 50,
+        "measurements": 50,
+        "validation_calls": 43,
+        "validation_ms_per_run": 17166.0867,
+        "validation_mean_ms_per_case": 343.321734,
+        "steps": {
+          "prepare": {
+            "total_ms": 1112.8177,
+            "ms_per_run": 1112.8177,
+            "mean_ms_per_case": 22.256354,
+            "percent": 6.482652216827031
+          },
+          "surface_bounds": {
+            "total_ms": 1416.0381,
+            "ms_per_run": 1416.0381,
+            "mean_ms_per_case": 28.320762,
+            "percent": 8.249044320625504
+          },
+          "subdivide": {
+            "total_ms": 0.20579999999999993,
+            "ms_per_run": 0.20579999999999993,
+            "mean_ms_per_case": 0.004115999999999998,
+            "percent": 0.0011988754548233752
+          },
+          "boundary": {
+            "total_ms": 14635.141899999997,
+            "ms_per_run": 14635.141899999997,
+            "mean_ms_per_case": 292.70283799999993,
+            "percent": 85.25613411937385
+          },
+          "report": {
+            "total_ms": 1.8832,
+            "ms_per_run": 1.8832,
+            "mean_ms_per_case": 0.037664,
+            "percent": 0.010970467718772503
+          }
+        },
+        "initial_validation_ms_per_run": 17166.0867,
+        "refined_validation_ms_per_run": 0.0,
+        "outer_validation_ms_per_run": 17166.1252,
+        "classification_compute_ms_per_run": 116.2233,
+        "optimization_compute_ms_per_run": 0.5385,
+        "optimization_iterations": 0,
+        "surface_nodes": 625,
+        "validation_pieces": 1189,
+        "input_surface_cells": 764,
+        "input_boundary_cells": 696
+      },
+      "regular": {
+        "cases_per_run": 40,
+        "measurements": 40,
+        "validation_calls": 40,
+        "validation_ms_per_run": 17121.6401,
+        "validation_mean_ms_per_case": 428.0410025,
+        "steps": {
+          "prepare": {
+            "total_ms": 1068.3755,
+            "ms_per_run": 1068.3755,
+            "mean_ms_per_case": 26.709387500000002,
+            "percent": 6.239913312977535
+          },
+          "surface_bounds": {
+            "total_ms": 1416.0381,
+            "ms_per_run": 1416.0381,
+            "mean_ms_per_case": 35.4009525,
+            "percent": 8.270458272277315
+          },
+          "subdivide": {
+            "total_ms": 0.20579999999999993,
+            "ms_per_run": 0.20579999999999993,
+            "mean_ms_per_case": 0.0051449999999999985,
+            "percent": 0.0012019876530403176
+          },
+          "boundary": {
+            "total_ms": 14635.141899999997,
+            "ms_per_run": 14635.141899999997,
+            "mean_ms_per_case": 365.8785474999999,
+            "percent": 85.47745317926638
+          },
+          "report": {
+            "total_ms": 1.8787999999999998,
+            "ms_per_run": 1.8787999999999998,
+            "mean_ms_per_case": 0.04697,
+            "percent": 0.010973247825715012
+          }
+        },
+        "initial_validation_ms_per_run": 17121.6401,
+        "refined_validation_ms_per_run": 0.0,
+        "outer_validation_ms_per_run": 17121.6761,
+        "classification_compute_ms_per_run": 100.2662,
+        "optimization_compute_ms_per_run": 0.0,
+        "optimization_iterations": 0,
+        "surface_nodes": 625,
+        "validation_pieces": 1189,
+        "input_surface_cells": 625,
+        "input_boundary_cells": 564
+      }
+    },
+    {
+      "run": 2,
+      "file": "sphere-validation-run2.csv",
+      "all": {
+        "cases_per_run": 50,
+        "measurements": 50,
+        "validation_calls": 43,
+        "validation_ms_per_run": 18065.6663,
+        "validation_mean_ms_per_case": 361.313326,
+        "steps": {
+          "prepare": {
+            "total_ms": 1195.97,
+            "ms_per_run": 1195.97,
+            "mean_ms_per_case": 23.9194,
+            "percent": 6.620126709635946
+          },
+          "surface_bounds": {
+            "total_ms": 1575.0716,
+            "ms_per_run": 1575.0716,
+            "mean_ms_per_case": 31.501432,
+            "percent": 8.718591242881532
+          },
+          "subdivide": {
+            "total_ms": 0.3136,
+            "ms_per_run": 0.3136,
+            "mean_ms_per_case": 0.006272,
+            "percent": 0.0017358894756071077
+          },
+          "boundary": {
+            "total_ms": 15293.070799999996,
+            "ms_per_run": 15293.070799999996,
+            "mean_ms_per_case": 305.8614159999999,
+            "percent": 84.65268064870652
+          },
+          "report": {
+            "total_ms": 1.2403,
+            "ms_per_run": 1.2403,
+            "mean_ms_per_case": 0.024805999999999998,
+            "percent": 0.00686550930036829
+          }
+        },
+        "initial_validation_ms_per_run": 18065.6663,
+        "refined_validation_ms_per_run": 0.0,
+        "outer_validation_ms_per_run": 18065.7029,
+        "classification_compute_ms_per_run": 132.9075,
+        "optimization_compute_ms_per_run": 0.4989,
+        "optimization_iterations": 0,
+        "surface_nodes": 625,
+        "validation_pieces": 1189,
+        "input_surface_cells": 764,
+        "input_boundary_cells": 696
+      },
+      "regular": {
+        "cases_per_run": 40,
+        "measurements": 40,
+        "validation_calls": 40,
+        "validation_ms_per_run": 18023.6467,
+        "validation_mean_ms_per_case": 450.59116750000004,
+        "steps": {
+          "prepare": {
+            "total_ms": 1153.9555,
+            "ms_per_run": 1153.9555,
+            "mean_ms_per_case": 28.8488875,
+            "percent": 6.402452950878137
+          },
+          "surface_bounds": {
+            "total_ms": 1575.0716,
+            "ms_per_run": 1575.0716,
+            "mean_ms_per_case": 39.37679,
+            "percent": 8.738917413422223
+          },
+          "subdivide": {
+            "total_ms": 0.3136,
+            "ms_per_run": 0.3136,
+            "mean_ms_per_case": 0.00784,
+            "percent": 0.0017399364580309932
+          },
+          "boundary": {
+            "total_ms": 15293.070799999996,
+            "ms_per_run": 15293.070799999996,
+            "mean_ms_per_case": 382.3267699999999,
+            "percent": 84.85003648013138
+          },
+          "report": {
+            "total_ms": 1.2351999999999999,
+            "ms_per_run": 1.2351999999999999,
+            "mean_ms_per_case": 0.030879999999999998,
+            "percent": 0.006853219110203707
+          }
+        },
+        "initial_validation_ms_per_run": 18023.6467,
+        "refined_validation_ms_per_run": 0.0,
+        "outer_validation_ms_per_run": 18023.6803,
+        "classification_compute_ms_per_run": 116.8638,
+        "optimization_compute_ms_per_run": 0.0,
+        "optimization_iterations": 0,
+        "surface_nodes": 625,
+        "validation_pieces": 1189,
+        "input_surface_cells": 625,
+        "input_boundary_cells": 564
+      }
+    },
+    {
+      "run": 3,
+      "file": "sphere-validation-run3.csv",
+      "all": {
+        "cases_per_run": 50,
+        "measurements": 50,
+        "validation_calls": 43,
+        "validation_ms_per_run": 16858.4905,
+        "validation_mean_ms_per_case": 337.16981,
+        "steps": {
+          "prepare": {
+            "total_ms": 1081.7634,
+            "ms_per_run": 1081.7634,
+            "mean_ms_per_case": 21.635268,
+            "percent": 6.4167275237364825
+          },
+          "surface_bounds": {
+            "total_ms": 1455.5659,
+            "ms_per_run": 1455.5659,
+            "mean_ms_per_case": 29.111318,
+            "percent": 8.63402271988705
+          },
+          "subdivide": {
+            "total_ms": 0.18519999999999995,
+            "ms_per_run": 0.18519999999999995,
+            "mean_ms_per_case": 0.003703999999999999,
+            "percent": 0.0010985562438107965
+          },
+          "boundary": {
+            "total_ms": 14319.401599999997,
+            "ms_per_run": 14319.401599999997,
+            "mean_ms_per_case": 286.38803199999995,
+            "percent": 84.9388122857144
+          },
+          "report": {
+            "total_ms": 1.5744,
+            "ms_per_run": 1.5744,
+            "mean_ms_per_case": 0.031488,
+            "percent": 0.00933891441822742
+          }
+        },
+        "initial_validation_ms_per_run": 16858.4905,
+        "refined_validation_ms_per_run": 0.0,
+        "outer_validation_ms_per_run": 16858.5277,
+        "classification_compute_ms_per_run": 119.5515,
+        "optimization_compute_ms_per_run": 0.4256,
+        "optimization_iterations": 0,
+        "surface_nodes": 625,
+        "validation_pieces": 1189,
+        "input_surface_cells": 764,
+        "input_boundary_cells": 696
+      },
+      "regular": {
+        "cases_per_run": 40,
+        "measurements": 40,
+        "validation_calls": 40,
+        "validation_ms_per_run": 16818.7728,
+        "validation_mean_ms_per_case": 420.46932,
+        "steps": {
+          "prepare": {
+            "total_ms": 1042.0506,
+            "ms_per_run": 1042.0506,
+            "mean_ms_per_case": 26.051265,
+            "percent": 6.195758824924492
+          },
+          "surface_bounds": {
+            "total_ms": 1455.5659,
+            "ms_per_run": 1455.5659,
+            "mean_ms_per_case": 36.3891475,
+            "percent": 8.654412050800758
+          },
+          "subdivide": {
+            "total_ms": 0.18519999999999995,
+            "ms_per_run": 0.18519999999999995,
+            "mean_ms_per_case": 0.004629999999999999,
+            "percent": 0.0011011504953559988
+          },
+          "boundary": {
+            "total_ms": 14319.401599999997,
+            "ms_per_run": 14319.401599999997,
+            "mean_ms_per_case": 357.9850399999999,
+            "percent": 85.13939613953283
+          },
+          "report": {
+            "total_ms": 1.5695,
+            "ms_per_run": 1.5695,
+            "mean_ms_per_case": 0.039237499999999995,
+            "percent": 0.009331834246550973
+          }
+        },
+        "initial_validation_ms_per_run": 16818.7728,
+        "refined_validation_ms_per_run": 0.0,
+        "outer_validation_ms_per_run": 16818.8081,
+        "classification_compute_ms_per_run": 104.1301,
+        "optimization_compute_ms_per_run": 0.0,
+        "optimization_iterations": 0,
+        "surface_nodes": 625,
+        "validation_pieces": 1189,
+        "input_surface_cells": 625,
+        "input_boundary_cells": 564
+      }
+    }
+  ],
+  "regular_buckets": {
+    "0": {
+      "cases_per_run": 8,
+      "measurements": 24,
+      "validation_calls": 24,
+      "validation_ms_per_run": 855.8819,
+      "validation_mean_ms_per_case": 106.9852375,
+      "steps": {
+        "prepare": {
+          "total_ms": 45.5778,
+          "ms_per_run": 15.1926,
+          "mean_ms_per_case": 1.899075,
+          "percent": 1.7750813517612654
+        },
+        "surface_bounds": {
+          "total_ms": 76.5539,
+          "ms_per_run": 25.517966666666666,
+          "mean_ms_per_case": 3.1897458333333333,
+          "percent": 2.9814822192952866
+        },
+        "subdivide": {
+          "total_ms": 0.022799999999999997,
+          "ms_per_run": 0.007599999999999999,
+          "mean_ms_per_case": 0.0009499999999999999,
+          "percent": 0.0008879729785149095
+        },
+        "boundary": {
+          "total_ms": 2445.3662000000004,
+          "ms_per_run": 815.1220666666668,
+          "mean_ms_per_case": 101.89025833333335,
+          "percent": 95.23768018305643
+        },
+        "report": {
+          "total_ms": 0.125,
+          "ms_per_run": 0.041666666666666664,
+          "mean_ms_per_case": 0.005208333333333333,
+          "percent": 0.004868272908524723
+        }
+      },
+      "initial_validation_ms_per_run": 855.8819,
+      "refined_validation_ms_per_run": 0.0,
+      "outer_validation_ms_per_run": 855.8885,
+      "classification_compute_ms_per_run": 7.3872333333333335,
+      "optimization_compute_ms_per_run": 0.0,
+      "optimization_iterations": 0,
+      "surface_nodes": 48,
+      "validation_pieces": 168,
+      "input_surface_cells": 48,
+      "input_boundary_cells": 120
+    },
+    "1": {
+      "cases_per_run": 8,
+      "measurements": 24,
+      "validation_calls": 24,
+      "validation_ms_per_run": 2411.1747666666665,
+      "validation_mean_ms_per_case": 301.3968458333333,
+      "steps": {
+        "prepare": {
+          "total_ms": 337.3571,
+          "ms_per_run": 112.45236666666666,
+          "mean_ms_per_case": 14.056545833333333,
+          "percent": 4.663799912858521
+        },
+        "surface_bounds": {
+          "total_ms": 396.6986,
+          "ms_per_run": 132.23286666666667,
+          "mean_ms_per_case": 16.529108333333333,
+          "percent": 5.484167655315681
+        },
+        "subdivide": {
+          "total_ms": 0.0635,
+          "ms_per_run": 0.021166666666666667,
+          "mean_ms_per_case": 0.0026458333333333334,
+          "percent": 0.0008778570080976986
+        },
+        "boundary": {
+          "total_ms": 6499.040900000001,
+          "ms_per_run": 2166.346966666667,
+          "mean_ms_per_case": 270.79337083333337,
+          "percent": 89.84611968470197
+        },
+        "report": {
+          "total_ms": 0.36419999999999997,
+          "ms_per_run": 0.1214,
+          "mean_ms_per_case": 0.015175,
+          "percent": 0.0050348901157351465
+        }
+      },
+      "initial_validation_ms_per_run": 2411.1747666666665,
+      "refined_validation_ms_per_run": 0.0,
+      "outer_validation_ms_per_run": 2411.181866666667,
+      "classification_compute_ms_per_run": 17.005566666666667,
+      "optimization_compute_ms_per_run": 0.0,
+      "optimization_iterations": 0,
+      "surface_nodes": 171,
+      "validation_pieces": 423,
+      "input_surface_cells": 171,
+      "input_boundary_cells": 252
+    },
+    "2": {
+      "cases_per_run": 8,
+      "measurements": 24,
+      "validation_calls": 24,
+      "validation_ms_per_run": 3526.1736333333333,
+      "validation_mean_ms_per_case": 440.77170416666667,
+      "steps": {
+        "prepare": {
+          "total_ms": 574.4032,
+          "ms_per_run": 191.4677333333333,
+          "mean_ms_per_case": 23.933466666666664,
+          "percent": 5.429900885292953
+        },
+        "surface_bounds": {
+          "total_ms": 747.6718999999999,
+          "ms_per_run": 249.22396666666666,
+          "mean_ms_per_case": 31.152995833333332,
+          "percent": 7.0678302483667625
+        },
+        "subdivide": {
+          "total_ms": 0.1011,
+          "ms_per_run": 0.0337,
+          "mean_ms_per_case": 0.0042125,
+          "percent": 0.0009557101692732866
+        },
+        "boundary": {
+          "total_ms": 9254.943,
+          "ms_per_run": 3084.9809999999998,
+          "mean_ms_per_case": 385.62262499999997,
+          "percent": 87.48806272150958
+        },
+        "report": {
+          "total_ms": 1.4017,
+          "ms_per_run": 0.46723333333333333,
+          "mean_ms_per_case": 0.05840416666666667,
+          "percent": 0.01325043466142795
+        }
+      },
+      "initial_validation_ms_per_run": 3526.1736333333333,
+      "refined_validation_ms_per_run": 0.0,
+      "outer_validation_ms_per_run": 3526.1805333333336,
+      "classification_compute_ms_per_run": 21.289666666666665,
+      "optimization_compute_ms_per_run": 0.0,
+      "optimization_iterations": 0,
+      "surface_nodes": 321,
+      "validation_pieces": 669,
+      "input_surface_cells": 321,
+      "input_boundary_cells": 348
+    },
+    "3": {
+      "cases_per_run": 8,
+      "measurements": 24,
+      "validation_calls": 24,
+      "validation_ms_per_run": 4336.693133333333,
+      "validation_mean_ms_per_case": 542.0866416666667,
+      "steps": {
+        "prepare": {
+          "total_ms": 868.7925,
+          "ms_per_run": 289.5975,
+          "mean_ms_per_case": 36.1996875,
+          "percent": 6.677841643303115
+        },
+        "surface_bounds": {
+          "total_ms": 1157.1851,
+          "ms_per_run": 385.72836666666666,
+          "mean_ms_per_case": 48.21604583333333,
+          "percent": 8.894527576826317
+        },
+        "subdivide": {
+          "total_ms": 0.1903,
+          "ms_per_run": 0.06343333333333333,
+          "mean_ms_per_case": 0.007929166666666666,
+          "percent": 0.00146271205693026
+        },
+        "boundary": {
+          "total_ms": 10983.051399999998,
+          "ms_per_run": 3661.017133333333,
+          "mean_ms_per_case": 457.6271416666666,
+          "percent": 84.4195570397518
+        },
+        "report": {
+          "total_ms": 0.8601,
+          "ms_per_run": 0.2867,
+          "mean_ms_per_case": 0.0358375,
+          "percent": 0.0066110280618272
+        }
+      },
+      "initial_validation_ms_per_run": 4336.693133333333,
+      "refined_validation_ms_per_run": 0.0,
+      "outer_validation_ms_per_run": 4336.7002999999995,
+      "classification_compute_ms_per_run": 27.358833333333333,
+      "optimization_compute_ms_per_run": 0.0,
+      "optimization_iterations": 0,
+      "surface_nodes": 456,
+      "validation_pieces": 864,
+      "input_surface_cells": 456,
+      "input_boundary_cells": 408
+    },
+    "4": {
+      "cases_per_run": 8,
+      "measurements": 24,
+      "validation_calls": 24,
+      "validation_ms_per_run": 6191.429766666667,
+      "validation_mean_ms_per_case": 773.9287208333334,
+      "steps": {
+        "prepare": {
+          "total_ms": 1438.251,
+          "ms_per_run": 479.417,
+          "mean_ms_per_case": 59.927125,
+          "percent": 7.743235699467651
+        },
+        "surface_bounds": {
+          "total_ms": 2068.5661,
+          "ms_per_run": 689.5220333333333,
+          "mean_ms_per_case": 86.19025416666666,
+          "percent": 11.13671735477922
+        },
+        "subdivide": {
+          "total_ms": 0.32689999999999986,
+          "ms_per_run": 0.10896666666666661,
+          "mean_ms_per_case": 0.013620833333333327,
+          "percent": 0.0017599596663975716
+        },
+        "boundary": {
+          "total_ms": 15065.212799999994,
+          "ms_per_run": 5021.737599999998,
+          "mean_ms_per_case": 627.7171999999997,
+          "percent": 81.10788281950575
+        },
+        "report": {
+          "total_ms": 1.9324999999999997,
+          "ms_per_run": 0.6441666666666666,
+          "mean_ms_per_case": 0.08052083333333332,
+          "percent": 0.010404166580952305
+        }
+      },
+      "initial_validation_ms_per_run": 6191.429766666667,
+      "refined_validation_ms_per_run": 0.0,
+      "outer_validation_ms_per_run": 6191.436966666667,
+      "classification_compute_ms_per_run": 34.0454,
+      "optimization_compute_ms_per_run": 0.0,
+      "optimization_iterations": 0,
+      "surface_nodes": 879,
+      "validation_pieces": 1443,
+      "input_surface_cells": 879,
+      "input_boundary_cells": 564
+    }
+  },
+  "slowest_regular": {
+    "id": 383,
+    "status": "Success",
+    "controls": 196,
+    "collapsed": false,
+    "prepare_mean_ms": 76.35753333333334,
+    "surface_bounds_mean_ms": 123.06503333333336,
+    "subdivide_mean_ms": 0.025300000000000003,
+    "boundary_mean_ms": 756.8481666666662,
+    "report_mean_ms": 0.08949999999999998,
+    "validation_mean_ms": 956.3855333333335
+  }
+}

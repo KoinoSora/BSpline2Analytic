@@ -76,6 +76,8 @@ CSV 保留每个案例的 `classify_ms` 与 `optimize_ms`，汇总脚本在“�
 
 `-SpherePolynomialOnly` 只运行 `SpherePolynomialDataset`，跳过涉及其他类型的 `Probe`，但保留该子集全部来源、控制点档、退化配额、真实分支及成功验收检查。独立输出 `build/dataset500-sphere-polynomial-Release.csv`，不覆盖全量结果。命令行也可使用 `BSpline2AnalyticDataset500Tests --sphere-polynomial-only <数据目录> <结果.csv>`。汇总脚本在此模式下要求编号完整且类型、来源、实际分支全部匹配；不将缺行 CSV 视为完整结果。
 
+验证内部现在还输出准备、曲面距离界、曲面判定/细分、边界验证、报告整理五项互斥计时，分别累计初始候选和优化后调用。专项脚本 `SummarizeSphereValidationTiming.py` 接受一轮或多轮该球面 CSV，检查五项之和和基线结果一致性。五步详细定义及本轮 50 个非有理球面的三轮结果见[验证计时报告](SPHERE_VALIDATION_TIMING_2026-10-14.md)。
+
 历史完整重测见 [2026-10-13 报告](DATASET500_RETEST_2026-10-13.md)，独立 CSV 为 `build/dataset500-20261013-current-Release.csv`。
 
 新增的 CSV 尾部字段记录分类缓存构建次数、缓存中的曲面点及偏导求值次数、原始候选数、参数域恢复次数和优化迭代数。有理路径这些近似分类计数为零；`class_cached_points` 只统计分类缓存的 `CalcPoint` 调用，不含等参曲线拟合、优化采样和验收求值。旧 CSV 无需补列即可继续汇总。

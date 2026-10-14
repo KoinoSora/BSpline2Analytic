@@ -176,3 +176,5 @@ if (result.status == bspline2analytic::Status::Success) {
 新矩阵结果见[业务尺寸极端测试报告](docs/testing/BUSINESS_EXTREME200_REPORT_2026-10-14.md)。旧数据结果见[历史极端测试报告](docs/testing/EXTREME200_REPORT_2026-10-13.md)；两批编号或均值不直接比较。
 
 等参专用路径的新四项计时与固定 500 例复测见[2026-10-14 报告](docs/testing/SPECIALIZED500_TIMING_REPORT_2026-10-14.md)：包含分类计算、分类验证、优化计算及优化验证，以及退化状态失败和未修改基线核对。
+
+非有理验证新增五步互斥计时，50 个非有理球面三轮专项测量见[验证分步计时报告](docs/testing/SPHERE_VALIDATION_TIMING_2026-10-14.md)。
