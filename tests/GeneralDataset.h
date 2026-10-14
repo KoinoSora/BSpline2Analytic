@@ -33,6 +33,7 @@ sggk::SurfaceType GeneralDatasetType(unsigned);
 const char *FixtureGroupName(GeneralFixtureGroup);
 std::string GeneralFixtureFilename(unsigned, bool extra = false);
 GeneralFixture ReadGeneralFixture(const std::filesystem::path &);
+void WriteGeneralFixture(const GeneralFixture &, const std::filesystem::path &);
 void GenerateGeneralDataset(const std::filesystem::path &, unsigned first = 0, unsigned last = 660);
 // Canonical analytic formula and chart are test-owned, not production projection code.
 detail::V FixtureTarget(const GeneralFixture &, double, double);

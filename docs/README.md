@@ -13,6 +13,8 @@
 | 测试 | [一般兜底评分前去重报告](testing/GENERAL_POSITIVE500_DEDUP_REPORT_2026-10-13.md) | 重复候选免于评分；500 个正例的前后比较及评分次数。 |
 | 测试 | [一般兜底分类加速报告](testing/GENERAL_POSITIVE500_STAGED_REPORT_2026-10-14.md) | 8 次初值尝试、分阶段评分与后备候选；500 正例的三配置对比。 |
 | 测试 | [一般兜底圆环初值修复报告](testing/GENERAL_POSITIVE500_TORUS_REPORT_2026-10-14.md) | 四法线直接求轴与双候选比较；8 次预算下 500/500，修复原 8 个圆环失败例。 |
+| 测试 | [一般兜底极端 320 例](testing/GENERAL_EXTREME320.md) | 尺度 1e-2～1e3、螺旋带、三角片、大世界坐标；独立构建与认证。 |
+| 测试 | [一般兜底极端 320 例报告](testing/GENERAL_EXTREME320_REPORT_2026-10-14.md) | 251 例通过、38 例返回失败、31 例转换超时；完整结果与分阶段耗时。 |
 | 需求 | [需求说明](requirements/REQUIREMENTS.md) | 输入约束、验收目标与阶段范围。 |
 | 需求 | [原始需求 PDF](requirements/中船海舟样条转二次曲面.pdf) | 原始项目材料。 |
 

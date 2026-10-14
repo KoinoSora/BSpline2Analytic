@@ -255,6 +255,7 @@ sggk::SurfaceType GeneralDatasetType(unsigned n)
     const sggk::SurfaceType t[]={sggk::SurfaceType::Plane,sggk::SurfaceType::Cylinder,sggk::SurfaceType::Sphere,sggk::SurfaceType::Cone,sggk::SurfaceType::Torus};
     if(n>=5)throw std::runtime_error("Invalid fixture type");return t[n];
 }
+void WriteGeneralFixture(const GeneralFixture &c,const std::filesystem::path &path) { Save(c,path); }
 const char *FixtureGroupName(GeneralFixtureGroup g)
 {
     const char *names[]={"feasible","infeasible","nonlinear_pcurve","periodic_singular","sphere_priority","tolerance","invalid_options","validation_budget"};
