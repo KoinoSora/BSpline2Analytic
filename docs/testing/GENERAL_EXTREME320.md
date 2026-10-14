@@ -6,6 +6,8 @@
 
 退化 UV 三角域补丁后的专项结果见 [球面三角片 48 例报告](GENERAL_SPHERE_TRIANGLE48_REPORT_2026-10-14.md)及[逐例 CSV](GENERAL_SPHERE_TRIANGLE48_RESULTS_2026-10-14.csv)，该轮仅重测 ID 128–175。
 
+小弧初值补丁后的专项结果见 [大半径小圆弧 64 例报告](GENERAL_RADIUS_ARC64_REPORT_2026-10-14.md)，该轮仅重测 ID 0–63，并保存逐组初值与逐候选诊断。
+
 ## 矩阵与尺寸
 
 | ID（含端点） | 组 | 输入数 | 配置 |

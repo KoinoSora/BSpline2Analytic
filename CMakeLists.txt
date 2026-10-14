@@ -16,7 +16,7 @@ add_library(BSpline2Analytic STATIC
     src/PatchRecovery.cpp src/RecognitionValidation.cpp src/Numerics.cpp
     src/IntervalBounds.cpp src/ApproximateGeometry.cpp src/ApproximateNumerics.cpp src/IsoCurveAnalysis.cpp
     src/SurfaceSampling.cpp src/SurfaceSampleContext.cpp src/ApproximateEvaluation.cpp src/AnalyticJacobian.cpp src/PlaneOffsetRefinement.cpp src/CandidateRefinement.cpp src/ConversionValidation.cpp src/ApproximateConversion.cpp
-    src/GeneralClassification.cpp src/GeneralConversion.cpp src/GeneralConversionValidation.cpp
+    src/GeneralClassification.cpp src/GeneralSeedNumerics.cpp src/GeneralConversion.cpp src/GeneralConversionValidation.cpp
     src/GeneralGeometry.cpp src/GeneralPCurve.cpp src/GeneralRefinement.cpp src/GeneralPairedBounds.cpp src/GeneralSphereChart.cpp)
 set_source_files_properties(src/IntervalBounds.cpp src/ConversionValidation.cpp src/GeneralConversionValidation.cpp src/GeneralPairedBounds.cpp PROPERTIES COMPILE_OPTIONS "/fp:strict")
 target_compile_features(BSpline2Analytic PUBLIC cxx_std_17)

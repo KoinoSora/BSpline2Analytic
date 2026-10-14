@@ -90,6 +90,7 @@ GeneralConversionResult ConvertGeneralWithSamples(const sggk::BSplineSurface &s,
                 result.statistics.candidateCount = static_cast<unsigned>(result.candidates.size());
             }
             const auto &seed = seeds[batchIndex++];
+            const unsigned iterationsBefore=result.statistics.optimizationIterations;
             ++index;
             AnalyticPatch candidate;
             candidate.parameters = seed.parameters;
@@ -164,6 +165,8 @@ GeneralConversionResult ConvertGeneralWithSamples(const sggk::BSplineSurface &s,
                     result.message = result.validation.message;
                     result.attempts.push_back({seed.parameters.type,PCurveFailure::None,
                         result.validation.failedBoundary,true,result.message});
+                    result.attempts.back().seedGroup=seed.score.seedGroup;
+                    result.attempts.back().optimizationIterations=result.statistics.optimizationIterations-iterationsBefore;
                     break;
                 }
                 result.status = ConversionStatus::VerificationFailed;
@@ -176,6 +179,8 @@ GeneralConversionResult ConvertGeneralWithSamples(const sggk::BSplineSurface &s,
             }
             result.attempts.push_back({seed.parameters.type,result.validation.pcurveFailure,
                 result.validation.failedBoundary,false,result.message});
+            result.attempts.back().seedGroup=seed.score.seedGroup;
+            result.attempts.back().optimizationIterations=result.statistics.optimizationIterations-iterationsBefore;
             // Finish the current ranked batch before drawing from the retained
             // pool. No new seed groups are generated during backup attempts.
         }

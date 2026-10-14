@@ -69,6 +69,24 @@ struct GeneralCandidateScore
     sggk::SurfaceType type = sggk::SurfaceType::Unknown;
     unsigned degreesOfFreedom = 0;
     double interiorMax = 0, interiorRms = 0, boundaryMax = 0, normalMax = 0;
+    unsigned seedGroup = 0; // Index into classification.seedGroups.
+};
+enum class GeneralSeedFailure
+{
+    None, InsufficientPoints, RankDeficient, AmbiguousAxis, InvalidParameters,
+    NonFinite, ConstructionFailed
+};
+const char *GeneralSeedFailureName(GeneralSeedFailure);
+struct GeneralSeedGroupDiagnostic
+{
+    sggk::SurfaceType type = sggk::SurfaceType::Unknown;
+    unsigned attempt = 0, sampleCount = 0;
+    bool multiPoint = false;
+    GeneralSeedFailure failure = GeneralSeedFailure::None;
+    unsigned generated = 0, duplicates = 0, scored = 0, fullyScored = 0, selected = 0;
+    // Relative singular values and algebraic residuals describe construction,
+    // not certified geometric accuracy. A small positive rank is not a failure.
+    double relativeRank = 1, axisSeparation = 0, constructionResidual = 0;
 };
 struct GeneralTorusSeedDiagnostics
 {
@@ -95,6 +113,7 @@ struct GeneralClassificationDiagnostics
     unsigned backupCandidateCount = 0, batchCount = 0;
     std::uint64_t interiorPointEvaluations = 0, boundaryPointEvaluations = 0;
     GeneralTorusSeedDiagnostics torus;
+    std::vector<GeneralSeedGroupDiagnostic> seedGroups;
 };
 struct GeneralValidationReport
 {
@@ -132,6 +151,7 @@ struct GeneralConversionResult
         BoundaryId failedBoundary=BoundaryId::Umin;
         bool succeeded=false;
         std::string message;
+        unsigned seedGroup = 0, optimizationIterations = 0;
     };
     std::vector<Attempt> attempts;
     ConversionStatistics statistics;

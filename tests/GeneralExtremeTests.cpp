@@ -13,6 +13,25 @@ namespace
 {
 void Require(bool ok,const std::string &message){if(!ok)throw std::runtime_error(message);}
 std::string Quote(std::string s){std::string out="\"";for(char c:s){if(c=='"')out+='"';out+=(c=='\n'||c=='\r')?' ':c;}return out+'"';}
+void SeedDiagnostics(const std::filesystem::path &csv,const GeneralConversionResult &result)
+{
+    std::ofstream seeds(csv.parent_path()/(csv.stem().string()+"-seeds.csv"));
+    std::ofstream attempts(csv.parent_path()/(csv.stem().string()+"-attempts.csv"));
+    Require(bool(seeds)&&bool(attempts),"Cannot write seed diagnostics");
+    seeds<<std::setprecision(17)<<"group,type,attempt,samples,multi_point,failure,generated,duplicates,scored,fully_scored,selected,relative_rank,axis_separation,construction_residual\n";
+    const auto &groups=result.classification.seedGroups;
+    for(size_t i=0;i<groups.size();++i)
+    {
+        const auto &d=groups[i];
+        seeds<<i<<','<<TypeName(d.type)<<','<<d.attempt<<','<<d.sampleCount<<','<<d.multiPoint<<','
+             <<GeneralSeedFailureName(d.failure)<<','<<d.generated<<','<<d.duplicates<<','<<d.scored<<','
+             <<d.fullyScored<<','<<d.selected<<','<<d.relativeRank<<','<<d.axisSeparation<<','<<d.constructionResidual<<'\n';
+    }
+    attempts<<"type,seed_group,iterations,succeeded,pcurve_failure,message\n";
+    for(const auto &a:result.attempts)
+        attempts<<TypeName(a.type)<<','<<a.seedGroup<<','<<a.optimizationIterations<<','<<a.succeeded<<','
+                <<PCurveFailureName(a.pcurveFailure)<<','<<Quote(a.message)<<'\n';
+}
 FixtureCertificate Audit(const GeneralFixture &c,const GeneralConversionResult &r)
 {
     FixtureCertificate out;
@@ -59,6 +78,7 @@ int Run(const std::filesystem::path &dir,const std::filesystem::path &csv,unsign
     if(!input.passed){save();return 1;}
     std::cout<<"BEGIN_CONVERT "<<id<<std::endl;
     result=ConvertGeneral(*c.input);converted=true;message=result.message;
+    SeedDiagnostics(csv,result);
     std::cout<<"END_CONVERT "<<id<<std::endl;
     bool success=result.status==ConversionStatus::Success;
     status=success?"audit_pending":"conversion_failed";save();
@@ -120,17 +140,76 @@ void SphereTriangleChecks(const std::filesystem::path &dir)
     }
     std::cout<<"Sphere triangle checks passed: 3 valid domains and 15 invalid-domain checks"<<std::endl;
 }
+void RadiusArcChecks(const std::filesystem::path &dir)
+{
+    unsigned accepted=0,rejected=0;
+    for(unsigned id:{8u,24u,38u,44u})
+    {
+        auto c=ReadGeneralFixture(dir/GeneralExtremeFilename(id));
+        auto frame=FrameOf(c.truth);
+        std::vector<SurfaceSample> points;
+        for(double u:{.1,.5,.9}) for(double v:{.1,.5,.9})
+        {
+            double a=0,b=0;double w[]={(1-u)*(1-v),u*(1-v),(1-u)*v,u*v};
+            for(unsigned k=0;k<4;++k) {a+=w[k]*c.corners[k].X();b+=w[k]*c.corners[k].Y();}
+            SurfaceSample p;p.point=frame.global(CanonicalPoint(c.truth,a,b));
+            p.normal=frame.vector(CanonicalNormal(c.truth,a,b));p.normalValid=true;
+            points.push_back(p);
+        }
+        double scale=0;for(const auto &p:points) scale=std::max(scale,Norm(p.point-points.front().point));
+        for(unsigned flip=0;flip<2;++flip)
+        {
+            if(flip) for(auto &p:points) p.normal=p.normal*-1;
+            GeneralSeedGroupDiagnostic d;
+            auto seed=ConditionedGeneralSeed(c.truth.type,points,scale,d);
+            // Held-out positions, including ends: never used in constructing this seed.
+            for(double u:{0.,.25,.75,1.}) for(double v:{0.,.25,.75,1.})
+            {
+                double a=0,b=0;double w[]={(1-u)*(1-v),u*(1-v),(1-u)*v,u*v};
+                for(unsigned k=0;k<4;++k){a+=w[k]*c.corners[k].X();b+=w[k]*c.corners[k].Y();}
+                V point=frame.global(CanonicalPoint(c.truth,a,b));
+                Require(Norm(point-ProjectToMother(seed,point))<1e-5,"Conditioned short-arc seed misses held-out truth positions");
+            }
+            ++accepted;
+        }
+        for(unsigned mode=0;mode<2;++mode)
+        {
+            auto invalid=points;
+            for(auto &p:invalid)
+                if(mode==0) p.normal=points.front().normal;
+                else p=points.front();
+            GeneralSeedGroupDiagnostic d;bool failed=false;
+            try {ConditionedGeneralSeed(c.truth.type,invalid,scale,d);}
+            catch(const Failure &) {failed=true;}
+            Require(failed && d.failure!=GeneralSeedFailure::None,"Degenerate seed group was not diagnosed");
+            ++rejected;
+        }
+        SurfaceSampleContext context(*c.input);GeneralClassificationDiagnostics d;
+        auto pool=InitializeGeneralCandidates(context,GeneralConversionOptions{},d);
+        Require(d.seedAttemptCount==40 && d.seedGroups.size()==40,"Changed eight-group construction budget");
+        unsigned multi=0;
+        for(const auto &g:d.seedGroups) if(g.type==c.truth.type)
+        {
+            multi+=g.multiPoint;
+            if(g.multiPoint) Require(g.generated==1 && g.sampleCount<=12,"Missing bounded multi-point seed");
+        }
+        Require(multi==1,"Repeated multi-point construction");
+    }
+    std::cout<<"Radius arc checks passed: "<<accepted<<" oriented seeds, "<<rejected
+             <<" degenerate groups, four fixed-budget sample pools"<<std::endl;
+}
 }
 int main(int argc,char **argv)
 {
     sggk::init();int code=2;
     try
     {
-        Require(argc>=3,"Usage: --generate dir [first last] | --run dir csv id | --checks dir | --sphere-triangle-checks dir");
+        Require(argc>=3,"Usage: --generate dir [first last] | --run dir csv id | --checks dir | --sphere-triangle-checks dir | --radius-arc-checks dir");
         if(std::string(argv[1])=="--generate")
         {GenerateGeneralExtreme(argv[2],argc>3?unsigned(std::stoul(argv[3])):0,argc>4?unsigned(std::stoul(argv[4])):320);code=0;}
         else if(std::string(argv[1])=="--checks"){CertificateChecks(argv[2]);code=0;}
         else if(std::string(argv[1])=="--sphere-triangle-checks"){SphereTriangleChecks(argv[2]);code=0;}
+        else if(std::string(argv[1])=="--radius-arc-checks"){RadiusArcChecks(argv[2]);code=0;}
         else {Require(argc==5&&std::string(argv[1])=="--run","Invalid command");code=Run(argv[2],argv[3],unsigned(std::stoul(argv[4])));}
     }
     catch(const std::exception &e){std::cerr<<"GENERAL EXTREME ERROR: "<<e.what()<<std::endl;}

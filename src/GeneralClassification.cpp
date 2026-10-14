@@ -29,60 +29,6 @@ static AnalyticParameters PlaneSeed(const std::array<SurfaceSample, 4> &p, doubl
         throw Failure(Status::IllConditioned, "Collinear plane seed");
     return Frame(Type::Plane, p[0].point, Cross(a, b));
 }
-static AnalyticParameters SphereSeed(const std::array<SurfaceSample, 4> &p, double scale)
-{
-    V n = p[0].normal, m = p[1].normal;
-    double b = Dot(n, m), divisor = 1 - b * b;
-    if (divisor < 1e-8) throw Failure(Status::IllConditioned, "Parallel sphere normals");
-    V delta = (p[1].point - p[0].point) / scale;
-    double t = (Dot(n, delta) - b * Dot(m, delta)) / divisor;
-    double u = (b * Dot(n, delta) - Dot(m, delta)) / divisor;
-    V c = (p[0].point + n * (t * scale) + p[1].point + m * (u * scale)) * .5;
-    auto a = Frame(Type::Sphere, c, {0, 0, 1});
-    a.radius = (Norm(p[0].point - c) + Norm(p[1].point - c)) * .5;
-    return a;
-}
-static AnalyticParameters CylinderSeed(const std::array<SurfaceSample, 4> &p, double scale)
-{
-    V cross = Cross(p[0].normal, p[1].normal);
-    if (Norm(cross) < 1e-4) throw Failure(Status::IllConditioned, "Parallel cylinder normals");
-    V axis = Unit(cross), delta = (p[1].point - p[0].point) / scale;
-    delta = delta - axis * Dot(delta, axis);
-    double b = Dot(p[0].normal, p[1].normal), divisor = 1 - b * b;
-    double t = (Dot(p[0].normal, delta) - b * Dot(p[1].normal, delta)) / divisor;
-    V c = p[0].point + p[0].normal * (t * scale);
-    auto a = Frame(Type::Cylinder, c, axis);
-    a.radius = std::abs(t * scale);
-    return a;
-}
-static AnalyticParameters ConeSeed(const std::array<SurfaceSample, 4> &p, double scale)
-{
-    std::vector<std::array<double, 3>> rows;
-    std::vector<double> rhs;
-    V origin = p[0].point;
-    for (unsigned i = 0; i < 3; ++i)
-    {
-        V n = p[i].normal;
-        rows.push_back({n.x, n.y, n.z});
-        rhs.push_back(Dot(n, (p[i].point - origin) / scale));
-    }
-    std::array<double, 3> x;
-    if (!LeastSquares3(rows, rhs, 1e-10, x))
-        throw Failure(Status::IllConditioned, "Singular cone tangent planes");
-    V apex = origin + V{x[0], x[1], x[2]} * scale;
-    V d0 = Unit(p[0].point - apex), d1 = Unit(p[1].point - apex), d2 = Unit(p[2].point - apex);
-    V cross = Cross(d1 - d0, d2 - d0);
-    if (Norm(cross) < 1e-8) throw Failure(Status::IllConditioned, "Singular cone directions");
-    V axis = Unit(cross);
-    if (Dot(axis, d0 + d1 + d2) < 0) axis = axis * -1;
-    auto a = Frame(Type::Cone, apex, axis);
-    a.halfAngle = (std::acos(std::clamp(Dot(axis, d0), -1.0, 1.0)) +
-                   std::acos(std::clamp(Dot(axis, d1), -1.0, 1.0)) +
-                   std::acos(std::clamp(Dot(axis, d2), -1.0, 1.0))) / 3;
-    if (!(a.halfAngle > 1e-8 && a.halfAngle < Pi / 2 - 1e-8))
-        throw Failure(Status::IllConditioned, "Invalid cone seed angle");
-    return a;
-}
 using LineCoordinates = std::array<double, 6>; // direction, moment = position x direction
 // Column-pivoted Householder QR of A^T (6 x 4). The last two columns
 // of the orthogonal factor span null(A), without forming normal equations.
@@ -296,6 +242,7 @@ static void CompleteScore(GeneralScoringCandidate &candidate, SurfaceSampleConte
                           const std::vector<size_t> &remaining, GeneralClassificationDiagnostics &diagnostics)
 {
     ++diagnostics.fullScoreCount;
+    ++diagnostics.seedGroups[candidate.seed.score.seedGroup].fullyScored;
     try
     {
         ScoreInterior(candidate, context, remaining, diagnostics);
@@ -324,7 +271,7 @@ static bool Similar(double a, double b, const GeneralConversionOptions &o)
 }
 // Spread a small, deterministic support set over the generation partition.
 // This neither samples the source again nor consumes the random attempt budget.
-static std::vector<SurfaceSample> TorusSupport(const std::vector<SurfaceSample> &points,
+static std::vector<SurfaceSample> SeedSupport(const std::vector<SurfaceSample> &points,
                                               const std::vector<size_t> &indices)
 {
     double u0 = points[indices.front()].u, u1 = u0, v0 = points[indices.front()].v, v1 = v0;
@@ -372,7 +319,7 @@ GeneralCandidatePool InitializeGeneralCandidates(SurfaceSampleContext &context, 
     std::vector<bool> isCoarse(points.size(), false);
     for (size_t i : coarse) isCoarse[i] = true;
     for (size_t i : context.Scores()) if (!isCoarse[i]) pool.remainingScoreIndices.push_back(i);
-    std::vector<SurfaceSample> torusSupport;
+    std::vector<SurfaceSample> support;
     unsigned familyIndex = 0;
     for (Type type : {Type::Plane, Type::Sphere, Type::Cylinder, Type::Cone, Type::Torus})
     {
@@ -380,6 +327,11 @@ GeneralCandidatePool InitializeGeneralCandidates(SurfaceSampleContext &context, 
         for (unsigned attempt = 0; attempt < o.seedAttemptsPerType; ++attempt)
         {
             ++diagnostics.seedAttemptCount;
+            unsigned groupIndex=static_cast<unsigned>(diagnostics.seedGroups.size());
+            diagnostics.seedGroups.emplace_back();
+            auto &group=diagnostics.seedGroups.back();
+            group.type=type;group.attempt=attempt+1;
+            group.multiPoint=attempt==0 && (type==Type::Sphere || type==Type::Cylinder || type==Type::Cone);
             std::array<SurfaceSample, 4> p;
             std::array<size_t, 4> chosen{};
             bool complete = true;
@@ -397,21 +349,27 @@ GeneralCandidatePool InitializeGeneralCandidates(SurfaceSampleContext &context, 
                 }
                 if (!found) { complete = false; break; }
             }
-            if (!complete) continue;
+            if (!complete && !group.multiPoint)
+            {group.failure=GeneralSeedFailure::InsufficientPoints;continue;}
             try
             {
                 std::vector<AnalyticParameters> seeds;
+                std::vector<SurfaceSample> fit;
+                if(group.multiPoint || type==Type::Torus)
+                    if(support.empty()) support=SeedSupport(points,indices);
+                if(type==Type::Sphere || type==Type::Cylinder || type==Type::Cone)
+                    fit=group.multiPoint?support:std::vector<SurfaceSample>(p.begin(),p.end());
+                group.sampleCount=fit.empty()?4:static_cast<unsigned>(fit.size());
                 switch (type)
                 {
                 case Type::Plane: seeds.push_back(PlaneSeed(p, scale)); break;
-                case Type::Sphere: seeds.push_back(SphereSeed(p, scale)); break;
-                case Type::Cylinder: seeds.push_back(CylinderSeed(p, scale)); break;
-                case Type::Cone: seeds.push_back(ConeSeed(p, scale)); break;
+                case Type::Sphere: case Type::Cylinder: case Type::Cone:
+                    seeds.push_back(ConditionedGeneralSeed(type,fit,scale,group));break;
                 default:
-                    if (torusSupport.empty()) torusSupport = TorusSupport(points, indices);
-                    seeds = TorusSeeds(p, scale, torusSupport, diagnostics.torus);
+                    seeds = TorusSeeds(p, scale, support, diagnostics.torus);
                     break;
                 }
+                group.generated=static_cast<unsigned>(seeds.size());
                 for (const auto &a : seeds)
                 {
                     ++diagnostics.rawCandidateCount;
@@ -438,20 +396,23 @@ GeneralCandidatePool InitializeGeneralCandidates(SurfaceSampleContext &context, 
                         if (duplicate)
                         {
                             ++diagnostics.duplicateCandidateCount;
+                            ++group.duplicates;
                             continue;
                         }
                         GeneralScoringCandidate candidate;
                         candidate.seed.parameters = a;
                         candidate.seed.score.type = type;
                         candidate.seed.score.degreesOfFreedom = Dof(type);
+                        candidate.seed.score.seedGroup = groupIndex;
                         // Undefined until CompleteScore evaluates the boundary.
                         candidate.seed.score.boundaryMax = std::numeric_limits<double>::infinity();
                         family.push_back(std::move(candidate));
                     }
-                    catch (const std::runtime_error &) {}
+                    catch (const std::runtime_error &) {group.failure=GeneralSeedFailure::ConstructionFailed;}
                 }
             }
-            catch (const std::runtime_error &) {}
+            catch (const std::runtime_error &)
+            {if(group.failure==GeneralSeedFailure::None) group.failure=GeneralSeedFailure::ConstructionFailed;}
         }
     }
     // Build the same deduplicated mother pool in both modes before scoring.
@@ -461,6 +422,7 @@ GeneralCandidatePool InitializeGeneralCandidates(SurfaceSampleContext &context, 
         for (auto &candidate : family)
         {
             ++diagnostics.scoreEvaluationCount;
+            ++diagnostics.seedGroups[candidate.seed.score.seedGroup].scored;
             try
             {
                 if (o.coarseScorePointCount)
@@ -514,6 +476,7 @@ std::vector<GeneralSeed> NextGeneralCandidateBatch(GeneralCandidatePool &pool, S
         for (size_t i : best)
         {
             candidates.push_back(family[i].seed);
+            ++diagnostics.seedGroups[family[i].seed.score.seedGroup].selected;
             family[i].stage = GeneralScoreStage::Consumed;
         }
     }
