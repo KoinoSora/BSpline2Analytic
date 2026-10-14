@@ -40,7 +40,8 @@ enum class ClassificationFailureReason
     DegenerateBoundary,
     NonLineOrCircleBoundary,
     InconsistentGeometry,
-    NoCandidate
+    NoCandidate,
+    IllConditionedBoundary
 };
 enum class VerificationLevel
 {

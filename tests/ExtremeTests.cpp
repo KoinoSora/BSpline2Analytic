@@ -191,6 +191,12 @@ int Run(const std::filesystem::path &dir, const std::filesystem::path &csvPath, 
     std::ofstream csv(csvPath);
     if (!csv)
         throw std::runtime_error("Cannot write result CSV");
+    auto fitPath = csvPath.parent_path() / (csvPath.stem().string() + "-fits.csv");
+    std::ofstream fits(fitPath);
+    if (!fits) throw std::runtime_error("Cannot write curve fit diagnostics");
+    fits << std::setprecision(17)
+         << "id,path,direction,parameter,boundary,edge,samples,candidate_tolerance,numeric_floor,"
+            "transverse_ratio,line_error,circle_error,radius,sweep_angle,sagitta,has_line,has_circle,circle_state\n";
     csv << std::setprecision(17)
         << "id,group,type,source_kind,qualified,controls,rational,pair_bound,source_distance_"
            "sampled,source_tangent_sampled_deg,source_normal_sampled_deg,status,path,output_type,"
@@ -234,10 +240,20 @@ int Run(const std::filesystem::path &dir, const std::filesystem::path &csvPath, 
                 message = r.Message();
                 status = FailureStage(r);
                 for (const auto &attempt : r.attempts)
+                {
                     attempts +=
                         std::string(ConversionPathName(attempt.path)) + ":" +
                         (attempt.skipped ? "skipped" : (attempt.succeeded ? "success" : "failed")) +
                         ":" + attempt.message + " | ";
+                    for (const auto &d : attempt.isoCurveFits)
+                        fits << id << ',' << ConversionPathName(attempt.path) << ',' << d.fixedDirection
+                             << ',' << d.fixedParameter << ',' << d.boundary << ',' << unsigned(d.edge)
+                             << ',' << d.sampleCount << ',' << d.candidateTolerance << ',' << d.numericFloor
+                             << ',' << d.transverseRatio << ',' << d.lineError << ',' << d.circleError
+                             << ',' << d.radius << ',' << d.sweepAngle << ',' << d.sagitta << ',' << d.hasLine
+                             << ',' << d.hasCircle << ',' << CircleFitStateName(d.circleState) << '\n';
+                }
+                fits.flush();
                 gb = r.pcurveValidation.distanceUpperBound;
                 bb = r.pcurveValidation.boundaryHausdorffUpperBound;
                 pieces = r.pcurveValidation.piecesVisited;

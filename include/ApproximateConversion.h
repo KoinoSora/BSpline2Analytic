@@ -1,5 +1,6 @@
 #pragma once
 #include "BSpline2Analytic.h"
+#include <vector>
 
 namespace bspline2analytic
 {
@@ -164,6 +165,26 @@ struct RefinementDiagnostics
     RefinementStopReason stopReason = RefinementStopReason::NoSamples;
     std::vector<RefinementIteration> trace; // Populated only when explicitly requested.
 };
+enum class CircleFitState
+{
+    NotAttempted, Accepted, NumericallyLinear, RankDeficient,
+    NonFinite, InvalidRadius, UnresolvedExtent, ResidualExceeded
+};
+const char *CircleFitStateName(CircleFitState);
+struct IsoCurveFitDiagnostic
+{
+    unsigned fixedDirection = 0; // 0: fixed source U, 1: fixed source V.
+    double fixedParameter = 0;
+    bool boundary = false;
+    BoundaryId edge = BoundaryId::Umin;
+    unsigned sampleCount = 0;
+    double candidateTolerance = 0, numericFloor = 0, transverseRatio = 0;
+    double lineError = std::numeric_limits<double>::infinity();
+    double circleError = std::numeric_limits<double>::infinity();
+    double radius = 0, sweepAngle = 0, sagitta = 0;
+    bool hasLine = false, hasCircle = false;
+    CircleFitState circleState = CircleFitState::NotAttempted;
+};
 struct ClassificationDiagnostics
 {
     unsigned sampleCacheBuilds = 0;
@@ -171,6 +192,8 @@ struct ClassificationDiagnostics
     unsigned cachedPointEvaluations = 0, cachedDerivativeEvaluations = 0;
     unsigned rawCandidateCount = 0, directionalConeCandidates = 0;
     unsigned patchRecoveryAttempts = 0;
+    // Sampled fitting diagnostics, not continuous geometric certificates.
+    std::vector<IsoCurveFitDiagnostic> isoCurveFits;
 };
 struct ConversionStatistics
 {

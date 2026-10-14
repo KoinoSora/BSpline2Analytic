@@ -30,15 +30,20 @@ def main():
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--timeout", type=float, default=300)
     parser.add_argument("--resume", action="store_true")
+    parser.add_argument("--first", type=int, default=0)
+    parser.add_argument("--last", type=int, default=200, help="exclusive end ID")
     args = parser.parse_args()
     if not math.isfinite(args.timeout) or args.timeout <= 0:
         parser.error("timeout must be finite and positive")
+    if not 0 <= args.first < args.last <= 200:
+        parser.error("Expected 0 <= first < last <= 200")
     manifest = read(args.data / "manifest.csv")
     if [int(r["id"]) for r in manifest] != list(range(200)):
         raise ValueError("Expected exactly 200 ordered fixtures")
+    manifest = manifest[args.first:args.last]
     existing = read(args.output) if args.resume and args.output.exists() else []
-    if [int(r["id"]) for r in existing] != list(range(len(existing))):
-        raise ValueError("Resume requires a contiguous prefix")
+    if len(existing) > len(manifest) or [int(r["id"]) for r in existing] != list(range(args.first, args.first + len(existing))):
+        raise ValueError("Resume requires a contiguous prefix of the selected range")
     for row, fixture in zip(existing, manifest):
         if any(row[k] != fixture[k] for k in ("id", "group", "type", "source_kind")):
             raise ValueError("Resume prefix belongs to a different matrix")
@@ -88,7 +93,7 @@ def main():
             stream.flush()
             failed += row["status"] not in ("same_type_success", "alternate_type_success")
             print(f"{index}: {row['status']} ({elapsed:.3f}s including loading and audits)", flush=True)
-    print(f"Completed 200 records, failed/unresolved={failed}", flush=True)
+    print(f"Completed {len(manifest)} records [{args.first},{args.last}), failed/unresolved={failed}", flush=True)
     return 1 if failed else 0
 
 

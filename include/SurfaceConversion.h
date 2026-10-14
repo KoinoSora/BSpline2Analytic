@@ -19,6 +19,8 @@ struct ConversionAttempt
     bool succeeded = false;
     ClassificationFailureReason classificationFailure = ClassificationFailureReason::None;
     std::string message;
+    // Retain specialized fits even when details is replaced by general fallback.
+    std::vector<IsoCurveFitDiagnostic> isoCurveFits;
 };
 struct SurfaceConversionOptions
 {

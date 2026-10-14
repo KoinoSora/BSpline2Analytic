@@ -34,6 +34,16 @@ target_link_libraries(BSpline2AnalyticSample PRIVATE BSpline2Analytic)
 option(BSPLINE2ANALYTIC_BUILD_TESTS "Build module regression tests" ON)
 if(BSPLINE2ANALYTIC_BUILD_TESTS)
     enable_testing()
+    add_executable(BSpline2AnalyticClassificationGateTests tests/ClassificationGateTests.cpp
+        tests/Dataset500.cpp tests/PairedSurfaceBounds.cpp)
+    target_link_libraries(BSpline2AnalyticClassificationGateTests PRIVATE BSpline2Analytic)
+    target_compile_options(BSpline2AnalyticClassificationGateTests PRIVATE /W4 /utf-8)
+    target_include_directories(BSpline2AnalyticClassificationGateTests PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src")
+    add_test(NAME BSpline2Analytic.ClassificationGate COMMAND BSpline2AnalyticClassificationGateTests
+        "${CMAKE_CURRENT_SOURCE_DIR}/tests/data/extreme200")
+    set_tests_properties(BSpline2Analytic.ClassificationGate PROPERTIES
+        TIMEOUT 60 WORKING_DIRECTORY "${SGGK_SDK_DIR}"
+        ENVIRONMENT_MODIFICATION "PATH=path_list_prepend:${SGGK_SDK_DIR}/x64-win/bin${_sgk_config}")
     add_executable(BSpline2AnalyticExtremeTests tests/ExtremeDataset.cpp tests/ExtremeTests.cpp
         tests/Dataset500.cpp tests/PairedSurfaceBounds.cpp)
     target_link_libraries(BSpline2AnalyticExtremeTests PRIVATE BSpline2Analytic)

@@ -1,0 +1,4 @@
+Release x64, CTest BSpline2Analytic.ClassificationGate: PASS
+arc R=10000 theta=0.00080000000000000004 error=5.4569682106375694e-12 ratio=1.1931818110847108e-08 state=Accepted
+arc R=100000000 theta=1.0000000000000001e-05 error=0 ratio=1.8643465909073584e-12 state=Accepted
+Passed 64 classification gate checks

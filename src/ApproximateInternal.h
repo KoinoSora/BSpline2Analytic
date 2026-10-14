@@ -8,6 +8,15 @@
 #include <tuple>
 namespace bspline2analytic::detail
 {
+ConversionStatus ApproximateFailureStatus(Status) noexcept;
+struct CurveFits
+{
+    BoundaryInfo line, circle;
+    bool hasLine = false, hasCircle = false;
+};
+CurveFits FitApproximateIsoCurve(const sggk::Curve3DPtr &, BoundaryId, double tolerance,
+                                unsigned maxSamples, IsoCurveFitDiagnostic * = nullptr,
+                                const std::function<V(double)> &sample = {});
 struct Frame3
 {
     V o, x, y, z;

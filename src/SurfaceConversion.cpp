@@ -69,6 +69,7 @@ SurfaceConversionResult Convert(const sggk::BSplineSurface &s, const SurfaceConv
             if (approximate.status==ConversionStatus::Success && !success)
             { approximate.status=ConversionStatus::VerificationFailed;approximate.message=result.pcurveValidation.message; }
             result.attempts.push_back({result.path,false,success,approximate.classificationFailure,approximate.message});
+            result.attempts.back().isoCurveFits = approximate.statistics.classification.isoCurveFits;
             bool invalid=approximate.status==ConversionStatus::InvalidInput;
             result.details=std::move(approximate);
             if (success || invalid)

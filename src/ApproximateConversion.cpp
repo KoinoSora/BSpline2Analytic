@@ -1,5 +1,22 @@
 #include "ApproximateInternal.h"
 #include "StageTimer.h"
+namespace bspline2analytic::detail
+{
+ConversionStatus ApproximateFailureStatus(Status status) noexcept
+{
+    switch (status)
+    {
+    case Status::InvalidInput: return ConversionStatus::InvalidInput;
+    case Status::Unsupported: return ConversionStatus::Unsupported;
+    case Status::Degenerate: return ConversionStatus::Degenerate;
+    case Status::InconsistentBoundary: return ConversionStatus::NoCandidate;
+    case Status::IllConditioned:
+    case Status::Ambiguous:
+    case Status::VerificationFailed: return ConversionStatus::Unresolved;
+    default: return ConversionStatus::Unresolved;
+    }
+}
+}
 namespace bspline2analytic
 {
 const char *ConversionStatusName(ConversionStatus s)
@@ -249,6 +266,8 @@ ConversionResult detail::ConvertApproximateWithSamples(const sggk::BSplineSurfac
                     result.classificationFailure = ClassificationFailureReason::DegenerateBoundary;
                 else if (e.status == Status::InconsistentBoundary)
                     result.classificationFailure = ClassificationFailureReason::NonLineOrCircleBoundary;
+                else if (e.status == Status::IllConditioned)
+                    result.classificationFailure = ClassificationFailureReason::IllConditionedBoundary;
                 throw;
             }
         }
@@ -285,13 +304,7 @@ ConversionResult detail::ConvertApproximateWithSamples(const sggk::BSplineSurfac
     catch (const Failure &e)
     {
         result.message = e.what();
-        result.status =
-            e.status == Status::Unsupported
-                ? ConversionStatus::Unsupported
-                : (e.status == Status::Degenerate
-                       ? ConversionStatus::Degenerate
-                       : (e.status == Status::VerificationFailed ? ConversionStatus::Unresolved
-                                                                 : ConversionStatus::InvalidInput));
+        result.status = ApproximateFailureStatus(e.status);
     }
     catch (const std::exception &e)
     {

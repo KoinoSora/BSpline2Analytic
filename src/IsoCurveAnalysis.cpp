@@ -1,5 +1,24 @@
 #include "ApproximateInternal.h"
 #include <numeric>
+#include <sstream>
+namespace bspline2analytic
+{
+const char *CircleFitStateName(CircleFitState state)
+{
+    switch (state)
+    {
+    case CircleFitState::NotAttempted: return "NotAttempted";
+    case CircleFitState::Accepted: return "Accepted";
+    case CircleFitState::NumericallyLinear: return "NumericallyLinear";
+    case CircleFitState::RankDeficient: return "RankDeficient";
+    case CircleFitState::NonFinite: return "NonFinite";
+    case CircleFitState::InvalidRadius: return "InvalidRadius";
+    case CircleFitState::UnresolvedExtent: return "UnresolvedExtent";
+    case CircleFitState::ResidualExceeded: return "ResidualExceeded";
+    }
+    return "Unknown";
+}
+}
 namespace bspline2analytic::detail
 {
 static std::array<V, 3> EigenFrame(double a[3][3], std::array<double, 3> &eigen)
@@ -50,23 +69,45 @@ static std::array<V, 3> EigenFrame(double a[3][3], std::array<double, 3> &eigen)
     }
     return out;
 }
-struct CurveFits
+CurveFits FitApproximateIsoCurve(const sggk::Curve3DPtr &curve, BoundaryId id, double tolerance,
+                                unsigned maxSamples, IsoCurveFitDiagnostic *diagnostic,
+                                const std::function<V(double)> &sample)
 {
-    BoundaryInfo line, circle;
-    bool hasLine = false, hasCircle = false;
-};
-static CurveFits FitCurve(const sggk::Curve3DPtr &curve, BoundaryId id, double tolerance,
-                          unsigned maxSamples, const std::function<V(double)> &sample = {})
-{
+    IsoCurveFitDiagnostic local;
+    auto &diag = diagnostic ? *diagnostic : local;
+    auto direction = diag.fixedDirection;
+    auto fixedParameter = diag.fixedParameter;
+    auto boundary = diag.boundary;
+    diag = {};
+    diag.fixedDirection = direction;
+    diag.fixedParameter = fixedParameter;
+    diag.boundary = boundary;
+    diag.edge = id;
+    diag.candidateTolerance = tolerance;
+    if (!(tolerance > 0 && std::isfinite(tolerance)) || !maxSamples)
+        throw Failure(Status::InvalidInput, "Invalid isocurve fitting options");
     auto bc = std::dynamic_pointer_cast<sggk::BSplineCurve3D>(curve);
     if (!bc)
         throw Failure(Status::Unsupported, "Expected spline isocurve");
     auto ts = SampleParameters(*bc, 8);
+    diag.sampleCount = static_cast<unsigned>(ts.size());
     if (ts.size() > maxSamples)
         throw Failure(Status::VerificationFailed, "Isocurve sample budget exceeded");
     std::vector<V> points;
     for (double t : ts)
         points.push_back(sample ? sample(t) : Get(curve->CalcPoint(t)));
+    double coordinateUlp = 0;
+    for (V p : points)
+    {
+        if (!Finite(p))
+        {
+            diag.circleState = CircleFitState::NonFinite;
+            throw Failure(Status::IllConditioned, "Nonfinite evaluated isocurve point");
+        }
+        for (double x : {p.x, p.y, p.z})
+            coordinateUlp = std::max(coordinateUlp, std::max(
+                std::nextafter(x, INFINITY)-x, x-std::nextafter(x, -INFINITY)));
+    }
     std::vector<double> weights(points.size(), 0);
     for (size_t i = 1; i < points.size(); ++i)
     {
@@ -74,21 +115,34 @@ static CurveFits FitCurve(const sggk::Curve3DPtr &curve, BoundaryId id, double t
         // Midpoint chord quadrature is representation-independent to sampling accuracy.
         double parameter=(ts[i]+ts[i-1])*.5;
         V mid=sample ? sample(parameter) : Get(curve->CalcPoint(parameter));
+        if (!Finite(mid))
+        {
+            diag.circleState = CircleFitState::NonFinite;
+            throw Failure(Status::IllConditioned, "Nonfinite evaluated isocurve midpoint");
+        }
         length = std::max(length, Norm(mid - points[i - 1]) + Norm(points[i] - mid));
         weights[i - 1] += length * 0.5;
         weights[i] += length * 0.5;
     }
     double length = std::accumulate(weights.begin(), weights.end(), 0.0);
-    if (!(length > 1e-12))
+    if (!std::isfinite(length))
+        throw Failure(Status::IllConditioned, "Nonfinite isocurve extent");
+    if (!(length > 0))
         throw Failure(Status::Degenerate, "Collapsed isocurve");
     for (auto &w : weights)
         w /= length;
-    V center{};
+    // Accumulate local offsets, avoiding a sum of large world coordinates.
+    V offset{}, anchor = points.front();
     for (size_t i = 0; i < points.size(); ++i)
-        center = center + points[i] * weights[i];
+        offset = offset + (points[i] - anchor) * weights[i];
+    V center = anchor + offset;
     double scale = 0;
     for (V x : points)
         scale = std::max(scale, Norm(x - center));
+    if (!(scale > 0 && std::isfinite(scale)) || !Finite(center))
+        throw Failure(Status::IllConditioned, "Unresolved isocurve normalization");
+    // Heuristic numerical-resolution estimate, not a geometric certificate.
+    diag.numericFloor = 8 * coordinateUlp + 64 * std::numeric_limits<double>::epsilon() * scale;
     std::vector<V> a;
     for (V x : points)
         a.push_back((x - center) / scale);
@@ -106,19 +160,26 @@ static CurveFits FitCurve(const sggk::Curve3DPtr &curve, BoundaryId id, double t
     out.line.id = id;
     out.line.curve = curve;
     out.line.kind = BoundaryKind::Line;
-    V direction = frame[2];
-    if (Dot(direction, points.back() - points.front()) < 0)
-        direction = direction * (-1);
+    V lineDirection = frame[2];
+    if (Dot(lineDirection, points.back() - points.front()) < 0)
+        lineDirection = lineDirection * (-1);
     double lineError = 0;
     for (V x : points)
-        lineError = std::max(lineError, Norm(Cross(x - center, direction)));
-    out.line.line = {Point(center), Direction(direction), Dot(points.front() - center, direction),
-                     Dot(points.back() - center, direction)};
+        lineError = std::max(lineError, Norm(Cross(x - center, lineDirection)));
+    out.line.line = {Point(center), Direction(lineDirection), Dot(points.front() - center, lineDirection),
+                     Dot(points.back() - center, lineDirection)};
     out.line.errorBound = lineError;
     out.line.message = "Sampled approximate fit; not a certified curve bound";
-    out.hasLine = lineError <= tolerance;
-    if (eigen[1] < 1e-10 * std::max(eigen[2], 1e-30))
+    diag.lineError = lineError;
+    out.hasLine = diag.hasLine = std::isfinite(lineError) && lineError <= tolerance;
+    diag.transverseRatio = std::max(0.0, eigen[1]) / std::max(eigen[2], 1e-30);
+    // A small covariance ratio alone does not establish geometric straightness.
+    // Skip circles only when an admissible line is numerically indistinguishable.
+    if (out.hasLine && lineError <= diag.numericFloor)
+    {
+        diag.circleState = CircleFitState::NumericallyLinear;
         return out;
+    }
     V normal = frame[0], ex = frame[2], ey = Cross(normal, ex);
     std::vector<std::array<double, 3>> rows;
     std::vector<double> rhs;
@@ -130,11 +191,18 @@ static CurveFits FitCurve(const sggk::Curve3DPtr &curve, BoundaryId id, double t
     }
     std::array<double, 3> sol;
     if (!LeastSquares3(rows, rhs, 1e-11, sol))
+    {
+        diag.circleState = CircleFitState::RankDeficient;
         return out;
+    }
     V o = ex * (-sol[0] * 0.5) + ey * (-sol[1] * 0.5);
     double r2 = (sol[0] * sol[0] + sol[1] * sol[1]) * 0.25 - sol[2];
-    if (!(r2 > 0))
+    if (!(r2 > 0 && std::isfinite(r2)) || !Finite(o))
+    {
+        diag.circleState = std::isfinite(r2) && Finite(o) ?
+            CircleFitState::InvalidRadius : CircleFitState::NonFinite;
         return out;
+    }
     double radius = std::sqrt(r2);
     auto residual = [&](V c, V n, double r) {
         std::vector<double> f;
@@ -187,7 +255,7 @@ static CurveFits FitCurve(const sggk::Curve3DPtr &curve, BoundaryId id, double t
             break;
         V trial = o + V{step[0], step[1], step[2]}, nn = Unit(normal + nx * step[3] + ny * step[4]);
         double rr = radius + step[5];
-        if (!(rr > 0))
+        if (!(rr > 0 && std::isfinite(rr)) || !Finite(trial) || !Finite(nn))
             break;
         auto next = residual(trial, nn, rr);
         double old = 0, now = 0;
@@ -195,7 +263,7 @@ static CurveFits FitCurve(const sggk::Curve3DPtr &curve, BoundaryId id, double t
             old += x * x;
         for (double x : next)
             now += x * x;
-        if (now >= old)
+        if (!std::isfinite(now) || now >= old)
             break;
         o = trial;
         normal = nn;
@@ -209,13 +277,24 @@ static CurveFits FitCurve(const sggk::Curve3DPtr &curve, BoundaryId id, double t
     ex = Unit(ex - normal * Dot(ex, normal));
     ey = Cross(normal, ex);
     V worldCenter = center + o * scale;
+    if (!Finite(worldCenter) || !std::isfinite(radius * scale))
+    {
+        diag.circleState = CircleFitState::NonFinite;
+        return out;
+    }
     double maxError = 0, first = 0, last = 0;
     for (size_t i = 0; i < points.size(); ++i)
     {
         V d = points[i] - worldCenter;
         double z = Dot(d, normal), rho = Norm(d - normal * z);
-        maxError = std::max(maxError, std::hypot(z, rho - radius * scale));
+        double error = std::hypot(z, rho - radius * scale);
         double angle = std::atan2(Dot(d, ey), Dot(d, ex));
+        if (!std::isfinite(error) || !std::isfinite(angle))
+        {
+            diag.circleState = CircleFitState::NonFinite;
+            return out;
+        }
+        maxError = std::max(maxError, error);
         if (i == 0)
             first = last = angle;
         else
@@ -228,7 +307,21 @@ static CurveFits FitCurve(const sggk::Curve3DPtr &curve, BoundaryId id, double t
         Point(worldCenter), Direction(normal), Direction(ex), radius * scale, first, last - first};
     out.circle.errorBound = maxError;
     out.circle.message = "Sampled geometric circle fit; not a certified curve bound";
-    out.hasCircle = maxError <= tolerance && std::abs(last - first) > 1e-3;
+    diag.circleError = maxError;
+    diag.radius = radius * scale;
+    diag.sweepAngle = last - first;
+    double sine = std::sin(std::abs(diag.sweepAngle) * .25);
+    diag.sagitta = diag.radius * (2 * sine * sine);
+    double extent = diag.radius * std::abs(diag.sweepAngle);
+    if (!(std::isfinite(extent) && extent > diag.numericFloor))
+        diag.circleState = CircleFitState::UnresolvedExtent;
+    else if (maxError > tolerance)
+        diag.circleState = CircleFitState::ResidualExceeded;
+    else
+    {
+        diag.circleState = CircleFitState::Accepted;
+        out.hasCircle = diag.hasCircle = true;
+    }
     return out;
 }
 static std::optional<AnalyticParameters> DirectionalCone(const std::array<BoundaryInfo, 4> &edges,
@@ -408,9 +501,15 @@ std::vector<AnalyticPatch> ClassifyApproximate(const sggk::BSplineSurface &s,
                 return shared->At(g==0?t:varying,g==0?varying:t,
                     sggk::DerivType::NONE,sggk::DerivType::NONE,false).point;
             };
-            try { groups[g][j]=FitCurve(curve,
+            IsoCurveFitDiagnostic local;
+            if (diagnostics) diagnostics->isoCurveFits.emplace_back();
+            auto &fitDiagnostic = diagnostics ? diagnostics->isoCurveFits.back() : local;
+            fitDiagnostic.fixedDirection = g;
+            fitDiagnostic.fixedParameter = t;
+            fitDiagnostic.boundary = boundary;
+            try { groups[g][j]=FitApproximateIsoCurve(curve,
                                          static_cast<BoundaryId>(2 * g + (j == n + 1 ? 1 : 0)),
-                                         tolerance, o.sampling.maxSamples,point); }
+                                         tolerance, o.sampling.maxSamples,&fitDiagnostic,point); }
             catch (const Failure &e)
             {
                 if (boundary || e.status==Status::InvalidInput || e.status==Status::VerificationFailed) throw;
@@ -418,8 +517,16 @@ std::vector<AnalyticPatch> ClassifyApproximate(const sggk::BSplineSurface &s,
             }
             // Interior families must never bypass an unsupported outer edge.
             if (boundary && !groups[g][j].hasLine && !groups[g][j].hasCircle)
-                throw Failure(Status::InconsistentBoundary,
-                              "Classification failed: outer boundary is neither line nor circle");
+            {
+                bool numerical = fitDiagnostic.circleState != CircleFitState::ResidualExceeded;
+                std::ostringstream message;
+                message << "Boundary fit failed: edge=" << unsigned(fitDiagnostic.edge)
+                        << ", circle=" << CircleFitStateName(fitDiagnostic.circleState)
+                        << ", line_error=" << fitDiagnostic.lineError
+                        << ", circle_error=" << fitDiagnostic.circleError;
+                throw Failure(numerical ? Status::IllConditioned : Status::InconsistentBoundary,
+                              message.str());
+            }
         }
     };
     // Gate all four outside edges before sampling any internal families.

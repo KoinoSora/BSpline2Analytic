@@ -1,0 +1,28 @@
+{
+  "baseline_commit": "b48893abd3d863693ced3f138da92a8db73f2c63",
+  "ids_half_open": [
+    96,
+    128
+  ],
+  "unit_checks": 64,
+  "fits": 160,
+  "before": {
+    "same_type_success": 6,
+    "InvalidInput": 8,
+    "VerificationFailed": 18
+  },
+  "after": {
+    "same_type_success": 8,
+    "VerificationFailed": 24
+  },
+  "angle_evidence": {
+    "sampled_only": 5,
+    "specialized_continuous_report": 3
+  },
+  "success_sample_maxima": {
+    "output_distance_sampled": 8.003554332670046e-11,
+    "output_tangent_sampled_deg": 6.670612012510756e-09,
+    "output_normal_sampled_deg": 9.788570559055357e-09
+  },
+  "timeout_s": 300
+}
