@@ -1,0 +1,369 @@
+{
+  "scope": "First recovered candidate; no optimizer or production fallback is invoked",
+  "sphere_runs": [
+    {
+      "rows": 50,
+      "statuses": {
+        "Passed": 40,
+        "NoCandidate": 5,
+        "ClassificationFailed": 2,
+        "Unsupported": 3
+      },
+      "matched_passes": 40,
+      "old_ms": 13585.8794,
+      "new_ms": 1303.6200000000001,
+      "speedup": 10.4216561574692,
+      "reduction_percent": 90.4045961132262,
+      "old_mean_ms": 339.646985,
+      "new_mean_ms": 32.590500000000006,
+      "stages_ms": {
+        "prepare_ms": 867.075000000001,
+        "surface_ms": 350.1851,
+        "subdivide_ms": 0.0,
+        "boundary_ms": 83.52989999999997,
+        "report_ms": 2.778999999999999
+      },
+      "stages_percent": {
+        "prepare_ms": 66.51546638497851,
+        "surface_ms": 26.863564567736706,
+        "subdivide_ms": 0.0,
+        "boundary_ms": 6.407785088476322,
+        "report_ms": 0.213183958808471
+      },
+      "mapping_attempts": {
+        "1": 40
+      },
+      "max_geometry_bound": 1.4102116239530226e-06,
+      "max_tangent_deg": 0.0007999176732044806,
+      "max_normal_deg": 0.0010526965703254328
+    },
+    {
+      "rows": 50,
+      "statuses": {
+        "Passed": 40,
+        "NoCandidate": 5,
+        "ClassificationFailed": 2,
+        "Unsupported": 3
+      },
+      "matched_passes": 40,
+      "old_ms": 13700.090999999999,
+      "new_ms": 1322.3783,
+      "speedup": 10.360190423572435,
+      "reduction_percent": 90.34766776366668,
+      "old_mean_ms": 342.50227499999994,
+      "new_mean_ms": 33.0594575,
+      "stages_ms": {
+        "prepare_ms": 878.565100000001,
+        "surface_ms": 355.4421,
+        "subdivide_ms": 0.0,
+        "boundary_ms": 85.35619999999999,
+        "report_ms": 2.9682999999999997
+      },
+      "stages_percent": {
+        "prepare_ms": 66.44059883008178,
+        "surface_ms": 26.87995001556718,
+        "subdivide_ms": 0.0,
+        "boundary_ms": 6.454976463167292,
+        "report_ms": 0.2244746911837626
+      },
+      "mapping_attempts": {
+        "1": 40
+      },
+      "max_geometry_bound": 1.4102116239530226e-06,
+      "max_tangent_deg": 0.0007999176732044806,
+      "max_normal_deg": 0.0010526965703254328
+    },
+    {
+      "rows": 50,
+      "statuses": {
+        "Passed": 40,
+        "NoCandidate": 5,
+        "ClassificationFailed": 2,
+        "Unsupported": 3
+      },
+      "matched_passes": 40,
+      "old_ms": 13599.1233,
+      "new_ms": 1303.76,
+      "speedup": 10.430695296680371,
+      "reduction_percent": 90.4129113970163,
+      "old_mean_ms": 339.97808249999997,
+      "new_mean_ms": 32.594,
+      "stages_ms": {
+        "prepare_ms": 866.4172000000008,
+        "surface_ms": 351.18549999999993,
+        "subdivide_ms": 0.0,
+        "boundary_ms": 83.3255,
+        "report_ms": 2.7801000000000005
+      },
+      "stages_percent": {
+        "prepare_ms": 66.45790319813108,
+        "surface_ms": 26.937429177984047,
+        "subdivide_ms": 0.0,
+        "boundary_ms": 6.391422068878442,
+        "report_ms": 0.2132455550064381
+      },
+      "mapping_attempts": {
+        "1": 40
+      },
+      "max_geometry_bound": 1.4102116239530226e-06,
+      "max_tangent_deg": 0.0007999176732044806,
+      "max_normal_deg": 0.0010526965703254328
+    }
+  ],
+  "sphere_all_runs": {
+    "rows": 150,
+    "statuses": {
+      "Passed": 120,
+      "NoCandidate": 15,
+      "ClassificationFailed": 6,
+      "Unsupported": 9
+    },
+    "matched_passes": 120,
+    "old_ms": 40885.09369999998,
+    "new_ms": 3929.758300000001,
+    "speedup": 10.403971587769144,
+    "reduction_percent": 90.38828593903895,
+    "old_mean_ms": 340.70911416666655,
+    "new_mean_ms": 32.74798583333334,
+    "stages_ms": {
+      "prepare_ms": 2612.057300000002,
+      "surface_ms": 1056.8127000000002,
+      "subdivide_ms": 0.0,
+      "boundary_ms": 252.2116,
+      "report_ms": 8.527399999999998
+    },
+    "stages_percent": {
+      "prepare_ms": 66.47117563095973,
+      "surface_ms": 26.89358406905113,
+      "subdivide_ms": 0.0,
+      "boundary_ms": 6.418236521750633,
+      "report_ms": 0.2170037782384963
+    },
+    "mapping_attempts": {
+      "1": 120
+    },
+    "max_geometry_bound": 1.4102116239530226e-06,
+    "max_tangent_deg": 0.0007999176732044806,
+    "max_normal_deg": 0.0010526965703254328
+  },
+  "dataset500": {
+    "rows": 500,
+    "statuses": {
+      "Passed": 280,
+      "Unsupported": 206,
+      "ClassificationFailed": 9,
+      "NoCandidate": 5
+    },
+    "matched_passes": 280,
+    "old_ms": 53620.449700000005,
+    "new_ms": 4930.537399999999,
+    "speedup": 10.875173505427625,
+    "reduction_percent": 90.80474440705781,
+    "old_mean_ms": 191.5016060714286,
+    "new_mean_ms": 17.60906214285714,
+    "stages_ms": {
+      "prepare_ms": 3267.9006000000018,
+      "surface_ms": 1278.4145999999996,
+      "subdivide_ms": 0.0,
+      "boundary_ms": 363.26279999999986,
+      "report_ms": 20.633700000000008
+    },
+    "stages_percent": {
+      "prepare_ms": 66.2831699498827,
+      "surface_ms": 25.93021715477247,
+      "subdivide_ms": 0.0,
+      "boundary_ms": 7.36809739833281,
+      "report_ms": 0.41851549701202495
+    },
+    "mapping_attempts": {
+      "1": 280
+    },
+    "max_geometry_bound": 3.1309451862761977e-06,
+    "max_tangent_deg": 0.003627392352102574,
+    "max_normal_deg": 0.004193018830567389
+  },
+  "dataset_by_type": {
+    "Cone": {
+      "rows": 100,
+      "statuses": {
+        "Unsupported": 53,
+        "Passed": 40,
+        "ClassificationFailed": 7
+      },
+      "matched_passes": 40,
+      "old_ms": 6374.9615,
+      "new_ms": 638.8031,
+      "speedup": 9.979540644057614,
+      "reduction_percent": 89.97949869971764,
+      "old_mean_ms": 159.37403750000001,
+      "new_mean_ms": 15.970077499999999,
+      "stages_ms": {
+        "prepare_ms": 418.98040000000066,
+        "surface_ms": 162.0117,
+        "subdivide_ms": 0.0,
+        "boundary_ms": 55.23830000000001,
+        "report_ms": 2.5265
+      },
+      "stages_percent": {
+        "prepare_ms": 65.59309183196302,
+        "surface_ms": 25.36359294122691,
+        "subdivide_ms": 0.0,
+        "boundary_ms": 8.647781339035234,
+        "report_ms": 0.3955338877748322
+      },
+      "mapping_attempts": {
+        "1": 40
+      },
+      "max_geometry_bound": 1.5207897237701304e-06,
+      "max_tangent_deg": 0.003627392352102574,
+      "max_normal_deg": 0.004193018830567389
+    },
+    "Cylinder": {
+      "rows": 100,
+      "statuses": {
+        "Unsupported": 50,
+        "Passed": 50
+      },
+      "matched_passes": 50,
+      "old_ms": 7669.890600000002,
+      "new_ms": 756.0244,
+      "speedup": 10.145030504306478,
+      "reduction_percent": 90.1429571889852,
+      "old_mean_ms": 153.39781200000004,
+      "new_mean_ms": 15.120488,
+      "stages_ms": {
+        "prepare_ms": 501.6994000000009,
+        "surface_ms": 185.14449999999997,
+        "subdivide_ms": 0.0,
+        "boundary_ms": 65.92110000000001,
+        "report_ms": 3.2009999999999996
+      },
+      "stages_percent": {
+        "prepare_ms": 66.36533918192092,
+        "surface_ms": 24.491114679760695,
+        "subdivide_ms": 0.0,
+        "boundary_ms": 8.720114396679206,
+        "report_ms": 0.4234317416391737
+      },
+      "mapping_attempts": {
+        "1": 50
+      },
+      "max_geometry_bound": 1.495621138217746e-06,
+      "max_tangent_deg": 0.0032906563642942227,
+      "max_normal_deg": 0.0032906563643279167
+    },
+    "Plane": {
+      "rows": 100,
+      "statuses": {
+        "Passed": 100
+      },
+      "matched_passes": 100,
+      "old_ms": 3430.0939999999996,
+      "new_ms": 663.3536000000001,
+      "speedup": 5.170837996507442,
+      "reduction_percent": 80.66077489421572,
+      "old_mean_ms": 34.30094,
+      "new_mean_ms": 6.633536000000001,
+      "stages_ms": {
+        "prepare_ms": 447.474999999999,
+        "surface_ms": 149.53640000000004,
+        "subdivide_ms": 0.0,
+        "boundary_ms": 57.5145,
+        "report_ms": 8.7278
+      },
+      "stages_percent": {
+        "prepare_ms": 67.46664210090341,
+        "surface_ms": 22.545882518258136,
+        "subdivide_ms": 0.0,
+        "boundary_ms": 8.671568662187648,
+        "report_ms": 1.3159067186507987
+      },
+      "mapping_attempts": {
+        "1": 100
+      },
+      "max_geometry_bound": 5.612783422127117e-13,
+      "max_tangent_deg": 2.529485741498698e-09,
+      "max_normal_deg": 1.5723568135568568e-09
+    },
+    "Sphere": {
+      "rows": 100,
+      "statuses": {
+        "Unsupported": 53,
+        "Passed": 40,
+        "NoCandidate": 5,
+        "ClassificationFailed": 2
+      },
+      "matched_passes": 40,
+      "old_ms": 13579.443600000002,
+      "new_ms": 1298.0364,
+      "speedup": 10.461527581198803,
+      "reduction_percent": 90.44116652909108,
+      "old_mean_ms": 339.48609000000005,
+      "new_mean_ms": 32.45091,
+      "stages_ms": {
+        "prepare_ms": 862.0619000000008,
+        "surface_ms": 350.2386,
+        "subdivide_ms": 0.0,
+        "boundary_ms": 82.9563,
+        "report_ms": 2.7315
+      },
+      "stages_percent": {
+        "prepare_ms": 66.41522885838033,
+        "surface_ms": 26.98318621207909,
+        "subdivide_ms": 0.0,
+        "boundary_ms": 6.39114389551893,
+        "report_ms": 0.21044103402164702
+      },
+      "mapping_attempts": {
+        "1": 40
+      },
+      "max_geometry_bound": 1.4102116239530226e-06,
+      "max_tangent_deg": 0.0007999176732044806,
+      "max_normal_deg": 0.0010526965703254328
+    },
+    "Torus": {
+      "rows": 100,
+      "statuses": {
+        "Unsupported": 50,
+        "Passed": 50
+      },
+      "matched_passes": 50,
+      "old_ms": 22566.059999999998,
+      "new_ms": 1574.3199000000004,
+      "speedup": 14.333846634346674,
+      "reduction_percent": 93.02350565406633,
+      "old_mean_ms": 451.3212,
+      "new_mean_ms": 31.48639800000001,
+      "stages_ms": {
+        "prepare_ms": 1037.6839000000014,
+        "surface_ms": 431.48339999999996,
+        "subdivide_ms": 0.0,
+        "boundary_ms": 101.6326,
+        "report_ms": 3.4468999999999994
+      },
+      "stages_percent": {
+        "prepare_ms": 65.9162146621483,
+        "surface_ms": 27.408878963577987,
+        "subdivide_ms": 0.0,
+        "boundary_ms": 6.455950871235687,
+        "report_ms": 0.21895550303802408
+      },
+      "mapping_attempts": {
+        "1": 50
+      },
+      "max_geometry_bound": 3.1309451862761977e-06,
+      "max_tangent_deg": 0.003544171329440245,
+      "max_normal_deg": 0.0037987738680239315
+    }
+  },
+  "production_regression": {
+    "differences": [],
+    "statuses": {
+      "Success": 460,
+      "Degenerate": 25,
+      "Unresolved": 4,
+      "InvalidInput": 6,
+      "NoCandidate": 5
+    }
+  }
+}

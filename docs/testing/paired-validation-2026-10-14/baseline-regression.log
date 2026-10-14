@@ -1,0 +1,64 @@
+Internal ctest changing into directory: D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-paired-baseline/out
+UpdateCTestConfiguration  from :D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-paired-baseline/out/DartConfiguration.tcl
+Parse Config file:D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-paired-baseline/out/DartConfiguration.tcl
+UpdateCTestConfiguration  from :D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-paired-baseline/out/DartConfiguration.tcl
+Parse Config file:D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-paired-baseline/out/DartConfiguration.tcl
+Test project D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-paired-baseline/out
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 11
+    Start 11: BSpline2Analytic.Cone
+
+11: Test command: D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-paired-baseline\out\Release\BSpline2AnalyticConeTests.exe "D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-paired-baseline/source/tests/data/dataset500" "D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-paired-baseline/out/cone249-Release.csv"
+11: Working Directory: D:/Projects/CppProjects/SeaGo/SGK1.7.11/SGGK
+11: Environment variable modifications:
+11:  PATH=path_list_prepend:D:/Projects/CppProjects/SeaGo/SGK1.7.11/SGGK/x64-win/bin
+11: Test timeout computed to be: 1500
+11: Failed to open log output file.
+11: Failed to open log output file.
+11: FAIL Classification cache or deferred recovery regressed
+1/2 Test #11: BSpline2Analytic.Cone ............***Failed    0.15 sec
+test 13
+    Start 13: BSpline2Analytic.Approximate
+
+13: Test command: D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-paired-baseline\out\Release\BSpline2AnalyticApproximateTests.exe
+13: Working Directory: D:/Projects/CppProjects/SeaGo/SGK1.7.11/SGGK
+13: Environment variable modifications:
+13:  PATH=path_list_prepend:D:/Projects/CppProjects/SeaGo/SGK1.7.11/SGGK/x64-win/bin
+13: Test timeout computed to be: 1500
+13: Failed to open log output file.
+13: Failed to open log output file.
+13: plane Success Outward interval/Bernstein bounds passed for finite-patch distance and both boundary angles geometry=Passed:9.56419e-14 tangent=Passed:2.10213e-11 normal=Passed:1.37862e-11 pieces=192 times=77.302,0,0
+13: refine plane iterations=1 passed=1 bounds=5.79732e-08,3.92727e-07,5.55392e-07
+13: plane transformed Success Outward interval/Bernstein bounds passed for finite-patch distance and both boundary angles bounds=2.48468e-13,1.73002e-10,1.57356e-10 pieces=206 iterations=0 times=77.7593,0,0
+13: cylinder Success Outward interval/Bernstein bounds passed for finite-patch distance and both boundary angles geometry=Passed:1.53711e-06 tangent=Passed:0.00174049 normal=Passed:0.00174049 pieces=192 times=107.327,0,0
+13: refine cylinder iterations=1 passed=1 bounds=1.58872e-06,0.00174115,0.00174115
+13: cylinder transformed Success Outward interval/Bernstein bounds passed for finite-patch distance and both boundary angles bounds=1.53711e-06,0.00174049,0.00174049 pieces=206 iterations=0 times=113.595,0,0
+13: cone Success Outward interval/Bernstein bounds passed for finite-patch distance and both boundary angles geometry=Passed:1.0365e-06 tangent=Passed:0.00132173 normal=Passed:0.00122545 pieces=192 times=120.773,0,0
+13: refine cone iterations=1 passed=1 bounds=3.32068e-06,0.00132929,0.00123433
+13: cone transformed Success Outward interval/Bernstein bounds passed for finite-patch distance and both boundary angles bounds=1.0365e-06,0.00132173,0.00122545 pieces=206 iterations=0 times=127.706,0,0
+13: sphere Success Outward interval/Bernstein bounds passed for finite-patch distance and both boundary angles geometry=Passed:2.99429e-06 tangent=Passed:0.0017412 normal=Passed:0.00150212 pieces=360 times=245.358,0,0
+13: refine sphere iterations=1 passed=1 bounds=3.09768e-06,0.00174036,0.0015004
+13: sphere transformed Success Outward interval/Bernstein bounds passed for finite-patch distance and both boundary angles bounds=2.99461e-06,0.0017412,0.00150212 pieces=374 iterations=0 times=259.296,0,0
+13: torus Success Outward interval/Bernstein bounds passed for finite-patch distance and both boundary angles geometry=Passed:2.97604e-06 tangent=Passed:0.00224977 normal=Passed:0.00241278 pieces=360 times=377.877,0,0
+13: refine torus iterations=1 passed=1 bounds=3.3482e-06,0.00227723,0.00243571
+13: torus transformed Success Outward interval/Bernstein bounds passed for finite-patch distance and both boundary angles bounds=2.98707e-06,0.0022498,0.0024131 pieces=374 iterations=0 times=391.209,0,0
+13: torus-concentric Success Outward interval/Bernstein bounds passed for finite-patch distance and both boundary angles bounds=1.88896e-07,0.0005977,0.000620813 pieces=896 iterations=0 times=879.983,0,0
+13: sphere-antipodal-meridians Unresolved Greville grid exceeds sample budget bounds=inf,inf,inf pieces=0 iterations=0 times=7.0707,0,0
+13: FAIL sphere-antipodal-meridians extended chart failed
+2/2 Test #13: BSpline2Analytic.Approximate .....***Failed    4.88 sec
+
+0% tests passed, 2 tests failed out of 2
+
+Total Test time (real) =   5.06 sec
+
+The following tests FAILED:
+	 11 - BSpline2Analytic.Cone (Failed)
+	 13 - BSpline2Analytic.Approximate (Failed)
+Errors while running CTest
+Output from these tests are in: D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-paired-baseline/out/Testing/Temporary/LastTest.log
+Use "--rerun-failed --output-on-failure" to re-run the failed cases verbosely.

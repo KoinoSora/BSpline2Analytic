@@ -1,0 +1,83 @@
+Internal ctest changing into directory: D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-specialized-timing
+UpdateCTestConfiguration  from :D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-specialized-timing/DartConfiguration.tcl
+Parse Config file:D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-specialized-timing/DartConfiguration.tcl
+UpdateCTestConfiguration  from :D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-specialized-timing/DartConfiguration.tcl
+Parse Config file:D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-specialized-timing/DartConfiguration.tcl
+Test project D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-specialized-timing
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 11
+    Start 11: BSpline2Analytic.Dataset500
+
+11: Test command: D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-specialized-timing\Release\BSpline2AnalyticDataset500Tests.exe "D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/tests/data/dataset500" "D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-specialized-timing/dataset500-Release.csv"
+11: Working Directory: D:/Projects/CppProjects/SeaGo/SGK1.7.11/SGGK
+11: Environment variable modifications:
+11:  PATH=path_list_prepend:D:/Projects/CppProjects/SeaGo/SGK1.7.11/SGGK/x64-win/bin
+11: Test timeout computed to be: 1500
+11: Failed to open log output file.
+11: Failed to open log output file.
+11: Tested 20/500; success=20 degenerate=0 failures=0
+11: Tested 40/500; success=40 degenerate=0 failures=0
+11: Tested 60/500; success=60 degenerate=0 failures=0
+11: Tested 80/500; success=80 degenerate=0 failures=0
+11: Tested 100/500; success=100 degenerate=0 failures=0
+11: Tested 120/500; success=120 degenerate=0 failures=0
+11: Tested 140/500; success=140 degenerate=0 failures=0
+11: Tested 160/500; success=160 degenerate=0 failures=0
+11: Tested 180/500; success=180 degenerate=0 failures=0
+11: Tested 200/500; success=200 degenerate=0 failures=0
+11: Tested 220/500; success=216 degenerate=4 failures=0
+11: FAIL 237 Unresolved Unresolved isocurve normalization
+11: FAIL 239 Unresolved Unresolved isocurve normalization
+11: Tested 240/500; success=232 degenerate=6 failures=2
+11: FAIL 257 InvalidInput Zero direction
+11: Tested 260/500; success=248 degenerate=9 failures=3
+11: FAIL 277 Unresolved Unresolved isocurve normalization
+11: Tested 280/500; success=264 degenerate=12 failures=4
+11: FAIL 297 InvalidInput Zero direction
+11: FAIL 299 InvalidInput Zero direction
+11: Tested 300/500; success=280 degenerate=14 failures=6
+11: FAIL 317 NoCandidate No analytic candidate could be initialized from line/circle families
+11: FAIL 319 Unresolved Unresolved isocurve normalization
+11: Tested 320/500; success=296 degenerate=16 failures=8
+11: FAIL 337 NoCandidate No analytic candidate could be initialized from line/circle families
+11: FAIL 339 InvalidInput Zero direction
+11: Tested 340/500; success=312 degenerate=18 failures=10
+11: FAIL 357 NoCandidate No analytic candidate could be initialized from line/circle families
+11: FAIL 359 InvalidInput Zero direction
+11: Tested 360/500; success=328 degenerate=20 failures=12
+11: FAIL 377 NoCandidate No analytic candidate could be initialized from line/circle families
+11: FAIL 379 InvalidInput Zero direction
+11: Tested 380/500; success=344 degenerate=22 failures=14
+11: FAIL 397 NoCandidate No analytic candidate could be initialized from line/circle families
+11: Tested 400/500; success=360 degenerate=25 failures=15
+11: Tested 420/500; success=380 degenerate=25 failures=15
+11: Tested 440/500; success=400 degenerate=25 failures=15
+11: Tested 460/500; success=420 degenerate=25 failures=15
+11: Tested 480/500; success=440 degenerate=25 failures=15
+11: Tested 500/500; success=460 degenerate=25 failures=15
+11: Cone/polynomial classify mean=155.068 p95=280.991 ms
+11: Cone/rational classify mean=1.34195 p95=2.754 ms
+11: Cylinder/polynomial classify mean=150.363 p95=387.724 ms
+11: Cylinder/rational classify mean=1.2974 p95=3.5261 ms
+11: Plane/polynomial classify mean=33.9116 p95=73.431 ms
+11: Sphere/polynomial classify mean=331.877 p95=714.37 ms
+11: Sphere/rational classify mean=1.23598 p95=2.5141 ms
+11: Torus/polynomial classify mean=438.622 p95=1102.68 ms
+11: Torus/rational classify mean=4.7123 p95=18.467 ms
+11: 500 fixtures certified; regular=460 degenerate=25 unexpected=15; rational=200 polynomial=300
+1/1 Test #11: BSpline2Analytic.Dataset500 ......***Failed   61.87 sec
+
+0% tests passed, 1 tests failed out of 1
+
+Total Test time (real) =  61.88 sec
+
+The following tests FAILED:
+	 11 - BSpline2Analytic.Dataset500 (Failed)
+Errors while running CTest
+Output from these tests are in: D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-specialized-timing/Testing/Temporary/LastTest.log
+Use "--rerun-failed --output-on-failure" to re-run the failed cases verbosely.

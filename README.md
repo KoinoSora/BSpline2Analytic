@@ -38,6 +38,8 @@
 
 非有理输入使用新增的 `ApproximateConversion.h`：`ConvertApproximate` 通过四边与少量内部等参线恢复五类候选，再进行参数优化和独立验收。默认距离严格小于 `1e-5`、边界切向及边界曲面法向角分别严格小于 `0.1°`。等参专用路径采用 `specialized-v2` 计时口径：`timing.classification` 包含分类计算与初始候选验证，`timing.optimization` 包含优化计算与优化后验证；四项明细为 `classificationCompute`、`classificationValidation`、`optimizationCompute`、`optimizationValidation`。初值合格时两项优化计时为零。独立专用接口的 `timing.validation` 为零；统一入口追加 PCurve 验证和一般兜底仍使用各自的计时。明细是阶段总计的组成部分，不能再次累加。默认启用解析 Jacobian（非光滑分支局部差分回退），可通过 `options.refinement.jacobianMode=JacobianMode::FiniteDifference` 切换全差分对照。算法及验证口径见 [非有理转换说明](docs/algorithm/APPROXIMATE_CONVERSION.md)。
 
+独立实验验证器 `ValidatePairedConversion` 通过候选的有限矩形域、分段单调参数对应和正权重有理 Bernstein 误差界，验证非有理输入的位置、四边切向及法向。入口为 [`PairedConversionValidation.h`](include/PairedConversionValidation.h)，目前单独接入测试，现有转换流程仍使用原验证器。实现范围、状态含义与配对计时见[独立验证器测试报告](docs/testing/PAIRED_VALIDATION_2026-10-14.md)。
+
 ## 构建与运行
 
 需要 Windows x64、Visual Studio 2022 C++ 工具链、CMake 3.22 及以上、SGK 1.7.11 SDK 和有效本地许可证。`cmake`、`ctest` 需在 PATH 中。

@@ -65,10 +65,17 @@ void MaterializePatch(AnalyticPatch &);
 struct ClassificationSamples
 {
     std::array<std::vector<V>, 4> boundaries;
+    std::array<std::vector<double>, 4> boundaryParameters;
     std::vector<V> scorePoints;
     V centerPoint, centerDu, centerDv;
     std::array<double, 4> sourceDomain;
 };
+struct PatchRecoveryTrace
+{
+    std::array<std::vector<std::array<double, 2>>, 4> paths;
+};
+PatchRecoveryTrace TraceApproximateBoundaries(const ClassificationSamples &,
+                                             const AnalyticParameters &);
 ClassificationSamples BuildClassificationSamples(const sggk::BSplineSurface &,
                                                  ClassificationDiagnostics * = nullptr,
                                                  SurfaceSampleContext * = nullptr);

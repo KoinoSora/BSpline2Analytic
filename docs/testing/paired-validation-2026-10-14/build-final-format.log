@@ -1,0 +1,32 @@
+适用于 .NET Framework MSBuild 版本 17.12.12+1cce77968
+
+  AnalyticJacobian.cpp
+  ApproximateConversion.cpp
+  ApproximateEvaluation.cpp
+  ApproximateGeometry.cpp
+  ApproximateNumerics.cpp
+  CandidateRefinement.cpp
+  GeneralClassification.cpp
+  GeneralConversion.cpp
+  GeneralGeometry.cpp
+  GeneralPCurve.cpp
+  GeneralRefinement.cpp
+  GeneralSeedNumerics.cpp
+  GeneralSphereChart.cpp
+  IsoCurveAnalysis.cpp
+  PlaneOffsetRefinement.cpp
+  SurfaceConversion.cpp
+  SurfaceSampling.cpp
+  正在生成代码...
+  ConversionValidation.cpp
+  GeneralConversionValidation.cpp
+  GeneralPairedBounds.cpp
+  PairedConversionValidation.cpp
+  PairedRationalChart.cpp
+  正在生成代码...
+  BSpline2Analytic.vcxproj -> D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-specialized-timing\Release\BSpline2Analytic.lib
+  ApproximateCases.cpp
+  Dataset500.cpp
+  PairedValidationTests.cpp
+  正在生成代码...
+  BSpline2AnalyticPairedValidationTests.vcxproj -> D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-specialized-timing\Release\BSpline2AnalyticPairedValidationTests.exe

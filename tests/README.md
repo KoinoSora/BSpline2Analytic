@@ -9,6 +9,7 @@
 | `Dataset500Tests.cpp`、`Dataset500.*`、`PairedSurfaceBounds.*` | 固定数据加载、配额与来源证书校验、数据生成。 |
 | `ReferenceCases.*`、`ApproximateCases.*` | 各测试共享的精确与非有理案例。 |
 | `ApproximateBenchmark.cpp`、`SummarizeDataset500.py` | 性能记录与 CSV 汇总。 |
+| `PairedValidationTests.cpp`、`SummarizePairedValidation.py` | 独立参数对应验证器专项、非有理球面及完整 Dataset500 分流对照；不替换正式转换入口。 |
 | `data/dataset500/` | 500 个固定 `.b2a` 输入及 `manifest.csv`；整理目录不重新生成数据。 |
 | `GeneralDataset.*`、`GeneralDatasetCertificate.cpp`、`GeneralDatasetTests.cpp` | 新增 600 个带独立证书的主案例、60 个专项及仅调用一般兜底的测试入口。 |
 | `SummarizeGeneralDataset.py` | 校验新 CSV 完整性并按来源类型、测试组汇总结果。 |

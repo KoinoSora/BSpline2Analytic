@@ -392,6 +392,7 @@ ClassificationSamples BuildClassificationSamples(const sggk::BSplineSurface &s,
         auto ts =
             SampleParameters(k < 2 ? s.KnotsV() : s.KnotsU(), k < 2 ? s.MinParamV() : s.MinParamU(),
                              k < 2 ? s.MaxParamV() : s.MaxParamU(), 8);
+        cache.boundaryParameters[k] = ts;
         for (double t : ts)
             cache.boundaries[k].push_back(
                 point(k < 2 ? (k == 0 ? s.MinParamU() : s.MaxParamU()) : t,
@@ -417,12 +418,12 @@ AnalyticPatch RecoverApproxPatch(const sggk::BSplineSurface &s, const AnalyticPa
 {
     return RecoverApproxPatch(BuildClassificationSamples(s), a);
 }
-AnalyticPatch RecoverApproxPatch(const ClassificationSamples &cache, const AnalyticParameters &a)
+PatchRecoveryTrace TraceApproximateBoundaries(const ClassificationSamples &cache,
+                                             const AnalyticParameters &a)
 {
-    AnalyticPatch p;
-    p.parameters = a;
+    PatchRecoveryTrace result;
+    auto &paths = result.paths;
     auto f = FrameOf(a);
-    std::array<std::vector<std::array<double, 2>>, 4> paths;
     auto corner = MotherParameters(a, f.local(cache.boundaries[0].front()));
     auto trace = [&](unsigned k, std::array<double, 2> last) {
         for (V point : cache.boundaries[k])
@@ -440,6 +441,15 @@ AnalyticPatch RecoverApproxPatch(const ClassificationSamples &cache, const Analy
     trace(2, corner);
     trace(1, paths[2].back());
     trace(3, paths[0].back());
+    return result;
+}
+AnalyticPatch RecoverApproxPatch(const ClassificationSamples &cache, const AnalyticParameters &a)
+{
+    AnalyticPatch p;
+    p.parameters = a;
+    auto f = FrameOf(a);
+    auto trace = TraceApproximateBoundaries(cache, a);
+    const auto &paths = trace.paths;
     std::array<unsigned, 4> fixed{};
     std::array<double, 4> value{};
     for (unsigned k = 0; k < 4; ++k)

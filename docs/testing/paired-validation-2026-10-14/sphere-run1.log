@@ -1,0 +1,81 @@
+Internal ctest changing into directory: D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-specialized-timing
+UpdateCTestConfiguration  from :D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-specialized-timing/DartConfiguration.tcl
+Parse Config file:D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-specialized-timing/DartConfiguration.tcl
+UpdateCTestConfiguration  from :D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-specialized-timing/DartConfiguration.tcl
+Parse Config file:D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-specialized-timing/DartConfiguration.tcl
+Test project D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-specialized-timing
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 2
+    Start 2: BSpline2Analytic.PairedSphere
+
+2: Test command: D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-specialized-timing\Release\BSpline2AnalyticPairedValidationTests.exe "--sphere" "D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/tests/data/dataset500" "D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-specialized-timing/paired-sphere-Release.csv"
+2: Working Directory: D:/Projects/CppProjects/SeaGo/SGK1.7.11/SGGK
+2: Environment variable modifications:
+2:  PATH=path_list_prepend:D:/Projects/CppProjects/SeaGo/SGK1.7.11/SGGK/x64-win/bin
+2: Test timeout computed to be: 600
+2: Failed to open log output file.
+2: Failed to open log output file.
+2: 301 old=Passed new=Passed ms=1.6783
+2: 303 old=Passed new=Passed ms=1.6393
+2: 305 old=Passed new=Passed ms=8.5077
+2: 307 old=Passed new=Passed ms=1.6275
+2: 309 old=Passed new=Passed ms=1.6763
+2: 311 old=Passed new=Passed ms=1.6853
+2: 313 old=Passed new=Passed ms=1.6221
+2: 315 old=Passed new=Passed ms=1.6064
+2: 317 old=NoCandidate new=NoCandidate ms=0
+2: 319 old=ClassificationFailed new=ClassificationFailed ms=0
+2: 321 old=Passed new=Passed ms=10.6077
+2: 323 old=Passed new=Passed ms=20.572
+2: 325 old=Passed new=Passed ms=21.3206
+2: 327 old=Passed new=Passed ms=10.7913
+2: 329 old=Passed new=Passed ms=21.3541
+2: 331 old=Passed new=Passed ms=21.3362
+2: 333 old=Passed new=Passed ms=10.4341
+2: 335 old=Passed new=Passed ms=20.072
+2: 337 old=NoCandidate new=NoCandidate ms=0
+2: 339 old=NotCertified new=Unsupported ms=13.5835
+2: 341 old=Passed new=Passed ms=21.1471
+2: 343 old=Passed new=Passed ms=34.4902
+2: 345 old=Passed new=Passed ms=33.9139
+2: 347 old=Passed new=Passed ms=21.4738
+2: 349 old=Passed new=Passed ms=33.196
+2: 351 old=Passed new=Passed ms=34.4674
+2: 353 old=Passed new=Passed ms=21.5495
+2: 355 old=Passed new=Passed ms=33.8387
+2: 357 old=NoCandidate new=NoCandidate ms=0
+2: 359 old=NotCertified new=Unsupported ms=21.1173
+2: 361 old=Passed new=Passed ms=21.5822
+2: 363 old=Passed new=Passed ms=51.1035
+2: 365 old=Passed new=Passed ms=52.1693
+2: 367 old=Passed new=Passed ms=22.2152
+2: 369 old=Passed new=Passed ms=51.0335
+2: 371 old=Passed new=Passed ms=51.11
+2: 373 old=Passed new=Passed ms=21.4959
+2: 375 old=Passed new=Passed ms=50.8632
+2: 377 old=NoCandidate new=NoCandidate ms=0
+2: 379 old=NotCertified new=Unsupported ms=21.3446
+2: 381 old=Passed new=Passed ms=36.5725
+2: 383 old=Passed new=Passed ms=94.5455
+2: 385 old=Passed new=Passed ms=98.6904
+2: 387 old=Passed new=Passed ms=36.9979
+2: 389 old=Passed new=Passed ms=97.3596
+2: 391 old=Passed new=Passed ms=95.7262
+2: 393 old=Passed new=Passed ms=36.8675
+2: 395 old=Passed new=Passed ms=94.6801
+2: 397 old=NoCandidate new=NoCandidate ms=0
+2: 399 old=ClassificationFailed new=ClassificationFailed ms=0
+2: Paired comparison passed=40 not_certified=3 skipped=7
+1/1 Test #2: BSpline2Analytic.PairedSphere ....   Passed   16.85 sec
+
+The following tests passed:
+	BSpline2Analytic.PairedSphere
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =  16.86 sec

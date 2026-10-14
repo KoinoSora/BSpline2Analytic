@@ -1,0 +1,53 @@
+适用于 .NET Framework MSBuild 版本 17.12.12+1cce77968
+
+  1>Checking Build System
+  Building Custom Rule D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-paired-baseline/source/CMakeLists.txt
+  BSpline2Analytic.cpp
+  SurfaceConversion.cpp
+  BoundaryAnalysis.cpp
+  AnalyticReconstruction.cpp
+  PatchRecovery.cpp
+  RecognitionValidation.cpp
+  Numerics.cpp
+  ApproximateGeometry.cpp
+  ApproximateNumerics.cpp
+  IsoCurveAnalysis.cpp
+  SurfaceSampling.cpp
+  SurfaceSampleContext.cpp
+  ApproximateEvaluation.cpp
+  AnalyticJacobian.cpp
+  PlaneOffsetRefinement.cpp
+  CandidateRefinement.cpp
+  ApproximateConversion.cpp
+  GeneralClassification.cpp
+  GeneralSeedNumerics.cpp
+  GeneralConversion.cpp
+  正在生成代码...
+  正在编译...
+  GeneralGeometry.cpp
+  GeneralPCurve.cpp
+  GeneralRefinement.cpp
+  GeneralSphereChart.cpp
+  正在生成代码...
+  IntervalBounds.cpp
+  ConversionValidation.cpp
+  GeneralConversionValidation.cpp
+  GeneralPairedBounds.cpp
+  正在生成代码...
+  BSpline2Analytic.vcxproj -> D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-paired-baseline\out\Release\BSpline2Analytic.lib
+  Building Custom Rule D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-paired-baseline/source/CMakeLists.txt
+  ApproximateConversionTests.cpp
+  ApproximateCases.cpp
+  ReferenceCases.cpp
+  正在生成代码...
+  BSpline2AnalyticApproximateTests.vcxproj -> D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-paired-baseline\out\Release\BSpline2AnalyticApproximateTests.exe
+适用于 .NET Framework MSBuild 版本 17.12.12+1cce77968
+
+  BSpline2Analytic.vcxproj -> D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-paired-baseline\out\Release\BSpline2Analytic.lib
+  Building Custom Rule D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-paired-baseline/source/CMakeLists.txt
+  ConeTests.cpp
+  Dataset500.cpp
+  ApproximateCases.cpp
+  正在生成代码...
+  PairedSurfaceBounds.cpp
+  BSpline2AnalyticConeTests.vcxproj -> D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-paired-baseline\out\Release\BSpline2AnalyticConeTests.exe
