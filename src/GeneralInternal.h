@@ -5,6 +5,8 @@
 namespace bspline2analytic::detail
 {
 V ProjectToMother(const AnalyticParameters &, V);
+std::vector<AnalyticParameters> TorusSeeds(const std::array<SurfaceSample, 4> &, double,
+    const std::vector<SurfaceSample> &, GeneralTorusSeedDiagnostics &);
 struct GeneralSeed
 {
     AnalyticParameters parameters;

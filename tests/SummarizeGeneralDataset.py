@@ -60,6 +60,18 @@ def main():
                       "deferred_candidates", "backup_candidates", "interior_point_evaluations",
                       "boundary_point_evaluations"):
             print(f"{field}: {sum(int(r[field]) for r in rows)}")
+    if all("torus_groups" in row for row in rows):
+        if any(not 0 <= int(r["torus_candidates"]) <= int(r["torus_axes"]) <=
+               2 * int(r["torus_groups"]) or
+               int(r["torus_candidates"]) + int(r["torus_circle_failures"]) +
+               int(r["torus_invalid_radii"]) != int(r["torus_axes"]) or
+               2 * int(r["torus_dual_groups"]) > int(r["torus_candidates"]) for r in rows):
+            raise SystemExit("Direct torus construction counters are inconsistent")
+        for field in ("torus_groups", "torus_rank_deficient", "torus_axis_degenerate",
+                      "torus_no_real_axis", "torus_axes", "torus_rejected_axes",
+                      "torus_circle_failures", "torus_invalid_radii", "torus_candidates",
+                      "torus_dual_groups"):
+            print(f"{field}: {sum(int(r[field]) for r in rows)}")
     print("Stage totals (seconds): " + ", ".join(
         f"{field}={sum(float(r[field]) for r in rows)/1000:.6f}"
         for field in ("classify_ms", "optimize_ms", "validate_ms", "total_ms")))

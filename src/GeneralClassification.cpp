@@ -83,91 +83,163 @@ static AnalyticParameters ConeSeed(const std::array<SurfaceSample, 4> &p, double
         throw Failure(Status::IllConditioned, "Invalid cone seed angle");
     return a;
 }
-// Solve the four-normal-line transversal equations in normalized coordinates.
-// All axes from the starts are retained for scoring; this is a bounded numerical
-// alternative to the paper's algebraic transversal construction, not an exact
-// enumeration guarantee. For each axis, fit a meridian circle to the four points.
-static std::vector<AnalyticParameters> TorusSeeds(const std::array<SurfaceSample, 4> &p, double scale)
+using LineCoordinates = std::array<double, 6>; // direction, moment = position x direction
+// Column-pivoted Householder QR of A^T (6 x 4). The last two columns
+// of the orthogonal factor span null(A), without forming normal equations.
+static bool AxisPencil(const std::array<V, 4> &points, const std::array<SurfaceSample, 4> &p,
+                       LineCoordinates &u, LineCoordinates &v)
 {
+    double a[6][4]{}, q[6][6]{};
+    for (unsigned i = 0; i < 6; ++i) q[i][i] = 1;
+    for (unsigned j = 0; j < 4; ++j)
+    {
+        V moment = Cross(points[j], p[j].normal);
+        a[0][j] = moment.x; a[1][j] = moment.y; a[2][j] = moment.z;
+        a[3][j] = p[j].normal.x; a[4][j] = p[j].normal.y; a[5][j] = p[j].normal.z;
+    }
+    double first = 0;
+    constexpr double eps = std::numeric_limits<double>::epsilon();
+    for (unsigned k = 0; k < 4; ++k)
+    {
+        unsigned pivot = k;
+        double best = 0;
+        for (unsigned j = k; j < 4; ++j)
+        {
+            double length = 0;
+            for (unsigned i = k; i < 6; ++i) length = std::hypot(length, a[i][j]);
+            if (length > best) { best = length; pivot = j; }
+        }
+        if (!k) first = best;
+        if (!(best > 512 * eps * first) || !std::isfinite(best)) return false;
+        for (unsigned i = 0; i < 6; ++i) std::swap(a[i][k], a[i][pivot]);
+        double alpha = -std::copysign(best, a[k][k]), length = 0;
+        LineCoordinates h{};
+        for (unsigned i = k; i < 6; ++i) h[i] = a[i][k];
+        h[k] -= alpha;
+        for (unsigned i = k; i < 6; ++i) length = std::hypot(length, h[i]);
+        for (unsigned i = k; i < 6; ++i) h[i] /= length;
+        for (unsigned j = k; j < 4; ++j)
+        {
+            double dot = 0;
+            for (unsigned i = k; i < 6; ++i) dot += h[i] * a[i][j];
+            for (unsigned i = k; i < 6; ++i) a[i][j] -= 2 * h[i] * dot;
+        }
+        for (unsigned i = 0; i < 6; ++i)
+        {
+            double dot = 0;
+            for (unsigned j = k; j < 6; ++j) dot += q[i][j] * h[j];
+            for (unsigned j = k; j < 6; ++j) q[i][j] -= 2 * dot * h[j];
+        }
+    }
+    for (unsigned i = 0; i < 6; ++i) { u[i] = q[i][4]; v[i] = q[i][5]; }
+    return true;
+}
+static V LinePart(const LineCoordinates &x, unsigned start) { return {x[start], x[start+1], x[start+2]}; }
+struct TorusAxis { V direction, position; };
+static std::vector<TorusAxis> TorusAxes(const std::array<V, 4> &points,
+    const std::array<SurfaceSample, 4> &p, GeneralTorusSeedDiagnostics &diagnostics)
+{
+    LineCoordinates u, v;
+    if (!AxisPencil(points, p, u, v)) { ++diagnostics.rankDeficientGroups; return {}; }
+    V ud = LinePart(u, 0), um = LinePart(u, 3), vd = LinePart(v, 0), vm = LinePart(v, 3);
+    // A line must satisfy direction . moment = 0. On the nullspace pencil
+    // s*u+t*v this is C*s^2+B*s*t+A*t^2=0, including roots with s=0.
+    double a = Dot(vd, vm), b = Dot(ud, vm) + Dot(vd, um), c = Dot(ud, um);
+    double magnitude = std::max({std::abs(a), std::abs(b), std::abs(c)});
+    constexpr double eps = std::numeric_limits<double>::epsilon();
+    if (!(magnitude > 256 * eps)) { ++diagnostics.degenerateAxisGroups; return {}; }
+    a /= magnitude; b /= magnitude; c /= magnitude;
+    double discriminant = std::fma(b, b, -4*a*c);
+    double roundoff = 64 * eps * (b*b + std::abs(4*a*c));
+    if (discriminant < -roundoff) { ++diagnostics.noRealAxisGroups; return {}; }
+    discriminant = std::max(0.0, discriminant);
+    double root = -.5 * (b + std::copysign(std::sqrt(discriminant), b));
+    // Homogeneous stable quadratic formula also handles linear and double roots.
+    std::array<std::array<double, 2>, 2> roots{{{a, root}, {root, c}}};
+    std::vector<TorusAxis> axes;
+    for (const auto &st : roots)
+    {
+        double length = std::hypot(st[0], st[1]);
+        if (!(length > 0)) continue;
+        double s = st[0] / length, t = st[1] / length;
+        V direction = ud*s + vd*t, moment = um*s + vm*t;
+        double norm = Norm(direction);
+        if (!(norm > 128 * eps)) { ++diagnostics.rejectedAxes; continue; }
+        direction = direction / norm; moment = moment / norm;
+        if (!Finite(direction) || !Finite(moment) ||
+            std::abs(Dot(direction, moment)) > 4096 * eps * (1 + Norm(moment)))
+        { ++diagnostics.rejectedAxes; continue; }
+        V position = Cross(direction, moment);
+        bool valid = Finite(position);
+        for (unsigned i = 0; i < 4; ++i)
+            valid &= std::abs(Dot(points[i] - position, Cross(p[i].normal, direction))) <=
+                8192 * eps * (1 + Norm(position));
+        if (!valid) { ++diagnostics.rejectedAxes; continue; }
+        bool duplicate = false;
+        for (const auto &existing : axes)
+            duplicate |= Norm(position - existing.position) < 1e-10 * (1 + Norm(position)) &&
+                         Parallel(direction, existing.direction, 1e-10);
+        if (!duplicate) axes.push_back({direction, position});
+    }
+    diagnostics.axisCount += static_cast<unsigned>(axes.size());
+    return axes;
+}
+// Algebraic four-normal axis enumeration, followed by a conditioned meridian
+// circle fit. Supplemental points come only from the generation partition.
+std::vector<AnalyticParameters> TorusSeeds(const std::array<SurfaceSample, 4> &p, double scale,
+    const std::vector<SurfaceSample> &support, GeneralTorusSeedDiagnostics &diagnostics)
+{
+    ++diagnostics.sampleGroups;
     V mean{};
     for (const auto &s : p) mean = mean + s.point * .25;
     std::array<V, 4> points;
     for (unsigned i = 0; i < 4; ++i) points[i] = (p[i].point - mean) / scale;
-    std::vector<V> starts{{1,0,0}, {0,1,0}, {0,0,1}, {1,1,1}, {1,-1,1}, {-1,1,1}};
-    for (unsigned i = 1; i < 4; ++i)
-    {
-        V x = Cross(p[0].normal, p[i].normal);
-        if (Norm(x) > 1e-4) starts.push_back(x);
-    }
     std::vector<AnalyticParameters> out;
-    for (V start : starts)
+    for (const auto &axis : TorusAxes(points, p, diagnostics))
     {
-        V axis = Unit(start), center{};
-        auto residual = [&](V c, V a) {
-            std::vector<double> r;
-            for (unsigned i = 0; i < 4; ++i)
-                r.push_back(Dot(points[i] - c, Cross(p[i].normal, a)));
-            return r;
+        std::vector<std::array<double, 2>> meridian;
+        auto add = [&](V point) {
+            V d = point - axis.position;
+            double z = Dot(d, axis.direction);
+            meridian.push_back({Norm(d - axis.direction*z), z});
         };
-        auto cost = [](const std::vector<double> &r) { double v = 0; for (double x : r) v += x*x; return v; };
-        double lambda = 1e-6;
-        for (unsigned iteration = 0; iteration < 40; ++iteration)
+        for (V point : points) add(point);
+        for (const auto &s : support)
         {
-            auto r = residual(center, axis);
-            if (cost(r) < 1e-20) break;
-            V ex = Perpendicular(axis), ey = Cross(axis, ex);
-            auto move = [&](const std::vector<double> &d) {
-                V a = Unit(axis + ex * d[2] + ey * d[3]);
-                V c = center + ex * d[0] + ey * d[1];
-                return std::make_pair(c - a * Dot(c, a), a);
-            };
-            std::vector<std::vector<double>> jac(4, std::vector<double>(4));
-            for (unsigned j = 0; j < 4; ++j)
-            {
-                std::vector<double> d(4, 0); d[j] = 1e-6;
-                auto plus = move(d); d[j] = -1e-6; auto minus = move(d);
-                auto rp = residual(plus.first, plus.second), rm = residual(minus.first, minus.second);
-                for (unsigned i = 0; i < 4; ++i) jac[i][j] = (rp[i] - rm[i]) / 2e-6;
-            }
-            std::vector<double> rhs;
-            for (double x : r) rhs.push_back(-x);
-            for (unsigned j = 0; j < 4; ++j)
-            {
-                std::vector<double> row(4, 0); row[j] = std::sqrt(lambda);
-                jac.push_back(row); rhs.push_back(0);
-            }
-            std::vector<double> d;
-            if (!SolveLeastSquares(jac, rhs, d)) break;
-            double length = 0; for (double x : d) length = std::max(length, std::abs(x));
-            if (length > .5) for (double &x : d) x *= .5 / length;
-            bool accepted = false;
-            for (unsigned line = 0; line < 8; ++line)
-            {
-                auto trial = move(d);
-                if (cost(residual(trial.first, trial.second)) < cost(r))
-                { center = trial.first; axis = trial.second; accepted = true; break; }
-                for (double &x : d) x *= .5;
-            }
-            lambda = accepted ? std::max(1e-12, lambda * .3) : lambda * 10;
-            if (lambda > 1e8) break;
+            bool duplicate = false;
+            for (const auto &seed : p) duplicate |= s.u == seed.u && s.v == seed.v;
+            if (!duplicate) add((s.point - mean) / scale);
         }
-        if (cost(residual(center, axis)) > 1e-8) continue;
+        double rhoMean = 0, zMean = 0;
+        for (const auto &x : meridian)
+        { rhoMean += x[0] / meridian.size(); zMean += x[1] / meridian.size(); }
+        double spread = 0;
+        for (const auto &x : meridian) spread = std::max(spread, std::hypot(x[0]-rhoMean, x[1]-zMean));
+        if (!(spread > Roundoff(std::hypot(rhoMean, zMean))))
+        { ++diagnostics.circleFitFailures; continue; }
         std::vector<std::array<double, 3>> rows;
         std::vector<double> rhs;
-        for (V point : points)
+        for (const auto &x : meridian)
         {
-            V d = point - center;
-            double z = Dot(d, axis), rho = Norm(d - axis * z);
-            rows.push_back({2 * rho, 2 * z, 1}); rhs.push_back(rho*rho + z*z);
+            double rho = (x[0] - rhoMean) / spread, z = (x[1] - zMean) / spread;
+            rows.push_back({2*rho, 2*z, 1}); rhs.push_back(rho*rho + z*z);
         }
         std::array<double, 3> circle;
-        if (!LeastSquares3(rows, rhs, 1e-10, circle)) continue;
+        if (!LeastSquares3(rows, rhs, 1e-12, circle))
+        { ++diagnostics.circleFitFailures; continue; }
         double r2 = circle[2] + circle[0]*circle[0] + circle[1]*circle[1];
-        if (!(r2 > 0 && circle[0] > std::sqrt(r2))) continue;
-        auto a = Frame(Type::Torus, mean + (center + axis * circle[1]) * scale, axis);
-        a.radius = std::sqrt(r2) * scale; a.majorRadius = circle[0] * scale;
+        double major = rhoMean + spread * circle[0];
+        double minor = r2 > 0 ? spread * std::sqrt(r2) : 0;
+        V center = mean + (axis.position + axis.direction * (zMean + spread * circle[1])) * scale;
+        if (!(minor > 0 && major > minor) || !std::isfinite(major*scale) ||
+            !std::isfinite(minor*scale) || !Finite(center))
+        { ++diagnostics.invalidRadii; continue; }
+        auto a = Frame(Type::Torus, center, axis.direction);
+        a.radius = minor * scale; a.majorRadius = major * scale;
         out.push_back(a);
     }
+    diagnostics.candidateCount += static_cast<unsigned>(out.size());
+    diagnostics.dualCandidateGroups += out.size() == 2;
     return out;
 }
 static void ScoreInterior(GeneralScoringCandidate &candidate, SurfaceSampleContext &context,
@@ -250,6 +322,35 @@ static bool Similar(double a, double b, const GeneralConversionOptions &o)
     return std::abs(a - b) <= o.similarScoreAbsoluteRatio * o.fitting.validation.distanceTolerance +
         o.similarScoreRelativeTolerance * std::max(a, b);
 }
+// Spread a small, deterministic support set over the generation partition.
+// This neither samples the source again nor consumes the random attempt budget.
+static std::vector<SurfaceSample> TorusSupport(const std::vector<SurfaceSample> &points,
+                                              const std::vector<size_t> &indices)
+{
+    double u0 = points[indices.front()].u, u1 = u0, v0 = points[indices.front()].v, v1 = v0;
+    for (size_t i : indices)
+    {
+        u0 = std::min(u0, points[i].u); u1 = std::max(u1, points[i].u);
+        v0 = std::min(v0, points[i].v); v1 = std::max(v1, points[i].v);
+    }
+    double du = u1 > u0 ? u1-u0 : 1, dv = v1 > v0 ? v1-v0 : 1;
+    std::vector<double> nearest(indices.size(), std::numeric_limits<double>::infinity());
+    std::vector<SurfaceSample> support;
+    size_t next = 0;
+    while (support.size() < std::min(size_t(12), indices.size()))
+    {
+        const auto &chosen = points[indices[next]];
+        support.push_back(chosen);
+        for (size_t j = 0; j < indices.size(); ++j)
+        {
+            double u = (points[indices[j]].u-chosen.u)/du, v = (points[indices[j]].v-chosen.v)/dv;
+            nearest[j] = std::min(nearest[j], u*u+v*v);
+        }
+        nearest[next] = -1;
+        next = static_cast<size_t>(std::max_element(nearest.begin(), nearest.end())-nearest.begin());
+    }
+    return support;
+}
 GeneralCandidatePool InitializeGeneralCandidates(SurfaceSampleContext &context, const GeneralConversionOptions &o,
                                                  GeneralClassificationDiagnostics &diagnostics)
 {
@@ -271,6 +372,7 @@ GeneralCandidatePool InitializeGeneralCandidates(SurfaceSampleContext &context, 
     std::vector<bool> isCoarse(points.size(), false);
     for (size_t i : coarse) isCoarse[i] = true;
     for (size_t i : context.Scores()) if (!isCoarse[i]) pool.remainingScoreIndices.push_back(i);
+    std::vector<SurfaceSample> torusSupport;
     unsigned familyIndex = 0;
     for (Type type : {Type::Plane, Type::Sphere, Type::Cylinder, Type::Cone, Type::Torus})
     {
@@ -305,7 +407,10 @@ GeneralCandidatePool InitializeGeneralCandidates(SurfaceSampleContext &context, 
                 case Type::Sphere: seeds.push_back(SphereSeed(p, scale)); break;
                 case Type::Cylinder: seeds.push_back(CylinderSeed(p, scale)); break;
                 case Type::Cone: seeds.push_back(ConeSeed(p, scale)); break;
-                default: seeds = TorusSeeds(p, scale); break;
+                default:
+                    if (torusSupport.empty()) torusSupport = TorusSupport(points, indices);
+                    seeds = TorusSeeds(p, scale, torusSupport, diagnostics.torus);
+                    break;
                 }
                 for (const auto &a : seeds)
                 {

@@ -70,6 +70,17 @@ struct GeneralCandidateScore
     unsigned degreesOfFreedom = 0;
     double interiorMax = 0, interiorRms = 0, boundaryMax = 0, normalMax = 0;
 };
+struct GeneralTorusSeedDiagnostics
+{
+    // Four-normal groups actually constructed; a degenerate group still uses its attempt.
+    unsigned sampleGroups = 0;
+    unsigned rankDeficientGroups = 0, degenerateAxisGroups = 0, noRealAxisGroups = 0;
+    // Finite axes passing the algebraic residual check, before meridian circle fitting.
+    unsigned axisCount = 0, rejectedAxes = 0;
+    unsigned circleFitFailures = 0, invalidRadii = 0;
+    // Ring-torus candidates before geometric deduplication and held-out scoring.
+    unsigned candidateCount = 0, dualCandidateGroups = 0;
+};
 struct GeneralClassificationDiagnostics
 {
     // Generated mother candidates, before deduplication and batch selection.
@@ -83,6 +94,7 @@ struct GeneralClassificationDiagnostics
     unsigned deferredCandidateCount = 0; // Incomplete after the first batch.
     unsigned backupCandidateCount = 0, batchCount = 0;
     std::uint64_t interiorPointEvaluations = 0, boundaryPointEvaluations = 0;
+    GeneralTorusSeedDiagnostics torus;
 };
 struct GeneralValidationReport
 {

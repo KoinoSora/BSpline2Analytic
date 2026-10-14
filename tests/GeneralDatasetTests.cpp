@@ -77,6 +77,59 @@ FixtureCertificate AuditOutput(const GeneralFixture &c,const GeneralConversionRe
     }
     return out;
 }
+// Exact positive tori exercise the direct axis solver independently of fitting.
+void TorusSeedChecks()
+{
+    using namespace detail;
+    V axis=Unit(V{.3,-.7,1.2}),x=Perpendicular(axis),y=Cross(axis,x);
+    unsigned checks=0;
+    for(double scale:{.001,1.0,1000.0})for(double span:{.2,1.4})
+    {
+        V center=V{17,-23,11}*scale;
+        auto sample=[&](double u,double v) {
+            SurfaceSample s;s.u=u;s.v=v;
+            V radial=x*std::cos(u)+y*std::sin(u);
+            s.point=center+(radial*(3+.7*std::cos(v))+axis*(.7*std::sin(v)))*scale;
+            s.normal=radial*std::cos(v)+axis*std::sin(v);
+            return s;
+        };
+        std::array<SurfaceSample,4> base{sample(.1,.4),sample(.1+span,.4+.13*span),
+            sample(.1+.27*span,.4+span),sample(.1+.83*span,.4+.72*span)};
+        std::vector<SurfaceSample> support;
+        for(unsigned i=0;i<3;++i)for(unsigned j=0;j<4;++j)
+            support.push_back(sample(.1+span*i/2,.4+span*j/3));
+        std::array<unsigned,4> order{0,1,2,3};
+        do
+        {
+            std::array<SurfaceSample,4> seed;
+            for(unsigned i=0;i<4;++i){seed[i]=base[order[i]];if(i%2)seed[i].normal=seed[i].normal*-1;}
+            GeneralTorusSeedDiagnostics d;
+            auto candidates=TorusSeeds(seed,scale,support,d);
+            Require(!candidates.empty()&&candidates.size()<=2&&d.axisCount<=2&&d.sampleGroups==1,
+                "Direct torus construction did not return one/two candidates");
+            double best=std::numeric_limits<double>::infinity();
+            for(const auto &a:candidates)
+            {
+                double error=0;
+                // Independent, interleaved points; neither seed nor circle-fit support.
+                for(unsigned i=0;i<4;++i)for(unsigned j=0;j<4;++j)
+                {
+                    auto p=sample(.1+span*(i+.37)/4,.4+span*(j+.61)/4).point;
+                    error=std::max(error,Norm(ProjectToMother(a,p)-p));
+                }
+                best=std::min(best,error);
+            }
+            Require(best<1e-7*scale,"Direct torus seed lost accuracy under permutation/sign/scale change");
+            ++checks;
+        }while(std::next_permutation(order.begin(),order.end()));
+        // A degenerate selection from the same valid surface must be reported.
+        std::array<SurfaceSample,4> repeated{base[0],base[0],base[0],base[0]};
+        GeneralTorusSeedDiagnostics d;
+        Require(TorusSeeds(repeated,scale,support,d).empty()&&d.rankDeficientGroups==1,
+            "Rank-deficient normal group was not rejected");
+    }
+    std::cout<<"Direct torus seed checks: "<<checks<<" positive permutations/sign/scale cases"<<std::endl;
+}
 void CacheChecks(const GeneralFixture &c)
 {
     detail::SurfaceSampleContext context(*c.input);
@@ -175,8 +228,9 @@ int Run(const std::filesystem::path &dir,const std::filesystem::path &csvPath,bo
     Require(first<last&&last<=(extra?60u:600u),"Invalid test range");CheckMembership(dir,extra);
     if(!extra&&first==0)
     {
+        TorusSeedChecks();
         CacheChecks(ReadGeneralFixture(dir/GeneralFixtureFilename(0)));
-        for(unsigned id:{0u,100u,200u,216u,300u,316u,339u,400u})
+        for(unsigned id:{0u,100u,200u,216u,300u,316u,339u,400u,420u,438u,442u,478u})
             ScoringChecks(ReadGeneralFixture(dir/GeneralFixtureFilename(id)));
         BoundaryAxisChecks(ReadGeneralFixture(dir/GeneralFixtureFilename(0)));
         for(unsigned type=1;type<5;++type)
@@ -190,7 +244,7 @@ int Run(const std::filesystem::path &dir,const std::filesystem::path &csvPath,bo
     }
     std::ofstream csv(csvPath);Require(bool(csv),"Cannot open test CSV");csv<<std::setprecision(17);
     if(certificatesOnly)csv<<"id,extra,file,certificate_passed,pair_bound,rank_margin,message\n";
-    else csv<<"id,extra,file,group,source_type,rational,controls,collapsed_mask,fixture_certified,fixture_bound,rank_margin,expected,success,passed,output_type,output_audit,output_bound,status,pcurve_failure,candidates,attempts,iterations,validation_pieces,classify_ms,optimize_ms,validate_ms,total_ms,sphere_attempted,torus_attempted,known_candidate_passed,chart_attempts,chart_iterations,raw_candidates,duplicate_candidates,score_evaluations,configuration,seed_attempts,coarse_points,coarse_scores,full_scores,completed_scores,deferred_candidates,backup_candidates,batches,interior_point_evaluations,boundary_point_evaluations,message\n";
+    else csv<<"id,extra,file,group,source_type,rational,controls,collapsed_mask,fixture_certified,fixture_bound,rank_margin,expected,success,passed,output_type,output_audit,output_bound,status,pcurve_failure,candidates,attempts,iterations,validation_pieces,classify_ms,optimize_ms,validate_ms,total_ms,sphere_attempted,torus_attempted,known_candidate_passed,chart_attempts,chart_iterations,raw_candidates,duplicate_candidates,score_evaluations,configuration,seed_attempts,coarse_points,coarse_scores,full_scores,completed_scores,deferred_candidates,backup_candidates,batches,interior_point_evaluations,boundary_point_evaluations,torus_groups,torus_rank_deficient,torus_axis_degenerate,torus_no_real_axis,torus_axes,torus_rejected_axes,torus_circle_failures,torus_invalid_radii,torus_candidates,torus_dual_groups,message\n";
     unsigned passed=0,success=0,failures=0;
     for(unsigned i=first;i<last;++i)
     {
@@ -260,7 +314,7 @@ int Run(const std::filesystem::path &dir,const std::filesystem::path &csvPath,bo
             if(ok)++passed;else ++failures;
             std::string message=result.message;if(succeeded&&!audit.passed)message+="; independent output audit: "+audit.message;
             const auto &time=result.timing;const auto &statistics=result.statistics;
-            csv<<i<<','<<extra<<','<<GeneralFixtureFilename(i,extra)<<','<<FixtureGroupName(c.group)<<','<<(c.type<5?TypeName(GeneralDatasetType(c.type)):"Freeform")<<','<<c.rational<<','<<c.input->ControlPoints().size()*c.input->ControlPoints()[0].size()<<','<<c.collapsedMask<<",1,"<<certificate.upper<<','<<certificate.rankMargin<<','<<(expectedSuccess?"success":c.group==GeneralFixtureGroup::NonlinearPCurve?"reject_known_pcurve":"failure")<<','<<succeeded<<','<<ok<<','<<(succeeded?TypeName(result.patch->Parameters().type):"Unknown")<<','<<audit.passed<<','<<audit.upper<<','<<unsigned(result.status)<<','<<PCurveFailureName(result.validation.pcurveFailure)<<','<<result.candidates.size()<<','<<result.attempts.size()<<','<<statistics.optimizationIterations<<','<<statistics.validationPieces<<','<<time.classification.elapsedMs<<','<<time.optimization.elapsedMs<<','<<time.validation.elapsedMs<<','<<time.totalMs<<','<<sphere<<','<<torus<<','<<known<<','<<result.chartAttempts<<','<<result.chartIterations<<','<<result.classification.rawCandidateCount<<','<<result.classification.duplicateCandidateCount<<','<<result.classification.scoreEvaluationCount<<','<<configurationName[configuration]<<','<<result.classification.seedAttemptCount<<','<<options.coarseScorePointCount<<','<<result.classification.coarseScoreCount<<','<<result.classification.fullScoreCount<<','<<result.classification.completedScoreCount<<','<<result.classification.deferredCandidateCount<<','<<result.classification.backupCandidateCount<<','<<result.classification.batchCount<<','<<result.classification.interiorPointEvaluations<<','<<result.classification.boundaryPointEvaluations<<','<<Quote(message)<<'\n';csv.flush();
+            csv<<i<<','<<extra<<','<<GeneralFixtureFilename(i,extra)<<','<<FixtureGroupName(c.group)<<','<<(c.type<5?TypeName(GeneralDatasetType(c.type)):"Freeform")<<','<<c.rational<<','<<c.input->ControlPoints().size()*c.input->ControlPoints()[0].size()<<','<<c.collapsedMask<<",1,"<<certificate.upper<<','<<certificate.rankMargin<<','<<(expectedSuccess?"success":c.group==GeneralFixtureGroup::NonlinearPCurve?"reject_known_pcurve":"failure")<<','<<succeeded<<','<<ok<<','<<(succeeded?TypeName(result.patch->Parameters().type):"Unknown")<<','<<audit.passed<<','<<audit.upper<<','<<unsigned(result.status)<<','<<PCurveFailureName(result.validation.pcurveFailure)<<','<<result.candidates.size()<<','<<result.attempts.size()<<','<<statistics.optimizationIterations<<','<<statistics.validationPieces<<','<<time.classification.elapsedMs<<','<<time.optimization.elapsedMs<<','<<time.validation.elapsedMs<<','<<time.totalMs<<','<<sphere<<','<<torus<<','<<known<<','<<result.chartAttempts<<','<<result.chartIterations<<','<<result.classification.rawCandidateCount<<','<<result.classification.duplicateCandidateCount<<','<<result.classification.scoreEvaluationCount<<','<<configurationName[configuration]<<','<<result.classification.seedAttemptCount<<','<<options.coarseScorePointCount<<','<<result.classification.coarseScoreCount<<','<<result.classification.fullScoreCount<<','<<result.classification.completedScoreCount<<','<<result.classification.deferredCandidateCount<<','<<result.classification.backupCandidateCount<<','<<result.classification.batchCount<<','<<result.classification.interiorPointEvaluations<<','<<result.classification.boundaryPointEvaluations<<','<<result.classification.torus.sampleGroups<<','<<result.classification.torus.rankDeficientGroups<<','<<result.classification.torus.degenerateAxisGroups<<','<<result.classification.torus.noRealAxisGroups<<','<<result.classification.torus.axisCount<<','<<result.classification.torus.rejectedAxes<<','<<result.classification.torus.circleFitFailures<<','<<result.classification.torus.invalidRadii<<','<<result.classification.torus.candidateCount<<','<<result.classification.torus.dualCandidateGroups<<','<<Quote(message)<<'\n';csv.flush();
             std::cout<<"END "<<i<<" expected="<<expectedSuccess<<" success="<<succeeded<<" passed="<<ok<<" ms="<<time.totalMs<<" "<<message<<std::endl;
         }
     }
