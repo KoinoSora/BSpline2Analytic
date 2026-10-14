@@ -17,9 +17,15 @@
 
 仅复测一般兜底的 500 个正例：`./Build.ps1 -GeneralPositiveOnly`。结果为 `build/general-positive500-Release.csv`，使用 `python tests/SummarizeGeneralDataset.py --positives <csv>` 汇总。测试仍校验来源证书和独立输出证书，并检查边界提取后的端点、导数及细分方向；不执行负例转换。
 
-一般兜底 CSV 中，`raw_candidates` 为五类母面生成的候选总数（去重及每类截断前），`duplicate_candidates` 为评分前剔除的重复候选数，`score_evaluations` 为实际评分调用次数（包括评分失败的调用）。三者满足 `raw_candidates = duplicate_candidates + score_evaluations`；汇总脚本同时支持不含这些列的历史 CSV。
+一般兜底 CSV 中，`raw_candidates` 为五类母面生成的候选总数（去重及分批选择前），`duplicate_candidates` 为评分前剔除的重复候选数，`score_evaluations` 为开始评分的非重复候选数（包括评分失败的调用，不将同一候选粗评和补评重复计数）。三者满足 `raw_candidates = duplicate_candidates + score_evaluations`；汇总脚本同时支持不含这些列的历史 CSV。
 
-分类阶段配对计时：先构建当前 Release 库，再运行 `python tests/BenchmarkGeneralClassification.py --baseline bd3c179`。脚本从指定 Git 提交提取旧的双参数 `ClassifyGeneral`，仅重命名函数，并与当前库链接到同一个测试程序；对 500 个正例交替执行新旧分类，各重复三轮，每次使用独立采样上下文。逐一比较保留候选的顺序、几何参数和评分是否完全一致。结果保存为 `build/general-classification-paired.csv`，临时基线源码和编译产物均在忽略的 `build/` 下；该计时不包含优化或验证。
+新入口 `BSpline2AnalyticGeneralDatasetTests --compare-positive <data-dir> <csv> 0 500` 对每个正例依次运行 `64-full`、`8-full`、`8-staged` 三种配置，逐例轮换六种执行顺序，并分别执行独立输出核验。只共享只读输入；转换内部采样上下文每次新建。输出共 1500 行，使用 `python tests/SummarizeGeneralDataset.py --positives --configuration 8-staged <csv>` 提取、核验和汇总某一配置，也可加 `--merge <csv>` 保存该配置的 500 行。
+
+新增计数：`seed_attempts` 是五类实际尝试组数，`coarse_points` 是配置的粗评点数（0 表示完整评分），`coarse_scores`/`full_scores` 是进入粗评/完整补评的候选数（含失败），`completed_scores` 是完成评分数，`deferred_candidates` 是首批选择后尚未补评的候选数，`backup_candidates` 是后续批次选出数。`interior_point_evaluations`/`boundary_point_evaluations` 统计评分中的点投影求距次数，不含验证和优化。正例入口还用已有正例穷尽候选池，检查粗评点独立性、缓存复用、分批排序、后备候选与尝试预算。
+
+对照配置均使用当前实现，不等同于检出历史提交。保留的历史分类比较脚本仍严格要求与旧版候选完全一致；当前去重时机和奇异法向处理有变化，不承诺继续满足该历史等价性检查，本轮使用三配置转换测试评估结果。
+
+历史评分前去重的分类阶段配对计时（显式保持 64 次、完整评分配置）：先构建当前 Release 库，再运行 `python tests/BenchmarkGeneralClassification.py --baseline bd3c179`。脚本从指定 Git 提交提取旧的双参数 `ClassifyGeneral`，仅重命名函数，并与当前库链接到同一个测试程序；对 500 个正例交替执行新旧分类，各重复三轮，每次使用独立采样上下文。逐一比较保留候选的顺序、几何参数和评分是否完全一致。结果保存为 `build/general-classification-paired.csv`，临时基线源码和编译产物均在忽略的 `build/` 下；该计时不包含优化或验证。
 
 构建和复现命令从仓库根目录执行，见 [Build.ps1 用法](../README.md#构建与运行)及[数据集说明](../docs/testing/DATASET500.md)。测试通过 CMake 私有引用 `src/` 内部头文件，调用方只依赖 `include/`。
 `ExtremeDataset.*` 和 `ExtremeTests.cpp` 提供独立的 200 例极端输入与 7 个模块诊断。`RunExtremeDataset.py` 隔离逐例执行并记录超时，`SummarizeExtremeDataset.py` 校验完整性、汇总分组耗时。只运行此组：`./Build.ps1 -ExtremeBoundaryOnly`；构造与验收口径见 [EXTREME200.md](../docs/testing/EXTREME200.md)。

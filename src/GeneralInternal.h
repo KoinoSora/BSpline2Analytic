@@ -10,6 +10,23 @@ struct GeneralSeed
     AnalyticParameters parameters;
     GeneralCandidateScore score;
 };
+enum class GeneralScoreStage { Coarse, Complete, Failed, Consumed };
+struct GeneralScoringCandidate
+{
+    GeneralSeed seed;
+    GeneralScoreStage stage = GeneralScoreStage::Coarse;
+    double weightedSquaredSum = 0, weightSum = 0;
+};
+struct GeneralCandidatePool
+{
+    std::array<std::vector<GeneralScoringCandidate>, 5> families;
+    std::vector<size_t> remainingScoreIndices;
+    unsigned batches = 0;
+};
+GeneralCandidatePool InitializeGeneralCandidates(SurfaceSampleContext &, const GeneralConversionOptions &,
+                                                 GeneralClassificationDiagnostics &);
+std::vector<GeneralSeed> NextGeneralCandidateBatch(GeneralCandidatePool &, SurfaceSampleContext &,
+    const GeneralConversionOptions &, GeneralClassificationDiagnostics &);
 struct GeneralTrim
 {
     AnalyticParameters parameters;

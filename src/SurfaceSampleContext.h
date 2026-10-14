@@ -25,6 +25,7 @@ public:
     const std::vector<SurfaceSample> &Greville(bool needNormals = true);
     const std::vector<size_t> &Seeds();
     const std::vector<size_t> &Scores();
+    const std::vector<size_t> &CoarseScores(unsigned count);
     const std::array<std::vector<SurfaceSample>, 4> &Boundaries();
     unsigned Evaluations() const { return static_cast<unsigned>(values.size()); }
     const sggk::BSplineSurface &source;
@@ -34,6 +35,7 @@ private:
     std::map<std::tuple<double, double, int, int>, SurfaceSample> values;
     std::vector<SurfaceSample> greville;
     std::vector<size_t> seeds, scores;
+    std::map<unsigned, std::vector<size_t>> coarseScores;
     std::vector<size_t> seedPartition;
     std::vector<double> grevilleWeights;
     std::array<std::vector<SurfaceSample>, 4> boundaries;

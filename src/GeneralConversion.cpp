@@ -13,6 +13,7 @@ static void CheckGeneralInput(const sggk::BSplineSurface &s, const GeneralConver
         !s.DegreeU() || !s.DegreeV() ||
         !o.seedAttemptsPerType || o.seedAttemptsPerType > 4096 ||
         !o.candidatesPerType || o.candidatesPerType > 32 ||
+        o.coarseScorePointCount > o.fitting.sampling.maxSamples ||
         o.boundarySamplesPerSpan<3 || o.boundarySamplesPerSpan>64 ||
         !o.fitting.sampling.maxSamples || r.maxIterations > 500 || r.maxRounds > 20 ||
         r.maxWarmupIterations > 500 || !r.stagnationWindow || r.stagnationWindow > 500 ||
@@ -67,18 +68,28 @@ GeneralConversionResult ConvertGeneralWithSamples(const sggk::BSplineSurface &s,
     try
     {
         CheckGeneralInput(s, o);
-        std::vector<GeneralSeed> seeds;
+        GeneralCandidatePool pool;
         {
             StageTimer timer(result.timing.classification);
-            seeds = ClassifyGeneral(context, o, &result.classification);
+            pool = InitializeGeneralCandidates(context, o, result.classification);
         }
-        for (const auto &seed : seeds) result.candidates.push_back(seed.score);
-        result.statistics.candidateCount = static_cast<unsigned>(seeds.size());
         result.message = "No general analytic candidate could be initialized";
         std::optional<SampleCache> base;
         unsigned index = 0;
-        for (const auto &seed : seeds)
+        std::vector<GeneralSeed> seeds;
+        size_t batchIndex = 0;
+        for (;;)
         {
+            if (batchIndex == seeds.size())
+            {
+                StageTimer timer(result.timing.classification);
+                seeds = NextGeneralCandidateBatch(pool, context, o, result.classification);
+                if (seeds.empty()) break;
+                batchIndex = 0;
+                for (const auto &seed : seeds) result.candidates.push_back(seed.score);
+                result.statistics.candidateCount = static_cast<unsigned>(result.candidates.size());
+            }
+            const auto &seed = seeds[batchIndex++];
             ++index;
             AnalyticPatch candidate;
             candidate.parameters = seed.parameters;
@@ -165,8 +176,8 @@ GeneralConversionResult ConvertGeneralWithSamples(const sggk::BSplineSurface &s,
             }
             result.attempts.push_back({seed.parameters.type,result.validation.pcurveFailure,
                 result.validation.failedBoundary,false,result.message});
-            // The ranked list retains independent torus seeds after sphere
-            // failure, and all remaining types after either family's failure.
+            // Finish the current ranked batch before drawing from the retained
+            // pool. No new seed groups are generated during backup attempts.
         }
     }
     catch (const Failure &e)

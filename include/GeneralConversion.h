@@ -1,6 +1,7 @@
 #pragma once
 #include "ApproximateConversion.h"
 #include <memory>
+#include <cstdint>
 #include <Geometry/2D/Curve2D.h>
 
 namespace bspline2analytic
@@ -8,11 +9,17 @@ namespace bspline2analytic
 struct GeneralConversionOptions
 {
     ConversionOptions fitting;
-    unsigned seedAttemptsPerType = 64;
+    // Fixed sample-group budget, including unsuccessful constructions.
+    unsigned seedAttemptsPerType = 8;
+    // Preferred candidates per family in each batch; remaining unique mothers
+    // stay available if all candidates in this batch fail conversion.
     unsigned candidatesPerType = 3;
     double similarScoreAbsoluteRatio = .1;
     double similarScoreRelativeTolerance = .05;
     unsigned boundarySamplesPerSpan = 8;
+    // Zero selects eager full scoring; otherwise use up to this many held-out
+    // interior points before completing competitive candidates.
+    unsigned coarseScorePointCount = 16;
 };
 enum class PCurveFailure
 {
@@ -65,11 +72,17 @@ struct GeneralCandidateScore
 };
 struct GeneralClassificationDiagnostics
 {
-    // Generated mother candidates, before deduplication and per-type truncation.
+    // Generated mother candidates, before deduplication and batch selection.
     unsigned rawCandidateCount = 0;
     unsigned duplicateCandidateCount = 0;
-    // Actual Score calls, including calls rejected by a scoring failure.
+    // Unique candidates entering scoring, including scoring failures.
     unsigned scoreEvaluationCount = 0;
+    unsigned seedAttemptCount = 0;
+    unsigned coarseScoreCount = 0, fullScoreCount = 0;
+    unsigned completedScoreCount = 0;
+    unsigned deferredCandidateCount = 0; // Incomplete after the first batch.
+    unsigned backupCandidateCount = 0, batchCount = 0;
+    std::uint64_t interiorPointEvaluations = 0, boundaryPointEvaluations = 0;
 };
 struct GeneralValidationReport
 {

@@ -13,11 +13,15 @@ def main():
     selection.add_argument("--extras", action="store_true")
     selection.add_argument("--positives", action="store_true")
     parser.add_argument("--merge", type=Path)
+    parser.add_argument("--configuration", choices=("64-full", "8-full", "8-staged"),
+                        help="Select one configuration from --compare-positive output")
     args = parser.parse_args()
     rows = []
     for path in args.csv:
         with path.open(encoding="utf-8-sig", newline="") as source:
             rows.extend(csv.DictReader(source))
+    if args.configuration:
+        rows = [r for r in rows if r.get("configuration") == args.configuration]
     rows.sort(key=lambda r: int(r["id"]))
     count = 60 if args.extras else 500 if args.positives else 600
     if [int(r["id"]) for r in rows] != list(range(count)):
@@ -48,6 +52,17 @@ def main():
         duplicates = sum(int(r["duplicate_candidates"]) for r in rows)
         scored = sum(int(r["score_evaluations"]) for r in rows)
         print(f"Generated candidates: {raw}; duplicates skipped: {duplicates}; score calls: {scored}")
+    if all("full_scores" in row for row in rows):
+        if any(not 0 <= int(r["completed_scores"]) <= int(r["full_scores"]) <=
+               int(r["score_evaluations"]) for r in rows):
+            raise SystemExit("Progressive scoring counters are inconsistent")
+        for field in ("seed_attempts", "coarse_scores", "full_scores", "completed_scores",
+                      "deferred_candidates", "backup_candidates", "interior_point_evaluations",
+                      "boundary_point_evaluations"):
+            print(f"{field}: {sum(int(r[field]) for r in rows)}")
+    print("Stage totals (seconds): " + ", ".join(
+        f"{field}={sum(float(r[field]) for r in rows)/1000:.6f}"
+        for field in ("classify_ms", "optimize_ms", "validate_ms", "total_ms")))
     groups = defaultdict(list)
     for row in rows:
         groups[(row["group"], row["source_type"])].append(row)
@@ -74,6 +89,8 @@ def main():
     print("Certified negatives: not run" if args.positives else f"Certified-negative false accepts: {len(false_accepts)}")
     for filename in false_accepts:
         print(filename)
+    if failures:
+        raise SystemExit("Unmet test expectations")
 
 
 if __name__ == "__main__":

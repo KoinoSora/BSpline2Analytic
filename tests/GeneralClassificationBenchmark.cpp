@@ -50,6 +50,10 @@ int main(int argc, char **argv)
         out << std::setprecision(17)
             << "repeat,id,source_type,old_first,before_ms,after_ms,candidates,raw_candidates,duplicate_candidates,score_evaluations,identical\n";
         GeneralConversionOptions options;
+        // Keep the historical budget/mode explicit. The strict comparison also
+        // reports subsequent algorithm changes beyond the old dedup baseline.
+        options.seedAttemptsPerType = 64;
+        options.coarseScorePointCount = 0;
         for (unsigned repeat = 0; repeat < 3; ++repeat)
         {
             double beforeTotal = 0, afterTotal = 0;

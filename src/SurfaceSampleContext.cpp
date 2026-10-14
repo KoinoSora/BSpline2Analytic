@@ -116,6 +116,37 @@ const std::vector<SurfaceSample> &SurfaceSampleContext::Greville(bool needNormal
 }
 const std::vector<size_t> &SurfaceSampleContext::Seeds() { Greville(); return seeds; }
 const std::vector<size_t> &SurfaceSampleContext::Scores() { Greville(false); return scores; }
+const std::vector<size_t> &SurfaceSampleContext::CoarseScores(unsigned count)
+{
+    Scores();
+    auto found = coarseScores.find(count);
+    if (found != coarseScores.end()) return found->second;
+    std::vector<size_t> selected;
+    if (count >= scores.size()) selected = scores;
+    else if (count && !scores.empty())
+    {
+        // Deterministic farthest-point coverage in normalized source UV. Only
+        // the held-out score partition is used; no new SDK evaluation occurs.
+        double du = source.MaxParamU() - source.MinParamU();
+        double dv = source.MaxParamV() - source.MinParamV();
+        std::vector<double> nearest(scores.size(), std::numeric_limits<double>::infinity());
+        size_t next = 0;
+        while (selected.size() < count)
+        {
+            size_t chosen = scores[next];
+            selected.push_back(chosen);
+            for (size_t j = 0; j < scores.size(); ++j)
+            {
+                double u = (greville[scores[j]].u - greville[chosen].u) / du;
+                double v = (greville[scores[j]].v - greville[chosen].v) / dv;
+                nearest[j] = std::min(nearest[j], u*u + v*v);
+            }
+            nearest[next] = -1;
+            next = static_cast<size_t>(std::max_element(nearest.begin(), nearest.end()) - nearest.begin());
+        }
+    }
+    return coarseScores.emplace(count, std::move(selected)).first->second;
+}
 const std::array<std::vector<SurfaceSample>, 4> &SurfaceSampleContext::Boundaries()
 {
     if (boundariesReady) return boundaries;
