@@ -1,0 +1,8 @@
+test,type,fixture,initial_worst,final_worst,iterations,analytic_blocks,fallback_blocks,jacobian_best_relative_error,geometry,tangent,normal,passed,message
+biased_seed,Plane,5,1.9999999999999998,0.00019998000201097303,1,400,0,3.2584233458843675e-15,not_checked,not_checked,not_checked,1,"MarginReached"
+biased_seed,Cylinder,17,2.0002853200735085,0.00093939553175506391,1,305,0,1.1132639804022826e-10,not_checked,not_checked,not_checked,1,"MarginReached"
+biased_seed,Cone,29,3.6002112800585739,0.00077763423752605799,1,340,0,1.7881341085086447e-10,not_checked,not_checked,not_checked,1,"MarginReached"
+biased_seed,Sphere,41,2.0005654282919791,0.00077763421755217433,1,25,0,8.317883010527551e-11,not_checked,not_checked,not_checked,1,"MarginReached"
+biased_seed,Torus,53,2.001411909767568,0.0018999233683008904,1,55,0,1.1606340350947073e-10,not_checked,not_checked,not_checked,1,"MarginReached"
+tangent_rejection,Plane,tiny_square,0,0,0,0,0,0,Passed,Exceeded,Passed,1,"A constraint exceeded its limit or could not be bounded within the validation budget"
+normal_rejection,Plane,tiny_square,0,0,0,0,0,0,Passed,Exceeded,Exceeded,1,"A constraint exceeded its limit or could not be bounded within the validation budget"

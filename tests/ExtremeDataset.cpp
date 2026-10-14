@@ -262,7 +262,7 @@ V ExtremeMotherNormal(const AnalyticParameters &p, V world)
         throw std::runtime_error("Unknown mother type");
     }
 }
-ExtremeQualification QualifyExtreme(const DatasetCase &c)
+ExtremeQualification QualifyExtreme(const DatasetCase &c, bool business)
 {
     ExtremeQualification q;
     const auto &s = *c.input;
@@ -289,30 +289,56 @@ ExtremeQualification QualifyExtreme(const DatasetCase &c)
             for (double x : {p.X(), p.Y(), p.Z()})
                 q.ulp = std::max(q.ulp, std::nextafter(std::abs(x), INFINITY) - std::abs(x));
     bool lengthOK = true;
-    for (double length : q.lengths)
-        lengthOK &= std::isfinite(length) && length >= .005 && length <= 5e4;
-    q.passed = q.controls >= 50 && q.controls <= 200 && q.pair.passed && lengthOK &&
+    for (unsigned e = 0; e < 4; ++e)
+    {
+        double length = q.lengths[e];
+        if (business && (c.collapsedMask & (1u << e)))
+        {
+            // Require exactly coincident controls, not a numerically short edge.
+            auto first = cp[e == 1 ? cp.size()-1 : 0][e == 3 ? cp[0].size()-1 : 0];
+            for (size_t j = 0; j < (e < 2 ? cp[0].size() : cp.size()); ++j)
+            {
+                auto p = cp[e < 2 ? (e == 0 ? 0 : cp.size()-1) : j]
+                           [e < 2 ? j : (e == 2 ? 0 : cp[0].size()-1)];
+                lengthOK &= p.X() == first.X() && p.Y() == first.Y() && p.Z() == first.Z();
+            }
+        }
+        else lengthOK &= std::isfinite(length) &&
+            length >= (business ? .01*(1-1e-10) : .005) &&
+            length <= (business ? 1000*(1+1e-10) : 5e4);
+    }
+    q.dimensionsPassed = !business || BusinessDimensions(c);
+    bool anglesOK = true;
+    if (business && !c.collapsedMask)
+    {
+        q.sourceAngles = BusinessBoundaryAngles(*c.source,s);
+        anglesOK = q.sourceAngles[0]<.05 && q.sourceAngles[1]<.05;
+    }
+    else if (c.collapsedMask) q.sourceAngles.fill(std::numeric_limits<double>::quiet_NaN());
+    q.passed = q.controls >= 50 && q.controls <= 200 && q.pair.passed && lengthOK && q.dimensionsPassed && anglesOK &&
                (!c.refitted || !s.IsRational());
     q.message = q.passed ? "qualified_pair_bound_and_measured_lengths"
-                         : (!q.pair.passed ? "pair_certificate_unresolved"
+                         : (!anglesOK ? "source_angle_sample_exceeded" : !q.dimensionsPassed ? "business_dimensions_out_of_range" : !q.pair.passed ? "pair_certificate_unresolved"
                                            : (!lengthOK ? "measured_edge_length_out_of_range"
                                                         : "representation_or_control_budget"));
     return q;
 }
-void GenerateExtremeDataset(const std::filesystem::path &dir)
+void GenerateExtremeDataset(const std::filesystem::path &dir, bool business)
 {
     if (std::filesystem::exists(dir) && !std::filesystem::is_empty(dir))
         throw std::runtime_error(
             "Generate into an empty directory; existing fixtures are never overwritten");
     std::filesystem::create_directories(dir);
+    if (business) { std::ofstream profile(dir / "profile.txt"); profile << "business-extreme200-v1\n"; }
+    unsigned failed = 0;
     std::ofstream csv(dir / "manifest.csv");
     if (!csv)
         throw std::runtime_error("Cannot write manifest");
     csv << std::setprecision(17)
         << "id,pair,group,label,type,source_kind,rho,theta,sagitta_ratio,controls,rational,min_"
            "weight,max_weight,pair_bound,pair_pieces,edge0,edge1,edge2,edge3,length_disagreement,"
-           "coordinate_ulp,qualified,message\n";
-    for (const auto &spec : ExtremeSpecs())
+           "coordinate_ulp,qualified,message,profile,dimensions_passed,collapsed_mask,control_bucket,source_tangent_sampled_deg,source_normal_sampled_deg\n";
+    for (const auto &spec : (business ? BusinessExtremeSpecs() : ExtremeSpecs()))
         for (unsigned mode = 0; mode < 2; ++mode)
         {
             unsigned id = 2 * spec.pair + mode;
@@ -321,6 +347,7 @@ void GenerateExtremeDataset(const std::filesystem::path &dir)
             c.pair = spec.pair;
             c.type = spec.type;
             c.variant = spec.orientation;
+            c.bucket = spec.pair % 5;
             c.truth = spec.truth;
             c.analyticDomain = spec.domain;
             c.refitted = mode != 0;
@@ -333,15 +360,27 @@ void GenerateExtremeDataset(const std::filesystem::path &dir)
                 patch.domain = c.analyticDomain;
                 MakeNative(patch);
                 c.source = NormalizeDatasetSurface(*patch.surface->ToBSpline(*patch.sdkDomain));
+                auto snap = [&](sggk::BSplineSurface &surface) {
+                    if (!spec.collapsed) return;
+                    auto point = c.source->ControlPoints()[0][0];
+                    for (unsigned i = 0; i < surface.ControlPoints().size(); ++i)
+                        surface.SetControlPoint(point,i,0);
+                };
+                snap(*c.source);
                 if (mode)
                 {
                     for (unsigned degree : {3u, 5u, 7u, 9u, 11u, 13u})
                     {
                         unsigned qdegree = c.type >= 3 ? degree : 3;
                         c.input = FitDatasetPolynomial(*c.source, degree, qdegree);
+                        snap(*c.input);
                         // Prefer the lowest degree attaining the continuous bound.
                         if (BoundPair(*c.source, *c.input, 7e-7).passed)
-                            break;
+                        {
+                            auto angles = business && !spec.collapsed ?
+                                BusinessBoundaryAngles(*c.source,*c.input) : std::array<double,2>{};
+                            if (angles[0]<.025 && angles[1]<.025) break;
+                        }
                     }
                 }
                 else
@@ -351,17 +390,23 @@ void GenerateExtremeDataset(const std::filesystem::path &dir)
                     c.input->InsertUKnots(1 / spec.knotRatio, 1);
                     c.input->InsertVKnots(1 / spec.knotRatio, 1);
                 }
+                if (business) PadBusinessExtreme(*c.input,c.bucket);
+                else {
                 unsigned nu = std::max(8u, static_cast<unsigned>(c.input->ControlPoints().size()));
                 unsigned nv =
                     std::max(8u, static_cast<unsigned>(c.input->ControlPoints()[0].size()));
                 if (nu * nv > 200)
                     throw std::runtime_error("Control count exceeds 200 before padding");
                 PadDatasetSurface(*c.input, nu, nv, 1);
+                }
+                snap(*c.input);
                 OrientSurface(*c.source, spec.orientation);
                 OrientSurface(*c.input, spec.orientation);
                 c.source = NormalizeDatasetSurface(*c.source);
                 c.input = NormalizeDatasetSurface(*c.input);
-                q = QualifyExtreme(c);
+                c.collapsedMask = spec.collapsed ? CollapsedMask(*c.input) : 0;
+                if (spec.collapsed && !c.collapsedMask) throw std::runtime_error("Collapsed edge lost");
+                q = QualifyExtreme(c,business);
                 c.storedBound = std::isfinite(q.pair.upper) ? q.pair.upper : 0;
                 SaveDatasetCase(c, dir / ExtremeFilename(id));
             }
@@ -379,11 +424,15 @@ void GenerateExtremeDataset(const std::filesystem::path &dir)
             for (double x : q.lengths)
                 csv << ',' << x;
             csv << ',' << q.lengthDisagreement << ',' << q.ulp << ',' << q.passed << ','
-                << Quote(q.message) << '\n';
+                << Quote(q.message) << ',' << (business ? "business-extreme200-v1" : "legacy-extreme200")
+                << ',' << q.dimensionsPassed << ',' << c.collapsedMask << ',' << c.bucket
+                << ',' << q.sourceAngles[0] << ',' << q.sourceAngles[1] << '\n';
+            failed += !q.passed;
             csv.flush();
             std::cout << "generated " << id << " " << q.message << std::endl;
         }
     if (!csv)
         throw std::runtime_error("Manifest write failed");
+    if (failed) throw std::runtime_error(std::to_string(failed)+" fixture qualifications failed; records preserved");
 }
 } // namespace bspline2analytic::tests

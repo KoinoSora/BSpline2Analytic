@@ -1,0 +1,55 @@
+Internal ctest changing into directory: D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build/business-extreme
+Test project D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build/business-extreme
+    Start 2: BSpline2Analytic.Extreme200
+1/2 Test #2: BSpline2Analytic.Extreme200 .......***Timeout 1500.04 sec
+0: same_type_success (0.166s including loading and audits)
+1: same_type_success (0.114s including loading and audits)
+2: same_type_success (0.108s including loading and audits)
+3: same_type_success (0.135s including loading and audits)
+4: same_type_success (0.218s including loading and audits)
+5: same_type_success (0.161s including loading and audits)
+6: same_type_success (0.117s including loading and audits)
+7: same_type_success (0.192s including loading and audits)
+8: same_type_success (0.132s including loading and audits)
+9: same_type_success (0.219s including loading and audits)
+10: same_type_success (0.108s including loading and audits)
+11: same_type_success (0.108s including loading and audits)
+12: VerificationFailed (63.787s including loading and audits)
+13: VerificationFailed (11.398s including loading and audits)
+14: VerificationFailed (22.805s including loading and audits)
+15: VerificationFailed (139.586s including loading and audits)
+16: VerificationFailed (3.946s including loading and audits)
+17: VerificationFailed (35.248s including loading and audits)
+18: VerificationFailed (5.954s including loading and audits)
+19: VerificationFailed (3.098s including loading and audits)
+20: VerificationFailed (1.973s including loading and audits)
+21: VerificationFailed (1.200s including loading and audits)
+22: VerificationFailed (1.870s including loading and audits)
+23: VerificationFailed (1.928s including loading and audits)
+24: VerificationFailed (58.052s including loading and audits)
+25: VerificationFailed (285.067s including loading and audits)
+26: VerificationFailed (36.979s including loading and audits)
+27: VerificationFailed (7.805s including loading and audits)
+28: VerificationFailed (4.413s including loading and audits)
+29: VerificationFailed (5.558s including loading and audits)
+30: VerificationFailed (5.749s including loading and audits)
+31: VerificationFailed (20.626s including loading and audits)
+32: VerificationFailed (1.061s including loading and audits)
+33: VerificationFailed (0.865s including loading and audits)
+34: VerificationFailed (6.429s including loading and audits)
+35: VerificationFailed (0.924s including loading and audits)
+36: VerificationFailed (49.240s including loading and audits)
+37: same_type_success (141.858s including loading and audits)
+38: VerificationFailed (71.341s including loading and audits)
+39: process_timeout (300.049s including loading and audits)
+40: VerificationFailed (55.623s including loading and audits)
+
+    Start 3: BSpline2Analytic.ExtremeModules
+2/2 Test #3: BSpline2Analytic.ExtremeModules ...   Passed    0.10 sec
+
+50% tests passed, 1 tests failed out of 2
+
+Total Test time (real) = 1500.15 sec
+
+The following tests FAILED:
+	  2 - BSpline2Analytic.Extreme200 (Timeout)

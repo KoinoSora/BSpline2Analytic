@@ -62,9 +62,11 @@ Audit AuditSource(const DatasetCase &c)
         for (double t : Parameters(e < 2 ? c.input->KnotsV() : c.input->KnotsU(), 32))
         {
             auto input = EvaluateSource(*c.input, e, t), source = EvaluateSource(*c.source, e, t);
+            if (c.collapsedMask) continue;
             a.tangent = std::max(a.tangent, DirectionAngle(input[1], source[1]));
             a.normal = std::max(a.normal, DirectionAngle(input[2], source[2]));
         }
+    if (c.collapsedMask) a.tangent = a.normal = std::numeric_limits<double>::quiet_NaN();
     return a;
 }
 V PCurveTangent(const GeneralAnalyticPatch &patch, unsigned e, double t)
@@ -105,7 +107,7 @@ V PCurveTangent(const GeneralAnalyticPatch &patch, unsigned e, double t)
     V local = du * (edge.end.X() - edge.start.X()) + dv * (edge.end.Y() - edge.start.Y());
     return x * local.x + y * local.y + z * local.z;
 }
-Audit AuditOutput(const sggk::BSplineSurface &s, const GeneralAnalyticPatch &p)
+Audit AuditOutput(const sggk::BSplineSurface &s, const GeneralAnalyticPatch &p, unsigned collapsedMask = 0)
 {
     Audit a;
     for (double u : Parameters(s.KnotsU(), 4))
@@ -161,10 +163,16 @@ Audit AuditOutput(const sggk::BSplineSurface &s, const GeneralAnalyticPatch &p)
                     f = endpoint;
             V projected = Get(p.CalcBoundaryPoint(BoundaryId(e), f));
             a.distance = std::max(a.distance, Norm(projected - source[0]));
-            a.tangent = std::max(a.tangent, DirectionAngle(source[1], PCurveTangent(p, e, f)));
-            a.normal =
-                std::max(a.normal,
-                         DirectionAngle(source[2], ExtremeMotherNormal(p.Parameters(), projected)));
+            // A collapsed point has no boundary tangent or regular surface normal.
+            // Its positional error is still checked above. Other edges remain audited.
+            bool collapsedEdge = (collapsedMask & (1u<<e)) != 0;
+            bool singularCorner = (t == 0 && (collapsedMask & (1u<<(e<2?2:0)))) ||
+                                  (t == 1 && (collapsedMask & (1u<<(e<2?3:1))));
+            if (!collapsedEdge)
+                a.tangent = std::max(a.tangent, DirectionAngle(source[1], PCurveTangent(p, e, f)));
+            if (!collapsedEdge && !singularCorner)
+                a.normal = std::max(a.normal,
+                    DirectionAngle(source[2], ExtremeMotherNormal(p.Parameters(), projected)));
         }
     return a;
 }
@@ -204,7 +212,8 @@ int Run(const std::filesystem::path &dir, const std::filesystem::path &csvPath, 
            "boundary_bound,output_distance_sampled,output_tangent_sampled_deg,output_normal_"
            "sampled_deg,angle_evidence,iterations,candidates,pieces,attempts,message\n";
     unsigned qualified = 0, success = 0, failed = 0;
-    auto specs = ExtremeSpecs();
+    bool business = IsBusinessExtreme(dir);
+    auto specs = business ? BusinessExtremeSpecs() : ExtremeSpecs();
     for (unsigned id = first; id < last; ++id)
     {
         const auto &spec = specs[id / 2];
@@ -222,7 +231,7 @@ int Run(const std::filesystem::path &dir, const std::filesystem::path &csvPath, 
             auto c = ReadDatasetCase(dir / ExtremeFilename(id));
             if (c.id != id || c.pair != id / 2 || c.type != spec.type || c.refitted != bool(id % 2))
                 throw std::runtime_error("Fixture identity mismatch");
-            q = QualifyExtreme(c);
+            q = QualifyExtreme(c,business);
             rational = c.input->IsRational();
             message = q.message;
             if (q.passed)
@@ -271,13 +280,14 @@ int Run(const std::filesystem::path &dir, const std::filesystem::path &csvPath, 
                 }
                 if (r.Succeeded())
                 {
-                    output = AuditOutput(*c.input, *r.patch);
+                    output = AuditOutput(*c.input, *r.patch,c.collapsedMask);
                     output.valid = true;
-                    if (angleEvidence == "not_checked")
-                        angleEvidence = "sampled_only";
+                    if (c.collapsedMask) angleEvidence = "sampled_regular_parts";
+                    else if (angleEvidence == "not_checked") angleEvidence = "sampled_only";
                     bool auditOK =
                         output.distance < 1e-5 && output.tangent < .1 && output.normal < .1;
                     status = !auditOK                   ? "success_with_sampled_violation"
+                             : c.collapsedMask ? "degenerate_success"
                              : r.Type() == c.truth.type ? "same_type_success"
                                                         : "alternate_type_success";
                     if (auditOK)
@@ -292,7 +302,7 @@ int Run(const std::filesystem::path &dir, const std::filesystem::path &csvPath, 
             message = e.what();
             status = q.passed ? "test_exception" : "generation_failed";
         }
-        if (status != "same_type_success" && status != "alternate_type_success")
+        if (status != "same_type_success" && status != "alternate_type_success" && status != "degenerate_success")
             ++failed;
         csv << id << ',' << spec.group << ',' << TypeName(spec.truth.type) << ','
             << (id % 2 ? "polynomial" : "analytic_nurbs") << ',' << q.passed << ',' << q.controls
@@ -327,9 +337,11 @@ int Modules(const std::filesystem::path &dir, const std::filesystem::path &csvPa
         << "test,type,fixture,initial_worst,final_worst,iterations,analytic_blocks,fallback_blocks,"
            "jacobian_best_relative_error,geometry,tangent,normal,passed,message\n";
     unsigned failed = 0;
-    // New-data-only biased-seed probes: ordinary translated-base fixtures,
-    // angle-gate cone, and the high-aspect plane. No old regression input.
-    for (unsigned id : {197u, 159u, 105u, 165u, 171u})
+    // Each profile selects five of its own fixed inputs, one per analytic family.
+    bool business = IsBusinessExtreme(dir);
+    auto probeIds = business ? std::vector<unsigned>{5,17,29,41,53} :
+                               std::vector<unsigned>{197,159,105,165,171};
+    for (unsigned id : probeIds)
     {
         bool passed = false;
         std::string message;
@@ -448,9 +460,9 @@ int main(int argc, char **argv)
     int status = 2;
     try
     {
-        if (argc == 3 && std::string(argv[1]) == "--generate")
+        if (argc == 3 && (std::string(argv[1]) == "--generate" || std::string(argv[1]) == "--generate-business"))
         {
-            GenerateExtremeDataset(argv[2]);
+            GenerateExtremeDataset(argv[2],std::string(argv[1]) == "--generate-business");
             status = 0;
         }
         else if ((argc == 4 || argc == 6) && std::string(argv[1]) == "--run")
@@ -459,7 +471,7 @@ int main(int argc, char **argv)
         else if (argc == 4 && std::string(argv[1]) == "--modules")
             status = Modules(argv[2], argv[3]);
         else
-            throw std::runtime_error("Usage: --generate dir | --run dir result.csv [first last] | "
+            throw std::runtime_error("Usage: --generate dir | --generate-business dir | --run dir result.csv [first last] | "
                                      "--modules dir result.csv");
     }
     catch (const std::exception &e)

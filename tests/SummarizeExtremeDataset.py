@@ -51,8 +51,14 @@ def summarize(manifest, results, modules, output):
     for row in rows:
         groups["all", "all"].append(row)
         groups["scenario", row["group"]].append(row)
-        groups["type_source", row["type"] + "/" + row["source_kind"]].append(row)
-    fields = ["dimension", "group", "count", "same_type", "alternate_type", "failed",
+        groups["type_source" if row["group"] != "collapsed" else "degenerate_type_source", row["type"] + "/" + row["source_kind"]].append(row)
+        groups["scope", "degenerate" if row["group"] == "collapsed" else "regular"].append(row)
+        count = int(row["controls"])
+        band = next((f"{lo}-{hi}" for lo,hi in ((50,79),(80,109),(110,139),(140,169),(170,200))
+                     if lo <= count <= hi), "out_of_range")
+        dimension = "degenerate_control_source" if row["group"] == "collapsed" else "control_source"
+        groups[dimension, band + "/" + row["source_kind"]].append(row)
+    fields = ["dimension", "group", "count", "same_type", "alternate_type", "degenerate_success", "failed",
               "sampled_violation", "qualified", "sampled_only_angles", "unknown_timings",
               "classify_mean_ms", "optimize_mean_ms", "validate_mean_ms", "total_mean_ms",
               "classify_optimize_mean_ms", "classify_optimize_max_ms", "slowest_id"]
@@ -63,7 +69,8 @@ def summarize(manifest, results, modules, output):
         slowest = max(timed, key=lambda r: float(r["classify_optimize_ms"]), default=None)
         item = dict(dimension=dimension, group=name, count=len(members),
                     same_type=counts["same_type_success"], alternate_type=counts["alternate_type_success"],
-                    failed=len(members)-counts["same_type_success"]-counts["alternate_type_success"],
+                    degenerate_success=counts["degenerate_success"],
+                    failed=len(members)-counts["same_type_success"]-counts["alternate_type_success"]-counts["degenerate_success"],
                     sampled_violation=counts["success_with_sampled_violation"],
                     qualified=sum(r["qualified"] == "1" for r in members),
                     sampled_only_angles=sum(r["angle_evidence"] == "sampled_only" for r in members),

@@ -19,5 +19,6 @@
 | 需求 | [原始需求 PDF](requirements/中船海舟样条转二次曲面.pdf) | 原始项目材料。 |
 
 代码与构建入口见[仓库 README](../README.md)，测试代码见 [tests/](../tests/README.md)，项目 Skill 见[Skill 索引](../.agents/skills/README.md)。历史报告保留其运行批次和基线，不以目录迁移更新历史性能结论。
-极端场景：[200 例构造与运行说明](testing/EXTREME200.md)。
+业务尺寸极端场景：[200 例构造与运行说明](testing/BUSINESS_EXTREME200.md)、[2026-10-14 测试报告](testing/BUSINESS_EXTREME200_REPORT_2026-10-14.md)。
+历史极限压力集：[旧 200 例构造说明](testing/EXTREME200.md)。
 [2026-10-13 极端测试报告](testing/EXTREME200_REPORT_2026-10-13.md)保存 200 条逐例结果、三阶段分组统计和超时记录。

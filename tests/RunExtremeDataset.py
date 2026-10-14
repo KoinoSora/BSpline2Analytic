@@ -49,7 +49,7 @@ def main():
             raise ValueError("Resume prefix belongs to a different matrix")
     partdir = args.output.with_suffix(".parts")
     partdir.mkdir(parents=True, exist_ok=True)
-    failed = sum(r["status"] not in ("same_type_success", "alternate_type_success") for r in existing)
+    failed = sum(r["status"] not in ("same_type_success", "alternate_type_success", "degenerate_success") for r in existing)
     with args.output.open("w", encoding="utf-8", newline="") as stream:
         writer = csv.DictWriter(stream, FIELDS)
         writer.writeheader()
@@ -60,6 +60,7 @@ def main():
             part = partdir / f"case-{index:03}.csv"
             # Remove only this runner's old per-case output, never input geometry.
             part.unlink(missing_ok=True)
+            part.with_name(part.stem + "-fits.csv").unlink(missing_ok=True)
             log = part.with_suffix(".log")
             start = time.perf_counter()
             timeout = False
@@ -91,7 +92,7 @@ def main():
             row["watchdog_elapsed_s"] = elapsed
             writer.writerow(row)
             stream.flush()
-            failed += row["status"] not in ("same_type_success", "alternate_type_success")
+            failed += row["status"] not in ("same_type_success", "alternate_type_success", "degenerate_success")
             print(f"{index}: {row['status']} ({elapsed:.3f}s including loading and audits)", flush=True)
     print(f"Completed {len(manifest)} records [{args.first},{args.last}), failed/unresolved={failed}", flush=True)
     return 1 if failed else 0

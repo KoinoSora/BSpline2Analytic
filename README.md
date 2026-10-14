@@ -172,5 +172,5 @@ if (result.status == bspline2analytic::Status::Success) {
 
 ## 极端场景专项
 
-新增 [200 个极端面片](docs/testing/EXTREME200.md)，覆盖大半径小弧长、浅锥、极端圆环比例、大坐标、参数节点与方向变化等情况。运行 `.\Build.ps1 -Configuration Release -ExtremeBoundaryOnly` 只执行新数据及 7 个模块诊断，需要 Python 3.8 或以上。单例进程隔离，外部看护上限 300 秒；超时不伪造阶段耗时。结果记录分类、优化、验证，以及每组 `max(分类+优化)`。
-本批结果及已知限制见 [极端测试报告](docs/testing/EXTREME200_REPORT_2026-10-13.md)；未将验证失败或超时改写为通过。
+当前专项使用[业务尺寸极端集 200 例](docs/testing/BUSINESS_EXTREME200.md)，主要半径与长度在 0.01–1000，包含短弧、点边、大坐标与参数表示变化；[旧极限压力集](docs/testing/EXTREME200.md)保留作历史参考。运行 `.\Build.ps1 -Configuration Release -ExtremeBoundaryOnly` 只执行新数据及 7 个模块诊断，需要 Python 3.8 或以上。单例进程隔离，外部看护上限 300 秒；超时不伪造阶段耗时。结果记录分类、优化、验证，以及每组 `max(分类+优化)`。
+新矩阵结果见[业务尺寸极端测试报告](docs/testing/BUSINESS_EXTREME200_REPORT_2026-10-14.md)。旧数据结果见[历史极端测试报告](docs/testing/EXTREME200_REPORT_2026-10-13.md)；两批编号或均值不直接比较。

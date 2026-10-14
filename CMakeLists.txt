@@ -44,19 +44,27 @@ if(BSPLINE2ANALYTIC_BUILD_TESTS)
     set_tests_properties(BSpline2Analytic.ClassificationGate PROPERTIES
         TIMEOUT 60 WORKING_DIRECTORY "${SGGK_SDK_DIR}"
         ENVIRONMENT_MODIFICATION "PATH=path_list_prepend:${SGGK_SDK_DIR}/x64-win/bin${_sgk_config}")
-    add_executable(BSpline2AnalyticExtremeTests tests/ExtremeDataset.cpp tests/ExtremeTests.cpp
+    add_executable(BSpline2AnalyticExtremeTests tests/ExtremeDataset.cpp tests/BusinessExtremeDataset.cpp tests/ExtremeTests.cpp
         tests/Dataset500.cpp tests/PairedSurfaceBounds.cpp)
     target_link_libraries(BSpline2AnalyticExtremeTests PRIVATE BSpline2Analytic)
     target_include_directories(BSpline2AnalyticExtremeTests PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src")
     target_compile_options(BSpline2AnalyticExtremeTests PRIVATE /W4 /utf-8)
     find_package(Python3 3.8 REQUIRED COMPONENTS Interpreter)
+    add_test(NAME BSpline2Analytic.ExtremeData COMMAND "${Python3_EXECUTABLE}"
+        "${CMAKE_CURRENT_SOURCE_DIR}/tests/AuditBusinessExtreme.py"
+        "${CMAKE_CURRENT_SOURCE_DIR}/tests/data/business-extreme200")
+    set_tests_properties(BSpline2Analytic.ExtremeData PROPERTIES TIMEOUT 30)
     add_test(NAME BSpline2Analytic.Extreme200 COMMAND "${Python3_EXECUTABLE}"
         "${CMAKE_CURRENT_SOURCE_DIR}/tests/RunExtremeDataset.py"
         --exe "$<TARGET_FILE:BSpline2AnalyticExtremeTests>"
-        --data "${CMAKE_CURRENT_SOURCE_DIR}/tests/data/extreme200"
-        --output "${CMAKE_CURRENT_BINARY_DIR}/extreme200-$<CONFIG>.csv" --timeout 300)
+        --data "${CMAKE_CURRENT_SOURCE_DIR}/tests/data/business-extreme200"
+        --output "${CMAKE_CURRENT_BINARY_DIR}/business-extreme200-$<CONFIG>.csv" --timeout 300)
     add_test(NAME BSpline2Analytic.ExtremeModules COMMAND BSpline2AnalyticExtremeTests --modules
-        "${CMAKE_CURRENT_SOURCE_DIR}/tests/data/extreme200" "${CMAKE_CURRENT_BINARY_DIR}/extreme-modules-$<CONFIG>.csv")
+        "${CMAKE_CURRENT_SOURCE_DIR}/tests/data/business-extreme200" "${CMAKE_CURRENT_BINARY_DIR}/business-extreme-modules-$<CONFIG>.csv")
+    # The batch has its own 300-second per-case watchdog. Do not let CTest's
+    # default 1500-second suite timeout discard a partially completed batch.
+    set_tests_properties(BSpline2Analytic.Extreme200 PROPERTIES TIMEOUT 61200)
+    set_tests_properties(BSpline2Analytic.ExtremeModules PROPERTIES TIMEOUT 60)
     set_tests_properties(BSpline2Analytic.Extreme200 BSpline2Analytic.ExtremeModules PROPERTIES
         WORKING_DIRECTORY "${SGGK_SDK_DIR}"
         ENVIRONMENT_MODIFICATION "PATH=path_list_prepend:${SGGK_SDK_DIR}/x64-win/bin${_sgk_config}")

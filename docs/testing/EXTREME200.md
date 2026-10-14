@@ -1,4 +1,6 @@
-# 大半径小弧长及补充极端测试集
+# 大半径小弧长及补充极端测试集（历史压力矩阵）
+
+2026-10-14 起，`Build.ps1 -ExtremeBoundaryOnly` 改为运行[业务尺寸矩阵](BUSINESS_EXTREME200.md)。本文件与 `tests/data/extreme200/` 保留历史数据定义；复现本矩阵应显式给 `RunExtremeDataset.py` 传入旧数据目录。
 
 本测试集测量当前完整转换入口在局部曲率难辨识、尺度悬殊和参数表示变化下的表现。200 个固定面片来自 100 个解析几何配置，每个配置包含解析转换的 NURBS 与非有理重拟合两个输入。另有 7 个模块诊断。所有文件独立保存于 `tests/data/extreme200/`，不读取旧 500 例或 General600 数据。
 
@@ -62,7 +64,10 @@ h = 2ρ sin²(θ/4)
 在仓库根目录执行：
 
 ```powershell
-.\Build.ps1 -Configuration Release -ExtremeBoundaryOnly
+cmake --build build --config Release --target BSpline2AnalyticExtremeTests
+# 在 SDK 工作目录并配置 DLL 路径后，显式运行旧目录：
+# python <repo>/tests/RunExtremeDataset.py --exe <repo>/build/Release/BSpline2AnalyticExtremeTests.exe --data <repo>/tests/data/extreme200 --output <repo>/build/extreme200-Release.csv
+# <exe> --modules <repo>/tests/data/extreme200 <repo>/build/extreme-modules-Release.csv
 python tests/SummarizeExtremeDataset.py tests/data/extreme200/manifest.csv `
     build/extreme200-Release.csv build/extreme-modules-Release.csv build/extreme-summary
 ```

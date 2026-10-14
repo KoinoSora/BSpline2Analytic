@@ -1,0 +1,8 @@
+Internal ctest changing into directory: D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build/business-extreme
+Test project D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build/business-extreme
+    Start 2: BSpline2Analytic.ExtremeData
+1/1 Test #2: BSpline2Analytic.ExtremeData .....   Passed    0.44 sec
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =   0.47 sec

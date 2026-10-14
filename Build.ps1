@@ -39,7 +39,7 @@ if ($ExtremeBoundaryOnly) {
 }
 if ($LASTEXITCODE -ne 0) { throw 'C++ build failed' }
 if ($ExtremeBoundaryOnly) {
-    ctest --test-dir $build -C $Configuration -R '^BSpline2Analytic\.Extreme(200|Modules)$' --output-on-failure
+    ctest --test-dir $build -C $Configuration -R '^BSpline2Analytic\.Extreme(200|Modules|Data)$' --output-on-failure
 } elseif ($GeneralPositiveOnly) {
     ctest --test-dir $build -C $Configuration -R '^BSpline2Analytic\.GeneralPositive500$' --output-on-failure
 } elseif ($GeneralOnly) {

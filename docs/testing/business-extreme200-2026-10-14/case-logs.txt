@@ -1,0 +1,1187 @@
+CASE 0
+BEGIN_CONVERT 0
+END_CONVERT 0
+0 scale_regular same_type_success cls+opt=1.5978 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 1
+BEGIN_CONVERT 1
+END_CONVERT 1
+1 scale_regular same_type_success cls+opt=0.8392 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 2
+BEGIN_CONVERT 2
+END_CONVERT 2
+2 scale_regular same_type_success cls+opt=1.3957 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 3
+BEGIN_CONVERT 3
+END_CONVERT 3
+3 scale_regular same_type_success cls+opt=1.5095 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 4
+BEGIN_CONVERT 4
+END_CONVERT 4
+4 scale_regular same_type_success cls+opt=1.7839 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 5
+BEGIN_CONVERT 5
+END_CONVERT 5
+5 scale_regular same_type_success cls+opt=1.6898 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 6
+BEGIN_CONVERT 6
+END_CONVERT 6
+6 scale_regular same_type_success cls+opt=1.8685 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 7
+BEGIN_CONVERT 7
+END_CONVERT 7
+7 scale_regular same_type_success cls+opt=2.1001 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 8
+BEGIN_CONVERT 8
+END_CONVERT 8
+8 scale_regular same_type_success cls+opt=2.2515 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 9
+BEGIN_CONVERT 9
+END_CONVERT 9
+9 scale_regular same_type_success cls+opt=2.6528 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 10
+BEGIN_CONVERT 10
+END_CONVERT 10
+10 scale_regular same_type_success cls+opt=1.6015 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 11
+BEGIN_CONVERT 11
+END_CONVERT 11
+11 scale_regular same_type_success cls+opt=0.8885 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 12
+BEGIN_CONVERT 12
+END_CONVERT 12
+12 scale_regular VerificationFailed cls+opt=38.7423 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 13
+BEGIN_CONVERT 13
+END_CONVERT 13
+13 scale_regular VerificationFailed cls+opt=81.8671 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 14
+BEGIN_CONVERT 14
+END_CONVERT 14
+14 scale_regular VerificationFailed cls+opt=121.365 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 15
+BEGIN_CONVERT 15
+END_CONVERT 15
+15 scale_regular VerificationFailed cls+opt=185.262 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 16
+BEGIN_CONVERT 16
+END_CONVERT 16
+16 scale_regular VerificationFailed cls+opt=79.5405 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 17
+BEGIN_CONVERT 17
+END_CONVERT 17
+17 scale_regular VerificationFailed cls+opt=180.747 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 18
+BEGIN_CONVERT 18
+END_CONVERT 18
+18 scale_regular VerificationFailed cls+opt=157.117 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 19
+BEGIN_CONVERT 19
+END_CONVERT 19
+19 scale_regular VerificationFailed cls+opt=159.108 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 20
+BEGIN_CONVERT 20
+END_CONVERT 20
+20 scale_regular VerificationFailed cls+opt=35.2579 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 21
+BEGIN_CONVERT 21
+END_CONVERT 21
+21 scale_regular VerificationFailed cls+opt=20.1875 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 22
+BEGIN_CONVERT 22
+END_CONVERT 22
+22 scale_regular VerificationFailed cls+opt=68.4747 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 23
+BEGIN_CONVERT 23
+END_CONVERT 23
+23 scale_regular VerificationFailed cls+opt=56.5996 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 24
+BEGIN_CONVERT 24
+END_CONVERT 24
+24 scale_regular VerificationFailed cls+opt=174.287 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 25
+BEGIN_CONVERT 25
+END_CONVERT 25
+25 scale_regular VerificationFailed cls+opt=114.227 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 26
+BEGIN_CONVERT 26
+END_CONVERT 26
+26 scale_regular VerificationFailed cls+opt=123.787 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 27
+BEGIN_CONVERT 27
+END_CONVERT 27
+27 scale_regular VerificationFailed cls+opt=171.583 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 28
+BEGIN_CONVERT 28
+END_CONVERT 28
+28 scale_regular VerificationFailed cls+opt=267.492 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 29
+BEGIN_CONVERT 29
+END_CONVERT 29
+29 scale_regular VerificationFailed cls+opt=267.574 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 30
+BEGIN_CONVERT 30
+END_CONVERT 30
+30 scale_regular VerificationFailed cls+opt=70.2299 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 31
+BEGIN_CONVERT 31
+END_CONVERT 31
+31 scale_regular VerificationFailed cls+opt=56.0398 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 32
+BEGIN_CONVERT 32
+END_CONVERT 32
+32 scale_regular VerificationFailed cls+opt=148.511 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 33
+BEGIN_CONVERT 33
+END_CONVERT 33
+33 scale_regular VerificationFailed cls+opt=100.736 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 34
+BEGIN_CONVERT 34
+END_CONVERT 34
+34 scale_regular VerificationFailed cls+opt=144.116 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 35
+BEGIN_CONVERT 35
+END_CONVERT 35
+35 scale_regular VerificationFailed cls+opt=145.082 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 36
+BEGIN_CONVERT 36
+END_CONVERT 36
+36 scale_regular VerificationFailed cls+opt=0.5676 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 37
+BEGIN_CONVERT 37
+END_CONVERT 37
+37 scale_regular same_type_success cls+opt=3.395 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 38
+BEGIN_CONVERT 38
+END_CONVERT 38
+38 scale_regular VerificationFailed cls+opt=131.334 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 39
+BEGIN_CONVERT 39
+
+CASE 40
+BEGIN_CONVERT 40
+END_CONVERT 40
+40 scale_regular VerificationFailed cls+opt=52.4621 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 41
+BEGIN_CONVERT 41
+
+CASE 42
+BEGIN_CONVERT 42
+END_CONVERT 42
+42 scale_regular VerificationFailed cls+opt=71.7986 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 43
+BEGIN_CONVERT 43
+
+CASE 44
+BEGIN_CONVERT 44
+END_CONVERT 44
+44 scale_regular VerificationFailed cls+opt=91.3937 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 45
+BEGIN_CONVERT 45
+END_CONVERT 45
+45 scale_regular VerificationFailed cls+opt=70.233 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 46
+BEGIN_CONVERT 46
+END_CONVERT 46
+46 scale_regular VerificationFailed cls+opt=75.1784 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 47
+BEGIN_CONVERT 47
+END_CONVERT 47
+47 scale_regular VerificationFailed cls+opt=122.699 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 48
+BEGIN_CONVERT 48
+END_CONVERT 48
+48 scale_regular VerificationFailed cls+opt=126.545 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 49
+BEGIN_CONVERT 49
+END_CONVERT 49
+49 scale_regular VerificationFailed cls+opt=346.858 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 50
+BEGIN_CONVERT 50
+END_CONVERT 50
+50 scale_regular VerificationFailed cls+opt=55.7663 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 51
+BEGIN_CONVERT 51
+END_CONVERT 51
+51 scale_regular VerificationFailed cls+opt=81.3467 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 52
+BEGIN_CONVERT 52
+END_CONVERT 52
+52 scale_regular VerificationFailed cls+opt=110.558 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 53
+BEGIN_CONVERT 53
+END_CONVERT 53
+53 scale_regular VerificationFailed cls+opt=127.453 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 54
+BEGIN_CONVERT 54
+END_CONVERT 54
+54 scale_regular VerificationFailed cls+opt=152.353 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 55
+BEGIN_CONVERT 55
+END_CONVERT 55
+55 scale_regular VerificationFailed cls+opt=118.089 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 56
+BEGIN_CONVERT 56
+END_CONVERT 56
+56 scale_regular VerificationFailed cls+opt=107.936 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 57
+BEGIN_CONVERT 57
+END_CONVERT 57
+57 scale_regular VerificationFailed cls+opt=163.667 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 58
+BEGIN_CONVERT 58
+END_CONVERT 58
+58 scale_regular VerificationFailed cls+opt=184.247 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 59
+BEGIN_CONVERT 59
+END_CONVERT 59
+59 scale_regular VerificationFailed cls+opt=349.777 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 60
+BEGIN_CONVERT 60
+END_CONVERT 60
+60 short_arc same_type_success cls+opt=0.2427 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 61
+BEGIN_CONVERT 61
+END_CONVERT 61
+61 short_arc alternate_type_success cls+opt=1.0997 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 62
+BEGIN_CONVERT 62
+END_CONVERT 62
+62 short_arc same_type_success cls+opt=0.3031 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 63
+BEGIN_CONVERT 63
+END_CONVERT 63
+63 short_arc same_type_success cls+opt=1.58 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 64
+BEGIN_CONVERT 64
+END_CONVERT 64
+64 short_arc same_type_success cls+opt=0.3391 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 65
+BEGIN_CONVERT 65
+END_CONVERT 65
+65 short_arc same_type_success cls+opt=1.8627 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 66
+BEGIN_CONVERT 66
+END_CONVERT 66
+66 short_arc same_type_success cls+opt=0.395 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 67
+BEGIN_CONVERT 67
+END_CONVERT 67
+67 short_arc same_type_success cls+opt=2.1242 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 68
+BEGIN_CONVERT 68
+END_CONVERT 68
+68 short_arc same_type_success cls+opt=0.4247 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 69
+BEGIN_CONVERT 69
+END_CONVERT 69
+69 short_arc same_type_success cls+opt=3.9609 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 70
+BEGIN_CONVERT 70
+END_CONVERT 70
+70 short_arc same_type_success cls+opt=0.2375 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 71
+BEGIN_CONVERT 71
+END_CONVERT 71
+71 short_arc same_type_success cls+opt=1.531 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 72
+BEGIN_CONVERT 72
+END_CONVERT 72
+72 short_arc alternate_type_success cls+opt=1.9534 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 73
+BEGIN_CONVERT 73
+END_CONVERT 73
+73 short_arc alternate_type_success cls+opt=66.5333 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 74
+BEGIN_CONVERT 74
+END_CONVERT 74
+74 short_arc VerificationFailed cls+opt=64.298 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 75
+BEGIN_CONVERT 75
+END_CONVERT 75
+75 short_arc VerificationFailed cls+opt=93.5609 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 76
+BEGIN_CONVERT 76
+END_CONVERT 76
+76 short_arc VerificationFailed cls+opt=68.7869 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 77
+BEGIN_CONVERT 77
+END_CONVERT 77
+77 short_arc same_type_success cls+opt=2.352 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 78
+BEGIN_CONVERT 78
+END_CONVERT 78
+78 short_arc alternate_type_success cls+opt=2.6227 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 79
+BEGIN_CONVERT 79
+END_CONVERT 79
+79 short_arc alternate_type_success cls+opt=145.116 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 80
+BEGIN_CONVERT 80
+END_CONVERT 80
+80 short_arc VerificationFailed cls+opt=12.1291 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 81
+BEGIN_CONVERT 81
+END_CONVERT 81
+81 short_arc VerificationFailed cls+opt=37.3815 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 82
+BEGIN_CONVERT 82
+END_CONVERT 82
+82 short_arc VerificationFailed cls+opt=71.8161 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 83
+BEGIN_CONVERT 83
+END_CONVERT 83
+83 short_arc VerificationFailed cls+opt=134.447 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 84
+BEGIN_CONVERT 84
+END_CONVERT 84
+84 short_arc same_type_success cls+opt=0.5724 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 85
+BEGIN_CONVERT 85
+END_CONVERT 85
+85 short_arc same_type_success cls+opt=3.767 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 86
+BEGIN_CONVERT 86
+END_CONVERT 86
+86 short_arc same_type_success cls+opt=0.556 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 87
+BEGIN_CONVERT 87
+END_CONVERT 87
+87 short_arc same_type_success cls+opt=4.6884 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 88
+BEGIN_CONVERT 88
+END_CONVERT 88
+88 short_arc same_type_success cls+opt=0.6925 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 89
+BEGIN_CONVERT 89
+END_CONVERT 89
+89 short_arc same_type_success cls+opt=6.3899 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 90
+BEGIN_CONVERT 90
+END_CONVERT 90
+90 short_arc VerificationFailed cls+opt=27.6298 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 91
+BEGIN_CONVERT 91
+END_CONVERT 91
+91 short_arc VerificationFailed cls+opt=46.3292 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 92
+BEGIN_CONVERT 92
+END_CONVERT 92
+92 short_arc VerificationFailed cls+opt=55.1742 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 93
+BEGIN_CONVERT 93
+END_CONVERT 93
+93 short_arc VerificationFailed cls+opt=123.495 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 94
+BEGIN_CONVERT 94
+END_CONVERT 94
+94 short_arc VerificationFailed cls+opt=78.0866 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 95
+BEGIN_CONVERT 95
+END_CONVERT 95
+95 short_arc VerificationFailed cls+opt=154.037 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 96
+BEGIN_CONVERT 96
+END_CONVERT 96
+96 short_arc same_type_success cls+opt=0.9918 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 97
+BEGIN_CONVERT 97
+END_CONVERT 97
+97 short_arc same_type_success cls+opt=3.5003 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 98
+BEGIN_CONVERT 98
+END_CONVERT 98
+98 short_arc same_type_success cls+opt=0.7301 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 99
+BEGIN_CONVERT 99
+END_CONVERT 99
+99 short_arc same_type_success cls+opt=5.4473 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 100
+BEGIN_CONVERT 100
+END_CONVERT 100
+100 short_arc same_type_success cls+opt=0.3466 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 101
+BEGIN_CONVERT 101
+END_CONVERT 101
+101 short_arc same_type_success cls+opt=1.6661 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 102
+BEGIN_CONVERT 102
+END_CONVERT 102
+102 short_arc same_type_success cls+opt=0.5022 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 103
+BEGIN_CONVERT 103
+END_CONVERT 103
+103 short_arc same_type_success cls+opt=3.3581 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 104
+BEGIN_CONVERT 104
+END_CONVERT 104
+104 short_arc same_type_success cls+opt=0.587 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 105
+BEGIN_CONVERT 105
+END_CONVERT 105
+105 short_arc same_type_success cls+opt=3.3292 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 106
+BEGIN_CONVERT 106
+END_CONVERT 106
+106 short_arc same_type_success cls+opt=0.5737 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 107
+BEGIN_CONVERT 107
+END_CONVERT 107
+107 short_arc same_type_success cls+opt=4.0799 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 108
+BEGIN_CONVERT 108
+END_CONVERT 108
+108 angle_gate same_type_success cls+opt=0.422 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 109
+BEGIN_CONVERT 109
+END_CONVERT 109
+109 angle_gate same_type_success cls+opt=2.9687 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 110
+BEGIN_CONVERT 110
+END_CONVERT 110
+110 angle_gate same_type_success cls+opt=0.2419 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 111
+BEGIN_CONVERT 111
+END_CONVERT 111
+111 angle_gate same_type_success cls+opt=1.8852 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 112
+BEGIN_CONVERT 112
+END_CONVERT 112
+112 angle_gate VerificationFailed cls+opt=72.3621 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 113
+BEGIN_CONVERT 113
+END_CONVERT 113
+113 angle_gate VerificationFailed cls+opt=132.32 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 114
+BEGIN_CONVERT 114
+END_CONVERT 114
+114 angle_gate VerificationFailed cls+opt=73.4714 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 115
+BEGIN_CONVERT 115
+END_CONVERT 115
+115 angle_gate VerificationFailed cls+opt=99.8396 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 116
+BEGIN_CONVERT 116
+END_CONVERT 116
+116 angle_gate VerificationFailed cls+opt=67.1248 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 117
+BEGIN_CONVERT 117
+END_CONVERT 117
+117 angle_gate VerificationFailed cls+opt=206.445 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 118
+BEGIN_CONVERT 118
+END_CONVERT 118
+118 angle_gate VerificationFailed cls+opt=105.39 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 119
+BEGIN_CONVERT 119
+END_CONVERT 119
+119 angle_gate VerificationFailed cls+opt=320.021 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 120
+BEGIN_CONVERT 120
+END_CONVERT 120
+120 angle_gate same_type_success cls+opt=0.3333 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 121
+BEGIN_CONVERT 121
+END_CONVERT 121
+121 angle_gate same_type_success cls+opt=1.6152 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 122
+BEGIN_CONVERT 122
+END_CONVERT 122
+122 angle_gate same_type_success cls+opt=0.4961 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 123
+BEGIN_CONVERT 123
+END_CONVERT 123
+123 angle_gate same_type_success cls+opt=2.9493 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 124
+BEGIN_CONVERT 124
+END_CONVERT 124
+124 weak_both alternate_type_success cls+opt=2.4114 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 125
+BEGIN_CONVERT 125
+END_CONVERT 125
+125 weak_both same_type_success cls+opt=4.2375 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 126
+BEGIN_CONVERT 126
+END_CONVERT 126
+126 weak_both same_type_success cls+opt=0.8643 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 127
+BEGIN_CONVERT 127
+END_CONVERT 127
+127 weak_both same_type_success cls+opt=3.617 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 128
+BEGIN_CONVERT 128
+END_CONVERT 128
+128 weak_both same_type_success cls+opt=0.6813 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 129
+BEGIN_CONVERT 129
+END_CONVERT 129
+129 weak_both same_type_success cls+opt=5.263 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 130
+BEGIN_CONVERT 130
+END_CONVERT 130
+130 weak_both same_type_success cls+opt=0.335 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 131
+BEGIN_CONVERT 131
+END_CONVERT 131
+131 weak_both same_type_success cls+opt=1.5865 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 132
+BEGIN_CONVERT 132
+END_CONVERT 132
+132 weak_both same_type_success cls+opt=0.4845 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 133
+BEGIN_CONVERT 133
+END_CONVERT 133
+133 weak_both same_type_success cls+opt=3.0185 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 134
+BEGIN_CONVERT 134
+END_CONVERT 134
+134 weak_both same_type_success cls+opt=0.558 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 135
+BEGIN_CONVERT 135
+END_CONVERT 135
+135 weak_both same_type_success cls+opt=3.4576 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 136
+BEGIN_CONVERT 136
+END_CONVERT 136
+136 shallow_cone VerificationFailed cls+opt=196.132 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 137
+BEGIN_CONVERT 137
+END_CONVERT 137
+137 shallow_cone VerificationFailed cls+opt=223.518 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 138
+BEGIN_CONVERT 138
+END_CONVERT 138
+138 shallow_cone VerificationFailed cls+opt=263.821 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 139
+BEGIN_CONVERT 139
+END_CONVERT 139
+139 shallow_cone VerificationFailed cls+opt=437.503 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 140
+BEGIN_CONVERT 140
+
+CASE 141
+BEGIN_CONVERT 141
+END_CONVERT 141
+141 torus_ratio VerificationFailed cls+opt=104.506 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 142
+BEGIN_CONVERT 142
+END_CONVERT 142
+142 torus_ratio VerificationFailed cls+opt=137.74 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 143
+BEGIN_CONVERT 143
+END_CONVERT 143
+143 torus_ratio VerificationFailed cls+opt=167.715 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 144
+BEGIN_CONVERT 144
+END_CONVERT 144
+144 near_singular VerificationFailed cls+opt=138.555 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 145
+BEGIN_CONVERT 145
+END_CONVERT 145
+145 near_singular VerificationFailed cls+opt=228.653 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 146
+BEGIN_CONVERT 146
+END_CONVERT 146
+146 near_singular VerificationFailed cls+opt=165.571 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 147
+BEGIN_CONVERT 147
+END_CONVERT 147
+147 near_singular VerificationFailed cls+opt=215.91 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 148
+BEGIN_CONVERT 148
+END_CONVERT 148
+148 near_singular VerificationFailed cls+opt=66.9629 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 149
+BEGIN_CONVERT 149
+END_CONVERT 149
+149 near_singular VerificationFailed cls+opt=168.062 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 150
+BEGIN_CONVERT 150
+END_CONVERT 150
+150 near_singular VerificationFailed cls+opt=42.3844 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 151
+BEGIN_CONVERT 151
+END_CONVERT 151
+151 near_singular VerificationFailed cls+opt=66.7194 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 152
+BEGIN_CONVERT 152
+END_CONVERT 152
+152 collapsed VerificationFailed cls+opt=219.817 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 153
+BEGIN_CONVERT 153
+END_CONVERT 153
+153 collapsed VerificationFailed cls+opt=143.878 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 154
+BEGIN_CONVERT 154
+END_CONVERT 154
+154 collapsed VerificationFailed cls+opt=225.081 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 155
+BEGIN_CONVERT 155
+END_CONVERT 155
+155 collapsed VerificationFailed cls+opt=188.741 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 156
+BEGIN_CONVERT 156
+END_CONVERT 156
+156 collapsed VerificationFailed cls+opt=68.2091 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 157
+BEGIN_CONVERT 157
+END_CONVERT 157
+157 collapsed VerificationFailed cls+opt=186.017 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 158
+BEGIN_CONVERT 158
+END_CONVERT 158
+158 collapsed VerificationFailed cls+opt=121.237 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 159
+BEGIN_CONVERT 159
+END_CONVERT 159
+159 collapsed VerificationFailed cls+opt=212.446 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 160
+BEGIN_CONVERT 160
+END_CONVERT 160
+160 translation same_type_success cls+opt=0.6017 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 161
+BEGIN_CONVERT 161
+END_CONVERT 161
+161 translation same_type_success cls+opt=1.1242 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 162
+BEGIN_CONVERT 162
+END_CONVERT 162
+162 translation VerificationFailed cls+opt=95.2665 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 163
+BEGIN_CONVERT 163
+END_CONVERT 163
+163 translation VerificationFailed cls+opt=111.073 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 164
+BEGIN_CONVERT 164
+END_CONVERT 164
+164 translation same_type_success cls+opt=0.8512 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 165
+BEGIN_CONVERT 165
+END_CONVERT 165
+165 translation same_type_success cls+opt=4.8352 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 166
+BEGIN_CONVERT 166
+END_CONVERT 166
+166 translation VerificationFailed cls+opt=62.9927 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 167
+BEGIN_CONVERT 167
+END_CONVERT 167
+167 translation VerificationFailed cls+opt=212.927 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 168
+BEGIN_CONVERT 168
+END_CONVERT 168
+168 translation same_type_success cls+opt=1.0666 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 169
+BEGIN_CONVERT 169
+END_CONVERT 169
+169 translation same_type_success cls+opt=5.9991 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 170
+BEGIN_CONVERT 170
+END_CONVERT 170
+170 translation VerificationFailed cls+opt=53.7916 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 171
+BEGIN_CONVERT 171
+END_CONVERT 171
+171 translation VerificationFailed cls+opt=71.072 ms
+qualified=1 accepted_with_sampled_audit=0 failed_or_unresolved=1
+
+CASE 172
+BEGIN_CONVERT 172
+END_CONVERT 172
+172 knots same_type_success cls+opt=1.4803 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 173
+BEGIN_CONVERT 173
+END_CONVERT 173
+173 knots same_type_success cls+opt=1.2504 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 174
+BEGIN_CONVERT 174
+END_CONVERT 174
+174 knots same_type_success cls+opt=1.7346 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 175
+BEGIN_CONVERT 175
+END_CONVERT 175
+175 knots same_type_success cls+opt=1.7917 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 176
+BEGIN_CONVERT 176
+END_CONVERT 176
+176 knots same_type_success cls+opt=0.3713 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 177
+BEGIN_CONVERT 177
+END_CONVERT 177
+177 knots same_type_success cls+opt=2.8657 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 178
+BEGIN_CONVERT 178
+END_CONVERT 178
+178 knots same_type_success cls+opt=0.432 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 179
+BEGIN_CONVERT 179
+END_CONVERT 179
+179 knots same_type_success cls+opt=3.0154 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 180
+BEGIN_CONVERT 180
+END_CONVERT 180
+180 orientation same_type_success cls+opt=0.5704 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 181
+BEGIN_CONVERT 181
+END_CONVERT 181
+181 orientation same_type_success cls+opt=1.0309 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 182
+BEGIN_CONVERT 182
+END_CONVERT 182
+182 orientation same_type_success cls+opt=0.5123 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 183
+BEGIN_CONVERT 183
+END_CONVERT 183
+183 orientation same_type_success cls+opt=3.6513 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 184
+BEGIN_CONVERT 184
+END_CONVERT 184
+184 orientation same_type_success cls+opt=0.5883 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 185
+BEGIN_CONVERT 185
+END_CONVERT 185
+185 orientation same_type_success cls+opt=3.4893 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 186
+BEGIN_CONVERT 186
+END_CONVERT 186
+186 seam same_type_success cls+opt=0.3782 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 187
+BEGIN_CONVERT 187
+END_CONVERT 187
+187 seam same_type_success cls+opt=2.1583 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 188
+BEGIN_CONVERT 188
+END_CONVERT 188
+188 seam same_type_success cls+opt=0.6612 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 189
+BEGIN_CONVERT 189
+END_CONVERT 189
+189 seam same_type_success cls+opt=5.5319 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 190
+BEGIN_CONVERT 190
+END_CONVERT 190
+190 seam same_type_success cls+opt=0.3764 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 191
+BEGIN_CONVERT 191
+END_CONVERT 191
+191 seam same_type_success cls+opt=1.501 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 192
+BEGIN_CONVERT 192
+END_CONVERT 192
+192 aspect same_type_success cls+opt=1.4908 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 193
+BEGIN_CONVERT 193
+END_CONVERT 193
+193 aspect same_type_success cls+opt=1.664 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 194
+BEGIN_CONVERT 194
+END_CONVERT 194
+194 aspect same_type_success cls+opt=2.018 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 195
+BEGIN_CONVERT 195
+END_CONVERT 195
+195 aspect same_type_success cls+opt=1.7847 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 196
+BEGIN_CONVERT 196
+END_CONVERT 196
+196 aspect alternate_type_success cls+opt=0.8104 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 197
+BEGIN_CONVERT 197
+END_CONVERT 197
+197 aspect same_type_success cls+opt=2.2809 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 198
+BEGIN_CONVERT 198
+END_CONVERT 198
+198 aspect same_type_success cls+opt=0.5278 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
+
+CASE 199
+BEGIN_CONVERT 199
+END_CONVERT 199
+199 aspect same_type_success cls+opt=2.928 ms
+qualified=1 accepted_with_sampled_audit=1 failed_or_unresolved=0
