@@ -18,7 +18,9 @@ add_library(BSpline2Analytic STATIC
     src/PairedRationalChart.cpp src/PairedConversionValidation.cpp src/PairedSourcePreparation.cpp src/PairedPositionBounds.cpp src/PairedBoundaryValidation.cpp
     src/SurfaceSampling.cpp src/SurfaceSampleContext.cpp src/ApproximateEvaluation.cpp src/AnalyticJacobian.cpp src/PlaneOffsetRefinement.cpp src/CandidateRefinement.cpp src/ConversionValidation.cpp src/ApproximateConversion.cpp
     src/GeneralClassification.cpp src/GeneralSeedNumerics.cpp src/GeneralConversion.cpp src/GeneralConversionValidation.cpp
-    src/GeneralGeometry.cpp src/GeneralPCurve.cpp src/GeneralRefinement.cpp src/GeneralPairedBounds.cpp src/GeneralSphereChart.cpp)
+    src/GeneralGeometry.cpp src/GeneralPCurve.cpp src/GeneralRefinement.cpp src/GeneralPairedBounds.cpp src/GeneralSphereChart.cpp
+    src/GeneralHybridValidation.cpp)
+set_source_files_properties(src/GeneralHybridValidation.cpp PROPERTIES COMPILE_OPTIONS "/fp:strict")
 set_source_files_properties(src/IntervalBounds.cpp src/ConversionValidation.cpp src/GeneralConversionValidation.cpp src/GeneralPairedBounds.cpp PROPERTIES COMPILE_OPTIONS "/fp:strict")
 set_source_files_properties(src/PairedRationalChart.cpp src/PairedConversionValidation.cpp src/PairedSourcePreparation.cpp src/PairedPositionBounds.cpp src/PairedBoundaryValidation.cpp PROPERTIES COMPILE_OPTIONS "/fp:strict")
 target_compile_features(BSpline2Analytic PUBLIC cxx_std_17)
@@ -36,6 +38,16 @@ target_link_libraries(BSpline2AnalyticSample PRIVATE BSpline2Analytic)
 option(BSPLINE2ANALYTIC_BUILD_TESTS "Build module regression tests" ON)
 if(BSPLINE2ANALYTIC_BUILD_TESTS)
     enable_testing()
+    add_executable(BSpline2AnalyticGeneralHybridTests tests/GeneralHybridTests.cpp
+        tests/GeneralDataset.cpp tests/GeneralDatasetCertificate.cpp)
+    target_link_libraries(BSpline2AnalyticGeneralHybridTests PRIVATE BSpline2Analytic)
+    target_include_directories(BSpline2AnalyticGeneralHybridTests PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src")
+    target_compile_options(BSpline2AnalyticGeneralHybridTests PRIVATE /W4 /utf-8 /fp:strict)
+    add_test(NAME BSpline2Analytic.GeneralHybridUnit COMMAND BSpline2AnalyticGeneralHybridTests --unit
+        "${CMAKE_CURRENT_SOURCE_DIR}/tests/data/dataset500")
+    set_tests_properties(BSpline2Analytic.GeneralHybridUnit PROPERTIES TIMEOUT 120
+        WORKING_DIRECTORY "${SGGK_SDK_DIR}"
+        ENVIRONMENT_MODIFICATION "PATH=path_list_prepend:${SGGK_SDK_DIR}/x64-win/bin${_sgk_config}")
     add_executable(BSpline2AnalyticPairedValidationTests tests/PairedValidationTests.cpp
         tests/Dataset500.cpp tests/PairedSurfaceBounds.cpp tests/ApproximateCases.cpp)
     target_link_libraries(BSpline2AnalyticPairedValidationTests PRIVATE BSpline2Analytic)

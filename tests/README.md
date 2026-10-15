@@ -2,6 +2,17 @@
 
 本目录保存测试实现、案例生成器和数据；测试说明与报告统一放在 [docs/testing/](../docs/testing/TEST_REPORT.md)。
 
+独立混合验证器的单测为 `BSpline2Analytic.GeneralHybridUnit`。批量运行使用真实分类候选，不执行母面优化、不调用旧验证器；源数据证书与输出独立证书在计时外执行。示例（仓库根目录）：
+
+```powershell
+cmake -S . -B build-general-hybrid -A x64
+cmake --build build-general-hybrid --config Release --target BSpline2AnalyticGeneralHybridTests --parallel 2
+ctest --test-dir build-general-hybrid -C Release -R '^BSpline2Analytic.GeneralHybridUnit$' --output-on-failure
+python tests/RunGeneralHybrid.py --exe build-general-hybrid/Release/BSpline2AnalyticGeneralHybridTests.exe --sdk ../../../SGGK --data tests/data/dataset500 --output build-general-hybrid/results.csv --runs 3 --timeout 30
+```
+
+默认覆盖 600 个主案例和 60 个专项；`--first/--last` 使用半开区间，0–499 为正例、500–599 为负例、600–659 为专项。CSV 保留每次测量；摘要按同例三次中位数统计分位数，另列三次均接受且均不超过 10 ms 的案例数。每例进程看门狗包含数据认证和输出审计；超时阶段、异常及未完成案例单独记录，不能从验收分母中剔除。运行器退出 0 表示完成测量且接受结果全部通过独立审计，不等同于全部正例通过或性能达标。结果合同与局限见[测试报告](../docs/testing/GENERAL_HYBRID_VALIDATION_2026-10-15.md)。
+
 | 文件/目录 | 职责 |
 | --- | --- |
 | `RecognitionTests.cpp`、`ApproximateConversionTests.cpp` | 有理识别与非有理转换回归。 |

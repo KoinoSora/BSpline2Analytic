@@ -1,0 +1,191 @@
+{
+  "groups": {
+    "feasible": {
+      "completed_cases": 500,
+      "runs": 1500,
+      "accepted_cases_all_runs": 500,
+      "audit_failures": 0,
+      "pipeline_case_median_mean_ms": 11.018542,
+      "pipeline_case_median_p50_ms": 10.0364,
+      "pipeline_case_median_p95_ms": 23.0028,
+      "pipeline_case_median_p99_ms": 29.8788,
+      "pipeline_case_median_max_ms": 39.1866,
+      "cases_median_le_10ms": 243,
+      "accepted_cases_all_runs_le_10ms": 234,
+      "unstable_outcome_cases": 0,
+      "mean_stages_ms": {
+        "classify_ms": 1.0293806,
+        "sampling_ms": 0.07153466666666666,
+        "recovery_ms": 0.9298906666666666,
+        "prepare_ms": 1.9085285333333333,
+        "boundary_ms": 7.164643066666667,
+        "validate_ms": 10.0873136
+      }
+    },
+    "infeasible": {
+      "completed_cases": 100,
+      "runs": 300,
+      "accepted_cases_all_runs": 0,
+      "audit_failures": 0,
+      "pipeline_case_median_mean_ms": 1.76696,
+      "pipeline_case_median_p50_ms": 1.7222,
+      "pipeline_case_median_p95_ms": 2.3534,
+      "pipeline_case_median_p99_ms": 2.4811,
+      "pipeline_case_median_max_ms": 2.6253,
+      "cases_median_le_10ms": 100,
+      "accepted_cases_all_runs_le_10ms": 0,
+      "unstable_outcome_cases": 0,
+      "mean_stages_ms": {
+        "classify_ms": 1.2934126666666665,
+        "sampling_ms": 0.45787633333333333,
+        "recovery_ms": 0.0,
+        "prepare_ms": 0.0,
+        "boundary_ms": 0.0,
+        "validate_ms": 0.4770623333333333
+      }
+    },
+    "nonlinear_pcurve": {
+      "completed_cases": 20,
+      "runs": 60,
+      "accepted_cases_all_runs": 0,
+      "audit_failures": 0,
+      "pipeline_case_median_mean_ms": 51.936605,
+      "pipeline_case_median_p50_ms": 2.0131,
+      "pipeline_case_median_p95_ms": 306.4535,
+      "pipeline_case_median_p99_ms": 335.9447,
+      "pipeline_case_median_max_ms": 335.9447,
+      "cases_median_le_10ms": 16,
+      "accepted_cases_all_runs_le_10ms": 0,
+      "unstable_outcome_cases": 0,
+      "mean_stages_ms": {
+        "classify_ms": 1.3220233333333333,
+        "sampling_ms": 0.31589,
+        "recovery_ms": 50.23008333333333,
+        "prepare_ms": 0.0,
+        "boundary_ms": 0.0,
+        "validate_ms": 50.569543333333336
+      }
+    },
+    "periodic_singular": {
+      "completed_cases": 10,
+      "runs": 30,
+      "accepted_cases_all_runs": 10,
+      "audit_failures": 0,
+      "pipeline_case_median_mean_ms": 4.4659,
+      "pipeline_case_median_p50_ms": 4.7179,
+      "pipeline_case_median_p95_ms": 6.4842,
+      "pipeline_case_median_p99_ms": 6.4842,
+      "pipeline_case_median_max_ms": 6.4842,
+      "cases_median_le_10ms": 10,
+      "accepted_cases_all_runs_le_10ms": 10,
+      "unstable_outcome_cases": 0,
+      "mean_stages_ms": {
+        "classify_ms": 0.5643,
+        "sampling_ms": 0.023423333333333334,
+        "recovery_ms": 0.17270999999999995,
+        "prepare_ms": 0.9492433333333333,
+        "boundary_ms": 2.8444333333333334,
+        "validate_ms": 3.9960566666666666
+      }
+    },
+    "sphere_priority": {
+      "completed_cases": 10,
+      "runs": 30,
+      "accepted_cases_all_runs": 10,
+      "audit_failures": 0,
+      "pipeline_case_median_mean_ms": 16.13657,
+      "pipeline_case_median_p50_ms": 15.7751,
+      "pipeline_case_median_p95_ms": 18.7898,
+      "pipeline_case_median_p99_ms": 18.7898,
+      "pipeline_case_median_max_ms": 18.7898,
+      "cases_median_le_10ms": 0,
+      "accepted_cases_all_runs_le_10ms": 0,
+      "unstable_outcome_cases": 0,
+      "mean_stages_ms": {
+        "classify_ms": 1.1424733333333332,
+        "sampling_ms": 0.07161,
+        "recovery_ms": 2.571676666666667,
+        "prepare_ms": 2.2874066666666666,
+        "boundary_ms": 10.136736666666666,
+        "validate_ms": 15.081323333333334
+      }
+    },
+    "tolerance": {
+      "completed_cases": 10,
+      "runs": 30,
+      "accepted_cases_all_runs": 10,
+      "audit_failures": 0,
+      "pipeline_case_median_mean_ms": 3.4217,
+      "pipeline_case_median_p50_ms": 3.181,
+      "pipeline_case_median_p95_ms": 5.8674,
+      "pipeline_case_median_p99_ms": 5.8674,
+      "pipeline_case_median_max_ms": 5.8674,
+      "cases_median_le_10ms": 10,
+      "accepted_cases_all_runs_le_10ms": 10,
+      "unstable_outcome_cases": 0,
+      "mean_stages_ms": {
+        "classify_ms": 0.7307133333333333,
+        "sampling_ms": 0.06462,
+        "recovery_ms": 0.23248666666666667,
+        "prepare_ms": 0.52897,
+        "boundary_ms": 2.056303333333333,
+        "validate_ms": 2.8905766666666666
+      }
+    },
+    "invalid_options": {
+      "completed_cases": 5,
+      "runs": 15,
+      "accepted_cases_all_runs": 0,
+      "audit_failures": 0,
+      "pipeline_case_median_mean_ms": 1.22414,
+      "pipeline_case_median_p50_ms": 1.4147,
+      "pipeline_case_median_p95_ms": 1.7149,
+      "pipeline_case_median_p99_ms": 1.7149,
+      "pipeline_case_median_max_ms": 1.7149,
+      "cases_median_le_10ms": 5,
+      "accepted_cases_all_runs_le_10ms": 0,
+      "unstable_outcome_cases": 0,
+      "mean_stages_ms": {
+        "classify_ms": 1.20194,
+        "sampling_ms": 0.0,
+        "recovery_ms": 0.0,
+        "prepare_ms": 0.0,
+        "boundary_ms": 0.0,
+        "validate_ms": 0.02132
+      }
+    },
+    "validation_budget": {
+      "completed_cases": 5,
+      "runs": 15,
+      "accepted_cases_all_runs": 0,
+      "audit_failures": 0,
+      "pipeline_case_median_mean_ms": 6.29292,
+      "pipeline_case_median_p50_ms": 6.9946,
+      "pipeline_case_median_p95_ms": 10.3271,
+      "pipeline_case_median_p99_ms": 10.3271,
+      "pipeline_case_median_max_ms": 10.3271,
+      "cases_median_le_10ms": 4,
+      "accepted_cases_all_runs_le_10ms": 0,
+      "unstable_outcome_cases": 0,
+      "mean_stages_ms": {
+        "classify_ms": 1.2199466666666667,
+        "sampling_ms": 0.4538133333333334,
+        "recovery_ms": 1.3610133333333334,
+        "prepare_ms": 2.54114,
+        "boundary_ms": 0.7937666666666667,
+        "validate_ms": 5.17066
+      }
+    }
+  },
+  "watchdog_or_process_failures": [],
+  "scope": "Classified candidates + standalone hybrid validation; no optimizer or legacy validator",
+  "repeats": 3,
+  "requested_cases": 660,
+  "timeout_seconds": 30.0,
+  "wall_seconds": 558.7810000000172,
+  "exe_sha256": "3d674d5eb01d5fc9904869504a334155dcd9d277bdf6d3e93ae88a8725316c24",
+  "source_data": "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+  "configuration": "Release /fp:strict",
+  "cpu_affinity_fixed": false,
+  "exclusive_machine": false
+}

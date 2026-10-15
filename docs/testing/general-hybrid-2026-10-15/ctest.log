@@ -1,0 +1,73 @@
+Start testing: Oct 15 11:46 中国标准时间
+----------------------------------------------------------
+1/19 Testing: BSpline2Analytic.GeneralHybridUnit
+1/19 Test: BSpline2Analytic.GeneralHybridUnit
+Command: "D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-general-hybrid/Release/BSpline2AnalyticGeneralHybridTests.exe" "--unit" "D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/tests/data/dataset500"
+Directory: D:/Projects/CppProjects/SeaGo/SGK1.7.11/SGGK
+"BSpline2Analytic.GeneralHybridUnit" start time: Oct 15 11:46 中国标准时间
+Output:
+----------------------------------------------------------
+Failed to open log output file.
+Failed to open log output file.
+Hybrid unit assertions=1955
+<end of output>
+Test time =   0.36 sec
+----------------------------------------------------------
+Test Passed.
+"BSpline2Analytic.GeneralHybridUnit" end time: Oct 15 11:46 中国标准时间
+"BSpline2Analytic.GeneralHybridUnit" time elapsed: 00:00:00
+----------------------------------------------------------
+
+2/19 Testing: BSpline2Analytic.PairedValidation
+2/19 Test: BSpline2Analytic.PairedValidation
+Command: "D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-general-hybrid/Release/BSpline2AnalyticPairedValidationTests.exe" "--unit"
+Directory: D:/Projects/CppProjects/SeaGo/SGK1.7.11/SGGK
+"BSpline2Analytic.PairedValidation" start time: Oct 15 11:46 中国标准时间
+Output:
+----------------------------------------------------------
+Failed to open log output file.
+Failed to open log output file.
+warped Passed segments=512 Positive-weight paired rational certificate: complete surface, oriented boundary tangents and normals
+Paired unit assertions: 78159
+<end of output>
+Test time =   1.37 sec
+----------------------------------------------------------
+Test Passed.
+"BSpline2Analytic.PairedValidation" end time: Oct 15 11:46 中国标准时间
+"BSpline2Analytic.PairedValidation" time elapsed: 00:00:01
+----------------------------------------------------------
+
+16/19 Testing: BSpline2Analytic.Regression
+16/19 Test: BSpline2Analytic.Regression
+Command: "D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-general-hybrid/Release/BSpline2AnalyticTests.exe"
+Directory: D:/Projects/CppProjects/SeaGo/SGK1.7.11/SGGK
+"BSpline2Analytic.Regression" start time: Oct 15 11:46 中国标准时间
+Output:
+----------------------------------------------------------
+Failed to open log output file.
+Failed to open log output file.
+PASS plane
+PASS cylinder
+PASS cone
+PASS sphere
+PASS torus
+PASS torus-concentric
+PASS sphere-antipodal-meridians
+PASS shallow-cone
+PASS short-cylinder-arc
+PASS torus-apple
+PASS torus-lemon
+PASS cylinder-full-turn
+PASS torus-cross-seams
+PASS torus-full-turns
+PASS large-origin-sphere
+3847 assertions, 0 failed reference cases
+<end of output>
+Test time =   0.16 sec
+----------------------------------------------------------
+Test Passed.
+"BSpline2Analytic.Regression" end time: Oct 15 11:46 中国标准时间
+"BSpline2Analytic.Regression" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Oct 15 11:46 中国标准时间

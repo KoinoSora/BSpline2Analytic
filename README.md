@@ -96,6 +96,10 @@ if (result.Succeeded()) {
 
 `path` 标识最终尝试分支，`details` 为三种结果之一，保留该模块报告；`Timing()` 汇总所有尝试。统一入口在专用模块成功后同样恢复并验证线性 PCurve，成功才发布 `result.patch`。母面对象本身不包含裁剪；有限域由四条 PCurve 围成的简单参数四边形定义，允许退化为三角形。失败统一返回 `ConversionFailed`，并保留模块及候选的诊断信息。原独立接口仍遵循各自历史验收合同。
 
+## 独立混合验证器
+
+实验接口 `GeneralHybridValidation.h::ValidateGeneralHybrid(source, mother, options)` 提供内部增强 Greville 采样、有限域样点检查，以及四边位置和切向连续认证。它不调用优化器，也未接入 `ConvertGeneral` 或统一入口。`GeneralHybridReport::certifiesInteriorContinuum` 恒为 `false`；`Passed()` 仅表示这份混合验收合同通过，不能作为全域曲面距离证书。精确退化为点的源边界通过 `tangentNotApplicable` 单独标明。实现及 600+60 数据测试见[独立混合验证器报告](docs/testing/GENERAL_HYBRID_VALIDATION_2026-10-15.md)。
+
 ## 一般情况与线性 PCurve
 
 `ConvertGeneral` 支持有理（正权重）与非有理连续样条，采用平面 3、球 4、圆柱 5、圆锥 6、圆环 7 个母面自由度生成少量候选。Greville 参数按完整带重数节点计算；缺少内部覆盖时补点。内部点交错划分为生成集和独立评分集，边界另行评估；无效法向不生成初值。球与圆环评分接近且边界表现接近时先尝试球，失败后保留独立圆环候选。圆环初值直接求解四条点法向直线的公共交线，每组最多构造两个候选；子午圆拟合补充初值点集中的最多 12 个分散点，经中心化与缩放后用 QR 求解，再交给独立点集评分。秩亏、无实轴线或非法半径的构造会被拒绝；固定 8 次尝试不提供任意输入上的搜索完备性保证。
