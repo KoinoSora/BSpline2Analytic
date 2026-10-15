@@ -12,6 +12,11 @@ namespace bspline2analytic
 PairedValidationReport ValidatePairedConversionBaseline(const sggk::BSplineSurface &,
                                                         const AnalyticPatch &,
                                                         const PairedValidationOptions &);
+std::shared_ptr<void> MakePairedBaselineCache();
+PairedValidationReport ValidatePairedConversionBaselineCached(const sggk::BSplineSurface &,
+                                                              const AnalyticPatch &,
+                                                              const PairedValidationOptions &,
+                                                              void *);
 } // namespace bspline2analytic
 using namespace bspline2analytic;
 using namespace bspline2analytic::tests;
@@ -59,18 +64,43 @@ int main(int argc, char **argv)
         std::ofstream csv(argv[2]);
         Require(bool(csv), "Cannot open comparison CSV");
         csv << std::setprecision(17);
-        csv << "id,run,controls,degree_u,degree_v,cells,cache_fill_ms";
-        for (auto name : {"baseline", "new", "cached"})
-            for (auto field :
-                 {"wall_ms",     "prepare_ms",    "extract_ms",    "local_ms",       "cache_ms",
-                  "surface_ms",  "boundary_ms",   "extractions",   "cache_hits",     "u_matrices",
-                  "v_matrices",  "geometry",      "tangent",       "normal",         "compose_ms",
-                  "product_ms",  "difference_ms", "fast_bound_ms", "tight_bound_ms", "fast_passes",
-                  "tight_checks"})
+        csv << "id,run,controls,degree_u,degree_v,cells,cache_fill_ms,baseline_cache_fill_ms";
+        for (auto name : {"baseline", "new", "cached", "baseline_cached"})
+            for (auto field : {"wall_ms",
+                               "prepare_ms",
+                               "extract_ms",
+                               "local_ms",
+                               "cache_ms",
+                               "surface_ms",
+                               "boundary_ms",
+                               "extractions",
+                               "cache_hits",
+                               "u_matrices",
+                               "v_matrices",
+                               "geometry",
+                               "tangent",
+                               "normal",
+                               "compose_ms",
+                               "product_ms",
+                               "difference_ms",
+                               "fast_bound_ms",
+                               "tight_bound_ms",
+                               "fast_passes",
+                               "tight_checks",
+                               "source_center_ms",
+                               "source_boundary_ms",
+                               "target_transform_ms",
+                               "target_boundary_ms",
+                               "edge_compose_ms",
+                               "edge_algebra_ms",
+                               "edge_bounds_ms",
+                               "edge_subdivision_ms",
+                               "source_boundary_builds",
+                               "boundary_segments"})
                 csv << ',' << name << '_' << field;
         csv << '\n';
         unsigned cases = 0;
-        // Each row compares all three modes on the same actual initial candidate.
+        // Each row compares all four modes on the same actual initial candidate.
         for (unsigned id = 301; id < 400; id += 2)
         {
             auto c = ReadDatasetCase(std::filesystem::path(argv[1]) / CaseFilename(id));
@@ -82,42 +112,49 @@ int main(int argc, char **argv)
             Require(!candidates.empty(), "No actual candidate");
             const auto &p = candidates.front();
             PairedValidationContext cache;
-            std::array<PairedValidationReport, 3> reports, reference;
-            std::array<double, 3> wall{};
+            auto baselineCache = MakePairedBaselineCache();
+            std::array<PairedValidationReport, 4> reports, reference;
+            std::array<double, 4> wall{};
             auto run = [&](unsigned mode) {
                 auto start = std::chrono::steady_clock::now();
                 reports[mode] = mode == 0   ? ValidatePairedConversionBaseline(*c.input, p, {})
                                 : mode == 1 ? ValidatePairedConversion(*c.input, p)
-                                            : ValidatePairedConversion(*c.input, p, cache);
+                                : mode == 2 ? ValidatePairedConversion(*c.input, p, cache)
+                                            : ValidatePairedConversionBaselineCached(
+                                                  *c.input, p, {}, baselineCache.get());
                 wall[mode] = std::chrono::duration<double, std::milli>(
                                  std::chrono::steady_clock::now() - start)
                                  .count();
                 Check(reports[mode]);
             };
-            for (unsigned mode = 0; mode < 3; ++mode)
+            for (unsigned mode = 0; mode < 4; ++mode)
                 run(mode);
             Require(reports[2].sourceExtractions == 1 && !reports[2].sourceCacheHits,
                     "Initial cache fill was not measured");
-            const double fillMs = wall[2];
+            const double fillMs = wall[2], baselineFillMs = wall[3];
             reference = reports;
             Same(reference[1], reference[2]);
-            constexpr unsigned order[6][3] = {{0, 1, 2}, {1, 2, 0}, {2, 0, 1},
-                                              {2, 1, 0}, {1, 0, 2}, {0, 2, 1}};
+            constexpr unsigned order[8][4] = {{0, 1, 2, 3}, {1, 2, 3, 0}, {2, 3, 0, 1},
+                                              {3, 0, 1, 2}, {3, 2, 1, 0}, {2, 1, 0, 3},
+                                              {1, 0, 3, 2}, {0, 3, 2, 1}};
             for (unsigned repeat = 0; repeat < repetitions; ++repeat)
             {
-                for (unsigned mode : order[(cases + repeat) % 6])
+                for (unsigned mode : order[(cases + repeat) % 8])
                     run(mode);
-                for (unsigned mode = 0; mode < 3; ++mode)
+                for (unsigned mode = 0; mode < 4; ++mode)
                     Same(reports[mode], reference[mode]);
                 Same(reports[1], reports[2]);
+                Same(reports[0], reports[3]);
+                Require(reports[3].sourceCacheHits == 1 && reports[3].sourceExtractions == 0,
+                        "Baseline cache was not exercised");
                 Require(reports[1].sourceExtractions == 1 && reports[2].sourceExtractions == 0 &&
                             reports[2].sourceCacheHits == 1 && reports[2].sourceExtractionMs == 0,
                         "Invalid cache behavior");
                 csv << id << ',' << repeat + 1 << ','
                     << c.input->ControlPoints().size() * c.input->ControlPoints()[0].size() << ','
                     << c.input->DegreeU() << ',' << c.input->DegreeV() << ','
-                    << reports[1].commonCells << ',' << fillMs;
-                for (unsigned mode = 0; mode < 3; ++mode)
+                    << reports[1].commonCells << ',' << fillMs << ',' << baselineFillMs;
+                for (unsigned mode = 0; mode < 4; ++mode)
                 {
                     const auto &r = reports[mode];
                     const auto &t = r.certificate.timing;
@@ -131,14 +168,18 @@ int main(int argc, char **argv)
                         << r.certificate.boundaryNormal.upperBound << ',' << r.surfaceComposeMs
                         << ',' << r.surfaceProductMs << ',' << r.surfaceDifferenceMs << ','
                         << r.surfaceFastBoundMs << ',' << r.surfaceTightBoundMs << ','
-                        << r.fastBoundPasses << ',' << r.tightBoundChecks;
+                        << r.fastBoundPasses << ',' << r.tightBoundChecks << ',' << r.sourceCenterMs
+                        << ',' << r.sourceBoundaryMs << ',' << r.targetTransformMs << ','
+                        << r.targetBoundaryMs << ',' << r.edgeComposeMs << ',' << r.edgeAlgebraMs
+                        << ',' << r.edgeBoundsMs << ',' << r.edgeSubdivisionMs << ','
+                        << r.sourceBoundaryBuilds << ',' << r.boundarySegments;
                 }
                 csv << '\n';
             }
             ++cases;
         }
         Require(cases == 40, "Incomplete sphere coverage");
-        std::cout << "PASS: " << cases << " cases, " << repetitions << " repeats, 3 modes"
+        std::cout << "PASS: " << cases << " cases, " << repetitions << " repeats, 4 modes"
                   << std::endl;
     }
     catch (const std::exception &e)

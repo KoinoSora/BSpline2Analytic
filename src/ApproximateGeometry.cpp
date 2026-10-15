@@ -443,7 +443,15 @@ PatchRecoveryTrace TraceApproximateBoundaries(const ClassificationSamples &cache
     trace(3, paths[0].back());
     return result;
 }
-AnalyticPatch RecoverApproxPatch(const ClassificationSamples &cache, const AnalyticParameters &a)
+bool SameMotherParameters(const AnalyticParameters &a, const AnalyticParameters &b)
+{
+    auto same = [](V x, V y) { return x.x == y.x && x.y == y.y && x.z == y.z; };
+    return a.type == b.type && same(Get(a.origin), Get(b.origin)) &&
+           same(Get(a.axis), Get(b.axis)) && same(Get(a.xDirection), Get(b.xDirection)) &&
+           a.radius == b.radius && a.majorRadius == b.majorRadius && a.halfAngle == b.halfAngle;
+}
+AnalyticPatch RecoverApproxPatch(const ClassificationSamples &cache, const AnalyticParameters &a,
+                                 PatchRecoveryTrace *savedTrace)
 {
     AnalyticPatch p;
     p.parameters = a;
@@ -502,6 +510,8 @@ AnalyticPatch RecoverApproxPatch(const ClassificationSamples &cache, const Analy
             ? 1
             : -1;
     MakeNative(p);
+    if (savedTrace)
+        *savedTrace = std::move(trace);
     return p;
 }
 void CheckApproximateInput(const sggk::BSplineSurface &s, const ValidationOptions &o)

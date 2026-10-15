@@ -1,0 +1,14 @@
+{
+  "baseline": "paired-position-2026-10-15/dataset500.csv",
+  "statuses": {
+    "Passed": 280,
+    "Unsupported": 206,
+    "ClassificationFailed": 9,
+    "NoCandidate": 5
+  },
+  "status_changes": [],
+  "passed": 280,
+  "classification_plus_validation_mean_ms": 7.872444285714286,
+  "classification_plus_validation_max_ms": 37.825,
+  "classification_plus_validation_at_least_10ms": 73
+}

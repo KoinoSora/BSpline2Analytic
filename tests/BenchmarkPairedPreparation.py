@@ -9,6 +9,7 @@ import csv
 import hashlib
 import json
 import os
+import re
 from pathlib import Path
 import subprocess
 
@@ -36,14 +37,36 @@ def main():
     sha = subprocess.check_output(git + ["rev-parse", args.baseline + "^{commit}"],
                                   cwd=root, env=env, text=True).strip()
     # A shared dependency must not silently invalidate the old/new comparison.
-    for name in ("src/IntervalBounds.cpp", "src/ApproximateGeometry.cpp", "src/ApproximateInternal.h"):
+    for name in ("src/IntervalBounds.cpp", "src/IntervalBounds.h", "src/Numerics.cpp", "src/Numerics.h",
+                 "src/SurfaceSampleContext.cpp", "src/SurfaceSampleContext.h"):
         if read_git(f"{sha}:{name}").replace("\r\n", "\n") != (root / name).read_text(encoding="utf-8"):
             raise ValueError(f"Baseline shared dependency differs: {name}")
+    # Recovery now optionally retains a trace. Guard every geometry helper used
+    # by the isolated baseline, rather than rejecting that unrelated API change.
+    def function(text, marker):
+        start = text.index(marker)
+        brace = text.index("{", start)
+        depth = 1
+        end = brace + 1
+        while depth:
+            depth += (text[end] == "{") - (text[end] == "}")
+            end += 1
+        return re.sub(r"\s+", "", text[start:end])
+    old_geometry = read_git(f"{sha}:src/ApproximateGeometry.cpp")
+    new_geometry = (root / "src/ApproximateGeometry.cpp").read_text(encoding="utf-8")
+    for marker in ("Frame3 FrameOf(", "std::array<double, 2> MotherParameters(",
+                   "ClassificationSamples BuildClassificationSamples(",
+                   "PatchRecoveryTrace TraceApproximateBoundaries(", "void CheckApproximateInput("):
+        if function(old_geometry, marker) != function(new_geometry, marker):
+            raise ValueError(f"Baseline geometry helper changed: {marker}")
     originals = {}
     files = ["PairedValidationInternal.h", "PairedRationalChart.cpp", "PairedConversionValidation.cpp"]
     if subprocess.run(git + ["cat-file", "-e", f"{sha}:src/PairedSourcePreparation.cpp"],
                       cwd=root, env=env, stderr=subprocess.DEVNULL).returncode == 0:
         files.append("PairedSourcePreparation.cpp")
+    if subprocess.run(git + ["cat-file", "-e", f"{sha}:src/PairedPositionBounds.cpp"],
+                      cwd=root, env=env, stderr=subprocess.DEVNULL).returncode == 0:
+        files.append("PairedPositionBounds.cpp")
     for name in files:
         original = read_git(f"{sha}:src/{name}")
         originals[name] = hashlib.sha256(original.encode()).hexdigest()
@@ -67,8 +90,15 @@ def main():
                 code = code[:code.index("struct PairedValidationContext::Impl")] + '''
 PairedValidationReport ValidatePairedConversionBaseline(const sggk::BSplineSurface &s,
  const AnalyticPatch &p, const PairedValidationOptions &o) { return ValidatePaired(s,p,o,nullptr); }
+std::shared_ptr<void> MakePairedBaselineCache()
+{ return std::make_shared<detail::paired_baseline::SourceCache>(); }
+PairedValidationReport ValidatePairedConversionBaselineCached(const sggk::BSplineSurface &s,
+ const AnalyticPatch &p, const PairedValidationOptions &o, void *cache)
+{ return ValidatePaired(s,p,o,static_cast<detail::paired_baseline::SourceCache *>(cache)); }
 } // namespace bspline2analytic
 '''
+        if name == "PairedConversionValidation.cpp" and "MakePairedBaselineCache" not in code:
+            raise ValueError("This comparison requires a baseline with SourceCache support")
         target = "PairedBaselineInternal.h" if name.endswith(".h") else name
         (work / target).write_text(code, encoding="utf-8")
     cmake = r'''cmake_minimum_required(VERSION 3.22)
@@ -86,6 +116,8 @@ target_link_libraries(PairedPreparationComparison PRIVATE "${LIBRARY}" SGGK_Foun
 '''
     if "PairedSourcePreparation.cpp" in files:
         cmake += '\ntarget_sources(PairedPreparationComparison PRIVATE PairedSourcePreparation.cpp)\n'
+    if "PairedPositionBounds.cpp" in files:
+        cmake += '\ntarget_sources(PairedPreparationComparison PRIVATE PairedPositionBounds.cpp)\n'
     (work / "CMakeLists.txt").write_text(cmake, encoding="utf-8")
     # Read the SDK selected by this library build, rather than assume its location.
     cache = (build / "CMakeCache.txt").read_text(encoding="utf-8")
@@ -119,13 +151,17 @@ target_link_libraries(PairedPreparationComparison PRIVATE "${LIBRARY}" SGGK_Foun
                "current_library_sha256": hashlib.sha256(library.read_bytes()).hexdigest(),
                "configuration": "Release /fp:strict", "cpu_affinity_fixed": False,
                "exclusive_machine": False, "cache_fill_mean_ms": mean("cache_fill_ms"),
+               "baseline_cache_fill_mean_ms": mean("baseline_cache_fill_ms"),
                "means": {mode: {field: mean(f"{mode}_{field}") for field in
                                 ("wall_ms", "prepare_ms", "extract_ms", "local_ms", "cache_ms",
                                  "surface_ms", "boundary_ms", "compose_ms", "product_ms",
-                                 "difference_ms", "fast_bound_ms", "tight_bound_ms")}
-                         for mode in ("baseline", "new", "cached")}}
-    summary["speedup"] = {mode: mean("baseline_wall_ms") / mean(f"{mode}_wall_ms")
-                          for mode in ("new", "cached")}
+                                 "difference_ms", "fast_bound_ms", "tight_bound_ms",
+                                 "source_center_ms", "source_boundary_ms", "target_transform_ms",
+                                 "target_boundary_ms", "edge_compose_ms", "edge_algebra_ms",
+                                 "edge_bounds_ms", "edge_subdivision_ms")}
+                         for mode in ("baseline", "new", "cached", "baseline_cached")}}
+    summary["speedup"] = {"cold": mean("baseline_wall_ms") / mean("new_wall_ms"),
+                          "cached": mean("baseline_cached_wall_ms") / mean("cached_wall_ms")}
     summary["position_speedup"] = mean("baseline_surface_ms") / mean("new_surface_ms")
     summary["new_fast_bound_passes"] = sum(int(r["new_fast_passes"]) for r in rows)
     summary["new_tight_bound_checks"] = sum(int(r["new_tight_checks"]) for r in rows)

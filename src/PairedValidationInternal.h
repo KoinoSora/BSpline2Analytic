@@ -42,6 +42,7 @@ BPoly Restrict(const BPoly &, bool alongU, I lo, I hi);
 BV Restrict(const BV &, bool alongU, I lo, I hi);
 BezierCell Crop(const BezierCell &, double, double, double, double);
 Chart BuildChart(const AnalyticPatch &);
+void PlaceChart(Chart &, const AnalyticParameters &, V sourceOrigin);
 void CheckPatch(const AnalyticPatch &);
 double RationalCoordinate(const Chart &, unsigned dimension, double analyticParameter);
 struct LocalFrame
@@ -52,7 +53,35 @@ LocalFrame MakeLocalFrame(const AnalyticParameters &);
 void Localize(BV &, const LocalFrame &);
 std::vector<BezierCell> ExtractPolynomialCells(const sggk::BSplineSurface &,
                                                PairedValidationReport &);
-// Untransformed source cells only. No pointer-identity or lossy hash keys.
+struct BoundarySegment
+{
+    double begin = 0, end = 1;
+    BV tangent, normal; // Packed into U; physical source parameter derivatives.
+};
+using Boundaries = std::array<std::vector<BoundarySegment>, 4>;
+struct PreparedSource
+{
+    V origin;
+    std::vector<BezierCell> cells;
+    Boundaries boundaries;
+};
+PreparedSource PrepareSource(const sggk::BSplineSurface &, PairedValidationReport &);
+struct BoundaryResult
+{
+    bool passed = false, tangentExceeded = false, normalExceeded = false;
+    double tangentRatio = 0, normalRatio = 0;
+};
+// Maps are already finalized (including chart breaks); this never changes them.
+Boundaries PrepareTargetBoundaries(const Chart &, Products &);
+BoundaryResult ValidateBoundaries(const Boundaries &, const Boundaries &,
+                                  const PairedParameterMap &, const PairedParameterMap &,
+                                  const PairedValidationOptions &, PairedValidationReport &,
+                                  Products &);
+struct Budget : std::runtime_error
+{
+    using std::runtime_error::runtime_error;
+};
+// Source-owned immutable coefficients. No pointer-identity or lossy hash keys.
 struct SourceCache
 {
     unsigned degreeU = 0, degreeV = 0;
@@ -60,8 +89,22 @@ struct SourceCache
     sggk::RealArray knotsU, knotsV;
     sggk::UIntArray multsU, multsV;
     std::vector<std::vector<V>> controls;
-    std::vector<BezierCell> cells;
+    PreparedSource prepared;
     bool Matches(const sggk::BSplineSurface &) const;
-    void Store(const sggk::BSplineSurface &, const std::vector<BezierCell> &);
+    void Store(const sggk::BSplineSurface &, PreparedSource &&);
 };
+// Stack-owned bridge between classification/recovery and paired validation.
+// The source must remain unchanged for this object's lifetime.
+struct AnalysisContext
+{
+    explicit AnalysisContext(const sggk::BSplineSurface &s, unsigned budget = 50000)
+        : samples(s, budget)
+    {
+    }
+    SurfaceSampleContext samples;
+    std::optional<ClassificationSamples> classification;
+    SourceCache source;
+};
+PairedValidationReport ValidatePrepared(AnalysisContext &, const RecoveredCandidate &,
+                                        const PairedValidationOptions & = {});
 } // namespace bspline2analytic::detail::paired

@@ -64,6 +64,7 @@ V ProjectInteriorPointLocal(const AnalyticPatch &, V local, const std::array<Edg
 void MaterializePatch(AnalyticPatch &);
 struct ClassificationSamples
 {
+    std::shared_ptr<const int> stamp = std::make_shared<const int>(0);
     std::array<std::vector<V>, 4> boundaries;
     std::array<std::vector<double>, 4> boundaryParameters;
     std::vector<V> scorePoints;
@@ -74,12 +75,22 @@ struct PatchRecoveryTrace
 {
     std::array<std::vector<std::array<double, 2>>, 4> paths;
 };
+struct RecoveredCandidate
+{
+    AnalyticPatch patch;
+    PatchRecoveryTrace trace;
+    AnalyticParameters traceParameters;
+    bool hasTrace = false;
+    std::shared_ptr<const int> sourceStamp;
+};
+bool SameMotherParameters(const AnalyticParameters &, const AnalyticParameters &);
 PatchRecoveryTrace TraceApproximateBoundaries(const ClassificationSamples &,
                                              const AnalyticParameters &);
 ClassificationSamples BuildClassificationSamples(const sggk::BSplineSurface &,
                                                  ClassificationDiagnostics * = nullptr,
                                                  SurfaceSampleContext * = nullptr);
-AnalyticPatch RecoverApproxPatch(const ClassificationSamples &, const AnalyticParameters &);
+AnalyticPatch RecoverApproxPatch(const ClassificationSamples &, const AnalyticParameters &,
+                                 PatchRecoveryTrace * = nullptr);
 AnalyticPatch RecoverApproxPatch(const sggk::BSplineSurface &, const AnalyticParameters &);
 struct Sample
 {
@@ -111,11 +122,10 @@ SampleCache SampleSurface(const sggk::BSplineSurface &, const SamplingOptions &,
                           SurfaceSampleContext * = nullptr);
 unsigned AddWitnessSamples(const sggk::BSplineSurface &, const ConversionValidationReport &,
                            const SamplingOptions &, SampleCache &, SurfaceSampleContext * = nullptr);
-std::vector<AnalyticPatch> ClassifyApproximate(const sggk::BSplineSurface &,
-                                               const ConversionOptions &,
-                                               ClassificationDiagnostics * = nullptr,
-                                               bool directionalCones = true,
-                                               SurfaceSampleContext * = nullptr);
+std::vector<AnalyticPatch> ClassifyApproximate(
+    const sggk::BSplineSurface &, const ConversionOptions &, ClassificationDiagnostics * = nullptr,
+    bool directionalCones = true, SurfaceSampleContext * = nullptr,
+    std::vector<RecoveredCandidate> * = nullptr, ClassificationSamples * = nullptr);
 struct ApproximateSeed
 {
     AnalyticParameters parameters;
@@ -126,7 +136,8 @@ struct ApproximateSeed
 std::vector<AnalyticPatch> RecoverRankedCandidates(const ClassificationSamples &,
                                                    const std::vector<ApproximateSeed> &,
                                                    double distanceTolerance,
-                                                   ClassificationDiagnostics * = nullptr);
+                                                   ClassificationDiagnostics * = nullptr,
+                                                   std::vector<RecoveredCandidate> * = nullptr);
 struct ResidualBuffer
 {
     // Distance and boundary tangent only. Normal errors are acceptance-only.

@@ -46,6 +46,14 @@ struct PairedValidationReport
     // Subsets of certificate.timing.surfaceBounds, exclusive of subdivision.
     double surfaceComposeMs = 0, surfaceProductMs = 0, surfaceDifferenceMs = 0;
     double surfaceFastBoundMs = 0, surfaceTightBoundMs = 0;
+    // Schema 2: source/target preparation are subsets of preparation; edge
+    // composition/algebra/bounds/subdivision are subsets of boundaryChecks.
+    unsigned preparationSchema = 2;
+    unsigned sourceBoundaryBuilds = 0, boundarySegments = 0;
+    unsigned recoveryTraceHits = 0, recoveryTraceBuilds = 0;
+    double sourceCenterMs = 0, sourceBoundaryMs = 0, targetTransformMs = 0;
+    double targetBoundaryMs = 0, edgeComposeMs = 0, edgeAlgebraMs = 0;
+    double edgeBoundsMs = 0, edgeSubdivisionMs = 0;
     bool Passed() const noexcept
     {
         return status == PairedValidationStatus::Passed && certificate.Passed();

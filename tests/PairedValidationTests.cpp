@@ -38,13 +38,18 @@ void Timing(const PairedValidationReport &r)
     Require(std::isfinite(t.totalMs) && t.totalMs >= 0 &&
                 std::abs(sum - t.totalMs) < 1e-7 * std::max(1.0, t.totalMs),
             "Exclusive paired timing mismatch");
-    Require(r.nurbsMs + r.mappingMs + r.sourceExtractionMs + r.sourceCacheMs + r.localTransformMs <=
+    Require(r.nurbsMs + r.mappingMs + r.sourceExtractionMs + r.sourceCacheMs + r.localTransformMs +
+                    r.sourceCenterMs + r.sourceBoundaryMs + r.targetTransformMs +
+                    r.targetBoundaryMs <=
                 t.preparation.elapsedMs + 1e-5,
             "Nested preparation timings exceed preparation");
     Require(r.surfaceComposeMs + r.surfaceProductMs + r.surfaceDifferenceMs + r.surfaceFastBoundMs +
                     r.surfaceTightBoundMs <=
                 t.surfaceBounds.elapsedMs + 1e-5,
             "Nested position timings exceed surface bounds");
+    Require(r.edgeComposeMs + r.edgeAlgebraMs + r.edgeBoundsMs + r.edgeSubdivisionMs <=
+                t.boundaryChecks.elapsedMs + 1e-5,
+            "Nested boundary timings exceed boundary checks");
     Require(r.fastBoundPasses + r.tightBoundChecks == r.surfaceNodes,
             "Position bound counters do not cover visited nodes");
     if (r.Passed())
@@ -60,6 +65,49 @@ void CheckExtraction(const sggk::BSplineSurface &s)
     Require(cells.size() == reference.size() &&
                 cells.size() == size_t(counts.uExtractionMatrices) * counts.vExtractionMatrices,
             "Extraction coverage or one-matrix-per-span count changed");
+    PairedValidationReport preparation;
+    auto prepared = paired::PrepareSource(s, preparation);
+    Require(preparation.sourceBoundaryBuilds == 1, "Source boundaries not prepared exactly once");
+    for (unsigned edge = 0; edge < 4; ++edge)
+        for (const auto &segment : prepared.boundaries[edge])
+        {
+            auto cell = std::find_if(reference.begin(), reference.end(), [&](const BezierCell &c) {
+                bool outer = edge == 0   ? c.u0 == reference.front().u0
+                             : edge == 1 ? c.u1 == reference.back().u1
+                             : edge == 2 ? c.v0 == reference.front().v0
+                                         : c.v1 == reference.back().v1;
+                return outer && (edge < 2 ? c.v0 : c.u0) == segment.begin &&
+                       (edge < 2 ? c.v1 : c.u1) == segment.end;
+            });
+            Require(cell != reference.end(), "Direct boundary partition differs from 2D reference");
+            for (double t : {0., .29, 1.})
+            {
+                double value = edge == 0   ? s.MinParamU()
+                               : edge == 1 ? s.MaxParamU()
+                               : edge == 2 ? s.MinParamV()
+                                           : s.MaxParamV();
+                double low = edge < 2 ? cell->u0 : cell->v0, high = edge < 2 ? cell->u1 : cell->v1;
+                I fixed = value == low    ? I(0)
+                          : value == high ? I(1)
+                                          : (I(value) - I(low)) / (I(high) - I(low));
+                auto eval = [&](bool along) {
+                    BV p = paired::Restrict(Derivative(cell->p, along), edge < 2, fixed, fixed);
+                    return Range(Evaluate(p, edge < 2 ? 0 : t, edge < 2 ? t : 0));
+                };
+                IV du = eval(true) * (I(1) / (I(cell->u1) - I(cell->u0)));
+                IV dv = eval(false) * (I(1) / (I(cell->v1) - I(cell->v0)));
+                for (auto pair :
+                     {std::make_pair(Range(Evaluate(segment.tangent, t, 0)), edge < 2 ? dv : du),
+                      std::make_pair(Range(Evaluate(segment.normal, t, 0)), Cross(du, dv))})
+                    for (auto coordinate : {std::make_pair(pair.first.x, pair.second.x),
+                                            std::make_pair(pair.first.y, pair.second.y),
+                                            std::make_pair(pair.first.z, pair.second.z)})
+                        Require(coordinate.first.finite() && coordinate.second.finite() &&
+                                    coordinate.first.lo <= coordinate.second.hi &&
+                                    coordinate.second.lo <= coordinate.first.hi,
+                                "Direct boundary derivative/normal misses independent enclosure");
+            }
+        }
     for (size_t i = 0; i < cells.size(); ++i)
     {
         const auto &a = cells[i], &b = reference[i];
@@ -297,6 +345,95 @@ void Unit()
               << std::endl;
     Require(mapped.Passed() && mapped.mappingAttempts == 2 && mapped.uMap.source.size() > 2,
             "Piecewise mapping failed on warped plane");
+    {
+        paired::AnalysisContext shared(*warped);
+        shared.classification = BuildClassificationSamples(*warped, nullptr, &shared.samples);
+        RecoveredCandidate candidate;
+        candidate.patch =
+            RecoverApproxPatch(*shared.classification, patch.parameters, &candidate.trace);
+        candidate.traceParameters = candidate.patch.parameters;
+        candidate.hasTrace = true;
+        candidate.sourceStamp = shared.classification->stamp;
+        auto a = paired::ValidatePrepared(shared, candidate);
+        auto b = ValidatePairedConversion(*warped, candidate.patch);
+        Require(a.Passed() && b.Passed() && a.recoveryTraceHits == 1 && !a.recoveryTraceBuilds &&
+                    a.sourceExtractions == 1 && a.sourceBoundaryBuilds == 1 &&
+                    a.uMap.source == b.uMap.source && a.uMap.target == b.uMap.target &&
+                    a.certificate.geometry.upperBound == b.certificate.geometry.upperBound &&
+                    a.certificate.boundaryNormal.upperBound ==
+                        b.certificate.boundaryNormal.upperBound,
+                "Recovery trace reuse changed the certificate");
+        auto warm = paired::ValidatePrepared(shared, candidate);
+        Require(warm.Passed() && warm.sourceCacheHits == 1 && !warm.sourceBoundaryBuilds &&
+                    !warm.sourceExtractions && warm.sourceBoundaryMs == 0 &&
+                    warm.sourceCenterMs == 0,
+                "Shared source was rebuilt on revalidation");
+        auto wrongStamp = candidate;
+        wrongStamp.sourceStamp = std::make_shared<const int>(0);
+        auto rebuilt = paired::ValidatePrepared(shared, wrongStamp);
+        Require(rebuilt.Passed() && rebuilt.recoveryTraceBuilds == 1 && !rebuilt.recoveryTraceHits,
+                "Foreign source trace was reused");
+        candidate.patch.parameters.origin = sggk::Point3D(0, 0, .01);
+        MaterializePatch(candidate.patch);
+        auto changed = paired::ValidatePrepared(shared, candidate);
+        Require(!changed.Passed() && changed.recoveryTraceBuilds == 1 &&
+                    !changed.recoveryTraceHits && changed.sourceCacheHits == 1,
+                "Stale mother-parameter trace was reused");
+        Timing(a);
+        Timing(warm);
+        Timing(rebuilt);
+        Timing(changed);
+    }
+    {
+        // Identical varying directions require subdivision of their dot-product
+        // hull; endpoint/midpoint samples alone must not be the certificate.
+        paired::Boundaries edges;
+        BV tangent{BPoly(1, 0), BPoly(0, 0, I(.01)), BPoly(0, 0)};
+        tangent.x.c = {I(-.9), I(1.1)};
+        BV normal{BPoly(0, 0), BPoly(0, 0), BPoly(0, 0, I(1))};
+        for (auto &edge : edges)
+            edge.push_back({0, 1, tangent, normal});
+        PairedParameterMap map{{0, 1}, {0, 1}};
+        PairedValidationReport report;
+        paired::Products products;
+        auto r = paired::ValidateBoundaries(edges, edges, map, map, {}, report, products);
+        Require(r.passed && report.boundarySegments == 4 && report.boundaryNodes > 4 &&
+                    report.edgeSubdivisionMs > 0,
+                "One-dimensional angle subdivision failed");
+        auto wrong = edges;
+        wrong[3][0].normal = normal * I(-1);
+        report = {};
+        Require(!paired::ValidateBoundaries(edges, wrong, map, map, {}, report, products).passed,
+                "Reversed boundary normal was accepted");
+        auto constant = edges;
+        BV direction{BPoly(0, 0, I(1)), BPoly(0, 0), BPoly(0, 0)};
+        for (auto &edge : constant)
+            edge[0].tangent = direction;
+        for (double degrees : {.099, .101})
+        {
+            auto tilted = constant;
+            double angle = degrees * Pi / 180;
+            tilted[2][0].tangent = {BPoly(0, 0, I(std::cos(angle))),
+                                    BPoly(0, 0, I(std::sin(angle))), BPoly(0, 0)};
+            report = {};
+            Require(paired::ValidateBoundaries(constant, tilted, map, map, {}, report, products)
+                            .passed == (degrees < .1),
+                    "Boundary angle threshold was weakened");
+        }
+        PairedValidationOptions limit;
+        limit.validation.maxValidationPieces = 3;
+        bool exhausted = false;
+        report = {};
+        try
+        {
+            (void)paired::ValidateBoundaries(constant, constant, map, map, limit, report, products);
+        }
+        catch (const paired::Budget &)
+        {
+            exhausted = true;
+        }
+        Require(exhausted, "Boundary checks did not share the node budget");
+    }
     for (unsigned flags = 1; flags < 8; ++flags)
     {
         auto oriented = Plane(4);
@@ -397,6 +534,11 @@ void Unit()
         2, 3, net, sggk::RealArray{-.3, .1, .4, 1.7}, sggk::RealArray{2, 2.2, 3.3, 5},
         sggk::UIntArray{3, 2, 1, 3}, sggk::UIntArray{4, 2, 1, 4});
     CheckExtraction(*asymmetric);
+    auto unclamped = std::make_shared<sggk::BSplineSurface>(
+        2, 3, net, sggk::RealArray{0, 1, 2, 3, 4, 5, 6, 7, 8},
+        sggk::RealArray{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, sggk::UIntArray(9, 1),
+        sggk::UIntArray(11, 1));
+    CheckExtraction(*unclamped);
     asymmetric->ExchangeUV();
     asymmetric->UReverse();
     asymmetric->VReverse();
@@ -438,13 +580,21 @@ void Unit()
             p.parameters.radius = 2;
             p.parameters.majorRadius = 4;
             p.parameters.halfAngle = .4;
+            p.parameters.origin = sggk::Point3D(1e6, -2e6, 3e6);
+            p.parameters.axis = Direction({.3, .7, .9});
+            p.parameters.xDirection = Direction({.8, -.4, .2});
             p.domain = {6.1, 8.3, .4, 2.1};
             p.mapping.swappedUV = bool(flags & 1);
             p.mapping.reversedU = bool(flags & 2);
             p.mapping.reversedV = bool(flags & 4);
             auto chart = paired::BuildChart(p);
-            for (const auto &c : chart.cells)
+            auto placed = chart;
+            V sourceOrigin{1e6 + 4, -2e6 + 3, 3e6 - 2};
+            paired::PlaceChart(placed, p.parameters, sourceOrigin);
+            auto frame = FrameOf(p.parameters);
+            for (size_t cellIndex = 0; cellIndex < chart.cells.size(); ++cellIndex)
             {
+                const auto &c = chart.cells[cellIndex];
                 double u = .31, v = .67, ou = c.surface.u0 + (c.surface.u1 - c.surface.u0) * u,
                        ov = c.surface.v0 + (c.surface.v1 - c.surface.v0) * v;
                 double coordinates[2] = {p.mapping.reversedU ? 1 - ou : ou,
@@ -474,8 +624,37 @@ void Unit()
                     Require(pair.first.lo - 1e-12 <= pair.second &&
                                 pair.second <= pair.first.hi + 1e-12,
                             "Rational chart evaluation mismatch");
+                IV transformed = Range(Evaluate(placed.cells[cellIndex].surface.p, u, v));
+                IV normal = Range(Evaluate(placed.cells[cellIndex].normal, u, v));
+                V point = frame.global(expected) - sourceOrigin;
+                V expectedNormal =
+                    frame.vector(CanonicalNormal(p.parameters, angles[0], angles[1]));
+                for (auto pair : {std::make_pair(transformed.x / w, point.x),
+                                  std::make_pair(transformed.y / w, point.y),
+                                  std::make_pair(transformed.z / w, point.z),
+                                  std::make_pair(normal.x / w, expectedNormal.x),
+                                  std::make_pair(normal.y / w, expectedNormal.y),
+                                  std::make_pair(normal.z / w, expectedNormal.z)})
+                    Require(pair.first.lo - 2e-9 <= pair.second &&
+                                pair.second <= pair.first.hi + 2e-9,
+                            "Fixed source frame changes analytic position/normal");
             }
         }
+    {
+        auto translatedPlane = Plane(0);
+        V delta{1e6, -2e6, 3e6};
+        for (unsigned i = 0; i < 4; ++i)
+            for (unsigned j = 0; j < 4; ++j)
+                translatedPlane->SetControlPoint(Point(Get(translatedPlane->ControlPoints()[i][j]) + delta), i, j);
+        AnalyticPatch p;
+        p.parameters.type = sggk::SurfaceType::Plane;
+        p.parameters.origin = Point(delta);
+        p.domain = {0, .001, 0, 1};
+        MaterializePatch(p);
+        auto result = ValidatePairedConversion(*translatedPlane, p);
+        Require(result.Passed(), "Large translated source lost its certificate");
+        Timing(result);
+    }
     // Exercise the entire common-partition certificate across rational chart
     // seams, including a periodic seam and a swapped/reversed source axis.
     AnalyticPatch cylinder;
@@ -569,7 +748,11 @@ int Dataset(const std::filesystem::path &dir, const std::filesystem::path &file,
            "ms,report_ms,nurbs_ms,mapping_ms,extraction_ms,source_cache_ms,local_transform_ms,"
            "source_extractions,cache_hits,u_matrices,v_matrices,compose_ms,product_ms,difference_"
            "ms,"
-           "fast_bound_ms,tight_bound_ms,fast_passes,tight_checks,message\n";
+           "fast_bound_ms,tight_bound_ms,fast_passes,tight_checks,source_center_ms,source_boundary_"
+           "ms,"
+           "target_transform_ms,target_boundary_ms,edge_compose_ms,edge_algebra_ms,edge_bounds_ms,"
+           "edge_subdivision_ms,source_boundary_builds,boundary_segments,trace_hits,trace_builds,"
+           "timing_schema,message\n";
     unsigned passed = 0, notCertified = 0, skipped = 0;
     bool warmed[5]{};
     for (unsigned id = sphere ? 301u : 0u; id < (sphere ? 400u : 500u); id += sphere ? 2u : 1u)
@@ -603,7 +786,12 @@ int Dataset(const std::filesystem::path &dir, const std::filesystem::path &file,
             try
             {
                 auto start = std::chrono::steady_clock::now();
-                auto list = ClassifyApproximate(*c.input, ConversionOptions{});
+                paired::AnalysisContext analysis(*c.input);
+                std::vector<RecoveredCandidate> recovered;
+                analysis.classification.emplace();
+                auto list =
+                    ClassifyApproximate(*c.input, ConversionOptions{}, nullptr, true,
+                                        &analysis.samples, &recovered, &*analysis.classification);
                 classifyMs = std::chrono::duration<double, std::milli>(
                                  std::chrono::steady_clock::now() - start)
                                  .count();
@@ -617,6 +805,18 @@ int Dataset(const std::filesystem::path &dir, const std::filesystem::path &file,
                 {
                     // First actual recovered candidate; never substitute fixture truth.
                     const auto &p = list.front();
+                    SurfaceSampleContext referenceSamples(*c.input, 50000);
+                    auto ordinary = ClassifyApproximate(*c.input, ConversionOptions{}, nullptr,
+                                                        true, &referenceSamples);
+                    Require(ordinary.size() == list.size() && recovered.size() == list.size(),
+                            "Prepared classification changed candidate count");
+                    for (size_t i = 0; i < list.size(); ++i)
+                        Require(SameMotherParameters(ordinary[i].parameters, list[i].parameters) &&
+                                    ordinary[i].domain == list[i].domain &&
+                                    ordinary[i].mapping.swappedUV == list[i].mapping.swappedUV &&
+                                    ordinary[i].mapping.reversedU == list[i].mapping.reversedU &&
+                                    ordinary[i].mapping.reversedV == list[i].mapping.reversedV,
+                                "Prepared classification changed candidate order/geometry");
                     if (!warmed[c.type] && !c.collapsedMask)
                     {
                         (void)ValidateConversion(*c.input, p);
@@ -632,7 +832,7 @@ int Dataset(const std::filesystem::path &dir, const std::filesystem::path &file,
                     };
                     auto newRun = [&] {
                         auto t = std::chrono::steady_clock::now();
-                        newer = ValidatePairedConversion(*c.input, p);
+                        newer = paired::ValidatePrepared(analysis, recovered.front());
                         newMs = std::chrono::duration<double, std::milli>(
                                     std::chrono::steady_clock::now() - t)
                                     .count();
@@ -692,8 +892,13 @@ int Dataset(const std::filesystem::path &dir, const std::filesystem::path &file,
             << newer.vExtractionMatrices << ',' << newer.surfaceComposeMs << ','
             << newer.surfaceProductMs << ',' << newer.surfaceDifferenceMs << ','
             << newer.surfaceFastBoundMs << ',' << newer.surfaceTightBoundMs << ','
-            << newer.fastBoundPasses << ',' << newer.tightBoundChecks << ',' << Quote(message)
-            << '\n';
+            << newer.fastBoundPasses << ',' << newer.tightBoundChecks << ',' << newer.sourceCenterMs
+            << ',' << newer.sourceBoundaryMs << ',' << newer.targetTransformMs << ','
+            << newer.targetBoundaryMs << ',' << newer.edgeComposeMs << ',' << newer.edgeAlgebraMs
+            << ',' << newer.edgeBoundsMs << ',' << newer.edgeSubdivisionMs << ','
+            << newer.sourceBoundaryBuilds << ',' << newer.boundarySegments << ','
+            << newer.recoveryTraceHits << ',' << newer.recoveryTraceBuilds << ','
+            << newer.preparationSchema << ',' << Quote(message) << '\n';
         csv.flush();
         std::cout << id << " old=" << oldStatus << " new=" << newStatus << " ms=" << newMs
                   << std::endl;

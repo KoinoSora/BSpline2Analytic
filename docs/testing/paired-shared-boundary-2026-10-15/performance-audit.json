@@ -1,0 +1,136 @@
+{
+  "baseline": "14d6c3b0d9e348caa4faf15f7f1534345cc13a3d",
+  "cases": 40,
+  "repetitions": 3,
+  "baseline_original_sha256": {
+    "PairedValidationInternal.h": "bb5cb2e720c0e3dd4e3302e979f35b02280a3114adb312191b76af6740701942",
+    "PairedRationalChart.cpp": "c956f5b7b20e5986466acb25d3b37f17cc5637b65a3200889f887e694a6fbe9f",
+    "PairedConversionValidation.cpp": "a54f73520226302ade2273b2e4c2ab11b91d78bfdb6cbb6dbd454e183dd3919b",
+    "PairedSourcePreparation.cpp": "aad1cd2f78d7aa79d7780cf0a23877cff566f0e2070ddc8cc055892d2166878b",
+    "PairedPositionBounds.cpp": "ea29d65f5dacef89b94c0789be28cd2f83a47cd653164ba5d3d9032392ebba70"
+  },
+  "current_library_sha256": "036ea3df3bc1d2c26b9305f9d4250160cd6b68bd2a5e33b93cbd2d5450ab6e27",
+  "configuration": "Release /fp:strict",
+  "cpu_affinity_fixed": false,
+  "exclusive_machine": false,
+  "cache_fill_mean_ms": 6.462899999999997,
+  "baseline_cache_fill_mean_ms": 7.0632474999999975,
+  "means": {
+    "baseline": {
+      "wall_ms": 7.007136666666669,
+      "prepare_ms": 3.0596491666666665,
+      "extract_ms": 2.5965233333333324,
+      "local_ms": 0.31805916666666667,
+      "cache_ms": 0.0,
+      "surface_ms": 1.9412658333333335,
+      "boundary_ms": 1.9375333333333336,
+      "compose_ms": 0.33685000000000004,
+      "product_ms": 0.9687999999999999,
+      "difference_ms": 0.6165541666666666,
+      "fast_bound_ms": 0.016387499999999996,
+      "tight_bound_ms": 0.0,
+      "source_center_ms": 0.0,
+      "source_boundary_ms": 0.0,
+      "target_transform_ms": 0.0,
+      "target_boundary_ms": 0.0,
+      "edge_compose_ms": 0.0,
+      "edge_algebra_ms": 0.0,
+      "edge_bounds_ms": 0.0,
+      "edge_subdivision_ms": 0.0
+    },
+    "new": {
+      "wall_ms": 6.536565000000002,
+      "prepare_ms": 3.4426541666666663,
+      "extract_ms": 2.6250958333333334,
+      "local_ms": 0.0,
+      "cache_ms": 0.0,
+      "surface_ms": 1.8968308333333335,
+      "boundary_ms": 1.1285425000000007,
+      "compose_ms": 0.2671708333333333,
+      "product_ms": 0.9873883333333334,
+      "difference_ms": 0.623388333333333,
+      "fast_bound_ms": 0.016150833333333336,
+      "tight_bound_ms": 0.0,
+      "source_center_ms": 0.01105,
+      "source_boundary_ms": 0.6379966666666668,
+      "target_transform_ms": 0.009408333333333341,
+      "target_boundary_ms": 0.02829749999999999,
+      "edge_compose_ms": 0.08756166666666668,
+      "edge_algebra_ms": 0.9917316666666671,
+      "edge_bounds_ms": 0.010037499999999994,
+      "edge_subdivision_ms": 0.0
+    },
+    "cached": {
+      "wall_ms": 3.2391550000000007,
+      "prepare_ms": 0.1573666666666667,
+      "extract_ms": 0.0,
+      "local_ms": 0.0,
+      "cache_ms": 0.0013316666666666665,
+      "surface_ms": 1.8897791666666668,
+      "boundary_ms": 1.1236866666666665,
+      "compose_ms": 0.2699708333333333,
+      "product_ms": 0.9815533333333335,
+      "difference_ms": 0.6195775000000001,
+      "fast_bound_ms": 0.015919166666666672,
+      "tight_bound_ms": 0.0,
+      "source_center_ms": 0.0,
+      "source_boundary_ms": 0.0,
+      "target_transform_ms": 0.009261666666666672,
+      "target_boundary_ms": 0.02822416666666666,
+      "edge_compose_ms": 0.090865,
+      "edge_algebra_ms": 0.9844041666666664,
+      "edge_bounds_ms": 0.009936666666666668,
+      "edge_subdivision_ms": 0.0
+    },
+    "baseline_cached": {
+      "wall_ms": 4.435474999999999,
+      "prepare_ms": 0.47131499999999954,
+      "extract_ms": 0.0,
+      "local_ms": 0.3169358333333332,
+      "cache_ms": 0.012754166666666669,
+      "surface_ms": 1.9476425000000004,
+      "boundary_ms": 1.9477591666666665,
+      "compose_ms": 0.3366624999999999,
+      "product_ms": 0.9731399999999998,
+      "difference_ms": 0.61903,
+      "fast_bound_ms": 0.016083333333333335,
+      "tight_bound_ms": 0.0,
+      "source_center_ms": 0.0,
+      "source_boundary_ms": 0.0,
+      "target_transform_ms": 0.0,
+      "target_boundary_ms": 0.0,
+      "edge_compose_ms": 0.0,
+      "edge_algebra_ms": 0.0,
+      "edge_bounds_ms": 0.0,
+      "edge_subdivision_ms": 0.0
+    }
+  },
+  "speedup": {
+    "cold": 1.0719906658415645,
+    "cached": 1.3693308903093548
+  },
+  "position_speedup": 1.0234259161223742,
+  "new_fast_bound_passes": 1875,
+  "new_tight_bound_checks": 0,
+  "per_case_three_run_means": {
+    "baseline": {
+      "max_ms": 17.535033333333335,
+      "at_least_10ms": 10
+    },
+    "new": {
+      "max_ms": 16.1513,
+      "at_least_10ms": 7
+    },
+    "cached": {
+      "max_ms": 8.4116,
+      "at_least_10ms": 0
+    },
+    "baseline_cached": {
+      "max_ms": 11.5928,
+      "at_least_10ms": 5
+    }
+  },
+  "cold_reduction_percent": 6.715605661085522,
+  "cached_reduction_percent": 26.97163212508241,
+  "boundary_including_preparation_ms": 1.7948366666666675
+}

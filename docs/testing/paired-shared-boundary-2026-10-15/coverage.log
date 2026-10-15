@@ -1,0 +1,10 @@
+Internal ctest changing into directory: D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-specialized-timing
+Test project D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-specialized-timing
+    Start 2: BSpline2Analytic.PairedSphere
+1/2 Test #2: BSpline2Analytic.PairedSphere .......   Passed   18.92 sec
+    Start 3: BSpline2Analytic.PairedDataset500
+2/2 Test #3: BSpline2Analytic.PairedDataset500 ...   Passed   90.82 sec
+
+100% tests passed, 0 tests failed out of 2
+
+Total Test time (real) = 109.76 sec

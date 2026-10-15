@@ -22,10 +22,6 @@ struct Measure
         elapsed += Milliseconds(start);
     }
 };
-struct Budget : std::runtime_error
-{
-    using std::runtime_error::runtime_error;
-};
 I MapValue(const PairedParameterMap &m, double t)
 {
     auto it = std::lower_bound(m.source.begin(), m.source.end(), t);
@@ -219,25 +215,6 @@ I Length(IV x)
 {
     return Sqrt(Sqr(x.x) + Sqr(x.y) + Sqr(x.z));
 }
-struct AngleBounds
-{
-    double ratio = INFINITY;
-    bool exceeded = false;
-};
-AngleBounds Angle(const BV &a, const BV &b, I threshold, Products &products)
-{
-    BPoly dot = products.Dot(a, b);
-    BV cross = products.Cross(a, b);
-    I d = dot.range();
-    double ratio = d.lo > 0 ? (Length(Range(cross)) / I(d.lo)).hi : INFINITY;
-    if (ratio < threshold.lo)
-        return {ratio, false};
-    auto ap = Range(Evaluate(a, .5, 0)), bp = Range(Evaluate(b, .5, 0));
-    I pointDot = detail::Dot(ap, bp), pointCross = Length(detail::Cross(ap, bp));
-    bool exceeded =
-        pointDot.hi < 0 || (pointDot.lo > 0 && (pointCross / pointDot).lo >= threshold.hi);
-    return {ratio, exceeded};
-}
 BV Half(const BV &p, bool u, bool right)
 {
     auto x = Split(p.x, u), y = Split(p.y, u), z = Split(p.z, u);
@@ -259,10 +236,13 @@ class Validator
     ValidationTimer &timer;
     SourceCache *sourceCache;
     Products products;
-    std::vector<BezierCell> sourceCells;
+    PreparedSource ownedSource;
+    const PreparedSource *prepared = nullptr;
+    AnalysisContext *analysis;
+    const RecoveredCandidate *recovered;
+    Boundaries targetBoundaries;
     Chart chart;
     double distanceUpper = 0, tangentRatio = 0, normalRatio = 0;
-    I tangentLimit, normalLimit;
     bool geometryExceeded = false, tangentExceeded = false, normalExceeded = false;
     void Visit(bool boundary)
     {
@@ -316,30 +296,6 @@ class Validator
         auto wl = Half(weight, u, false), wr = Half(weight, u, true);
         return Geometry(left, wl, depth + 1) && Geometry(right, wr, depth + 1);
     }
-    bool Edge(const BV &t, const BV &normal, const BV &targetT, const BV &targetN, unsigned depth)
-    {
-        Visit(true);
-        auto a = Angle(t, targetT, tangentLimit, products),
-             b = Angle(normal, targetN, normalLimit, products);
-        if (a.ratio < tangentLimit.lo && b.ratio < normalLimit.lo)
-        {
-            tangentRatio = std::max(tangentRatio, a.ratio);
-            normalRatio = std::max(normalRatio, b.ratio);
-            return true;
-        }
-        if (a.exceeded || b.exceeded)
-        {
-            tangentExceeded |= a.exceeded;
-            normalExceeded |= b.exceeded;
-            return false;
-        }
-        if (depth >= options.validation.maxSubdivisionDepth)
-            return false;
-        return Edge(Half(t, true, false), Half(normal, true, false), Half(targetT, true, false),
-                    Half(targetN, true, false), depth + 1) &&
-               Edge(Half(t, true, true), Half(normal, true, true), Half(targetT, true, true),
-                    Half(targetN, true, true), depth + 1);
-    }
     bool Attempt()
     {
         ++out.mappingAttempts;
@@ -365,11 +321,11 @@ class Validator
             for (size_t j = 0; j < nv && geometryOK && edgesOK; ++j)
             {
                 double u0 = us[i], u1 = us[i + 1], v0 = vs[j], v1 = vs[j + 1];
-                auto src =
-                    std::find_if(sourceCells.begin(), sourceCells.end(), [&](const BezierCell &c) {
+                auto src = std::find_if(
+                    prepared->cells.begin(), prepared->cells.end(), [&](const BezierCell &c) {
                         return u0 >= c.u0 && u1 <= c.u1 && v0 >= c.v0 && v1 <= c.v1;
                     });
-                if (src == sourceCells.end())
+                if (src == prepared->cells.end())
                     throw Failure(Status::VerificationFailed, "Source partition coverage failure");
                 I mu = MapValue(out.uMap, u0 + (u1 - u0) * .5),
                   mv = MapValue(out.vMap, v0 + (v1 - v0) * .5);
@@ -388,8 +344,7 @@ class Validator
                     {
                         Measure measure(out.surfaceComposeMs);
                         s = Crop(*src, u0, u1, v0, v1);
-                        r = Compose(*dst, out.uMap, out.vMap, u0, u1, v0, v1,
-                                    i == 0 || i + 1 == nu || j == 0 || j + 1 == nv);
+                        r = Compose(*dst, out.uMap, out.vMap, u0, u1, v0, v1, false);
                     }
                     {
                         Measure measure(out.surfaceProductMs);
@@ -403,28 +358,18 @@ class Validator
                 geometryOK = Geometry(error, r.surface.w, 0);
                 if (!geometryOK)
                     break;
-                for (unsigned edge = 0; edge < 4 && edgesOK; ++edge)
-                {
-                    bool outer = edge == 0   ? i == 0
-                                 : edge == 1 ? i + 1 == nu
-                                 : edge == 2 ? j == 0
-                                             : j + 1 == nv;
-                    if (!outer)
-                        continue;
-                    ValidationTimer::Scope stage(timer, report.timing.boundaryChecks);
-                    auto id = static_cast<BoundaryId>(edge);
-                    BV tangent = Boundary(Derivative(s.p, edge >= 2), id);
-                    BV normal = products.Cross(Boundary(Derivative(s.p, true), id),
-                                               Boundary(Derivative(s.p, false), id));
-                    BV rp = Boundary(r.surface.p, id);
-                    // Boundary packs the varying direction into the first axis.
-                    BV rwVector{r.surface.w, r.surface.w, r.surface.w};
-                    BPoly rw = Boundary(rwVector, id).x;
-                    BV targetT = products.Mul(Derivative(rp, true), rw) -
-                                 products.Mul(rp, Derivative(rw, true));
-                    edgesOK = Edge(tangent, normal, targetT, Boundary(r.normal, id), 0);
-                }
             }
+        if (geometryOK)
+        {
+            ValidationTimer::Scope stage(timer, report.timing.boundaryChecks);
+            auto edges = ValidateBoundaries(prepared->boundaries, targetBoundaries, out.uMap,
+                                            out.vMap, options, out, products);
+            edgesOK = edges.passed;
+            tangentExceeded = edges.tangentExceeded;
+            normalExceeded = edges.normalExceeded;
+            tangentRatio = edges.tangentRatio;
+            normalRatio = edges.normalRatio;
+        }
         ValidationTimer::Scope stage(timer, report.timing.reporting);
         report.geometry.state = geometryOK         ? CheckState::Passed
                                 : geometryExceeded ? CheckState::Exceeded
@@ -453,8 +398,9 @@ class Validator
   public:
     Validator(const sggk::BSplineSurface &s, const AnalyticPatch &p,
               const PairedValidationOptions &o, PairedValidationReport &r, ValidationTimer &t,
-              SourceCache *cache)
-        : source(s), patch(p), options(o), out(r), timer(t), sourceCache(cache)
+              SourceCache *cache, AnalysisContext *shared, const RecoveredCandidate *recovery)
+        : source(s), patch(p), options(o), out(r), timer(t), sourceCache(cache), analysis(shared),
+          recovered(recovery)
     {
     }
     bool Run()
@@ -479,39 +425,40 @@ class Validator
             cached = sourceCache->Matches(source);
             if (cached)
             {
-                sourceCells = sourceCache->cells;
+                prepared = &sourceCache->prepared;
                 ++out.sourceCacheHits;
             }
         }
         if (!cached)
         {
-            {
-                Measure measure(out.sourceExtractionMs);
-                sourceCells = ExtractPolynomialCells(source, out);
-                ++out.sourceExtractions;
-            }
+            auto data = PrepareSource(source, out);
+            ++out.sourceExtractions;
             if (sourceCache)
             {
                 Measure measure(out.sourceCacheMs);
-                sourceCache->Store(source, sourceCells);
+                sourceCache->Store(source, std::move(data));
+                prepared = &sourceCache->prepared;
+            }
+            else
+            {
+                ownedSource = std::move(data);
+                prepared = &ownedSource;
             }
         }
-        if (sourceCells.empty())
+        if (prepared->cells.empty())
             throw Failure(Status::InvalidInput, "Empty source domain");
-        {
-            Measure measure(out.localTransformMs);
-            const auto frame = MakeLocalFrame(patch.parameters);
-            for (auto &c : sourceCells)
-                Localize(c.p, frame);
-        }
         auto start = Clock::now();
         chart = BuildChart(patch);
         out.nurbsMs += Milliseconds(start);
         out.targetPatches = static_cast<unsigned>(chart.cells.size());
-        I t = I(options.validation.boundaryTangentToleranceDeg) * IPi() / I(180),
-          n = I(options.validation.boundaryNormalToleranceDeg) * IPi() / I(180);
-        tangentLimit = Sin(t) / Cos(t);
-        normalLimit = Sin(n) / Cos(n);
+        {
+            Measure measure(out.targetTransformMs);
+            PlaceChart(chart, patch.parameters, prepared->origin);
+        }
+        {
+            Measure measure(out.targetBoundaryMs);
+            targetBoundaries = PrepareTargetBoundaries(chart, products);
+        }
         out.uMap = {{source.MinParamU(), source.MaxParamU()}, {0, 1}};
         out.vMap = {{source.MinParamV(), source.MaxParamV()}, {0, 1}};
         if (Attempt())
@@ -522,9 +469,26 @@ class Validator
         start = Clock::now();
         try
         {
-            SurfaceSampleContext samples(source, 50000);
-            auto cache = BuildClassificationSamples(source, nullptr, &samples);
-            auto trace = TraceApproximateBoundaries(cache, patch.parameters);
+            SurfaceSampleContext local(source, 50000);
+            auto &samples = analysis ? analysis->samples : local;
+            if (analysis && !analysis->classification)
+                analysis->classification = BuildClassificationSamples(source, nullptr, &samples);
+            ClassificationSamples localCache;
+            if (!analysis)
+                localCache = BuildClassificationSamples(source, nullptr, &samples);
+            const auto &cache = analysis ? *analysis->classification : localCache;
+            PatchRecoveryTrace localTrace;
+            bool reuse = recovered && recovered->hasTrace &&
+                         recovered->sourceStamp == cache.stamp &&
+                         SameMotherParameters(recovered->traceParameters, patch.parameters);
+            if (reuse)
+                ++out.recoveryTraceHits;
+            else
+            {
+                localTrace = TraceApproximateBoundaries(cache, patch.parameters);
+                ++out.recoveryTraceBuilds;
+            }
+            const auto &trace = reuse ? recovered->trace : localTrace;
             out.uMap = AdaptiveMap(source, patch, chart, true, options, out, samples, cache, trace);
             out.vMap =
                 AdaptiveMap(source, patch, chart, false, options, out, samples, cache, trace);
@@ -562,13 +526,15 @@ const char *PairedValidationStatusName(PairedValidationStatus s) noexcept
 }
 static PairedValidationReport ValidatePaired(const sggk::BSplineSurface &s, const AnalyticPatch &p,
                                              const PairedValidationOptions &o,
-                                             detail::paired::SourceCache *cache)
+                                             detail::paired::SourceCache *cache,
+                                             detail::paired::AnalysisContext *analysis = nullptr,
+                                             const detail::RecoveredCandidate *recovered = nullptr)
 {
     PairedValidationReport out;
     detail::ValidationTimer timer(out.certificate.timing);
     try
     {
-        detail::paired::Validator validator(s, p, o, out, timer, cache);
+        detail::paired::Validator validator(s, p, o, out, timer, cache, analysis, recovered);
         bool passed = validator.Run();
         out.status = passed ? PairedValidationStatus::Passed : PairedValidationStatus::NotCertified;
         out.certificate.message = passed ? "Positive-weight paired rational certificate: complete "
@@ -630,3 +596,14 @@ PairedValidationReport ValidatePairedConversion(const sggk::BSplineSurface &s,
     return ValidatePaired(s, p, o, &context.impl_->cache);
 }
 } // namespace bspline2analytic
+
+namespace bspline2analytic::detail::paired
+{
+PairedValidationReport ValidatePrepared(AnalysisContext &context,
+                                        const RecoveredCandidate &candidate,
+                                        const PairedValidationOptions &options)
+{
+    return ValidatePaired(context.samples.source, candidate.patch, options, &context.source,
+                          &context, &candidate);
+}
+} // namespace bspline2analytic::detail::paired

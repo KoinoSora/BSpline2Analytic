@@ -268,6 +268,33 @@ Chart BuildChart(const AnalyticPatch &p)
         }
     return chart;
 }
+void PlaceChart(Chart &chart, const AnalyticParameters &parameters, V sourceOrigin)
+{
+    const auto f = MakeLocalFrame(parameters);
+    const IV offset = f.origin - Exact(sourceOrigin);
+    Products products;
+    for (auto &cell : chart.cells)
+    {
+        auto transform = [&](BV &p, const BPoly *weight) {
+            unsigned u = std::max({p.x.u, p.y.u, p.z.u, weight ? weight->u : 0u});
+            unsigned v = std::max({p.x.v, p.y.v, p.z.v, weight ? weight->v : 0u});
+            p = {products.Elevate(p.x, u, v), products.Elevate(p.y, u, v),
+                 products.Elevate(p.z, u, v)};
+            BPoly w = weight ? products.Elevate(*weight, u, v) : BPoly(0, 0);
+            for (size_t i = 0; i < p.x.c.size(); ++i)
+            {
+                IV q = f.x * p.x.c[i] + f.y * p.y.c[i] + f.z * p.z.c[i];
+                if (weight)
+                    q = q + offset * w.c[i];
+                p.x.c[i] = q.x;
+                p.y.c[i] = q.y;
+                p.z.c[i] = q.z;
+            }
+        };
+        transform(cell.surface.p, &cell.surface.w);
+        transform(cell.normal, nullptr);
+    }
+}
 double RationalCoordinate(const Chart &c, unsigned d, double angle)
 {
     const auto &a = c.angles[d];

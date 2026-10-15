@@ -1,0 +1,580 @@
+{
+  "scope": "First recovered candidate; no optimizer or production fallback is invoked",
+  "reference_validator": "old_ms is legacy projection ValidateConversion, not the previous paired implementation",
+  "sphere_runs": [
+    {
+      "rows": 50,
+      "statuses": {
+        "Passed": 40,
+        "NoCandidate": 5,
+        "ClassificationFailed": 2,
+        "Unsupported": 3
+      },
+      "matched_passes": 40,
+      "old_ms": 15681.890900000002,
+      "new_ms": 308.9678000000001,
+      "speedup": 50.75574509706188,
+      "reduction_percent": 98.02977968683611,
+      "old_mean_ms": 392.0472725000001,
+      "new_mean_ms": 7.7241950000000035,
+      "stages_ms": {
+        "prepare_ms": 160.37060000000005,
+        "surface_ms": 92.15920000000001,
+        "subdivide_ms": 0.0,
+        "boundary_ms": 53.4074,
+        "report_ms": 2.9727
+      },
+      "preparation_details_ms": {
+        "extraction_ms": 120.81179999999998,
+        "source_cache_ms": 0.24109999999999998,
+        "local_transform_ms": 0.0,
+        "source_center_ms": 0.4859,
+        "source_boundary_ms": 30.845100000000002,
+        "target_transform_ms": 0.4676,
+        "target_boundary_ms": 1.3296000000000003
+      },
+      "edge_details_ms": {
+        "edge_compose_ms": 4.379500000000001,
+        "edge_algebra_ms": 46.657000000000004,
+        "edge_bounds_ms": 0.48229999999999995,
+        "edge_subdivision_ms": 0.0
+      },
+      "surface_details_ms": {
+        "compose_ms": 13.3017,
+        "product_ms": 47.9261,
+        "difference_ms": 30.051799999999997,
+        "fast_bound_ms": 0.7599999999999998,
+        "tight_bound_ms": 0.0
+      },
+      "stages_percent": {
+        "prepare_ms": 51.91500822731807,
+        "surface_ms": 29.833682895886472,
+        "subdivide_ms": 0.0,
+        "boundary_ms": 17.288989443200105,
+        "report_ms": 0.9623194335953622
+      },
+      "mapping_attempts": {
+        "1": 40
+      },
+      "max_geometry_bound": 1.5847302545315436e-06,
+      "max_tangent_deg": 0.0007997275240875042,
+      "max_normal_deg": 0.0012160376654738896
+    },
+    {
+      "rows": 50,
+      "statuses": {
+        "Passed": 40,
+        "NoCandidate": 5,
+        "ClassificationFailed": 2,
+        "Unsupported": 3
+      },
+      "matched_passes": 40,
+      "old_ms": 14782.960200000003,
+      "new_ms": 300.1352,
+      "speedup": 49.25433671225502,
+      "reduction_percent": 97.96972192348863,
+      "old_mean_ms": 369.57400500000006,
+      "new_mean_ms": 7.50338,
+      "stages_ms": {
+        "prepare_ms": 156.1933,
+        "surface_ms": 89.7143,
+        "subdivide_ms": 0.0,
+        "boundary_ms": 51.298399999999994,
+        "report_ms": 2.8838000000000004
+      },
+      "preparation_details_ms": {
+        "extraction_ms": 117.40530000000003,
+        "source_cache_ms": 0.2098,
+        "local_transform_ms": 0.0,
+        "source_center_ms": 0.4658999999999998,
+        "source_boundary_ms": 30.241100000000003,
+        "target_transform_ms": 0.5111,
+        "target_boundary_ms": 1.3615000000000002
+      },
+      "edge_details_ms": {
+        "edge_compose_ms": 4.1076,
+        "edge_algebra_ms": 44.949099999999994,
+        "edge_bounds_ms": 0.46280000000000004,
+        "edge_subdivision_ms": 0.0
+      },
+      "surface_details_ms": {
+        "compose_ms": 13.007399999999999,
+        "product_ms": 46.4687,
+        "difference_ms": 29.364799999999995,
+        "fast_bound_ms": 0.7637000000000003,
+        "tight_bound_ms": 0.0
+      },
+      "stages_percent": {
+        "prepare_ms": 52.04885337655595,
+        "surface_ms": 29.895817851856343,
+        "subdivide_ms": 0.0,
+        "boundary_ms": 17.09434975797244,
+        "report_ms": 0.960979013615258
+      },
+      "mapping_attempts": {
+        "1": 40
+      },
+      "max_geometry_bound": 1.5847302545315436e-06,
+      "max_tangent_deg": 0.0007997275240875042,
+      "max_normal_deg": 0.0012160376654738896
+    },
+    {
+      "rows": 50,
+      "statuses": {
+        "Passed": 40,
+        "NoCandidate": 5,
+        "ClassificationFailed": 2,
+        "Unsupported": 3
+      },
+      "matched_passes": 40,
+      "old_ms": 15078.447499999997,
+      "new_ms": 303.97080000000005,
+      "speedup": 49.604920933194876,
+      "reduction_percent": 97.98407097282396,
+      "old_mean_ms": 376.96118749999994,
+      "new_mean_ms": 7.5992700000000015,
+      "stages_ms": {
+        "prepare_ms": 158.36950000000007,
+        "surface_ms": 87.9229,
+        "subdivide_ms": 0.0,
+        "boundary_ms": 54.52220000000001,
+        "report_ms": 3.0946000000000002
+      },
+      "preparation_details_ms": {
+        "extraction_ms": 118.5383,
+        "source_cache_ms": 0.2966999999999999,
+        "local_transform_ms": 0.0,
+        "source_center_ms": 0.5033,
+        "source_boundary_ms": 30.444400000000005,
+        "target_transform_ms": 0.47829999999999995,
+        "target_boundary_ms": 1.4419000000000002
+      },
+      "edge_details_ms": {
+        "edge_compose_ms": 4.3177,
+        "edge_algebra_ms": 47.8372,
+        "edge_bounds_ms": 0.48189999999999994,
+        "edge_subdivision_ms": 0.0
+      },
+      "surface_details_ms": {
+        "compose_ms": 12.505699999999997,
+        "product_ms": 45.9705,
+        "difference_ms": 28.6231,
+        "fast_bound_ms": 0.7079,
+        "tight_bound_ms": 0.0
+      },
+      "stages_percent": {
+        "prepare_ms": 52.110794934802904,
+        "surface_ms": 28.93064770661762,
+        "subdivide_ms": 0.0,
+        "boundary_ms": 17.94029269268584,
+        "report_ms": 1.0182646658936285
+      },
+      "mapping_attempts": {
+        "1": 40
+      },
+      "max_geometry_bound": 1.5847302545315436e-06,
+      "max_tangent_deg": 0.0007997275240875042,
+      "max_normal_deg": 0.0012160376654738896
+    }
+  ],
+  "sphere_all_runs": {
+    "rows": 150,
+    "statuses": {
+      "Passed": 120,
+      "NoCandidate": 15,
+      "ClassificationFailed": 6,
+      "Unsupported": 9
+    },
+    "matched_passes": 120,
+    "old_ms": 45543.29860000002,
+    "new_ms": 913.0738000000009,
+    "speedup": 49.87909914839301,
+    "reduction_percent": 97.99515224397909,
+    "old_mean_ms": 379.52748833333345,
+    "new_mean_ms": 7.608948333333341,
+    "stages_ms": {
+      "prepare_ms": 474.93340000000006,
+      "surface_ms": 269.7964,
+      "subdivide_ms": 0.0,
+      "boundary_ms": 159.22800000000004,
+      "report_ms": 8.951099999999999
+    },
+    "preparation_details_ms": {
+      "extraction_ms": 356.7553999999999,
+      "source_cache_ms": 0.7476000000000002,
+      "local_transform_ms": 0.0,
+      "source_center_ms": 1.4551,
+      "source_boundary_ms": 91.53059999999998,
+      "target_transform_ms": 1.457,
+      "target_boundary_ms": 4.133000000000001
+    },
+    "edge_details_ms": {
+      "edge_compose_ms": 12.804800000000002,
+      "edge_algebra_ms": 139.44329999999997,
+      "edge_bounds_ms": 1.4269999999999996,
+      "edge_subdivision_ms": 0.0
+    },
+    "surface_details_ms": {
+      "compose_ms": 38.8148,
+      "product_ms": 140.3653,
+      "difference_ms": 88.0397,
+      "fast_bound_ms": 2.2315999999999994,
+      "tight_bound_ms": 0.0
+    },
+    "stages_percent": {
+      "prepare_ms": 52.02418335498756,
+      "surface_ms": 29.55348556685119,
+      "subdivide_ms": 0.0,
+      "boundary_ms": 17.441827985245844,
+      "report_ms": 0.9805030929154046
+    },
+    "mapping_attempts": {
+      "1": 120
+    },
+    "max_geometry_bound": 1.5847302545315436e-06,
+    "max_tangent_deg": 0.0007997275240875042,
+    "max_normal_deg": 0.0012160376654738896
+  },
+  "dataset500": {
+    "rows": 500,
+    "statuses": {
+      "Passed": 280,
+      "Unsupported": 206,
+      "ClassificationFailed": 9,
+      "NoCandidate": 5
+    },
+    "matched_passes": 280,
+    "old_ms": 70493.52650000002,
+    "new_ms": 1621.426800000001,
+    "speedup": 43.47623124275482,
+    "reduction_percent": 97.69989262772944,
+    "old_mean_ms": 251.7625946428572,
+    "new_mean_ms": 5.790810000000004,
+    "stages_ms": {
+      "prepare_ms": 802.0826999999996,
+      "surface_ms": 495.30219999999986,
+      "subdivide_ms": 0.0,
+      "boundary_ms": 298.90999999999985,
+      "report_ms": 24.699500000000018
+    },
+    "preparation_details_ms": {
+      "extraction_ms": 575.8240999999999,
+      "source_cache_ms": 1.8978000000000002,
+      "local_transform_ms": 0.0,
+      "source_center_ms": 3.7442999999999986,
+      "source_boundary_ms": 166.9419,
+      "target_transform_ms": 2.7723999999999993,
+      "target_boundary_ms": 8.387600000000004
+    },
+    "edge_details_ms": {
+      "edge_compose_ms": 39.65570000000002,
+      "edge_algebra_ms": 236.3193,
+      "edge_bounds_ms": 4.954899999999999,
+      "edge_subdivision_ms": 0.0
+    },
+    "surface_details_ms": {
+      "compose_ms": 150.00519999999986,
+      "product_ms": 178.80700000000002,
+      "difference_ms": 157.5338,
+      "fast_bound_ms": 6.897500000000001,
+      "tight_bound_ms": 0.0
+    },
+    "stages_percent": {
+      "prepare_ms": 49.48090505432961,
+      "surface_ms": 30.55545410890994,
+      "subdivide_ms": 0.0,
+      "boundary_ms": 18.43991564683999,
+      "report_ms": 1.5237251899204602
+    },
+    "mapping_attempts": {
+      "1": 280
+    },
+    "max_geometry_bound": 3.4873667840582056e-06,
+    "max_tangent_deg": 0.0036273856342237125,
+    "max_normal_deg": 0.004193008425086796
+  },
+  "dataset_by_type": {
+    "Cone": {
+      "rows": 100,
+      "statuses": {
+        "Unsupported": 53,
+        "Passed": 40,
+        "ClassificationFailed": 7
+      },
+      "matched_passes": 40,
+      "old_ms": 8156.808,
+      "new_ms": 227.8585,
+      "speedup": 35.79769023319297,
+      "reduction_percent": 97.20652367936084,
+      "old_mean_ms": 203.9202,
+      "new_mean_ms": 5.6964625,
+      "stages_ms": {
+        "prepare_ms": 113.02349999999997,
+        "surface_ms": 67.50789999999999,
+        "subdivide_ms": 0.0,
+        "boundary_ms": 44.282900000000005,
+        "report_ms": 2.9688000000000003
+      },
+      "preparation_details_ms": {
+        "extraction_ms": 80.33330000000002,
+        "source_cache_ms": 0.29209999999999997,
+        "local_transform_ms": 0.0,
+        "source_center_ms": 0.5494,
+        "source_boundary_ms": 24.001300000000004,
+        "target_transform_ms": 0.34759999999999996,
+        "target_boundary_ms": 1.0713
+      },
+      "edge_details_ms": {
+        "edge_compose_ms": 5.8327,
+        "edge_algebra_ms": 35.289500000000004,
+        "edge_bounds_ms": 0.6524999999999999,
+        "edge_subdivision_ms": 0.0
+      },
+      "surface_details_ms": {
+        "compose_ms": 20.623200000000004,
+        "product_ms": 22.697100000000002,
+        "difference_ms": 23.083600000000004,
+        "fast_bound_ms": 0.8589000000000001,
+        "tight_bound_ms": 0.0
+      },
+      "stages_percent": {
+        "prepare_ms": 49.61891378245357,
+        "surface_ms": 29.636922142160678,
+        "subdivide_ms": 0.0,
+        "boundary_ms": 19.440818919401842,
+        "report_ms": 1.3033451559839166
+      },
+      "mapping_attempts": {
+        "1": 40
+      },
+      "max_geometry_bound": 1.5372997058057799e-06,
+      "max_tangent_deg": 0.0036273856342237125,
+      "max_normal_deg": 0.004193008425086796
+    },
+    "Cylinder": {
+      "rows": 100,
+      "statuses": {
+        "Unsupported": 50,
+        "Passed": 50
+      },
+      "matched_passes": 50,
+      "old_ms": 9812.890499999998,
+      "new_ms": 277.76279999999997,
+      "speedup": 35.32831070251307,
+      "reduction_percent": 97.16940895243863,
+      "old_mean_ms": 196.25780999999995,
+      "new_mean_ms": 5.555255999999999,
+      "stages_ms": {
+        "prepare_ms": 132.90659999999994,
+        "surface_ms": 82.8606,
+        "subdivide_ms": 0.0,
+        "boundary_ms": 58.0021,
+        "report_ms": 3.9149000000000007
+      },
+      "preparation_details_ms": {
+        "extraction_ms": 94.11579999999998,
+        "source_cache_ms": 0.3161,
+        "local_transform_ms": 0.0,
+        "source_center_ms": 0.6734999999999999,
+        "source_boundary_ms": 28.5911,
+        "target_transform_ms": 0.4493,
+        "target_boundary_ms": 1.4566999999999999
+      },
+      "edge_details_ms": {
+        "edge_compose_ms": 7.547400000000003,
+        "edge_algebra_ms": 46.049699999999994,
+        "edge_bounds_ms": 0.8587000000000001,
+        "edge_subdivision_ms": 0.0
+      },
+      "surface_details_ms": {
+        "compose_ms": 24.941999999999997,
+        "product_ms": 27.965600000000002,
+        "difference_ms": 28.503899999999994,
+        "fast_bound_ms": 1.1568000000000003,
+        "tight_bound_ms": 0.0
+      },
+      "stages_percent": {
+        "prepare_ms": 47.862499918972695,
+        "surface_ms": 29.839868454885096,
+        "subdivide_ms": 0.0,
+        "boundary_ms": 20.887792679597908,
+        "report_ms": 1.4098389465443124
+      },
+      "mapping_attempts": {
+        "1": 50
+      },
+      "max_geometry_bound": 1.5076296690830288e-06,
+      "max_tangent_deg": 0.003290655724741942,
+      "max_normal_deg": 0.003290655710529991
+    },
+    "Plane": {
+      "rows": 100,
+      "statuses": {
+        "Passed": 100
+      },
+      "matched_passes": 100,
+      "old_ms": 4056.4559999999997,
+      "new_ms": 303.49690000000004,
+      "speedup": 13.365724658143128,
+      "reduction_percent": 92.51817596443792,
+      "old_mean_ms": 40.56456,
+      "new_mean_ms": 3.0349690000000002,
+      "stages_ms": {
+        "prepare_ms": 134.9608000000001,
+        "surface_ms": 103.94479999999989,
+        "subdivide_ms": 0.0,
+        "boundary_ms": 54.1388,
+        "report_ms": 10.3166
+      },
+      "preparation_details_ms": {
+        "extraction_ms": 88.2885,
+        "source_cache_ms": 0.5370999999999999,
+        "local_transform_ms": 0.0,
+        "source_center_ms": 1.2659999999999998,
+        "source_boundary_ms": 32.446600000000004,
+        "target_transform_ms": 0.6318,
+        "target_boundary_ms": 1.3217999999999996
+      },
+      "edge_details_ms": {
+        "edge_compose_ms": 14.381299999999998,
+        "edge_algebra_ms": 30.893499999999996,
+        "edge_bounds_ms": 2.179500000000001,
+        "edge_subdivision_ms": 0.0
+      },
+      "surface_details_ms": {
+        "compose_ms": 68.95429999999999,
+        "product_ms": 4.325300000000004,
+        "difference_ms": 26.456300000000013,
+        "fast_bound_ms": 2.9862000000000015,
+        "tight_bound_ms": 0.0
+      },
+      "stages_percent": {
+        "prepare_ms": 44.488513685015576,
+        "surface_ms": 34.26439126980722,
+        "subdivide_ms": 0.0,
+        "boundary_ms": 17.84632830192411,
+        "report_ms": 3.4007667432530875
+      },
+      "mapping_attempts": {
+        "1": 100
+      },
+      "max_geometry_bound": 1.2842204603334258e-13,
+      "max_tangent_deg": 2.279368487294301e-10,
+      "max_normal_deg": 1.8615033983820992e-10
+    },
+    "Sphere": {
+      "rows": 100,
+      "statuses": {
+        "Unsupported": 53,
+        "Passed": 40,
+        "NoCandidate": 5,
+        "ClassificationFailed": 2
+      },
+      "matched_passes": 40,
+      "old_ms": 17963.0393,
+      "new_ms": 365.27130000000005,
+      "speedup": 49.17725345517153,
+      "reduction_percent": 97.9665395487945,
+      "old_mean_ms": 449.0759825,
+      "new_mean_ms": 9.131782500000002,
+      "stages_ms": {
+        "prepare_ms": 192.5548,
+        "surface_ms": 106.08250000000001,
+        "subdivide_ms": 0.0,
+        "boundary_ms": 63.21289999999999,
+        "report_ms": 3.359
+      },
+      "preparation_details_ms": {
+        "extraction_ms": 144.5282,
+        "source_cache_ms": 0.35300000000000004,
+        "local_transform_ms": 0.0,
+        "source_center_ms": 0.5381,
+        "source_boundary_ms": 36.358000000000004,
+        "target_transform_ms": 0.5838000000000001,
+        "target_boundary_ms": 2.3186999999999998
+      },
+      "edge_details_ms": {
+        "edge_compose_ms": 5.154400000000001,
+        "edge_algebra_ms": 55.1498,
+        "edge_bounds_ms": 0.5503,
+        "edge_subdivision_ms": 0.0
+      },
+      "surface_details_ms": {
+        "compose_ms": 15.2767,
+        "product_ms": 55.1481,
+        "difference_ms": 34.7159,
+        "fast_bound_ms": 0.8106,
+        "tight_bound_ms": 0.0
+      },
+      "stages_percent": {
+        "prepare_ms": 52.72452063091511,
+        "surface_ms": 29.047050293366112,
+        "subdivide_ms": 0.0,
+        "boundary_ms": 17.308682256635375,
+        "report_ms": 0.9197468190834186
+      },
+      "mapping_attempts": {
+        "1": 40
+      },
+      "max_geometry_bound": 1.5847302545315436e-06,
+      "max_tangent_deg": 0.0007997275240875042,
+      "max_normal_deg": 0.0012160376654738896
+    },
+    "Torus": {
+      "rows": 100,
+      "statuses": {
+        "Unsupported": 50,
+        "Passed": 50
+      },
+      "matched_passes": 50,
+      "old_ms": 30504.3327,
+      "new_ms": 447.0373,
+      "speedup": 68.23666101240322,
+      "reduction_percent": 98.53451211538878,
+      "old_mean_ms": 610.086654,
+      "new_mean_ms": 8.940746,
+      "stages_ms": {
+        "prepare_ms": 228.637,
+        "surface_ms": 134.90640000000002,
+        "subdivide_ms": 0.0,
+        "boundary_ms": 79.27330000000002,
+        "report_ms": 4.140199999999998
+      },
+      "preparation_details_ms": {
+        "extraction_ms": 168.5583,
+        "source_cache_ms": 0.3995000000000001,
+        "local_transform_ms": 0.0,
+        "source_center_ms": 0.7173,
+        "source_boundary_ms": 45.544899999999984,
+        "target_transform_ms": 0.7599,
+        "target_boundary_ms": 2.2191
+      },
+      "edge_details_ms": {
+        "edge_compose_ms": 6.739899999999999,
+        "edge_algebra_ms": 68.93679999999999,
+        "edge_bounds_ms": 0.7139,
+        "edge_subdivision_ms": 0.0
+      },
+      "surface_details_ms": {
+        "compose_ms": 20.209000000000003,
+        "product_ms": 68.6709,
+        "difference_ms": 44.7741,
+        "fast_bound_ms": 1.085,
+        "tight_bound_ms": 0.0
+      },
+      "stages_percent": {
+        "prepare_ms": 51.15414931506819,
+        "surface_ms": 30.183312977157307,
+        "subdivide_ms": 0.0,
+        "boundary_ms": 17.736229153191285,
+        "report_ms": 0.9263085545832267
+      },
+      "mapping_attempts": {
+        "1": 50
+      },
+      "max_geometry_bound": 3.4873667840582056e-06,
+      "max_tangent_deg": 0.003544396032887622,
+      "max_normal_deg": 0.0038223515953267105
+    }
+  }
+}

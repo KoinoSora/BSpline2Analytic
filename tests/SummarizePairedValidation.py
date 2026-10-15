@@ -7,6 +7,8 @@ import math
 from pathlib import Path
 
 PREPARATION_DETAILS = ("extraction_ms", "source_cache_ms", "local_transform_ms")
+SOURCE_DETAILS = ("source_center_ms", "source_boundary_ms", "target_transform_ms", "target_boundary_ms")
+EDGE_DETAILS = ("edge_compose_ms", "edge_algebra_ms", "edge_bounds_ms", "edge_subdivision_ms")
 SURFACE_DETAILS = ("compose_ms", "product_ms", "difference_ms", "fast_bound_ms", "tight_bound_ms")
 
 
@@ -34,8 +36,10 @@ def aggregate(data):
             "new_mean_ms": new / len(selected) if selected else None,
             "stages_ms": stages,
             "preparation_details_ms": {k: sum(float(r[k]) for r in selected)
-                                       for k in PREPARATION_DETAILS
+                                       for k in PREPARATION_DETAILS + SOURCE_DETAILS
                                        if selected and k in selected[0]},
+            "edge_details_ms": {k: sum(float(r[k]) for r in selected)
+                                for k in EDGE_DETAILS if selected and k in selected[0]},
             "surface_details_ms": {k: sum(float(r[k]) for r in selected)
                                    for k in SURFACE_DETAILS if selected and k in selected[0]},
             "stages_percent": {k: 100 * v / sum(stages.values()) for k, v in stages.items()} if selected else {},
@@ -64,7 +68,8 @@ def main():
     stable = ("old_status", "new_status", "geometry_bound", "tangent_deg", "normal_deg",
               "attempts", "u_segments", "v_segments", "common_cells", "surface_nodes", "boundary_nodes")
     stable += tuple(k for k in ("source_extractions", "cache_hits", "u_matrices", "v_matrices",
-                               "fast_passes", "tight_checks")
+                               "fast_passes", "tight_checks", "source_boundary_builds", "boundary_segments",
+                               "trace_hits", "trace_builds", "timing_schema")
                     if k in runs[0][0])
     for left, right in zip(runs, runs[1:]):
         require(all(a[k] == b[k] for a, b in zip(left, right) for k in stable), "Unstable repeated certificate")
@@ -74,12 +79,19 @@ def main():
         if all(k in r for k in PREPARATION_DETAILS):
             nested = sum(float(r[k]) for k in PREPARATION_DETAILS + ("nurbs_ms", "mapping_ms"))
             require(nested <= float(r["prepare_ms"]) + 1e-5, "Preparation sub-timers overlap")
+        if all(k in r for k in SOURCE_DETAILS):
+            require(nested + sum(float(r[k]) for k in SOURCE_DETAILS) <= float(r["prepare_ms"]) + 1e-5,
+                    "Shared preparation sub-timers overlap")
+        if all(k in r for k in EDGE_DETAILS):
+            require(sum(float(r[k]) for k in EDGE_DETAILS) <= float(r["boundary_ms"]) + 1e-5,
+                    "Boundary sub-timers overlap")
         if all(k in r for k in SURFACE_DETAILS):
             nested = sum(float(r[k]) for k in SURFACE_DETAILS)
             require(nested <= float(r["surface_ms"]) + 1e-5, "Surface sub-timers overlap")
             require(int(r["fast_passes"]) + int(r["tight_checks"]) == int(r["surface_nodes"]),
                     "Position-bound counter mismatch")
     summary = {"scope": "First recovered candidate; no optimizer or production fallback is invoked",
+               "reference_validator": "old_ms is legacy projection ValidateConversion, not the previous paired implementation",
                "sphere_runs": [aggregate(r) for r in runs],
                "sphere_all_runs": aggregate([r for run in runs for r in run]),
                "dataset500": aggregate(data),
@@ -90,7 +102,7 @@ def main():
         mean = dict(trio[0])
         for key in ("old_ms", "new_ms", "classify_ms", "prepare_ms", "surface_ms", "subdivide_ms",
                     "boundary_ms", "report_ms", "nurbs_ms", "mapping_ms") + tuple(
-                        k for k in PREPARATION_DETAILS + SURFACE_DETAILS if k in mean):
+                        k for k in PREPARATION_DETAILS + SOURCE_DETAILS + SURFACE_DETAILS + EDGE_DETAILS if k in mean):
             mean[key] = sum(float(r[key]) for r in trio) / len(trio)
         mean["speedup"] = mean["old_ms"] / mean["new_ms"] if mean["new_ms"] else 0
         mean["old_classification_total_ms"] = mean["classify_ms"] + mean["old_ms"]

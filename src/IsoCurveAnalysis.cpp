@@ -381,8 +381,11 @@ static std::optional<AnalyticParameters> DirectionalCone(const std::array<Bounda
 std::vector<AnalyticPatch> RecoverRankedCandidates(const ClassificationSamples &cache,
                                                    const std::vector<ApproximateSeed> &seeds,
                                                    double distanceTolerance,
-                                                   ClassificationDiagnostics *diagnostics)
+                                                   ClassificationDiagnostics *diagnostics,
+                                                   std::vector<RecoveredCandidate> *recovered)
 {
+    if (recovered)
+        recovered->clear();
     const size_t missing = seeds.size();
     struct Selection
     {
@@ -395,6 +398,7 @@ std::vector<AnalyticPatch> RecoverRankedCandidates(const ClassificationSamples &
         double score;
     };
     std::vector<std::optional<AnalyticPatch>> patches(seeds.size());
+    std::vector<PatchRecoveryTrace> traces(recovered ? seeds.size() : 0);
     std::vector<bool> attempted(seeds.size(), false);
     auto recover = [&](size_t i) {
         if (!attempted[i])
@@ -404,7 +408,8 @@ std::vector<AnalyticPatch> RecoverRankedCandidates(const ClassificationSamples &
                 ++diagnostics->patchRecoveryAttempts;
             try
             {
-                patches[i] = RecoverApproxPatch(cache, seeds[i].parameters);
+                patches[i] = RecoverApproxPatch(cache, seeds[i].parameters,
+                                                recovered ? &traces[i] : nullptr);
             }
             catch (const std::runtime_error &)
             {
@@ -466,23 +471,29 @@ std::vector<AnalyticPatch> RecoverRankedCandidates(const ClassificationSamples &
         return a.score < b.score;
     });
     std::vector<AnalyticPatch> result;
+    auto append = [&](size_t i) {
+        result.push_back(*patches[i]);
+        if (recovered)
+            recovered->push_back({*patches[i], traces[i], seeds[i].parameters, true, cache.stamp});
+    };
     for (const auto &family : families)
         for (auto selection : {family.directional, family.legacy})
         {
             // New directional cone seeds are tried first; both original fallback
             // roles survive. A failed chart never discards the next ranked seed.
             if (selection.boundary != missing && selection.boundary != selection.best)
-                result.push_back(*patches[selection.boundary]);
+                append(selection.boundary);
             if (selection.best != missing)
-                result.push_back(*patches[selection.best]);
+                append(selection.best);
         }
     return result;
 }
 std::vector<AnalyticPatch> ClassifyApproximate(const sggk::BSplineSurface &s,
                                                const ConversionOptions &o,
                                                ClassificationDiagnostics *diagnostics,
-                                               bool directionalCones,
-                                               SurfaceSampleContext *shared)
+                                               bool directionalCones, SurfaceSampleContext *shared,
+                                               std::vector<RecoveredCandidate> *recovered,
+                                               ClassificationSamples *savedSamples)
 {
     std::array<std::vector<CurveFits>, 2> groups;
     unsigned n = o.sampling.interiorIsoCurves;
@@ -596,8 +607,14 @@ std::vector<AnalyticPatch> ClassifyApproximate(const sggk::BSplineSurface &s,
                         }
                     }
                 }
-    return cache
-               ? RecoverRankedCandidates(*cache, seeds, o.validation.distanceTolerance, diagnostics)
-               : std::vector<AnalyticPatch>{};
+    if (recovered)
+        recovered->clear();
+    if (!cache)
+        return {};
+    auto result = RecoverRankedCandidates(*cache, seeds, o.validation.distanceTolerance,
+                                          diagnostics, recovered);
+    if (savedSamples)
+        *savedSamples = std::move(*cache);
+    return result;
 }
 } // namespace bspline2analytic::detail
