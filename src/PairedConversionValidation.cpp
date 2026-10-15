@@ -180,9 +180,15 @@ std::vector<double> Breaks(const sggk::RealArray &knots, const PairedParameterMa
     return out;
 }
 TargetCell Compose(const TargetCell &target, const PairedParameterMap &u,
-                   const PairedParameterMap &v, double u0, double u1, double v0, double v1)
+                   const PairedParameterMap &v, double u0, double u1, double v0, double v1,
+                   bool needNormal)
 {
-    TargetCell out = target;
+    TargetCell out;
+    out.surface = target.surface;
+    out.weightFactors = target.weightFactors;
+    out.separableWeight = target.separableWeight;
+    if (needNormal)
+        out.normal = target.normal;
     auto axis = [&](bool along, double l, double r, double a, double b,
                     const PairedParameterMap &m) {
         I x = (MapValue(m, l) - I(a)) / (I(b) - I(a)), y = (MapValue(m, r) - I(a)) / (I(b) - I(a));
@@ -193,7 +199,13 @@ TargetCell Compose(const TargetCell &target, const PairedParameterMap &u,
             y = I(1);
         out.surface.p = Restrict(out.surface.p, along, x, y);
         out.surface.w = Restrict(out.surface.w, along, x, y);
-        out.normal = Restrict(out.normal, along, x, y);
+        if (needNormal)
+            out.normal = Restrict(out.normal, along, x, y);
+        if (out.separableWeight)
+        {
+            auto &factor = out.weightFactors[along ? 0 : 1];
+            factor = Restrict(factor, along, x, y);
+        }
     };
     axis(true, u0, u1, target.surface.u0, target.surface.u1, u);
     axis(false, v0, v1, target.surface.v0, target.surface.v1, v);
@@ -206,20 +218,6 @@ TargetCell Compose(const TargetCell &target, const PairedParameterMap &u,
 I Length(IV x)
 {
     return Sqrt(Sqr(x.x) + Sqr(x.y) + Sqr(x.z));
-}
-double ErrorUpper(const BV &e, const BPoly &weight)
-{
-    unsigned u = std::max({e.x.u, e.y.u, e.z.u, weight.u}),
-             v = std::max({e.x.v, e.y.v, e.z.v, weight.v});
-    BPoly zero(u, v), x = e.x + zero, y = e.y + zero, z = e.z + zero, w = weight + zero;
-    double upper = 0;
-    for (size_t i = 0; i < w.c.size(); ++i)
-    {
-        if (w.c[i].lo <= 0)
-            return INFINITY;
-        upper = std::max(upper, Length({x.c[i] / w.c[i], y.c[i] / w.c[i], z.c[i] / w.c[i]}).hi);
-    }
-    return upper;
 }
 struct AngleBounds
 {
@@ -281,7 +279,18 @@ class Validator
         double upper;
         {
             ValidationTimer::Scope stage(timer, out.certificate.timing.surfaceBounds);
-            upper = ErrorUpper(error, weight);
+            {
+                Measure measure(out.surfaceFastBoundMs);
+                upper = PositionBoxUpper(error, weight);
+            }
+            if (upper < options.validation.distanceTolerance)
+                ++out.fastBoundPasses;
+            else
+            {
+                Measure measure(out.surfaceTightBoundMs);
+                ++out.tightBoundChecks;
+                upper = std::min(upper, PositionControlUpper(error, weight, products));
+            }
             if (upper < options.validation.distanceTolerance)
             {
                 distanceUpper = std::max(distanceUpper, upper);
@@ -376,9 +385,20 @@ class Validator
                 BV error;
                 {
                     ValidationTimer::Scope stage(timer, report.timing.surfaceBounds);
-                    s = Crop(*src, u0, u1, v0, v1);
-                    r = Compose(*dst, out.uMap, out.vMap, u0, u1, v0, v1);
-                    error = products.Mul(s.p, r.surface.w) - r.surface.p;
+                    {
+                        Measure measure(out.surfaceComposeMs);
+                        s = Crop(*src, u0, u1, v0, v1);
+                        r = Compose(*dst, out.uMap, out.vMap, u0, u1, v0, v1,
+                                    i == 0 || i + 1 == nu || j == 0 || j + 1 == nv);
+                    }
+                    {
+                        Measure measure(out.surfaceProductMs);
+                        error = products.MulWeight(s.p, r);
+                    }
+                    {
+                        Measure measure(out.surfaceDifferenceMs);
+                        error = products.Subtract(std::move(error), r.surface.p);
+                    }
                 }
                 geometryOK = Geometry(error, r.surface.w, 0);
                 if (!geometryOK)

@@ -7,6 +7,7 @@ import math
 from pathlib import Path
 
 PREPARATION_DETAILS = ("extraction_ms", "source_cache_ms", "local_transform_ms")
+SURFACE_DETAILS = ("compose_ms", "product_ms", "difference_ms", "fast_bound_ms", "tight_bound_ms")
 
 
 def rows(path):
@@ -35,6 +36,8 @@ def aggregate(data):
             "preparation_details_ms": {k: sum(float(r[k]) for r in selected)
                                        for k in PREPARATION_DETAILS
                                        if selected and k in selected[0]},
+            "surface_details_ms": {k: sum(float(r[k]) for r in selected)
+                                   for k in SURFACE_DETAILS if selected and k in selected[0]},
             "stages_percent": {k: 100 * v / sum(stages.values()) for k, v in stages.items()} if selected else {},
             "mapping_attempts": dict(collections.Counter(r["attempts"] for r in selected)),
             "max_geometry_bound": max((float(r["geometry_bound"]) for r in selected), default=None),
@@ -60,7 +63,8 @@ def main():
                     require(math.isfinite(float(r[k])) and float(r[k]) < limit, "Tolerance violation")
     stable = ("old_status", "new_status", "geometry_bound", "tangent_deg", "normal_deg",
               "attempts", "u_segments", "v_segments", "common_cells", "surface_nodes", "boundary_nodes")
-    stable += tuple(k for k in ("source_extractions", "cache_hits", "u_matrices", "v_matrices")
+    stable += tuple(k for k in ("source_extractions", "cache_hits", "u_matrices", "v_matrices",
+                               "fast_passes", "tight_checks")
                     if k in runs[0][0])
     for left, right in zip(runs, runs[1:]):
         require(all(a[k] == b[k] for a, b in zip(left, right) for k in stable), "Unstable repeated certificate")
@@ -70,6 +74,11 @@ def main():
         if all(k in r for k in PREPARATION_DETAILS):
             nested = sum(float(r[k]) for k in PREPARATION_DETAILS + ("nurbs_ms", "mapping_ms"))
             require(nested <= float(r["prepare_ms"]) + 1e-5, "Preparation sub-timers overlap")
+        if all(k in r for k in SURFACE_DETAILS):
+            nested = sum(float(r[k]) for k in SURFACE_DETAILS)
+            require(nested <= float(r["surface_ms"]) + 1e-5, "Surface sub-timers overlap")
+            require(int(r["fast_passes"]) + int(r["tight_checks"]) == int(r["surface_nodes"]),
+                    "Position-bound counter mismatch")
     summary = {"scope": "First recovered candidate; no optimizer or production fallback is invoked",
                "sphere_runs": [aggregate(r) for r in runs],
                "sphere_all_runs": aggregate([r for run in runs for r in run]),
@@ -81,7 +90,7 @@ def main():
         mean = dict(trio[0])
         for key in ("old_ms", "new_ms", "classify_ms", "prepare_ms", "surface_ms", "subdivide_ms",
                     "boundary_ms", "report_ms", "nurbs_ms", "mapping_ms") + tuple(
-                        k for k in PREPARATION_DETAILS if k in mean):
+                        k for k in PREPARATION_DETAILS + SURFACE_DETAILS if k in mean):
             mean[key] = sum(float(r[key]) for r in trio) / len(trio)
         mean["speedup"] = mean["old_ms"] / mean["new_ms"] if mean["new_ms"] else 0
         mean["old_classification_total_ms"] = mean["classify_ms"] + mean["old_ms"]

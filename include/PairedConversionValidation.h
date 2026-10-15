@@ -42,6 +42,10 @@ struct PairedValidationReport
     // Subsets of certificate.timing.preparation; do not add to totalMs again.
     double nurbsMs = 0, mappingMs = 0;
     double sourceExtractionMs = 0, sourceCacheMs = 0, localTransformMs = 0;
+    unsigned fastBoundPasses = 0, tightBoundChecks = 0;
+    // Subsets of certificate.timing.surfaceBounds, exclusive of subdivision.
+    double surfaceComposeMs = 0, surfaceProductMs = 0, surfaceDifferenceMs = 0;
+    double surfaceFastBoundMs = 0, surfaceTightBoundMs = 0;
     bool Passed() const noexcept
     {
         return status == PairedValidationStatus::Passed && certificate.Passed();

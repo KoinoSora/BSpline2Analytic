@@ -1,7 +1,7 @@
 """Compare a saved paired validator with the current cold and cached validator.
 
 The baseline keeps its numerical code; only its private namespace/public symbols
-are renamed and two preparation sub-timers added. Generated files stay in build/.
+are renamed and missing preparation sub-timers added. Generated files stay in build/.
 Build the current Release library first. No repository checkout or reset is used.
 """
 import argparse
@@ -40,7 +40,11 @@ def main():
         if read_git(f"{sha}:{name}").replace("\r\n", "\n") != (root / name).read_text(encoding="utf-8"):
             raise ValueError(f"Baseline shared dependency differs: {name}")
     originals = {}
-    for name in ("PairedValidationInternal.h", "PairedRationalChart.cpp", "PairedConversionValidation.cpp"):
+    files = ["PairedValidationInternal.h", "PairedRationalChart.cpp", "PairedConversionValidation.cpp"]
+    if subprocess.run(git + ["cat-file", "-e", f"{sha}:src/PairedSourcePreparation.cpp"],
+                      cwd=root, env=env, stderr=subprocess.DEVNULL).returncode == 0:
+        files.append("PairedSourcePreparation.cpp")
+    for name in files:
         original = read_git(f"{sha}:src/{name}")
         originals[name] = hashlib.sha256(original.encode()).hexdigest()
         code = original.replace("detail::paired", "detail::paired_baseline")
@@ -49,13 +53,22 @@ def main():
         code = code.replace("PairedValidationStatusName(", "PairedValidationStatusNameBaseline(")
         if name == "PairedConversionValidation.cpp":
             old = "        sourceCells = ExtractCells(source);"
-            assert code.count(old) == 1
-            code = code.replace(old, "        auto extractionStart = Clock::now();\n" + old +
-                                "\n        out.sourceExtractionMs += Milliseconds(extractionStart);")
-            old = "        for (auto &c : sourceCells)\n            c.p = LocalSource(c.p, patch.parameters);"
-            assert code.count(old) == 1
-            code = code.replace(old, "        auto localStart = Clock::now();\n" + old +
-                                "\n        out.localTransformMs += Milliseconds(localStart);")
+            if old in code:
+                assert code.count(old) == 1
+                code = code.replace(old, "        auto extractionStart = Clock::now();\n" + old +
+                                    "\n        out.sourceExtractionMs += Milliseconds(extractionStart);")
+                old = "        for (auto &c : sourceCells)\n            c.p = LocalSource(c.p, patch.parameters);"
+                assert code.count(old) == 1
+                code = code.replace(old, "        auto localStart = Clock::now();\n" + old +
+                                    "\n        out.localTransformMs += Milliseconds(localStart);")
+            if "struct PairedValidationContext::Impl" in code:
+                # Only the cold baseline is exercised. Avoid duplicate public
+                # context symbols; keep its original cold helper and numerics.
+                code = code[:code.index("struct PairedValidationContext::Impl")] + '''
+PairedValidationReport ValidatePairedConversionBaseline(const sggk::BSplineSurface &s,
+ const AnalyticPatch &p, const PairedValidationOptions &o) { return ValidatePaired(s,p,o,nullptr); }
+} // namespace bspline2analytic
+'''
         target = "PairedBaselineInternal.h" if name.endswith(".h") else name
         (work / target).write_text(code, encoding="utf-8")
     cmake = r'''cmake_minimum_required(VERSION 3.22)
@@ -71,6 +84,8 @@ target_include_directories(PairedPreparationComparison SYSTEM PRIVATE "${SDK}/in
 target_link_directories(PairedPreparationComparison PRIVATE "${SDK}/x64-win/lib")
 target_link_libraries(PairedPreparationComparison PRIVATE "${LIBRARY}" SGGK_Foundation SGGK_Math SGGK_GeomBase SGGK_Geometry SGGK_BSplineAlgo)
 '''
+    if "PairedSourcePreparation.cpp" in files:
+        cmake += '\ntarget_sources(PairedPreparationComparison PRIVATE PairedSourcePreparation.cpp)\n'
     (work / "CMakeLists.txt").write_text(cmake, encoding="utf-8")
     # Read the SDK selected by this library build, rather than assume its location.
     cache = (build / "CMakeCache.txt").read_text(encoding="utf-8")
@@ -106,10 +121,14 @@ target_link_libraries(PairedPreparationComparison PRIVATE "${LIBRARY}" SGGK_Foun
                "exclusive_machine": False, "cache_fill_mean_ms": mean("cache_fill_ms"),
                "means": {mode: {field: mean(f"{mode}_{field}") for field in
                                 ("wall_ms", "prepare_ms", "extract_ms", "local_ms", "cache_ms",
-                                 "surface_ms", "boundary_ms")}
+                                 "surface_ms", "boundary_ms", "compose_ms", "product_ms",
+                                 "difference_ms", "fast_bound_ms", "tight_bound_ms")}
                          for mode in ("baseline", "new", "cached")}}
     summary["speedup"] = {mode: mean("baseline_wall_ms") / mean(f"{mode}_wall_ms")
                           for mode in ("new", "cached")}
+    summary["position_speedup"] = mean("baseline_surface_ms") / mean("new_surface_ms")
+    summary["new_fast_bound_passes"] = sum(int(r["new_fast_passes"]) for r in rows)
+    summary["new_tight_bound_checks"] = sum(int(r["new_tight_checks"]) for r in rows)
     output.with_suffix(".summary.json").write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(summary, indent=2), flush=True)
 

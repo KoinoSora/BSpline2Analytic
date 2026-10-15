@@ -41,6 +41,12 @@ void Timing(const PairedValidationReport &r)
     Require(r.nurbsMs + r.mappingMs + r.sourceExtractionMs + r.sourceCacheMs + r.localTransformMs <=
                 t.preparation.elapsedMs + 1e-5,
             "Nested preparation timings exceed preparation");
+    Require(r.surfaceComposeMs + r.surfaceProductMs + r.surfaceDifferenceMs + r.surfaceFastBoundMs +
+                    r.surfaceTightBoundMs <=
+                t.surfaceBounds.elapsedMs + 1e-5,
+            "Nested position timings exceed surface bounds");
+    Require(r.fastBoundPasses + r.tightBoundChecks == r.surfaceNodes,
+            "Position bound counters do not cover visited nodes");
     if (r.Passed())
         Require(r.certificate.Passed() && std::isfinite(r.certificate.geometry.upperBound),
                 "Incomplete certificate accepted");
@@ -112,8 +118,106 @@ sggk::BSplineSurfacePtr Plane(unsigned mode)
                                                   sggk::RealArray{0, 1}, sggk::UIntArray{4, 4},
                                                   sggk::UIntArray{4, 4});
 }
+void PositionArithmetic()
+{
+    paired::Products products;
+    auto sameEnclosure = [&](const BV &a, const BV &b) {
+        for (auto pair :
+             {std::make_pair(&a.x, &b.x), std::make_pair(&a.y, &b.y), std::make_pair(&a.z, &b.z)})
+        {
+            Require(pair.first->u == pair.second->u && pair.first->v == pair.second->v,
+                    "Weighted product degrees differ");
+            for (size_t i = 0; i < pair.first->c.size(); ++i)
+                Require(pair.first->c[i].finite() && pair.second->c[i].finite() &&
+                            pair.first->c[i].lo <= pair.second->c[i].hi &&
+                            pair.second->c[i].lo <= pair.first->c[i].hi,
+                        "Weighted product enclosures do not overlap");
+        }
+    };
+    // Independent reference: the shared implementation uses successive elevation.
+    for (auto degree : {std::make_pair(0u, 0u), {0u, 3u}, {2u, 0u}, {2u, 3u}, {7u, 7u}, {32u, 1u}})
+    {
+        BPoly p(degree.first, degree.second);
+        for (size_t i = 0; i < p.c.size(); ++i)
+            p.c[i] = I(std::sin(double(i)), std::sin(double(i)) + 1e-10);
+        unsigned u = p.u + 3, v = p.v + 2;
+        auto direct = products.Elevate(p, u, v), reference = p + BPoly(u, v);
+        Require(direct.u == u && direct.v == v, "Wrong direct elevation degrees");
+        for (size_t i = 0; i < direct.c.size(); ++i)
+            Require(direct.c[i].finite() && direct.c[i].lo <= reference.c[i].hi &&
+                        reference.c[i].lo <= direct.c[i].hi,
+                    "Direct/reference elevation enclosures are disjoint");
+        BV a{p, p, p}, b{BPoly(1, 1, I(.3)), BPoly(0, 0, I(-.2)), BPoly(2, 1, I(.7))};
+        auto difference = products.Subtract(a, b), old = a - b;
+        for (auto pair :
+             {std::make_pair(&difference.x, &old.x), std::make_pair(&difference.y, &old.y),
+              std::make_pair(&difference.z, &old.z)})
+            for (size_t i = 0; i < pair.first->c.size(); ++i)
+                Require(pair.first->c[i].lo <= pair.second->c[i].hi &&
+                            pair.second->c[i].lo <= pair.first->c[i].hi,
+                        "Direct subtraction differs from reference enclosure");
+    }
+    BPoly quadratic(2, 0);
+    quadratic.c = {I(0), I(0), I(1)};
+    auto elevated = products.Elevate(quadratic, 4, 0);
+    // Exact Bernstein coefficients of t^2 at degree four.
+    const double expected[] = {0, 0, 1.0 / 6, .5, 1};
+    for (unsigned i = 0; i < 5; ++i)
+        Require(elevated.c[i].lo <= expected[i] && elevated.c[i].hi >= expected[i],
+                "Known polynomial elevation failed");
+    BPoly w(1, 0);
+    w.c = {I(1), I(4)};
+    BV e{w * I(.5), BPoly(), BPoly()};
+    Require(paired::PositionBoxUpper(e, w) > 1 &&
+                paired::PositionControlUpper(e, w, products) < .5000000001,
+            "Tight rational bound did not resolve a loose box bound");
+    Require(!std::isfinite(paired::PositionBoxUpper(e, BPoly(0, 0, I(0)))) &&
+                !std::isfinite(paired::PositionControlUpper(e, BPoly(0, 0, I(-1)), products)),
+            "Nonpositive weights were accepted");
+    // Known chart factorization must survive orientation, chart seams and
+    // restriction. Compare against the independent, full tensor product.
+    using T = sggk::SurfaceType;
+    for (auto type : {T::Plane, T::Cylinder, T::Cone, T::Sphere, T::Torus})
+        for (unsigned flags = 0; flags < 8; ++flags)
+        {
+            AnalyticPatch p;
+            p.parameters.type = type;
+            p.parameters.radius = .8;
+            p.parameters.majorRadius = 2;
+            p.parameters.halfAngle = .3;
+            p.domain = {-.4, 3.1, .3, 2.7};
+            p.mapping.reversedU = (flags & 1) != 0;
+            p.mapping.reversedV = (flags & 2) != 0;
+            p.mapping.swappedUV = (flags & 4) != 0;
+            auto chart = paired::BuildChart(p);
+            for (auto cell : chart.cells)
+            {
+                Require(cell.separableWeight && !cell.weightFactors[0].v &&
+                            !cell.weightFactors[1].u,
+                        "Wrong oriented factor axes");
+                cell.surface.w = paired::Restrict(
+                    paired::Restrict(cell.surface.w, true, I(.17), I(.83)), false, I(.11), I(.71));
+                cell.weightFactors[0] =
+                    paired::Restrict(cell.weightFactors[0], true, I(.17), I(.83));
+                cell.weightFactors[1] =
+                    paired::Restrict(cell.weightFactors[1], false, I(.11), I(.71));
+                BV a{BPoly(2, 3), BPoly(2, 3), BPoly(2, 3)};
+                for (size_t i = 0; i < a.x.c.size(); ++i)
+                {
+                    a.x.c[i] = I(std::sin(double(i)));
+                    a.y.c[i] = I(double(i) - 2);
+                    a.z.c[i] = I(.1);
+                }
+                auto reference = products.Mul(a, cell.surface.w);
+                sameEnclosure(products.MulWeight(a, cell), reference);
+                cell.separableWeight = false;
+                sameEnclosure(products.MulWeight(a, cell), reference);
+            }
+        }
+}
 void Unit()
 {
+    PositionArithmetic();
     AnalyticPatch patch;
     patch.parameters.type = sggk::SurfaceType::Plane;
     patch.domain = {0, .001, 0, 1};
@@ -121,6 +225,50 @@ void Unit()
     auto exact = ValidatePairedConversion(*Plane(0), patch);
     Timing(exact);
     Require(exact.Passed(), "Exact plane: " + exact.certificate.message);
+    Require(exact.fastBoundPasses == exact.surfaceNodes && !exact.tightBoundChecks,
+            "Exact plane did not use the fast position bound");
+    {
+        auto p = patch;
+        p.domain = {0, 1, 0, 1};
+        auto s = Plane(4);
+        // Error control vectors point in different directions. The box bound is
+        // above tolerance, while every control vector is strictly below it.
+        for (unsigned i = 0; i < 4; ++i)
+            for (unsigned j = 0; j < 4; ++j)
+                s->SetControlPoint(sggk::Point3D(double(i) / 3 + 8e-6 * (1 - double(i) / 3),
+                                                 double(j) / 3 + 8e-6 * double(i) / 3, 0),
+                                   i, j);
+        PairedValidationOptions o;
+        o.enablePiecewiseMapping = false;
+        auto fallback = ValidatePairedConversion(*s, p, o);
+        Timing(fallback);
+        Require(fallback.Passed() && fallback.tightBoundChecks > 0 && !fallback.fastBoundPasses,
+                "Loose fast bound was not resolved by the tight fallback");
+        const double bulge[] = {0, 2e-5, -2e-5, 0};
+        for (unsigned i = 0; i < 4; ++i)
+            for (unsigned j = 0; j < 4; ++j)
+                s->SetControlPoint(sggk::Point3D(double(i) / 3, double(j) / 3, bulge[i]), i, j);
+        auto subdivided = ValidatePairedConversion(*s, p, o);
+        Timing(subdivided);
+        Require(subdivided.Passed() && subdivided.surfaceNodes > subdivided.commonCells &&
+                    subdivided.tightBoundChecks > 0 &&
+                    subdivided.certificate.timing.subdivision.elapsedMs > 0,
+                "Loose bounds incorrectly rejected a surface requiring subdivision");
+        for (double offset : {9.9e-6, 1e-5, 1.01e-5})
+        {
+            auto shiftedSource = Plane(0);
+            for (unsigned i = 0; i < 4; ++i)
+                for (unsigned j = 0; j < 4; ++j)
+                {
+                    const auto &point = shiftedSource->ControlPoints()[i][j];
+                    shiftedSource->SetControlPoint(sggk::Point3D(point.X(), point.Y(), offset), i,
+                                                   j);
+                }
+            auto r = ValidatePairedConversion(*shiftedSource, patch, o);
+            Timing(r);
+            Require(r.Passed() == (offset < 1e-5), "Strict position tolerance boundary failed");
+        }
+    }
     for (unsigned i = 1; i < 4; ++i)
     {
         PairedValidationOptions o;
@@ -419,7 +567,9 @@ int Dataset(const std::filesystem::path &dir, const std::filesystem::path &file,
            "ms,new_ms,speedup,geometry_bound,tangent_deg,normal_deg,attempts,u_segments,v_segments,"
            "common_cells,surface_nodes,boundary_nodes,prepare_ms,surface_ms,subdivide_ms,boundary_"
            "ms,report_ms,nurbs_ms,mapping_ms,extraction_ms,source_cache_ms,local_transform_ms,"
-           "source_extractions,cache_hits,u_matrices,v_matrices,message\n";
+           "source_extractions,cache_hits,u_matrices,v_matrices,compose_ms,product_ms,difference_"
+           "ms,"
+           "fast_bound_ms,tight_bound_ms,fast_passes,tight_checks,message\n";
     unsigned passed = 0, notCertified = 0, skipped = 0;
     bool warmed[5]{};
     for (unsigned id = sphere ? 301u : 0u; id < (sphere ? 400u : 500u); id += sphere ? 2u : 1u)
@@ -539,7 +689,11 @@ int Dataset(const std::filesystem::path &dir, const std::filesystem::path &file,
             << newer.sourceExtractionMs << ',' << newer.sourceCacheMs << ','
             << newer.localTransformMs << ',' << newer.sourceExtractions << ','
             << newer.sourceCacheHits << ',' << newer.uExtractionMatrices << ','
-            << newer.vExtractionMatrices << ',' << Quote(message) << '\n';
+            << newer.vExtractionMatrices << ',' << newer.surfaceComposeMs << ','
+            << newer.surfaceProductMs << ',' << newer.surfaceDifferenceMs << ','
+            << newer.surfaceFastBoundMs << ',' << newer.surfaceTightBoundMs << ','
+            << newer.fastBoundPasses << ',' << newer.tightBoundChecks << ',' << Quote(message)
+            << '\n';
         csv.flush();
         std::cout << id << " old=" << oldStatus << " new=" << newStatus << " ms=" << newMs
                   << std::endl;

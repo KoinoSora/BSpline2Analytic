@@ -1,0 +1,4 @@
+legacy: passed
+preparation: passed
+current: passed
+Copies/scaled timings are parser fixtures only, not performance measurements.

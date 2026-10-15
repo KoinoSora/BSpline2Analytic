@@ -42,6 +42,8 @@
 
 独立验证器现已采用 U/V 两步提取和逐控制点坐标变换；可传入 `PairedValidationContext` 复用同一源面的准备结果。源面内容改变会自动失效，候选改变仍重新验证。首次验证及缓存命中的同批对比见[准备阶段优化报告](docs/testing/PAIRED_PREPARATION_2026-10-15.md)。
 
+位置误差界现采用快速连续保守界、缓存直接升阶与可分离权重乘法；快速界不够紧时仍执行控制系数求界和必要的细分，容差保持不变。40 个普通非有理球面的同批位置计算加速 4.24 倍，详见[位置误差界优化报告](docs/testing/PAIRED_POSITION_2026-10-15.md)。
+
 ## 构建与运行
 
 需要 Windows x64、Visual Studio 2022 C++ 工具链、CMake 3.22 及以上、SGK 1.7.11 SDK 和有效本地许可证。`cmake`、`ctest` 需在 PATH 中。

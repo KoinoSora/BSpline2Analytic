@@ -1,0 +1,622 @@
+Internal ctest changing into directory: D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-specialized-timing
+UpdateCTestConfiguration  from :D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-specialized-timing/DartConfiguration.tcl
+Parse Config file:D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-specialized-timing/DartConfiguration.tcl
+UpdateCTestConfiguration  from :D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-specialized-timing/DartConfiguration.tcl
+Parse Config file:D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-specialized-timing/DartConfiguration.tcl
+Test project D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-specialized-timing
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 2
+    Start  2: BSpline2Analytic.PairedSphere
+
+2: Test command: D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-specialized-timing\Release\BSpline2AnalyticPairedValidationTests.exe "--sphere" "D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/tests/data/dataset500" "D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-specialized-timing/paired-sphere-Release.csv"
+2: Working Directory: D:/Projects/CppProjects/SeaGo/SGK1.7.11/SGGK
+2: Environment variable modifications:
+2:  PATH=path_list_prepend:D:/Projects/CppProjects/SeaGo/SGK1.7.11/SGGK/x64-win/bin
+2: Test timeout computed to be: 600
+2: Failed to open log output file.
+2: Failed to open log output file.
+2: 301 old=Passed new=Passed ms=2.3115
+2: 303 old=Passed new=Passed ms=3.3509
+2: 305 old=Passed new=Passed ms=6.5557
+2: 307 old=Passed new=Passed ms=1.6264
+2: 309 old=Passed new=Passed ms=1.4712
+2: 311 old=Passed new=Passed ms=2.0337
+2: 313 old=Passed new=Passed ms=1.379
+2: 315 old=Passed new=Passed ms=1.3332
+2: 317 old=NoCandidate new=NoCandidate ms=0
+2: 319 old=ClassificationFailed new=ClassificationFailed ms=0
+2: 321 old=Passed new=Passed ms=4.1974
+2: 323 old=Passed new=Passed ms=6.9419
+2: 325 old=Passed new=Passed ms=5.9894
+2: 327 old=Passed new=Passed ms=3.8692
+2: 329 old=Passed new=Passed ms=7.0416
+2: 331 old=Passed new=Passed ms=7.0563
+2: 333 old=Passed new=Passed ms=3.7219
+2: 335 old=Passed new=Passed ms=6.7085
+2: 337 old=NoCandidate new=NoCandidate ms=0
+2: 339 old=NotCertified new=Unsupported ms=8.197
+2: 341 old=Passed new=Passed ms=7.6351
+2: 343 old=Passed new=Passed ms=10.0216
+2: 345 old=Passed new=Passed ms=15.3887
+2: 347 old=Passed new=Passed ms=6.159
+2: 349 old=Passed new=Passed ms=10.0854
+2: 351 old=Passed new=Passed ms=12.444
+2: 353 old=Passed new=Passed ms=6.2088
+2: 355 old=Passed new=Passed ms=8.9568
+2: 357 old=NoCandidate new=NoCandidate ms=0
+2: 359 old=NotCertified new=Unsupported ms=11.0767
+2: 361 old=Passed new=Passed ms=7.1664
+2: 363 old=Passed new=Passed ms=14.5503
+2: 365 old=Passed new=Passed ms=14.1427
+2: 367 old=Passed new=Passed ms=8.2712
+2: 369 old=Passed new=Passed ms=13.1179
+2: 371 old=Passed new=Passed ms=15.3725
+2: 373 old=Passed new=Passed ms=8.1637
+2: 375 old=Passed new=Passed ms=17.8009
+2: 377 old=NoCandidate new=NoCandidate ms=0
+2: 379 old=NotCertified new=Unsupported ms=9.028
+2: 381 old=Passed new=Passed ms=10.204
+2: 383 old=Passed new=Passed ms=21.8734
+2: 385 old=Passed new=Passed ms=24.1587
+2: 387 old=Passed new=Passed ms=11.6015
+2: 389 old=Passed new=Passed ms=24.4673
+2: 391 old=Passed new=Passed ms=22.2028
+2: 393 old=Passed new=Passed ms=9.8945
+2: 395 old=Passed new=Passed ms=23.6525
+2: 397 old=NoCandidate new=NoCandidate ms=0
+2: 399 old=ClassificationFailed new=ClassificationFailed ms=0
+2: Paired comparison passed=40 not_certified=3 skipped=7
+1/3 Test  #2: BSpline2Analytic.PairedSphere .......   Passed   20.70 sec
+test 3
+    Start  3: BSpline2Analytic.PairedDataset500
+
+3: Test command: D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-specialized-timing\Release\BSpline2AnalyticPairedValidationTests.exe "--dataset" "D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/tests/data/dataset500" "D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-specialized-timing/paired-dataset500-Release.csv"
+3: Working Directory: D:/Projects/CppProjects/SeaGo/SGK1.7.11/SGGK
+3: Environment variable modifications:
+3:  PATH=path_list_prepend:D:/Projects/CppProjects/SeaGo/SGK1.7.11/SGGK/x64-win/bin
+3: Test timeout computed to be: 600
+3: Failed to open log output file.
+3: Failed to open log output file.
+3: 0 old=Passed new=Passed ms=0.8353
+3: 1 old=Passed new=Passed ms=0.8733
+3: 2 old=Passed new=Passed ms=2.1614
+3: 3 old=Passed new=Passed ms=1.6798
+3: 4 old=Passed new=Passed ms=1.661
+3: 5 old=Passed new=Passed ms=1.6773
+3: 6 old=Passed new=Passed ms=1.137
+3: 7 old=Passed new=Passed ms=0.9279
+3: 8 old=Passed new=Passed ms=1.4245
+3: 9 old=Passed new=Passed ms=1.6382
+3: 10 old=Passed new=Passed ms=2.5544
+3: 11 old=Passed new=Passed ms=1.6527
+3: 12 old=Passed new=Passed ms=0.9779
+3: 13 old=Passed new=Passed ms=0.9695
+3: 14 old=Passed new=Passed ms=1.3842
+3: 15 old=Passed new=Passed ms=1.6469
+3: 16 old=Passed new=Passed ms=1.6464
+3: 17 old=Passed new=Passed ms=1.6578
+3: 18 old=Passed new=Passed ms=1.0094
+3: 19 old=Passed new=Passed ms=0.9204
+3: 20 old=Passed new=Passed ms=1.4957
+3: 21 old=Passed new=Passed ms=1.3902
+3: 22 old=Passed new=Passed ms=2.2623
+3: 23 old=Passed new=Passed ms=4.0814
+3: 24 old=Passed new=Passed ms=2.7744
+3: 25 old=Passed new=Passed ms=2.8412
+3: 26 old=Passed new=Passed ms=1.4268
+3: 27 old=Passed new=Passed ms=1.325
+3: 28 old=Passed new=Passed ms=2.3316
+3: 29 old=Passed new=Passed ms=3.744
+3: 30 old=Passed new=Passed ms=5.0766
+3: 31 old=Passed new=Passed ms=3.4843
+3: 32 old=Passed new=Passed ms=1.777
+3: 33 old=Passed new=Passed ms=1.6869
+3: 34 old=Passed new=Passed ms=2.6693
+3: 35 old=Passed new=Passed ms=2.8475
+3: 36 old=Passed new=Passed ms=3.2035
+3: 37 old=Passed new=Passed ms=3.067
+3: 38 old=Passed new=Passed ms=1.4754
+3: 39 old=Passed new=Passed ms=1.3548
+3: 40 old=Passed new=Passed ms=2.182
+3: 41 old=Passed new=Passed ms=2.184
+3: 42 old=Passed new=Passed ms=2.8919
+3: 43 old=Passed new=Passed ms=3.2842
+3: 44 old=Passed new=Passed ms=3.8091
+3: 45 old=Passed new=Passed ms=4.1108
+3: 46 old=Passed new=Passed ms=1.6896
+3: 47 old=Passed new=Passed ms=2.1405
+3: 48 old=Passed new=Passed ms=3.8709
+3: 49 old=Passed new=Passed ms=3.3505
+3: 50 old=Passed new=Passed ms=4.6205
+3: 51 old=Passed new=Passed ms=4.3353
+3: 52 old=Passed new=Passed ms=2.5182
+3: 53 old=Passed new=Passed ms=3.1241
+3: 54 old=Passed new=Passed ms=4.077
+3: 55 old=Passed new=Passed ms=3.403
+3: 56 old=Passed new=Passed ms=4.0686
+3: 57 old=Passed new=Passed ms=3.5389
+3: 58 old=Passed new=Passed ms=3.3328
+3: 59 old=Passed new=Passed ms=1.867
+3: 60 old=Passed new=Passed ms=2.417
+3: 61 old=Passed new=Passed ms=1.9367
+3: 62 old=Passed new=Passed ms=3.7478
+3: 63 old=Passed new=Passed ms=6.559
+3: 64 old=Passed new=Passed ms=4.0402
+3: 65 old=Passed new=Passed ms=4.8994
+3: 66 old=Passed new=Passed ms=2.0439
+3: 67 old=Passed new=Passed ms=1.8214
+3: 68 old=Passed new=Passed ms=3.0464
+3: 69 old=Passed new=Passed ms=4.4211
+3: 70 old=Passed new=Passed ms=4.1475
+3: 71 old=Passed new=Passed ms=5.5668
+3: 72 old=Passed new=Passed ms=2.0793
+3: 73 old=Passed new=Passed ms=2.633
+3: 74 old=Passed new=Passed ms=4.7631
+3: 75 old=Passed new=Passed ms=7.4799
+3: 76 old=Passed new=Passed ms=4.0901
+3: 77 old=Passed new=Passed ms=4.0284
+3: 78 old=Passed new=Passed ms=2.7421
+3: 79 old=Passed new=Passed ms=1.8105
+3: 80 old=Passed new=Passed ms=2.7036
+3: 81 old=Passed new=Passed ms=4.0628
+3: 82 old=Passed new=Passed ms=4.834
+3: 83 old=Passed new=Passed ms=5.5984
+3: 84 old=Passed new=Passed ms=9.346
+3: 85 old=Passed new=Passed ms=5.9182
+3: 86 old=Passed new=Passed ms=2.7349
+3: 87 old=Passed new=Passed ms=2.5323
+3: 88 old=Passed new=Passed ms=4.2819
+3: 89 old=Passed new=Passed ms=6.4492
+3: 90 old=Passed new=Passed ms=6.3529
+3: 91 old=Passed new=Passed ms=7.3208
+3: 92 old=Passed new=Passed ms=2.6945
+3: 93 old=Passed new=Passed ms=4.3892
+3: 94 old=Passed new=Passed ms=4.7305
+3: 95 old=Passed new=Passed ms=6.3725
+3: 96 old=Passed new=Passed ms=6.2623
+3: 97 old=Passed new=Passed ms=10.6048
+3: 98 old=Passed new=Passed ms=3.0085
+3: 99 old=Passed new=Passed ms=2.8201
+3: 100 old=NotRun new=Unsupported ms=0
+3: 101 old=Passed new=Passed ms=1.0965
+3: 102 old=NotRun new=Unsupported ms=0
+3: 103 old=Passed new=Passed ms=3.4941
+3: 104 old=NotRun new=Unsupported ms=0
+3: 105 old=Passed new=Passed ms=1.3352
+3: 106 old=NotRun new=Unsupported ms=0
+3: 107 old=Passed new=Passed ms=1.4587
+3: 108 old=NotRun new=Unsupported ms=0
+3: 109 old=Passed new=Passed ms=1.6727
+3: 110 old=NotRun new=Unsupported ms=0
+3: 111 old=Passed new=Passed ms=1.4072
+3: 112 old=NotRun new=Unsupported ms=0
+3: 113 old=Passed new=Passed ms=1.1119
+3: 114 old=NotRun new=Unsupported ms=0
+3: 115 old=Passed new=Passed ms=1.6998
+3: 116 old=NotRun new=Unsupported ms=0
+3: 117 old=Passed new=Passed ms=4.8618
+3: 118 old=NotRun new=Unsupported ms=0
+3: 119 old=Passed new=Passed ms=1.0447
+3: 120 old=NotRun new=Unsupported ms=0
+3: 121 old=Passed new=Passed ms=2.6343
+3: 122 old=NotRun new=Unsupported ms=0
+3: 123 old=Passed new=Passed ms=6.8719
+3: 124 old=NotRun new=Unsupported ms=0
+3: 125 old=Passed new=Passed ms=4.0336
+3: 126 old=NotRun new=Unsupported ms=0
+3: 127 old=Passed new=Passed ms=3.3054
+3: 128 old=NotRun new=Unsupported ms=0
+3: 129 old=Passed new=Passed ms=5.0071
+3: 130 old=NotRun new=Unsupported ms=0
+3: 131 old=Passed new=Passed ms=7.7622
+3: 132 old=NotRun new=Unsupported ms=0
+3: 133 old=Passed new=Passed ms=3.3076
+3: 134 old=NotRun new=Unsupported ms=0
+3: 135 old=Passed new=Passed ms=4.4773
+3: 136 old=NotRun new=Unsupported ms=0
+3: 137 old=Passed new=Passed ms=5.7148
+3: 138 old=NotRun new=Unsupported ms=0
+3: 139 old=Passed new=Passed ms=2.6048
+3: 140 old=NotRun new=Unsupported ms=0
+3: 141 old=Passed new=Passed ms=3.188
+3: 142 old=NotRun new=Unsupported ms=0
+3: 143 old=Passed new=Passed ms=6.7849
+3: 144 old=NotRun new=Unsupported ms=0
+3: 145 old=Passed new=Passed ms=6.3344
+3: 146 old=NotRun new=Unsupported ms=0
+3: 147 old=Passed new=Passed ms=3.5222
+3: 148 old=NotRun new=Unsupported ms=0
+3: 149 old=Passed new=Passed ms=7.2701
+3: 150 old=NotRun new=Unsupported ms=0
+3: 151 old=Passed new=Passed ms=11.4444
+3: 152 old=NotRun new=Unsupported ms=0
+3: 153 old=Passed new=Passed ms=4.2759
+3: 154 old=NotRun new=Unsupported ms=0
+3: 155 old=Passed new=Passed ms=7.5103
+3: 156 old=NotRun new=Unsupported ms=0
+3: 157 old=Passed new=Passed ms=6.5027
+3: 158 old=NotRun new=Unsupported ms=0
+3: 159 old=Passed new=Passed ms=4.4338
+3: 160 old=NotRun new=Unsupported ms=0
+3: 161 old=Passed new=Passed ms=6.1063
+3: 162 old=NotRun new=Unsupported ms=0
+3: 163 old=Passed new=Passed ms=7.7046
+3: 164 old=NotRun new=Unsupported ms=0
+3: 165 old=Passed new=Passed ms=7.3378
+3: 166 old=NotRun new=Unsupported ms=0
+3: 167 old=Passed new=Passed ms=3.8692
+3: 168 old=NotRun new=Unsupported ms=0
+3: 169 old=Passed new=Passed ms=9.1132
+3: 170 old=NotRun new=Unsupported ms=0
+3: 171 old=Passed new=Passed ms=8.6584
+3: 172 old=NotRun new=Unsupported ms=0
+3: 173 old=Passed new=Passed ms=3.2824
+3: 174 old=NotRun new=Unsupported ms=0
+3: 175 old=Passed new=Passed ms=9.5403
+3: 176 old=NotRun new=Unsupported ms=0
+3: 177 old=Passed new=Passed ms=7.2096
+3: 178 old=NotRun new=Unsupported ms=0
+3: 179 old=Passed new=Passed ms=3.7438
+3: 180 old=NotRun new=Unsupported ms=0
+3: 181 old=Passed new=Passed ms=5.2051
+3: 182 old=NotRun new=Unsupported ms=0
+3: 183 old=Passed new=Passed ms=12.9375
+3: 184 old=NotRun new=Unsupported ms=0
+3: 185 old=Passed new=Passed ms=11.1678
+3: 186 old=NotRun new=Unsupported ms=0
+3: 187 old=Passed new=Passed ms=6.8455
+3: 188 old=NotRun new=Unsupported ms=0
+3: 189 old=Passed new=Passed ms=11.8965
+3: 190 old=NotRun new=Unsupported ms=0
+3: 191 old=Passed new=Passed ms=19.238
+3: 192 old=NotRun new=Unsupported ms=0
+3: 193 old=Passed new=Passed ms=6.4168
+3: 194 old=NotRun new=Unsupported ms=0
+3: 195 old=Passed new=Passed ms=13.7134
+3: 196 old=NotRun new=Unsupported ms=0
+3: 197 old=Passed new=Passed ms=10.9814
+3: 198 old=NotRun new=Unsupported ms=0
+3: 199 old=Passed new=Passed ms=5.0964
+3: 200 old=NotRun new=Unsupported ms=0
+3: 201 old=Passed new=Passed ms=3.5257
+3: 202 old=NotRun new=Unsupported ms=0
+3: 203 old=Passed new=Passed ms=4.8443
+3: 204 old=NotRun new=Unsupported ms=0
+3: 205 old=Passed new=Passed ms=1.4984
+3: 206 old=NotRun new=Unsupported ms=0
+3: 207 old=Passed new=Passed ms=1.164
+3: 208 old=NotRun new=Unsupported ms=0
+3: 209 old=Passed new=Passed ms=1.4395
+3: 210 old=NotRun new=Unsupported ms=0
+3: 211 old=Passed new=Passed ms=2.6119
+3: 212 old=NotRun new=Unsupported ms=0
+3: 213 old=Passed new=Passed ms=1.5634
+3: 214 old=NotRun new=Unsupported ms=0
+3: 215 old=Passed new=Passed ms=1.4597
+3: 216 old=NotRun new=Unsupported ms=0
+3: 217 old=ClassificationFailed new=ClassificationFailed ms=0
+3: 218 old=NotRun new=Unsupported ms=0
+3: 219 old=ClassificationFailed new=ClassificationFailed ms=0
+3: 220 old=NotRun new=Unsupported ms=0
+3: 221 old=Passed new=Passed ms=4.1219
+3: 222 old=NotRun new=Unsupported ms=0
+3: 223 old=Passed new=Passed ms=4.3564
+3: 224 old=NotRun new=Unsupported ms=0
+3: 225 old=Passed new=Passed ms=4.2596
+3: 226 old=NotRun new=Unsupported ms=0
+3: 227 old=Passed new=Passed ms=2.5421
+3: 228 old=NotRun new=Unsupported ms=0
+3: 229 old=Passed new=Passed ms=6.2702
+3: 230 old=NotRun new=Unsupported ms=0
+3: 231 old=Passed new=Passed ms=4.7881
+3: 232 old=NotRun new=Unsupported ms=0
+3: 233 old=Passed new=Passed ms=2.6982
+3: 234 old=NotRun new=Unsupported ms=0
+3: 235 old=Passed new=Passed ms=5.9167
+3: 236 old=NotRun new=Unsupported ms=0
+3: 237 old=ClassificationFailed new=ClassificationFailed ms=0
+3: 238 old=NotRun new=Unsupported ms=0
+3: 239 old=ClassificationFailed new=ClassificationFailed ms=0
+3: 240 old=NotRun new=Unsupported ms=0
+3: 241 old=Passed new=Passed ms=3.2749
+3: 242 old=NotRun new=Unsupported ms=0
+3: 243 old=Passed new=Passed ms=6.9188
+3: 244 old=NotRun new=Unsupported ms=0
+3: 245 old=Passed new=Passed ms=7.0146
+3: 246 old=NotRun new=Unsupported ms=0
+3: 247 old=Passed new=Passed ms=3.992
+3: 248 old=NotRun new=Unsupported ms=0
+3: 249 old=Passed new=Passed ms=7.3374
+3: 250 old=NotRun new=Unsupported ms=0
+3: 251 old=Passed new=Passed ms=8.242
+3: 252 old=NotRun new=Unsupported ms=0
+3: 253 old=Passed new=Passed ms=3.3637
+3: 254 old=NotRun new=Unsupported ms=0
+3: 255 old=Passed new=Passed ms=6.6773
+3: 256 old=NotRun new=Unsupported ms=0
+3: 257 old=NotCertified new=Unsupported ms=3.7245
+3: 258 old=NotRun new=Unsupported ms=0
+3: 259 old=ClassificationFailed new=ClassificationFailed ms=0
+3: 260 old=NotRun new=Unsupported ms=0
+3: 261 old=Passed new=Passed ms=4.8035
+3: 262 old=NotRun new=Unsupported ms=0
+3: 263 old=Passed new=Passed ms=8.7527
+3: 264 old=NotRun new=Unsupported ms=0
+3: 265 old=Passed new=Passed ms=12.4981
+3: 266 old=NotRun new=Unsupported ms=0
+3: 267 old=Passed new=Passed ms=6.0421
+3: 268 old=NotRun new=Unsupported ms=0
+3: 269 old=Passed new=Passed ms=11.9908
+3: 270 old=NotRun new=Unsupported ms=0
+3: 271 old=Passed new=Passed ms=9.6813
+3: 272 old=NotRun new=Unsupported ms=0
+3: 273 old=Passed new=Passed ms=4.8568
+3: 274 old=NotRun new=Unsupported ms=0
+3: 275 old=Passed new=Passed ms=9.4299
+3: 276 old=NotRun new=Unsupported ms=0
+3: 277 old=ClassificationFailed new=ClassificationFailed ms=0
+3: 278 old=NotRun new=Unsupported ms=0
+3: 279 old=ClassificationFailed new=ClassificationFailed ms=0
+3: 280 old=NotRun new=Unsupported ms=0
+3: 281 old=Passed new=Passed ms=4.5332
+3: 282 old=NotRun new=Unsupported ms=0
+3: 283 old=Passed new=Passed ms=11.7728
+3: 284 old=NotRun new=Unsupported ms=0
+3: 285 old=Passed new=Passed ms=11.3407
+3: 286 old=NotRun new=Unsupported ms=0
+3: 287 old=Passed new=Passed ms=4.518
+3: 288 old=NotRun new=Unsupported ms=0
+3: 289 old=Passed new=Passed ms=14.2505
+3: 290 old=NotRun new=Unsupported ms=0
+3: 291 old=Passed new=Passed ms=11.3859
+3: 292 old=NotRun new=Unsupported ms=0
+3: 293 old=Passed new=Passed ms=6.6144
+3: 294 old=NotRun new=Unsupported ms=0
+3: 295 old=Passed new=Passed ms=17.0787
+3: 296 old=NotRun new=Unsupported ms=0
+3: 297 old=NotCertified new=Unsupported ms=6.4735
+3: 298 old=NotRun new=Unsupported ms=0
+3: 299 old=NotCertified new=Unsupported ms=0.0431
+3: 300 old=NotRun new=Unsupported ms=0
+3: 301 old=Passed new=Passed ms=2.0031
+3: 302 old=NotRun new=Unsupported ms=0
+3: 303 old=Passed new=Passed ms=1.9886
+3: 304 old=NotRun new=Unsupported ms=0
+3: 305 old=Passed new=Passed ms=4.007
+3: 306 old=NotRun new=Unsupported ms=0
+3: 307 old=Passed new=Passed ms=1.1556
+3: 308 old=NotRun new=Unsupported ms=0
+3: 309 old=Passed new=Passed ms=1.8149
+3: 310 old=NotRun new=Unsupported ms=0
+3: 311 old=Passed new=Passed ms=1.1577
+3: 312 old=NotRun new=Unsupported ms=0
+3: 313 old=Passed new=Passed ms=1.2061
+3: 314 old=NotRun new=Unsupported ms=0
+3: 315 old=Passed new=Passed ms=1.1575
+3: 316 old=NotRun new=Unsupported ms=0
+3: 317 old=NoCandidate new=NoCandidate ms=0
+3: 318 old=NotRun new=Unsupported ms=0
+3: 319 old=ClassificationFailed new=ClassificationFailed ms=0
+3: 320 old=NotRun new=Unsupported ms=0
+3: 321 old=Passed new=Passed ms=4.333
+3: 322 old=NotRun new=Unsupported ms=0
+3: 323 old=Passed new=Passed ms=10.5181
+3: 324 old=NotRun new=Unsupported ms=0
+3: 325 old=Passed new=Passed ms=7.1488
+3: 326 old=NotRun new=Unsupported ms=0
+3: 327 old=Passed new=Passed ms=6.5258
+3: 328 old=NotRun new=Unsupported ms=0
+3: 329 old=Passed new=Passed ms=7.564
+3: 330 old=NotRun new=Unsupported ms=0
+3: 331 old=Passed new=Passed ms=8.0088
+3: 332 old=NotRun new=Unsupported ms=0
+3: 333 old=Passed new=Passed ms=4.3574
+3: 334 old=NotRun new=Unsupported ms=0
+3: 335 old=Passed new=Passed ms=5.8261
+3: 336 old=NotRun new=Unsupported ms=0
+3: 337 old=NoCandidate new=NoCandidate ms=0
+3: 338 old=NotRun new=Unsupported ms=0
+3: 339 old=NotCertified new=Unsupported ms=7.457
+3: 340 old=NotRun new=Unsupported ms=0
+3: 341 old=Passed new=Passed ms=7.4855
+3: 342 old=NotRun new=Unsupported ms=0
+3: 343 old=Passed new=Passed ms=8.4693
+3: 344 old=NotRun new=Unsupported ms=0
+3: 345 old=Passed new=Passed ms=8.7075
+3: 346 old=NotRun new=Unsupported ms=0
+3: 347 old=Passed new=Passed ms=11.3131
+3: 348 old=NotRun new=Unsupported ms=0
+3: 349 old=Passed new=Passed ms=11.7723
+3: 350 old=NotRun new=Unsupported ms=0
+3: 351 old=Passed new=Passed ms=11.9499
+3: 352 old=NotRun new=Unsupported ms=0
+3: 353 old=Passed new=Passed ms=10.9253
+3: 354 old=NotRun new=Unsupported ms=0
+3: 355 old=Passed new=Passed ms=9.4304
+3: 356 old=NotRun new=Unsupported ms=0
+3: 357 old=NoCandidate new=NoCandidate ms=0
+3: 358 old=NotRun new=Unsupported ms=0
+3: 359 old=NotCertified new=Unsupported ms=9.2679
+3: 360 old=NotRun new=Unsupported ms=0
+3: 361 old=Passed new=Passed ms=9.9595
+3: 362 old=NotRun new=Unsupported ms=0
+3: 363 old=Passed new=Passed ms=11.9411
+3: 364 old=NotRun new=Unsupported ms=0
+3: 365 old=Passed new=Passed ms=18.1436
+3: 366 old=NotRun new=Unsupported ms=0
+3: 367 old=Passed new=Passed ms=6.4437
+3: 368 old=NotRun new=Unsupported ms=0
+3: 369 old=Passed new=Passed ms=12.9594
+3: 370 old=NotRun new=Unsupported ms=0
+3: 371 old=Passed new=Passed ms=12.8824
+3: 372 old=NotRun new=Unsupported ms=0
+3: 373 old=Passed new=Passed ms=10.6576
+3: 374 old=NotRun new=Unsupported ms=0
+3: 375 old=Passed new=Passed ms=18.7881
+3: 376 old=NotRun new=Unsupported ms=0
+3: 377 old=NoCandidate new=NoCandidate ms=0
+3: 378 old=NotRun new=Unsupported ms=0
+3: 379 old=NotCertified new=Unsupported ms=10.4536
+3: 380 old=NotRun new=Unsupported ms=0
+3: 381 old=Passed new=Passed ms=11.0476
+3: 382 old=NotRun new=Unsupported ms=0
+3: 383 old=Passed new=Passed ms=21.4892
+3: 384 old=NotRun new=Unsupported ms=0
+3: 385 old=Passed new=Passed ms=23.1215
+3: 386 old=NotRun new=Unsupported ms=0
+3: 387 old=Passed new=Passed ms=10.0038
+3: 388 old=NotRun new=Unsupported ms=0
+3: 389 old=Passed new=Passed ms=24.0865
+3: 390 old=NotRun new=Unsupported ms=0
+3: 391 old=Passed new=Passed ms=21.8229
+3: 392 old=NotRun new=Unsupported ms=0
+3: 393 old=Passed new=Passed ms=10.9894
+3: 394 old=NotRun new=Unsupported ms=0
+3: 395 old=Passed new=Passed ms=21.199
+3: 396 old=NotRun new=Unsupported ms=0
+3: 397 old=NoCandidate new=NoCandidate ms=0
+3: 398 old=NotRun new=Unsupported ms=0
+3: 399 old=ClassificationFailed new=ClassificationFailed ms=0
+3: 400 old=NotRun new=Unsupported ms=0
+3: 401 old=Passed new=Passed ms=1.2111
+3: 402 old=NotRun new=Unsupported ms=0
+3: 403 old=Passed new=Passed ms=2.1476
+3: 404 old=NotRun new=Unsupported ms=0
+3: 405 old=Passed new=Passed ms=1.1903
+3: 406 old=NotRun new=Unsupported ms=0
+3: 407 old=Passed new=Passed ms=1.2999
+3: 408 old=NotRun new=Unsupported ms=0
+3: 409 old=Passed new=Passed ms=1.1889
+3: 410 old=NotRun new=Unsupported ms=0
+3: 411 old=Passed new=Passed ms=1.1766
+3: 412 old=NotRun new=Unsupported ms=0
+3: 413 old=Passed new=Passed ms=2.1027
+3: 414 old=NotRun new=Unsupported ms=0
+3: 415 old=Passed new=Passed ms=1.2076
+3: 416 old=NotRun new=Unsupported ms=0
+3: 417 old=Passed new=Passed ms=1.2371
+3: 418 old=NotRun new=Unsupported ms=0
+3: 419 old=Passed new=Passed ms=1.1862
+3: 420 old=NotRun new=Unsupported ms=0
+3: 421 old=Passed new=Passed ms=3.7752
+3: 422 old=NotRun new=Unsupported ms=0
+3: 423 old=Passed new=Passed ms=6.0768
+3: 424 old=NotRun new=Unsupported ms=0
+3: 425 old=Passed new=Passed ms=7.531
+3: 426 old=NotRun new=Unsupported ms=0
+3: 427 old=Passed new=Passed ms=3.7664
+3: 428 old=NotRun new=Unsupported ms=0
+3: 429 old=Passed new=Passed ms=8.1651
+3: 430 old=NotRun new=Unsupported ms=0
+3: 431 old=Passed new=Passed ms=6.5097
+3: 432 old=NotRun new=Unsupported ms=0
+3: 433 old=Passed new=Passed ms=5.6773
+3: 434 old=NotRun new=Unsupported ms=0
+3: 435 old=Passed new=Passed ms=6.1449
+3: 436 old=NotRun new=Unsupported ms=0
+3: 437 old=Passed new=Passed ms=5.934
+3: 438 old=NotRun new=Unsupported ms=0
+3: 439 old=Passed new=Passed ms=4.4507
+3: 440 old=NotRun new=Unsupported ms=0
+3: 441 old=Passed new=Passed ms=7.2231
+3: 442 old=NotRun new=Unsupported ms=0
+3: 443 old=Passed new=Passed ms=10.5658
+3: 444 old=NotRun new=Unsupported ms=0
+3: 445 old=Passed new=Passed ms=8.7747
+3: 446 old=NotRun new=Unsupported ms=0
+3: 447 old=Passed new=Passed ms=7.2595
+3: 448 old=NotRun new=Unsupported ms=0
+3: 449 old=Passed new=Passed ms=9.0492
+3: 450 old=NotRun new=Unsupported ms=0
+3: 451 old=Passed new=Passed ms=8.4863
+3: 452 old=NotRun new=Unsupported ms=0
+3: 453 old=Passed new=Passed ms=5.1855
+3: 454 old=NotRun new=Unsupported ms=0
+3: 455 old=Passed new=Passed ms=9.8826
+3: 456 old=NotRun new=Unsupported ms=0
+3: 457 old=Passed new=Passed ms=15.1955
+3: 458 old=NotRun new=Unsupported ms=0
+3: 459 old=Passed new=Passed ms=8.7034
+3: 460 old=NotRun new=Unsupported ms=0
+3: 461 old=Passed new=Passed ms=7.092
+3: 462 old=NotRun new=Unsupported ms=0
+3: 463 old=Passed new=Passed ms=14.4358
+3: 464 old=NotRun new=Unsupported ms=0
+3: 465 old=Passed new=Passed ms=13.0382
+3: 466 old=NotRun new=Unsupported ms=0
+3: 467 old=Passed new=Passed ms=7.5466
+3: 468 old=NotRun new=Unsupported ms=0
+3: 469 old=Passed new=Passed ms=14.9543
+3: 470 old=NotRun new=Unsupported ms=0
+3: 471 old=Passed new=Passed ms=13.2527
+3: 472 old=NotRun new=Unsupported ms=0
+3: 473 old=Passed new=Passed ms=7.8147
+3: 474 old=NotRun new=Unsupported ms=0
+3: 475 old=Passed new=Passed ms=12.8604
+3: 476 old=NotRun new=Unsupported ms=0
+3: 477 old=Passed new=Passed ms=13.6306
+3: 478 old=NotRun new=Unsupported ms=0
+3: 479 old=Passed new=Passed ms=6.6122
+3: 480 old=NotRun new=Unsupported ms=0
+3: 481 old=Passed new=Passed ms=9.5888
+3: 482 old=NotRun new=Unsupported ms=0
+3: 483 old=Passed new=Passed ms=32.6683
+3: 484 old=NotRun new=Unsupported ms=0
+3: 485 old=Passed new=Passed ms=22.5294
+3: 486 old=NotRun new=Unsupported ms=0
+3: 487 old=Passed new=Passed ms=11.0952
+3: 488 old=NotRun new=Unsupported ms=0
+3: 489 old=Passed new=Passed ms=22.7506
+3: 490 old=NotRun new=Unsupported ms=0
+3: 491 old=Passed new=Passed ms=24.0781
+3: 492 old=NotRun new=Unsupported ms=0
+3: 493 old=Passed new=Passed ms=17.2496
+3: 494 old=NotRun new=Unsupported ms=0
+3: 495 old=Passed new=Passed ms=23.3048
+3: 496 old=NotRun new=Unsupported ms=0
+3: 497 old=Passed new=Passed ms=25.5367
+3: 498 old=NotRun new=Unsupported ms=0
+3: 499 old=Passed new=Passed ms=10.1245
+3: Paired comparison passed=280 not_certified=6 skipped=214
+2/3 Test  #3: BSpline2Analytic.PairedDataset500 ...   Passed   96.41 sec
+test 15
+    Start 15: BSpline2Analytic.Regression
+
+15: Test command: D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-specialized-timing\Release\BSpline2AnalyticTests.exe
+15: Working Directory: D:/Projects/CppProjects/SeaGo/SGK1.7.11/SGGK
+15: Environment variable modifications:
+15:  PATH=path_list_prepend:D:/Projects/CppProjects/SeaGo/SGK1.7.11/SGGK/x64-win/bin
+15: Test timeout computed to be: 1500
+15: Failed to open log output file.
+15: Failed to open log output file.
+15: PASS plane
+15: PASS cylinder
+15: PASS cone
+15: PASS sphere
+15: PASS torus
+15: PASS torus-concentric
+15: PASS sphere-antipodal-meridians
+15: PASS shallow-cone
+15: PASS short-cylinder-arc
+15: PASS torus-apple
+15: PASS torus-lemon
+15: PASS cylinder-full-turn
+15: PASS torus-cross-seams
+15: PASS torus-full-turns
+15: PASS large-origin-sphere
+15: 3847 assertions, 0 failed reference cases
+3/3 Test #15: BSpline2Analytic.Regression .........   Passed    0.22 sec
+
+The following tests passed:
+	BSpline2Analytic.PairedSphere
+	BSpline2Analytic.PairedDataset500
+	BSpline2Analytic.Regression
+
+100% tests passed, 0 tests failed out of 3
+
+Total Test time (real) = 117.37 sec

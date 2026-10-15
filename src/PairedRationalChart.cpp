@@ -261,6 +261,9 @@ Chart BuildChart(const AnalyticPatch &p)
                             p.mapping.reversedV ? 1 - low[dv] : high[dv],
                             Orient(w, p.mapping)};
             cell.normal = Orient(n, p.mapping) * I(p.normalSign);
+            cell.weightFactors = {Orient(p.mapping.swappedUV ? v.w : u.w, p.mapping),
+                                  Orient(p.mapping.swappedUV ? u.w : v.w, p.mapping)};
+            cell.separableWeight = true;
             chart.cells.push_back(std::move(cell));
         }
     return chart;

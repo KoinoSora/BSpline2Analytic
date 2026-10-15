@@ -1,0 +1,8 @@
+适用于 .NET Framework MSBuild 版本 17.12.12+1cce77968
+
+  PairedConversionValidation.cpp
+  PairedRationalChart.cpp
+  PairedSourcePreparation.cpp
+  PairedPreparationBenchmark.cpp
+  正在生成代码...
+  PairedPreparationComparison.vcxproj -> D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-specialized-timing\paired-preparation-comparison\out\Release\PairedPreparationComparison.exe

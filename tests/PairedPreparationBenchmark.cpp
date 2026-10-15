@@ -61,9 +61,12 @@ int main(int argc, char **argv)
         csv << std::setprecision(17);
         csv << "id,run,controls,degree_u,degree_v,cells,cache_fill_ms";
         for (auto name : {"baseline", "new", "cached"})
-            for (auto field : {"wall_ms", "prepare_ms", "extract_ms", "local_ms", "cache_ms",
-                               "surface_ms", "boundary_ms", "extractions", "cache_hits",
-                               "u_matrices", "v_matrices", "geometry", "tangent", "normal"})
+            for (auto field :
+                 {"wall_ms",     "prepare_ms",    "extract_ms",    "local_ms",       "cache_ms",
+                  "surface_ms",  "boundary_ms",   "extractions",   "cache_hits",     "u_matrices",
+                  "v_matrices",  "geometry",      "tangent",       "normal",         "compose_ms",
+                  "product_ms",  "difference_ms", "fast_bound_ms", "tight_bound_ms", "fast_passes",
+                  "tight_checks"})
                 csv << ',' << name << '_' << field;
         csv << '\n';
         unsigned cases = 0;
@@ -125,7 +128,10 @@ int main(int argc, char **argv)
                         << r.sourceCacheHits << ',' << r.uExtractionMatrices << ','
                         << r.vExtractionMatrices << ',' << r.certificate.geometry.upperBound << ','
                         << r.certificate.boundaryTangent.upperBound << ','
-                        << r.certificate.boundaryNormal.upperBound;
+                        << r.certificate.boundaryNormal.upperBound << ',' << r.surfaceComposeMs
+                        << ',' << r.surfaceProductMs << ',' << r.surfaceDifferenceMs << ','
+                        << r.surfaceFastBoundMs << ',' << r.surfaceTightBoundMs << ','
+                        << r.fastBoundPasses << ',' << r.tightBoundChecks;
                 }
                 csv << '\n';
             }

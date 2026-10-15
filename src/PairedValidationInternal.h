@@ -9,6 +9,10 @@ struct TargetCell
 {
     BezierCell surface;
     BV normal; // Canonical normal numerator, with patch.normalSign applied.
+    // Analytically constructed factors in oriented source axes; never inferred
+    // from approximate rank of a coefficient matrix.
+    std::array<BPoly, 2> weightFactors;
+    bool separableWeight = false;
 };
 struct Chart
 {
@@ -27,7 +31,13 @@ class Products
     BV Mul(const BV &, const BPoly &);
     BPoly Dot(const BV &, const BV &);
     BV Cross(const BV &, const BV &);
+    BPoly Elevate(const BPoly &, unsigned, unsigned);
+    BV Subtract(BV, const BV &);
+    BV MulShared(const BV &, const BPoly &);
+    BV MulWeight(const BV &, const TargetCell &);
 };
+double PositionBoxUpper(const BV &, const BPoly &);
+double PositionControlUpper(const BV &, const BPoly &, Products &);
 BPoly Restrict(const BPoly &, bool alongU, I lo, I hi);
 BV Restrict(const BV &, bool alongU, I lo, I hi);
 BezierCell Crop(const BezierCell &, double, double, double, double);

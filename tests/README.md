@@ -40,6 +40,8 @@
 
 ## 等参专用路径计时
 
+位置误差界优化沿用比较工具：`python tests/BenchmarkPairedPreparation.py --baseline d345b30 --build-dir build-specialized-timing --output <comparison.csv> --runs 3`。新增位置内部计时 `compose_ms`、`product_ms`、`difference_ms`、`fast_bound_ms`、`tight_bound_ms`，均为 `surface_ms` 的子项；`fast_passes` 和 `tight_checks` 统计快速界成功及紧界调用的节点数。CSV 汇总兼容旧字段集合。实现范围、专项和同批比较见[位置误差界优化报告](../docs/testing/PAIRED_POSITION_2026-10-15.md)。
+
 准备阶段优化的复现方式：先构建当前 Release 库，再执行 `python tests/BenchmarkPairedPreparation.py --baseline 3985a1b --build-dir build-specialized-timing --output <comparison.csv> --runs 3`。脚本提取旧实现到忽略的构建目录，只重命名私有命名空间和公开函数，并增加两个子计时器；两版共用未修改的区间基础运算和同一编译设置。40 个普通非有理球面的三种模式轮换顺序，各测三次；缓存首次填充另列，不能把缓存命中耗时当作首次验证耗时。见[准备阶段优化报告](../docs/testing/PAIRED_PREPARATION_2026-10-15.md)。
 
 `Build.ps1 -Dataset500Only` 当前直接调用 `Recognize`（200 个有理输入）及 `ConvertApproximate`（300 个非有理输入），不进入一般兜底。固定 500 例全部重载并核验来源证书，40 个退化案例保留退化预期。

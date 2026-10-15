@@ -1,0 +1,67 @@
+{
+  "baseline": "d345b30ea7aaa1725f4de140c0c7893af3dacfea",
+  "cases": 40,
+  "repetitions": 3,
+  "baseline_original_sha256": {
+    "PairedValidationInternal.h": "bea2264abbbe31d32a031545938471f7d7a305d299914709f0d71d4f7194aafa",
+    "PairedRationalChart.cpp": "8056b32dc144b55683e605456a349c9d9e394b86a4fcbd412de7fb091dbf31e9",
+    "PairedConversionValidation.cpp": "ddd2da9bf8130fc5246d16da1ac1321575664fb749c869b946c2d5fec9d46a15",
+    "PairedSourcePreparation.cpp": "aad1cd2f78d7aa79d7780cf0a23877cff566f0e2070ddc8cc055892d2166878b"
+  },
+  "current_library_sha256": "62c9d903199b5507525b6f8047da4de61cffb89b500634a67fe2f980d3ddec7b",
+  "configuration": "Release /fp:strict",
+  "cpu_affinity_fixed": false,
+  "exclusive_machine": false,
+  "cache_fill_mean_ms": 9.034187500000005,
+  "means": {
+    "baseline": {
+      "wall_ms": 16.757324999999998,
+      "prepare_ms": 3.8621358333333307,
+      "extract_ms": 3.2669099999999998,
+      "local_ms": 0.39773583333333334,
+      "cache_ms": 0.0,
+      "surface_ms": 10.32202,
+      "boundary_ms": 2.4914091666666662,
+      "compose_ms": 0.0,
+      "product_ms": 0.0,
+      "difference_ms": 0.0,
+      "fast_bound_ms": 0.0,
+      "tight_bound_ms": 0.0
+    },
+    "new": {
+      "wall_ms": 8.848503333333333,
+      "prepare_ms": 3.876611666666664,
+      "extract_ms": 3.2748449999999996,
+      "local_ms": 0.41233916666666665,
+      "cache_ms": 0.0,
+      "surface_ms": 2.4331,
+      "boundary_ms": 2.4574874999999987,
+      "compose_ms": 0.4331608333333333,
+      "product_ms": 1.2026316666666665,
+      "difference_ms": 0.7737400000000001,
+      "fast_bound_ms": 0.020336666666666666,
+      "tight_bound_ms": 0.0
+    },
+    "cached": {
+      "wall_ms": 5.577340833333333,
+      "prepare_ms": 0.6196191666666665,
+      "extract_ms": 0.0,
+      "local_ms": 0.4138183333333333,
+      "cache_ms": 0.01553833333333333,
+      "surface_ms": 2.458720833333332,
+      "boundary_ms": 2.415644166666666,
+      "compose_ms": 0.43141250000000003,
+      "product_ms": 1.222165,
+      "difference_ms": 0.7817541666666669,
+      "fast_bound_ms": 0.019963333333333326,
+      "tight_bound_ms": 0.0
+    }
+  },
+  "speedup": {
+    "new": 1.8938033211642946,
+    "cached": 3.004536660167651
+  },
+  "position_speedup": 4.242332826435412,
+  "new_fast_bound_passes": 1875,
+  "new_tight_bound_checks": 0
+}
