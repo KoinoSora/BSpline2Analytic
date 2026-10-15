@@ -1,0 +1,39 @@
+Start testing: Oct 15 15:44 中国标准时间
+----------------------------------------------------------
+1/21 Testing: BSpline2Analytic.GeneralRationalBoundaryUnit
+1/21 Test: BSpline2Analytic.GeneralRationalBoundaryUnit
+Command: "D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-general-hybrid/Release/BSpline2AnalyticGeneralRationalBoundaryTests.exe" "--unit" "D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/tests/data/dataset500"
+Directory: D:/Projects/CppProjects/SeaGo/SGK1.7.11/SGGK
+"BSpline2Analytic.GeneralRationalBoundaryUnit" start time: Oct 15 15:44 中国标准时间
+Output:
+----------------------------------------------------------
+Failed to open log output file.
+Failed to open log output file.
+Rational boundary unit assertions=6357
+<end of output>
+Test time =   0.21 sec
+----------------------------------------------------------
+Test Passed.
+"BSpline2Analytic.GeneralRationalBoundaryUnit" end time: Oct 15 15:44 中国标准时间
+"BSpline2Analytic.GeneralRationalBoundaryUnit" time elapsed: 00:00:00
+----------------------------------------------------------
+
+2/21 Testing: BSpline2Analytic.GeneralHybridUnit
+2/21 Test: BSpline2Analytic.GeneralHybridUnit
+Command: "D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-general-hybrid/Release/BSpline2AnalyticGeneralHybridTests.exe" "--unit" "D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/tests/data/dataset500"
+Directory: D:/Projects/CppProjects/SeaGo/SGK1.7.11/SGGK
+"BSpline2Analytic.GeneralHybridUnit" start time: Oct 15 15:44 中国标准时间
+Output:
+----------------------------------------------------------
+Failed to open log output file.
+Failed to open log output file.
+Hybrid unit assertions=1955
+<end of output>
+Test time =   0.47 sec
+----------------------------------------------------------
+Test Passed.
+"BSpline2Analytic.GeneralHybridUnit" end time: Oct 15 15:44 中国标准时间
+"BSpline2Analytic.GeneralHybridUnit" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Oct 15 15:44 中国标准时间

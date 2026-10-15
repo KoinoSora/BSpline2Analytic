@@ -1,0 +1,997 @@
+{
+  "failures": [],
+  "runs": 5,
+  "rows": 220,
+  "exe_sha256": "95270d066c9cf37eb0b1df81b4c891857a43acc9adac63cbc2c4326c8509be7c",
+  "inputs_sha256": {
+    "general-000.b2a": "0a42b7790ebbe24247e4672092b7fec883990260ecb1973c7763bbbffa4dd792",
+    "general-100.b2a": "b2066229e4672c257bbd1ac054356f152ae2de7d09c89bea00aab1bbb91139c4",
+    "general-188.b2a": "a8eba99d7de8a8c0e4f4e6eeb7b16b0938f758363b77844af60db3895e5e2229",
+    "general-200.b2a": "e8d464a4c20e98928a4dd5bf087c0e0ca3ddcb41f45208e833bc6a0f4bd4a7e6",
+    "general-218.b2a": "28e8534936809ef71defcd2f605a06806fbfc45542e2a72272312891c393ab55",
+    "general-230.b2a": "cccad5908e8a5fcb256e51fc25e52106f5097a4db73fc190c1ac961200d03197",
+    "general-231.b2a": "e745f31b67ddaa23e4b36b4d656e59f5e634b442e4ab45d8254e742e3234d759",
+    "general-254.b2a": "bc7aa1afb8adcd49e6a014d1e4852010eb6b10f3f86eb9276b35005e58f657de",
+    "general-255.b2a": "84b6deb3c07e9316d3402412507490859277f5fca2b218152d567ed746a8dcf8",
+    "general-284.b2a": "1ea5be5ddec333f70a1424a2b00006bad7afacb9536cf26febf31e5578849808",
+    "general-286.b2a": "fbb59915fe6edf253e309f21b66b9039f4c994546447de3d32045eb41bcac02b",
+    "general-288.b2a": "bf2551783b397e26b1d1fdeb55dd5c7956575c96d1c7df135ba31aa09af04ca6",
+    "general-318.b2a": "ded89bcccb4ac430750217d51a82ce489b659648ee2504f17ed721dc6ee28514",
+    "general-388.b2a": "c94f934e1957cc7da115c6925c1d7dfb878530c76a0188bf2d4129a40a349d54",
+    "general-486.b2a": "36ee9ed4f8e7d3e406f49687b3960f4c5e8bc42af44448ea0fef218aba0b6226",
+    "general-488.b2a": "186b303aaaf214a25440168d471a7dc2c93ce55ddb914c78fbe92e9a34887072",
+    "general-500.b2a": "718e3b16b7bd7c22c0129757af68cbf5213735b8c1001533971a5d205cb9fcf0"
+  },
+  "cpu_affinity_fixed": false,
+  "exclusive_machine": false,
+  "cases": [
+    {
+      "synthetic": 0,
+      "id": 0,
+      "analytic_uv": {
+        "accepted_runs": 5,
+        "outcomes": [
+          "Passed"
+        ],
+        "medians": {
+          "pipeline_ms": 1.3076,
+          "validate_ms": 0.9545,
+          "classify_ms": 0.35090000000000005,
+          "sampling_ms": 0.0198,
+          "recovery_ms": 0.15759999999999996,
+          "prepare_ms": 0.353,
+          "boundary_ms": 0.42450000000000004,
+          "attempts": 1.0,
+          "chart_attempts": 1.0,
+          "nodes": 18.0,
+          "refinements": 0.0,
+          "max_degree": 0.0
+        }
+      },
+      "rational": {
+        "accepted_runs": 5,
+        "outcomes": [
+          "Passed"
+        ],
+        "medians": {
+          "pipeline_ms": 1.634,
+          "validate_ms": 1.1862,
+          "classify_ms": 0.4671,
+          "sampling_ms": 0.028,
+          "recovery_ms": 0.1914,
+          "prepare_ms": 0.4509,
+          "boundary_ms": 0.5321,
+          "attempts": 1.0,
+          "chart_attempts": 1.0,
+          "nodes": 18.0,
+          "refinements": 0.0,
+          "max_degree": 2.0
+        }
+      }
+    },
+    {
+      "synthetic": 0,
+      "id": 100,
+      "analytic_uv": {
+        "accepted_runs": 5,
+        "outcomes": [
+          "Passed"
+        ],
+        "medians": {
+          "pipeline_ms": 4.6791,
+          "validate_ms": 4.159,
+          "classify_ms": 0.5357,
+          "sampling_ms": 0.0206,
+          "recovery_ms": 0.12080000000000002,
+          "prepare_ms": 1.2008,
+          "boundary_ms": 2.8151,
+          "attempts": 1.0,
+          "chart_attempts": 1.0,
+          "nodes": 8.0,
+          "refinements": 0.0,
+          "max_degree": 0.0
+        }
+      },
+      "rational": {
+        "accepted_runs": 5,
+        "outcomes": [
+          "Passed"
+        ],
+        "medians": {
+          "pipeline_ms": 10.1782,
+          "validate_ms": 9.6332,
+          "classify_ms": 0.5398000000000001,
+          "sampling_ms": 0.0324,
+          "recovery_ms": 0.1785,
+          "prepare_ms": 1.5318,
+          "boundary_ms": 7.8817,
+          "attempts": 1.0,
+          "chart_attempts": 1.0,
+          "nodes": 52.0,
+          "refinements": 22.0,
+          "max_degree": 3.0
+        }
+      }
+    },
+    {
+      "synthetic": 0,
+      "id": 188,
+      "analytic_uv": {
+        "accepted_runs": 5,
+        "outcomes": [
+          "Passed"
+        ],
+        "medians": {
+          "pipeline_ms": 19.812,
+          "validate_ms": 18.1932,
+          "classify_ms": 1.6594,
+          "sampling_ms": 0.1157,
+          "recovery_ms": 0.3511000000000024,
+          "prepare_ms": 4.2062,
+          "boundary_ms": 13.1421,
+          "attempts": 1.0,
+          "chart_attempts": 1.0,
+          "nodes": 36.0,
+          "refinements": 0.0,
+          "max_degree": 0.0
+        }
+      },
+      "rational": {
+        "accepted_runs": 0,
+        "outcomes": [
+          "NotCertified"
+        ],
+        "medians": {
+          "pipeline_ms": 3.7864,
+          "validate_ms": 1.6588999999999998,
+          "classify_ms": 2.1213,
+          "sampling_ms": 0.5498000000000001,
+          "recovery_ms": 0.9488,
+          "prepare_ms": 0.0,
+          "boundary_ms": 0.0,
+          "attempts": 27.0,
+          "chart_attempts": 3.0,
+          "nodes": 0.0,
+          "refinements": 0.0,
+          "max_degree": 0.0
+        }
+      }
+    },
+    {
+      "synthetic": 0,
+      "id": 200,
+      "analytic_uv": {
+        "accepted_runs": 5,
+        "outcomes": [
+          "Passed"
+        ],
+        "medians": {
+          "pipeline_ms": 5.7586,
+          "validate_ms": 5.2135,
+          "classify_ms": 0.5205,
+          "sampling_ms": 0.022500000000000003,
+          "recovery_ms": 0.30909999999999993,
+          "prepare_ms": 1.1801,
+          "boundary_ms": 3.6737,
+          "attempts": 1.0,
+          "chart_attempts": 6.0,
+          "nodes": 8.0,
+          "refinements": 0.0,
+          "max_degree": 0.0
+        }
+      },
+      "rational": {
+        "accepted_runs": 5,
+        "outcomes": [
+          "Passed"
+        ],
+        "medians": {
+          "pipeline_ms": 9.3885,
+          "validate_ms": 8.8796,
+          "classify_ms": 0.5172,
+          "sampling_ms": 0.0419,
+          "recovery_ms": 0.6895,
+          "prepare_ms": 1.7111,
+          "boundary_ms": 5.1924,
+          "attempts": 1.0,
+          "chart_attempts": 4.0,
+          "nodes": 32.0,
+          "refinements": 12.0,
+          "max_degree": 4.0
+        }
+      }
+    },
+    {
+      "synthetic": 0,
+      "id": 218,
+      "analytic_uv": {
+        "accepted_runs": 5,
+        "outcomes": [
+          "Passed"
+        ],
+        "medians": {
+          "pipeline_ms": 5.4519,
+          "validate_ms": 4.9773,
+          "classify_ms": 0.5106999999999999,
+          "sampling_ms": 0.0212,
+          "recovery_ms": 0.31679999999999975,
+          "prepare_ms": 1.1886,
+          "boundary_ms": 3.3434,
+          "attempts": 1.0,
+          "chart_attempts": 6.0,
+          "nodes": 8.0,
+          "refinements": 0.0,
+          "max_degree": 0.0
+        }
+      },
+      "rational": {
+        "accepted_runs": 5,
+        "outcomes": [
+          "Passed"
+        ],
+        "medians": {
+          "pipeline_ms": 11.1784,
+          "validate_ms": 10.6837,
+          "classify_ms": 0.512,
+          "sampling_ms": 0.039900000000000005,
+          "recovery_ms": 0.6734,
+          "prepare_ms": 1.8176,
+          "boundary_ms": 8.1597,
+          "attempts": 1.0,
+          "chart_attempts": 4.0,
+          "nodes": 42.0,
+          "refinements": 17.0,
+          "max_degree": 4.0
+        }
+      }
+    },
+    {
+      "synthetic": 0,
+      "id": 230,
+      "analytic_uv": {
+        "accepted_runs": 5,
+        "outcomes": [
+          "Passed"
+        ],
+        "medians": {
+          "pipeline_ms": 41.1036,
+          "validate_ms": 39.8185,
+          "classify_ms": 0.8312999999999999,
+          "sampling_ms": 0.0537,
+          "recovery_ms": 28.6278,
+          "prepare_ms": 1.9537,
+          "boundary_ms": 7.4499,
+          "attempts": 1.0,
+          "chart_attempts": 8.0,
+          "nodes": 16.0,
+          "refinements": 0.0,
+          "max_degree": 0.0
+        }
+      },
+      "rational": {
+        "accepted_runs": 0,
+        "outcomes": [
+          "NotCertified"
+        ],
+        "medians": {
+          "pipeline_ms": 3.4104,
+          "validate_ms": 2.110399999999999,
+          "classify_ms": 1.3584999999999998,
+          "sampling_ms": 0.21400000000000005,
+          "recovery_ms": 1.7523000000000002,
+          "prepare_ms": 0.0,
+          "boundary_ms": 0.0,
+          "attempts": 25.0,
+          "chart_attempts": 8.0,
+          "nodes": 0.0,
+          "refinements": 0.0,
+          "max_degree": 0.0
+        }
+      }
+    },
+    {
+      "synthetic": 0,
+      "id": 231,
+      "analytic_uv": {
+        "accepted_runs": 5,
+        "outcomes": [
+          "Passed"
+        ],
+        "medians": {
+          "pipeline_ms": 42.4855,
+          "validate_ms": 40.8517,
+          "classify_ms": 1.2049,
+          "sampling_ms": 0.0774,
+          "recovery_ms": 31.544800000000002,
+          "prepare_ms": 2.102,
+          "boundary_ms": 4.6748,
+          "attempts": 1.0,
+          "chart_attempts": 8.0,
+          "nodes": 16.0,
+          "refinements": 0.0,
+          "max_degree": 0.0
+        }
+      },
+      "rational": {
+        "accepted_runs": 0,
+        "outcomes": [
+          "NotCertified"
+        ],
+        "medians": {
+          "pipeline_ms": 2.7419,
+          "validate_ms": 1.8325999999999993,
+          "classify_ms": 0.9128999999999998,
+          "sampling_ms": 0.20820000000000002,
+          "recovery_ms": 1.4632,
+          "prepare_ms": 0.0,
+          "boundary_ms": 0.0,
+          "attempts": 25.0,
+          "chart_attempts": 8.0,
+          "nodes": 0.0,
+          "refinements": 0.0,
+          "max_degree": 0.0
+        }
+      }
+    },
+    {
+      "synthetic": 0,
+      "id": 254,
+      "analytic_uv": {
+        "accepted_runs": 5,
+        "outcomes": [
+          "Passed"
+        ],
+        "medians": {
+          "pipeline_ms": 49.6353,
+          "validate_ms": 48.6694,
+          "classify_ms": 0.9841,
+          "sampling_ms": 0.0702,
+          "recovery_ms": 34.6812,
+          "prepare_ms": 2.7398,
+          "boundary_ms": 9.613999999999999,
+          "attempts": 1.0,
+          "chart_attempts": 8.0,
+          "nodes": 20.0,
+          "refinements": 0.0,
+          "max_degree": 0.0
+        }
+      },
+      "rational": {
+        "accepted_runs": 0,
+        "outcomes": [
+          "NotCertified"
+        ],
+        "medians": {
+          "pipeline_ms": 3.2037,
+          "validate_ms": 1.9946999999999997,
+          "classify_ms": 1.2039000000000002,
+          "sampling_ms": 0.2789,
+          "recovery_ms": 1.5643,
+          "prepare_ms": 0.0,
+          "boundary_ms": 0.0,
+          "attempts": 25.0,
+          "chart_attempts": 8.0,
+          "nodes": 0.0,
+          "refinements": 0.0,
+          "max_degree": 0.0
+        }
+      }
+    },
+    {
+      "synthetic": 0,
+      "id": 255,
+      "analytic_uv": {
+        "accepted_runs": 5,
+        "outcomes": [
+          "Passed"
+        ],
+        "medians": {
+          "pipeline_ms": 45.2005,
+          "validate_ms": 44.1117,
+          "classify_ms": 1.0957000000000001,
+          "sampling_ms": 0.0718,
+          "recovery_ms": 36.1537,
+          "prepare_ms": 2.3002,
+          "boundary_ms": 6.085999999999999,
+          "attempts": 1.0,
+          "chart_attempts": 8.0,
+          "nodes": 20.0,
+          "refinements": 0.0,
+          "max_degree": 0.0
+        }
+      },
+      "rational": {
+        "accepted_runs": 0,
+        "outcomes": [
+          "NotCertified"
+        ],
+        "medians": {
+          "pipeline_ms": 3.3483,
+          "validate_ms": 2.0340999999999996,
+          "classify_ms": 1.2459,
+          "sampling_ms": 0.28729999999999994,
+          "recovery_ms": 1.5929999999999997,
+          "prepare_ms": 0.0,
+          "boundary_ms": 0.0,
+          "attempts": 25.0,
+          "chart_attempts": 8.0,
+          "nodes": 0.0,
+          "refinements": 0.0,
+          "max_degree": 0.0
+        }
+      }
+    },
+    {
+      "synthetic": 0,
+      "id": 284,
+      "analytic_uv": {
+        "accepted_runs": 5,
+        "outcomes": [
+          "Passed"
+        ],
+        "medians": {
+          "pipeline_ms": 28.0632,
+          "validate_ms": 25.9039,
+          "classify_ms": 2.1337,
+          "sampling_ms": 0.1279,
+          "recovery_ms": 5.6361000000000026,
+          "prepare_ms": 4.3422,
+          "boundary_ms": 15.2878,
+          "attempts": 1.0,
+          "chart_attempts": 8.0,
+          "nodes": 36.0,
+          "refinements": 0.0,
+          "max_degree": 0.0
+        }
+      },
+      "rational": {
+        "accepted_runs": 0,
+        "outcomes": [
+          "NotCertified"
+        ],
+        "medians": {
+          "pipeline_ms": 6.1171,
+          "validate_ms": 4.1354,
+          "classify_ms": 2.1265,
+          "sampling_ms": 0.5828000000000002,
+          "recovery_ms": 3.4487,
+          "prepare_ms": 0.0,
+          "boundary_ms": 0.0,
+          "attempts": 25.0,
+          "chart_attempts": 8.0,
+          "nodes": 0.0,
+          "refinements": 0.0,
+          "max_degree": 0.0
+        }
+      }
+    },
+    {
+      "synthetic": 0,
+      "id": 286,
+      "analytic_uv": {
+        "accepted_runs": 5,
+        "outcomes": [
+          "Passed"
+        ],
+        "medians": {
+          "pipeline_ms": 28.7819,
+          "validate_ms": 26.5342,
+          "classify_ms": 2.2012,
+          "sampling_ms": 0.1295,
+          "recovery_ms": 4.675099999999997,
+          "prepare_ms": 4.7975,
+          "boundary_ms": 17.688,
+          "attempts": 1.0,
+          "chart_attempts": 8.0,
+          "nodes": 36.0,
+          "refinements": 0.0,
+          "max_degree": 0.0
+        }
+      },
+      "rational": {
+        "accepted_runs": 0,
+        "outcomes": [
+          "NotCertified"
+        ],
+        "medians": {
+          "pipeline_ms": 5.5654,
+          "validate_ms": 3.1970999999999994,
+          "classify_ms": 2.3554999999999997,
+          "sampling_ms": 0.7803999999999999,
+          "recovery_ms": 2.0876,
+          "prepare_ms": 0.0,
+          "boundary_ms": 0.0,
+          "attempts": 25.0,
+          "chart_attempts": 8.0,
+          "nodes": 0.0,
+          "refinements": 0.0,
+          "max_degree": 0.0
+        }
+      }
+    },
+    {
+      "synthetic": 0,
+      "id": 288,
+      "analytic_uv": {
+        "accepted_runs": 5,
+        "outcomes": [
+          "Passed"
+        ],
+        "medians": {
+          "pipeline_ms": 27.2598,
+          "validate_ms": 25.5817,
+          "classify_ms": 1.8599999999999999,
+          "sampling_ms": 0.125,
+          "recovery_ms": 4.363399999999999,
+          "prepare_ms": 4.8496,
+          "boundary_ms": 14.889700000000001,
+          "attempts": 1.0,
+          "chart_attempts": 8.0,
+          "nodes": 36.0,
+          "refinements": 0.0,
+          "max_degree": 0.0
+        }
+      },
+      "rational": {
+        "accepted_runs": 0,
+        "outcomes": [
+          "NotCertified"
+        ],
+        "medians": {
+          "pipeline_ms": 5.092,
+          "validate_ms": 2.8901000000000003,
+          "classify_ms": 2.1951,
+          "sampling_ms": 0.5800000000000001,
+          "recovery_ms": 2.0857,
+          "prepare_ms": 0.0,
+          "boundary_ms": 0.0,
+          "attempts": 25.0,
+          "chart_attempts": 8.0,
+          "nodes": 0.0,
+          "refinements": 0.0,
+          "max_degree": 0.0
+        }
+      }
+    },
+    {
+      "synthetic": 0,
+      "id": 318,
+      "analytic_uv": {
+        "accepted_runs": 5,
+        "outcomes": [
+          "Passed"
+        ],
+        "medians": {
+          "pipeline_ms": 4.7443,
+          "validate_ms": 4.1422,
+          "classify_ms": 0.5559000000000001,
+          "sampling_ms": 0.022400000000000003,
+          "recovery_ms": 0.13600000000000012,
+          "prepare_ms": 1.1796,
+          "boundary_ms": 2.7171000000000003,
+          "attempts": 1.0,
+          "chart_attempts": 1.0,
+          "nodes": 8.0,
+          "refinements": 0.0,
+          "max_degree": 0.0
+        }
+      },
+      "rational": {
+        "accepted_runs": 5,
+        "outcomes": [
+          "Passed"
+        ],
+        "medians": {
+          "pipeline_ms": 3.7701,
+          "validate_ms": 3.2285,
+          "classify_ms": 0.548,
+          "sampling_ms": 0.0342,
+          "recovery_ms": 0.19469999999999998,
+          "prepare_ms": 1.4118,
+          "boundary_ms": 1.5143,
+          "attempts": 1.0,
+          "chart_attempts": 1.0,
+          "nodes": 14.0,
+          "refinements": 3.0,
+          "max_degree": 3.0
+        }
+      }
+    },
+    {
+      "synthetic": 0,
+      "id": 388,
+      "analytic_uv": {
+        "accepted_runs": 5,
+        "outcomes": [
+          "Passed"
+        ],
+        "medians": {
+          "pipeline_ms": 19.2886,
+          "validate_ms": 17.5453,
+          "classify_ms": 1.7399,
+          "sampling_ms": 0.1283,
+          "recovery_ms": 0.3633000000000024,
+          "prepare_ms": 4.5445,
+          "boundary_ms": 12.0031,
+          "attempts": 1.0,
+          "chart_attempts": 1.0,
+          "nodes": 36.0,
+          "refinements": 0.0,
+          "max_degree": 0.0
+        }
+      },
+      "rational": {
+        "accepted_runs": 0,
+        "outcomes": [
+          "NotCertified"
+        ],
+        "medians": {
+          "pipeline_ms": 3.6381,
+          "validate_ms": 1.3046999999999995,
+          "classify_ms": 2.3449,
+          "sampling_ms": 0.6887000000000001,
+          "recovery_ms": 0.4278,
+          "prepare_ms": 0.0,
+          "boundary_ms": 0.0,
+          "attempts": 33.0,
+          "chart_attempts": 1.0,
+          "nodes": 0.0,
+          "refinements": 0.0,
+          "max_degree": 0.0
+        }
+      }
+    },
+    {
+      "synthetic": 0,
+      "id": 486,
+      "analytic_uv": {
+        "accepted_runs": 5,
+        "outcomes": [
+          "Passed"
+        ],
+        "medians": {
+          "pipeline_ms": 23.6915,
+          "validate_ms": 21.8533,
+          "classify_ms": 1.9055,
+          "sampling_ms": 0.142,
+          "recovery_ms": 0.3849000000000018,
+          "prepare_ms": 4.118,
+          "boundary_ms": 17.3215,
+          "attempts": 1.0,
+          "chart_attempts": 1.0,
+          "nodes": 36.0,
+          "refinements": 0.0,
+          "max_degree": 0.0
+        }
+      },
+      "rational": {
+        "accepted_runs": 0,
+        "outcomes": [
+          "NotCertified"
+        ],
+        "medians": {
+          "pipeline_ms": 5.026,
+          "validate_ms": 2.5021000000000004,
+          "classify_ms": 2.4939,
+          "sampling_ms": 0.8653000000000002,
+          "recovery_ms": 1.4170999999999998,
+          "prepare_ms": 0.0,
+          "boundary_ms": 0.0,
+          "attempts": 39.0,
+          "chart_attempts": 5.0,
+          "nodes": 0.0,
+          "refinements": 0.0,
+          "max_degree": 0.0
+        }
+      }
+    },
+    {
+      "synthetic": 0,
+      "id": 488,
+      "analytic_uv": {
+        "accepted_runs": 5,
+        "outcomes": [
+          "Passed"
+        ],
+        "medians": {
+          "pipeline_ms": 26.2852,
+          "validate_ms": 23.0689,
+          "classify_ms": 2.4329,
+          "sampling_ms": 0.15660000000000002,
+          "recovery_ms": 0.43219999999999814,
+          "prepare_ms": 4.3624,
+          "boundary_ms": 17.598399999999998,
+          "attempts": 1.0,
+          "chart_attempts": 1.0,
+          "nodes": 36.0,
+          "refinements": 0.0,
+          "max_degree": 0.0
+        }
+      },
+      "rational": {
+        "accepted_runs": 0,
+        "outcomes": [
+          "NotCertified"
+        ],
+        "medians": {
+          "pipeline_ms": 4.5406,
+          "validate_ms": 2.2261,
+          "classify_ms": 2.3082000000000003,
+          "sampling_ms": 0.7731999999999999,
+          "recovery_ms": 1.1993,
+          "prepare_ms": 0.0,
+          "boundary_ms": 0.0,
+          "attempts": 36.0,
+          "chart_attempts": 4.0,
+          "nodes": 0.0,
+          "refinements": 0.0,
+          "max_degree": 0.0
+        }
+      }
+    },
+    {
+      "synthetic": 0,
+      "id": 500,
+      "analytic_uv": {
+        "accepted_runs": 0,
+        "outcomes": [
+          "NotCertified"
+        ],
+        "medians": {
+          "pipeline_ms": 1.7171,
+          "validate_ms": 0.5320999999999999,
+          "classify_ms": 1.1819,
+          "sampling_ms": 0.5095999999999998,
+          "recovery_ms": 0.0,
+          "prepare_ms": 0.0,
+          "boundary_ms": 0.0,
+          "attempts": 43.0,
+          "chart_attempts": 0.0,
+          "nodes": 0.0,
+          "refinements": 0.0,
+          "max_degree": 0.0
+        }
+      },
+      "rational": {
+        "accepted_runs": 0,
+        "outcomes": [
+          "NotCertified"
+        ],
+        "medians": {
+          "pipeline_ms": 1.9222,
+          "validate_ms": 0.7260999999999996,
+          "classify_ms": 1.1913999999999998,
+          "sampling_ms": 0.512,
+          "recovery_ms": 0.0,
+          "prepare_ms": 0.0,
+          "boundary_ms": 0.0,
+          "attempts": 43.0,
+          "chart_attempts": 0.0,
+          "nodes": 0.0,
+          "refinements": 0.0,
+          "max_degree": 0.0
+        }
+      }
+    },
+    {
+      "synthetic": 1,
+      "id": 0,
+      "analytic_uv": {
+        "accepted_runs": 5,
+        "outcomes": [
+          "Passed"
+        ],
+        "medians": {
+          "pipeline_ms": 4.4232,
+          "validate_ms": 4.4108,
+          "classify_ms": 0.0,
+          "sampling_ms": 0.8085,
+          "recovery_ms": 0.42989999999999995,
+          "prepare_ms": 2.5175,
+          "boundary_ms": 0.4904,
+          "attempts": 1.0,
+          "chart_attempts": 1.0,
+          "nodes": 40.0,
+          "refinements": 0.0,
+          "max_degree": 0.0
+        }
+      },
+      "rational": {
+        "accepted_runs": 5,
+        "outcomes": [
+          "Passed"
+        ],
+        "medians": {
+          "pipeline_ms": 4.754,
+          "validate_ms": 4.7502,
+          "classify_ms": 0.0,
+          "sampling_ms": 0.835,
+          "recovery_ms": 0.4425,
+          "prepare_ms": 2.5609,
+          "boundary_ms": 0.8493,
+          "attempts": 1.0,
+          "chart_attempts": 1.0,
+          "nodes": 40.0,
+          "refinements": 0.0,
+          "max_degree": 2.0
+        }
+      }
+    },
+    {
+      "synthetic": 1,
+      "id": 1,
+      "analytic_uv": {
+        "accepted_runs": 0,
+        "outcomes": [
+          "NotCertified"
+        ],
+        "medians": {
+          "pipeline_ms": 1.6733,
+          "validate_ms": 1.6719,
+          "classify_ms": 0.0,
+          "sampling_ms": 1.0511,
+          "recovery_ms": 0.4656,
+          "prepare_ms": 0.0,
+          "boundary_ms": 0.0134,
+          "attempts": 1.0,
+          "chart_attempts": 1.0,
+          "nodes": 0.0,
+          "refinements": 0.0,
+          "max_degree": 0.0
+        }
+      },
+      "rational": {
+        "accepted_runs": 5,
+        "outcomes": [
+          "Passed"
+        ],
+        "medians": {
+          "pipeline_ms": 8.3058,
+          "validate_ms": 8.3017,
+          "classify_ms": 0.0,
+          "sampling_ms": 1.0063,
+          "recovery_ms": 0.5324000000000001,
+          "prepare_ms": 2.7024,
+          "boundary_ms": 3.9189,
+          "attempts": 1.0,
+          "chart_attempts": 1.0,
+          "nodes": 40.0,
+          "refinements": 0.0,
+          "max_degree": 3.0
+        }
+      }
+    },
+    {
+      "synthetic": 1,
+      "id": 2,
+      "analytic_uv": {
+        "accepted_runs": 0,
+        "outcomes": [
+          "NotCertified"
+        ],
+        "medians": {
+          "pipeline_ms": 33.8549,
+          "validate_ms": 33.85,
+          "classify_ms": 0.0,
+          "sampling_ms": 0.8599,
+          "recovery_ms": 32.8843,
+          "prepare_ms": 0.0,
+          "boundary_ms": 0.0133,
+          "attempts": 1.0,
+          "chart_attempts": 15.0,
+          "nodes": 0.0,
+          "refinements": 0.0,
+          "max_degree": 0.0
+        }
+      },
+      "rational": {
+        "accepted_runs": 5,
+        "outcomes": [
+          "Passed"
+        ],
+        "medians": {
+          "pipeline_ms": 10.11,
+          "validate_ms": 10.1086,
+          "classify_ms": 0.0,
+          "sampling_ms": 1.0452,
+          "recovery_ms": 0.6600999999999999,
+          "prepare_ms": 3.3043,
+          "boundary_ms": 5.0283,
+          "attempts": 1.0,
+          "chart_attempts": 1.0,
+          "nodes": 40.0,
+          "refinements": 0.0,
+          "max_degree": 4.0
+        }
+      }
+    },
+    {
+      "synthetic": 1,
+      "id": 3,
+      "analytic_uv": {
+        "accepted_runs": 0,
+        "outcomes": [
+          "NotCertified"
+        ],
+        "medians": {
+          "pipeline_ms": 1.3736,
+          "validate_ms": 1.3729,
+          "classify_ms": 0.0,
+          "sampling_ms": 0.8613,
+          "recovery_ms": 0.4847,
+          "prepare_ms": 0.0,
+          "boundary_ms": 0.0136,
+          "attempts": 1.0,
+          "chart_attempts": 1.0,
+          "nodes": 0.0,
+          "refinements": 0.0,
+          "max_degree": 0.0
+        }
+      },
+      "rational": {
+        "accepted_runs": 5,
+        "outcomes": [
+          "Passed"
+        ],
+        "medians": {
+          "pipeline_ms": 8.5524,
+          "validate_ms": 8.5513,
+          "classify_ms": 0.0,
+          "sampling_ms": 1.0246,
+          "recovery_ms": 0.5815,
+          "prepare_ms": 2.8423,
+          "boundary_ms": 4.0576,
+          "attempts": 1.0,
+          "chart_attempts": 1.0,
+          "nodes": 40.0,
+          "refinements": 0.0,
+          "max_degree": 3.0
+        }
+      }
+    },
+    {
+      "synthetic": 1,
+      "id": 4,
+      "analytic_uv": {
+        "accepted_runs": 0,
+        "outcomes": [
+          "NotCertified"
+        ],
+        "medians": {
+          "pipeline_ms": 1.5093,
+          "validate_ms": 1.5012,
+          "classify_ms": 0.0,
+          "sampling_ms": 0.9254,
+          "recovery_ms": 0.5224,
+          "prepare_ms": 0.0,
+          "boundary_ms": 0.0159,
+          "attempts": 1.0,
+          "chart_attempts": 1.0,
+          "nodes": 0.0,
+          "refinements": 0.0,
+          "max_degree": 0.0
+        }
+      },
+      "rational": {
+        "accepted_runs": 5,
+        "outcomes": [
+          "Passed"
+        ],
+        "medians": {
+          "pipeline_ms": 12.0763,
+          "validate_ms": 12.0746,
+          "classify_ms": 0.0,
+          "sampling_ms": 1.1416,
+          "recovery_ms": 0.7052999999999999,
+          "prepare_ms": 3.1878,
+          "boundary_ms": 6.9193,
+          "attempts": 1.0,
+          "chart_attempts": 1.0,
+          "nodes": 40.0,
+          "refinements": 0.0,
+          "max_degree": 4.0
+        }
+      }
+    }
+  ]
+}

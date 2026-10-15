@@ -1,5 +1,7 @@
 # 测试代码与固定输入
 
+`GeneralRationalBoundaryTests.cpp` 和 `RunGeneralRationalBoundarySelected.py` 提供新 NURBS 域直线合同的单测及慢例定向比较。选取 17 个旧案例和 5 个双五次、200 控制点的压力样本，旧合同拒绝/新合同通过分别列出；不把未认证路径缩短视为成功转换加速。复现与限制见[报告](../docs/testing/GENERAL_RATIONAL_BOUNDARY_2026-10-15.md)。
+
 本目录保存测试实现、案例生成器和数据；测试说明与报告统一放在 [docs/testing/](../docs/testing/TEST_REPORT.md)。
 
 独立混合验证器的单测为 `BSpline2Analytic.GeneralHybridUnit`。批量运行使用真实分类候选，不执行母面优化、不调用旧验证器；源数据证书与输出独立证书在计时外执行。示例（仓库根目录）：

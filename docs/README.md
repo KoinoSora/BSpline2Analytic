@@ -12,6 +12,7 @@
 | 测试 | [独立验证器准备阶段优化](testing/PAIRED_PREPARATION_2026-10-15.md) | 分离提取、控制点坐标变换、源面缓存及同批三模式比较。 |
 | 测试 | [独立验证器位置误差界优化](testing/PAIRED_POSITION_2026-10-15.md) | 快速连续上界、直接升阶、可分离权重乘法及 500 例覆盖。 |
 | 测试 | [独立混合验证器](testing/GENERAL_HYBRID_VALIDATION_2026-10-15.md) | 内部增强 Greville 采样、四边位置与切向连续认证，600+60 例三轮测量及采样合同边界。 |
+| 测试 | [NURBS 参数直线边界验证](testing/GENERAL_RATIONAL_BOUNDARY_2026-10-15.md) | 输出母面及四条三维 NURBS 边界；有理误差曲线、输出舍入认证、慢例及新合同代表案例。 |
 | 测试 | [2026-10-13 全量重测](testing/DATASET500_RETEST_2026-10-13.md) | 固定批次统计、慢例与误差上界。 |
 | 测试 | [一般兜底正例修复报告](testing/GENERAL_POSITIVE500_FIX_REPORT_2026-10-13.md) | 边界参数方向、球参数图与奇异端点修复；500 个正例及性能对比。 |
 | 测试 | [一般兜底评分前去重报告](testing/GENERAL_POSITIVE500_DEDUP_REPORT_2026-10-13.md) | 重复候选免于评分；500 个正例的前后比较及评分次数。 |

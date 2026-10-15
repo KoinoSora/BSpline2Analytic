@@ -19,7 +19,10 @@ add_library(BSpline2Analytic STATIC
     src/SurfaceSampling.cpp src/SurfaceSampleContext.cpp src/ApproximateEvaluation.cpp src/AnalyticJacobian.cpp src/PlaneOffsetRefinement.cpp src/CandidateRefinement.cpp src/ConversionValidation.cpp src/ApproximateConversion.cpp
     src/GeneralClassification.cpp src/GeneralSeedNumerics.cpp src/GeneralConversion.cpp src/GeneralConversionValidation.cpp
     src/GeneralGeometry.cpp src/GeneralPCurve.cpp src/GeneralRefinement.cpp src/GeneralPairedBounds.cpp src/GeneralSphereChart.cpp
-    src/GeneralHybridValidation.cpp)
+    src/GeneralHybridValidation.cpp src/GeneralRationalBoundaryRecovery.cpp
+    src/GeneralRationalBoundaryCurves.cpp src/GeneralRationalBoundaryValidation.cpp)
+set_source_files_properties(src/GeneralRationalBoundaryRecovery.cpp src/GeneralRationalBoundaryCurves.cpp
+    src/GeneralRationalBoundaryValidation.cpp PROPERTIES COMPILE_OPTIONS "/fp:strict")
 set_source_files_properties(src/GeneralHybridValidation.cpp PROPERTIES COMPILE_OPTIONS "/fp:strict")
 set_source_files_properties(src/IntervalBounds.cpp src/ConversionValidation.cpp src/GeneralConversionValidation.cpp src/GeneralPairedBounds.cpp PROPERTIES COMPILE_OPTIONS "/fp:strict")
 set_source_files_properties(src/PairedRationalChart.cpp src/PairedConversionValidation.cpp src/PairedSourcePreparation.cpp src/PairedPositionBounds.cpp src/PairedBoundaryValidation.cpp PROPERTIES COMPILE_OPTIONS "/fp:strict")
@@ -38,6 +41,16 @@ target_link_libraries(BSpline2AnalyticSample PRIVATE BSpline2Analytic)
 option(BSPLINE2ANALYTIC_BUILD_TESTS "Build module regression tests" ON)
 if(BSPLINE2ANALYTIC_BUILD_TESTS)
     enable_testing()
+    add_executable(BSpline2AnalyticGeneralRationalBoundaryTests tests/GeneralRationalBoundaryTests.cpp
+        tests/GeneralDataset.cpp tests/GeneralDatasetCertificate.cpp)
+    target_link_libraries(BSpline2AnalyticGeneralRationalBoundaryTests PRIVATE BSpline2Analytic)
+    target_include_directories(BSpline2AnalyticGeneralRationalBoundaryTests PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src")
+    target_compile_options(BSpline2AnalyticGeneralRationalBoundaryTests PRIVATE /W4 /utf-8 /fp:strict)
+    add_test(NAME BSpline2Analytic.GeneralRationalBoundaryUnit COMMAND BSpline2AnalyticGeneralRationalBoundaryTests --unit
+        "${CMAKE_CURRENT_SOURCE_DIR}/tests/data/dataset500")
+    set_tests_properties(BSpline2Analytic.GeneralRationalBoundaryUnit PROPERTIES TIMEOUT 120
+        WORKING_DIRECTORY "${SGGK_SDK_DIR}"
+        ENVIRONMENT_MODIFICATION "PATH=path_list_prepend:${SGGK_SDK_DIR}/x64-win/bin${_sgk_config}")
     add_executable(BSpline2AnalyticGeneralHybridTests tests/GeneralHybridTests.cpp
         tests/GeneralDataset.cpp tests/GeneralDatasetCertificate.cpp)
     target_link_libraries(BSpline2AnalyticGeneralHybridTests PRIVATE BSpline2Analytic)

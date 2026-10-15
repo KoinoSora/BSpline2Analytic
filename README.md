@@ -44,6 +44,8 @@
 
 位置误差界现采用快速连续保守界、缓存直接升阶与可分离权重乘法；快速界不够紧时仍执行控制系数求界和必要的细分，容差保持不变。40 个普通非有理球面的同批位置计算加速 4.24 倍，详见[位置误差界优化报告](docs/testing/PAIRED_POSITION_2026-10-15.md)。
 
+新增独立入口 [`ValidateGeneralRationalBoundaries`](include/GeneralRationalBoundaryValidation.h)：线性约束定义于母面 NURBS 参数域，输出解析母面参数及四条三维 NURBS 边界，不输出解析 UV PCurve。内部保持增强 Greville 采样，边界采用有理误差样条位置/切向连续认证，并覆盖 SDK 输出系数。它与旧解析 UV 直线合同不同，尚未替换正式入口。范围和慢例测试见[新边界验证报告](docs/testing/GENERAL_RATIONAL_BOUNDARY_2026-10-15.md)。
+
 ## 构建与运行
 
 需要 Windows x64、Visual Studio 2022 C++ 工具链、CMake 3.22 及以上、SGK 1.7.11 SDK 和有效本地许可证。`cmake`、`ctest` 需在 PATH 中。
