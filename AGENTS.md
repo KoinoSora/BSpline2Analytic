@@ -16,6 +16,8 @@
 
 精确有理路径 `Recognize` 不属于上述旧验证器，保留测试；新验证器尚不支持有理源面时，应单列精确识别结果，其五模块耗时标为不适用，不能当作零耗时通过。数据来源证书、输出独立审计在算法计时外保留。一般路径的验证器沿用其单独约定。
 
+第三个独立实验验证器为 `ValidateMotherDistanceConversion` / `mother::ValidatePrepared`：内部采用带浮点保护的母面距离界，四边采用区间位置、切向和法向检查。允许与当前 `ValidatePairedConversion` 对照；两个验收合同不同，不能混称为同一证书。正式转换入口尚未迁移，旧验证器禁测约束不变。
+
 ## 文件分类
 
 公开接口放在 `include/`，算法实现和内部头文件放在 `src/`，示例放在 `examples/`，测试代码与固定数据放在 `tests/`。算法、测试和需求文档分别放在 `docs/algorithm/`、`docs/testing/`、`docs/requirements/`；根目录保留构建入口与导航。路径调整时同步更新 CMake 和相对文档链接。

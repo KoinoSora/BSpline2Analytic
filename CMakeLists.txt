@@ -16,6 +16,7 @@ add_library(BSpline2Analytic STATIC
     src/PatchRecovery.cpp src/RecognitionValidation.cpp src/Numerics.cpp
     src/IntervalBounds.cpp src/ApproximateGeometry.cpp src/ApproximateNumerics.cpp src/IsoCurveAnalysis.cpp
     src/PairedRationalChart.cpp src/PairedConversionValidation.cpp src/PairedSourcePreparation.cpp src/PairedPositionBounds.cpp src/PairedBoundaryValidation.cpp
+    src/MotherDistanceValidation.cpp src/MotherDistanceBounds.cpp src/MotherDistanceBoundary.cpp
     src/SurfaceSampling.cpp src/SurfaceSampleContext.cpp src/ApproximateEvaluation.cpp src/AnalyticJacobian.cpp src/PlaneOffsetRefinement.cpp src/CandidateRefinement.cpp src/ConversionValidation.cpp src/ApproximateConversion.cpp
     src/GeneralClassification.cpp src/GeneralSeedNumerics.cpp src/GeneralConversion.cpp src/GeneralConversionValidation.cpp
     src/GeneralGeometry.cpp src/GeneralPCurve.cpp src/GeneralRefinement.cpp src/GeneralPairedBounds.cpp src/GeneralSphereChart.cpp
@@ -26,6 +27,7 @@ set_source_files_properties(src/GeneralRationalBoundaryRecovery.cpp src/GeneralR
 set_source_files_properties(src/GeneralHybridValidation.cpp PROPERTIES COMPILE_OPTIONS "/fp:strict")
 set_source_files_properties(src/IntervalBounds.cpp src/ConversionValidation.cpp src/GeneralConversionValidation.cpp src/GeneralPairedBounds.cpp PROPERTIES COMPILE_OPTIONS "/fp:strict")
 set_source_files_properties(src/PairedRationalChart.cpp src/PairedConversionValidation.cpp src/PairedSourcePreparation.cpp src/PairedPositionBounds.cpp src/PairedBoundaryValidation.cpp PROPERTIES COMPILE_OPTIONS "/fp:strict")
+set_source_files_properties(src/MotherDistanceValidation.cpp src/MotherDistanceBounds.cpp src/MotherDistanceBoundary.cpp PROPERTIES COMPILE_OPTIONS "/fp:strict")
 target_compile_features(BSpline2Analytic PUBLIC cxx_std_17)
 target_compile_options(BSpline2Analytic PRIVATE /W4 /utf-8 /permissive-)
 target_compile_definitions(BSpline2Analytic PUBLIC NOMINMAX)
@@ -41,6 +43,18 @@ target_link_libraries(BSpline2AnalyticSample PRIVATE BSpline2Analytic)
 option(BSPLINE2ANALYTIC_BUILD_TESTS "Build module regression tests" ON)
 if(BSPLINE2ANALYTIC_BUILD_TESTS)
     enable_testing()
+    add_executable(BSpline2AnalyticMotherDistanceTests tests/MotherDistanceTests.cpp
+        tests/Dataset500.cpp tests/PairedSurfaceBounds.cpp)
+    target_link_libraries(BSpline2AnalyticMotherDistanceTests PRIVATE BSpline2Analytic)
+    target_include_directories(BSpline2AnalyticMotherDistanceTests PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src")
+    target_compile_options(BSpline2AnalyticMotherDistanceTests PRIVATE /W4 /utf-8 /fp:strict)
+    add_test(NAME BSpline2Analytic.MotherDistanceUnit COMMAND BSpline2AnalyticMotherDistanceTests --unit
+        "${CMAKE_CURRENT_SOURCE_DIR}/tests/data/dataset500")
+    add_test(NAME BSpline2Analytic.MotherDistanceSphereTorus COMMAND BSpline2AnalyticMotherDistanceTests --sphere-torus
+        "${CMAKE_CURRENT_SOURCE_DIR}/tests/data/dataset500" "${CMAKE_CURRENT_BINARY_DIR}/mother-sphere-torus-$<CONFIG>.csv")
+    set_tests_properties(BSpline2Analytic.MotherDistanceUnit BSpline2Analytic.MotherDistanceSphereTorus PROPERTIES TIMEOUT 120
+        WORKING_DIRECTORY "${SGGK_SDK_DIR}"
+        ENVIRONMENT_MODIFICATION "PATH=path_list_prepend:${SGGK_SDK_DIR}/x64-win/bin${_sgk_config}")
     add_executable(BSpline2AnalyticGeneralRationalBoundaryTests tests/GeneralRationalBoundaryTests.cpp
         tests/GeneralDataset.cpp tests/GeneralDatasetCertificate.cpp)
     target_link_libraries(BSpline2AnalyticGeneralRationalBoundaryTests PRIVATE BSpline2Analytic)

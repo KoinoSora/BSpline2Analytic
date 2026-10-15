@@ -1,0 +1,13 @@
+CMake is re-running because D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-specialized-timing/mother-distance-20261015/out/CMakeFiles/generate.stamp is out-of-date.
+  the file 'D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-specialized-timing/mother-distance-20261015/source/CMakeLists.txt'
+  is newer than 'D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-specialized-timing/mother-distance-20261015/out/CMakeFiles/generate.stamp.depend'
+  result='-1'
+-- Selecting Windows SDK version 10.0.26100.0 to target Windows 10.0.26200.
+-- Configuring done (4.7s)
+-- Generating done (1.3s)
+-- Build files have been written to: D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-specialized-timing/mother-distance-20261015/out
+适用于 .NET Framework MSBuild 版本 17.12.12+1cce77968
+
+  BSpline2Analytic.vcxproj -> D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-specialized-timing\mother-distance-20261015\out\Release\BSpline2Analytic.lib
+  Building Custom Rule D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-specialized-timing/mother-distance-20261015/source/CMakeLists.txt
+  BSpline2AnalyticMotherDistanceTests.vcxproj -> D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-specialized-timing\mother-distance-20261015\out\Release\BSpline2AnalyticMotherDistanceTests.exe

@@ -1,0 +1,147 @@
+Start testing: Oct 15 18:36 中国标准时间
+----------------------------------------------------------
+1/22 Testing: BSpline2Analytic.MotherDistanceUnit
+1/22 Test: BSpline2Analytic.MotherDistanceUnit
+Command: "D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-specialized-timing/mother-distance-20261015/out/Release/BSpline2AnalyticMotherDistanceTests.exe" "--unit" "D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-specialized-timing/mother-distance-20261015/source/tests/data/dataset500"
+Directory: D:/Projects/CppProjects/SeaGo/SGK1.7.11/SGGK
+"BSpline2Analytic.MotherDistanceUnit" start time: Oct 15 18:36 中国标准时间
+Output:
+----------------------------------------------------------
+Failed to open log output file.
+Failed to open log output file.
+representative 1 preparation_ms=0.647 position_ms=0.1047 subdivision_ms=0 boundary_ms=0.2592 reporting_ms=0.0825 total_ms=1.0934
+representative 101 preparation_ms=0.8129 position_ms=0.2202 subdivision_ms=0 boundary_ms=0.5898 reporting_ms=0.0595 total_ms=1.6824
+representative 201 preparation_ms=0.6427 position_ms=0.1444 subdivision_ms=0 boundary_ms=0.4369 reporting_ms=0.053 total_ms=1.277
+representative 301 preparation_ms=1.1825 position_ms=0.4055 subdivision_ms=0 boundary_ms=0.9223 reporting_ms=0.0552 total_ms=2.5655
+representative 391 preparation_ms=4.9243 position_ms=2.6343 subdivision_ms=0 boundary_ms=2.5262 reporting_ms=0.0579 total_ms=10.1427
+representative 401 preparation_ms=0.9807 position_ms=0.4415 subdivision_ms=0 boundary_ms=0.73 reporting_ms=0.0565 total_ms=2.2087
+representative 489 preparation_ms=5.0149 position_ms=5.5233 subdivision_ms=0 boundary_ms=2.7086 reporting_ms=0.0515 total_ms=13.2983
+representative 497 preparation_ms=4.9639 position_ms=5.4864 subdivision_ms=0 boundary_ms=2.6588 reporting_ms=0.0587 total_ms=13.1678
+Unit checks=1458 PASSED
+<end of output>
+Test time =   0.95 sec
+----------------------------------------------------------
+Test Passed.
+"BSpline2Analytic.MotherDistanceUnit" end time: Oct 15 18:36 中国标准时间
+"BSpline2Analytic.MotherDistanceUnit" time elapsed: 00:00:00
+----------------------------------------------------------
+
+2/22 Testing: BSpline2Analytic.MotherDistanceSphereTorus
+2/22 Test: BSpline2Analytic.MotherDistanceSphereTorus
+Command: "D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-specialized-timing/mother-distance-20261015/out/Release/BSpline2AnalyticMotherDistanceTests.exe" "--sphere-torus" "D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-specialized-timing/mother-distance-20261015/source/tests/data/dataset500" "D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-specialized-timing/mother-distance-20261015/out/mother-sphere-torus-Release.csv"
+Directory: D:/Projects/CppProjects/SeaGo/SGK1.7.11/SGGK
+"BSpline2Analytic.MotherDistanceSphereTorus" start time: Oct 15 18:36 中国标准时间
+Output:
+----------------------------------------------------------
+Failed to open log output file.
+Failed to open log output file.
+case 301 completed
+case 303 completed
+case 305 completed
+case 307 completed
+case 309 completed
+case 311 completed
+case 313 completed
+case 315 completed
+case 317 completed
+case 319 completed
+case 321 completed
+case 323 completed
+case 325 completed
+case 327 completed
+case 329 completed
+case 331 completed
+case 333 completed
+case 335 completed
+case 337 completed
+case 339 completed
+case 341 completed
+case 343 completed
+case 345 completed
+case 347 completed
+case 349 completed
+case 351 completed
+case 353 completed
+case 355 completed
+case 357 completed
+case 359 completed
+case 361 completed
+case 363 completed
+case 365 completed
+case 367 completed
+case 369 completed
+case 371 completed
+case 373 completed
+case 375 completed
+case 377 completed
+case 379 completed
+case 381 completed
+case 383 completed
+case 385 completed
+case 387 completed
+case 389 completed
+case 391 completed
+case 393 completed
+case 395 completed
+case 397 completed
+case 399 completed
+case 401 completed
+case 403 completed
+case 405 completed
+case 407 completed
+case 409 completed
+case 411 completed
+case 413 completed
+case 415 completed
+case 417 completed
+case 419 completed
+case 421 completed
+case 423 completed
+case 425 completed
+case 427 completed
+case 429 completed
+case 431 completed
+case 433 completed
+case 435 completed
+case 437 completed
+case 439 completed
+case 441 completed
+case 443 completed
+case 445 completed
+case 447 completed
+case 449 completed
+case 451 completed
+case 453 completed
+case 455 completed
+case 457 completed
+case 459 completed
+case 461 completed
+case 463 completed
+case 465 completed
+case 467 completed
+case 469 completed
+case 471 completed
+case 473 completed
+case 475 completed
+case 477 completed
+case 479 completed
+case 481 completed
+case 483 completed
+case 485 completed
+case 487 completed
+case 489 completed
+case 491 completed
+case 493 completed
+case 495 completed
+case 497 completed
+case 499 completed
+Batch successes=540 no_candidate=60 PASSED
+<end of output>
+Test time =   8.72 sec
+----------------------------------------------------------
+Test Passed.
+"BSpline2Analytic.MotherDistanceSphereTorus" end time: Oct 15 18:36 中国标准时间
+"BSpline2Analytic.MotherDistanceSphereTorus" time elapsed: 00:00:08
+----------------------------------------------------------
+
+End testing: Oct 15 18:36 中国标准时间

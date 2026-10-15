@@ -599,6 +599,33 @@ PairedValidationReport ValidatePairedConversion(const sggk::BSplineSurface &s,
 
 namespace bspline2analytic::detail::paired
 {
+void CompleteChartMaps(PairedValidationReport &out, const Chart &chart)
+{
+    AddChartBreaks(out.uMap, chart, true);
+    AddChartBreaks(out.vMap, chart, false);
+}
+void RefineBoundaryMaps(AnalysisContext &analysis, const AnalyticPatch &patch, const Chart &chart,
+                        const PairedValidationOptions &options, PairedValidationReport &out,
+                        const RecoveredCandidate *recovered)
+{
+    Measure time(out.mappingMs);
+    const auto &source = analysis.samples.source;
+    if (!analysis.classification)
+        analysis.classification = BuildClassificationSamples(source, nullptr, &analysis.samples);
+    const auto &cache = *analysis.classification;
+    bool reuse = recovered && recovered->hasTrace && recovered->sourceStamp == cache.stamp &&
+                 SameMotherParameters(recovered->traceParameters, patch.parameters);
+    PatchRecoveryTrace local;
+    if (reuse) ++out.recoveryTraceHits;
+    else
+    {
+        local = TraceApproximateBoundaries(cache, patch.parameters);
+        ++out.recoveryTraceBuilds;
+    }
+    const auto &trace = reuse ? recovered->trace : local;
+    out.uMap = AdaptiveMap(source, patch, chart, true, options, out, analysis.samples, cache, trace);
+    out.vMap = AdaptiveMap(source, patch, chart, false, options, out, analysis.samples, cache, trace);
+}
 PairedValidationReport ValidatePrepared(AnalysisContext &context,
                                         const RecoveredCandidate &candidate,
                                         const PairedValidationOptions &options)

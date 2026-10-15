@@ -107,4 +107,9 @@ struct AnalysisContext
 };
 PairedValidationReport ValidatePrepared(AnalysisContext &, const RecoveredCandidate &,
                                         const PairedValidationOptions & = {});
+// Shared correspondence construction; no geometry certification is performed.
+void CompleteChartMaps(PairedValidationReport &, const Chart &);
+void RefineBoundaryMaps(AnalysisContext &, const AnalyticPatch &, const Chart &,
+                        const PairedValidationOptions &, PairedValidationReport &,
+                        const RecoveredCandidate *);
 } // namespace bspline2analytic::detail::paired

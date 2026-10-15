@@ -40,6 +40,8 @@
 
 独立实验验证器 `ValidatePairedConversion` 通过候选的有限矩形域、分段单调参数对应和正权重有理 Bernstein 误差界，验证非有理输入的位置、四边切向及法向。入口为 [`PairedConversionValidation.h`](include/PairedConversionValidation.h)，目前单独接入测试，现有转换流程仍使用原验证器。实现范围、状态含义与配对计时见[独立验证器测试报告](docs/testing/PAIRED_VALIDATION_2026-10-14.md)。
 
+第三个独立入口 [`ValidateMotherDistanceConversion`](include/MotherDistanceValidation.h) 用带浮点保护的母面距离界检查内部位置，保留四边区间位置、切向和法向检查；它不提供内部逐参数配对或有限面片双向 Hausdorff 证明。球面/圆环专项、代表性反例和五模块耗时见[测试报告](docs/testing/MOTHER_DISTANCE_SPHERE_TORUS_2026-10-15.md)。当前仍独立接入测试，未替换正式转换流程。
+
 2026-10-15 起，等参旧验证器 `ValidateConversion` 已废弃，保留实现和历史证据但不再测试；调用它的完整转换回归暂停。`Build.ps1 -Dataset500Only` / `-SpherePolynomialOnly` 改为新验证器测试，有理输入另外测试精确 `Recognize`。当前命令、五模块计时和未覆盖范围见[测试说明](tests/README.md#等参专用路径计时)。下面涉及近似、平台、Jacobian、圆锥和极端完整转换的旧测试开关已禁用，不能按历史命令重跑。
 
 独立验证器现已采用 U/V 两步提取和逐控制点坐标变换；可传入 `PairedValidationContext` 复用同一源面的准备结果。源面内容改变会自动失效，候选改变仍重新验证。首次验证及缓存命中的同批对比见[准备阶段优化报告](docs/testing/PAIRED_PREPARATION_2026-10-15.md)。

@@ -1,0 +1,10 @@
+Internal ctest changing into directory: D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-specialized-timing/mother-distance-20261015/out
+Test project D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-specialized-timing/mother-distance-20261015/out
+    Start 1: BSpline2Analytic.MotherDistanceUnit
+1/2 Test #1: BSpline2Analytic.MotherDistanceUnit ..........   Passed    0.95 sec
+    Start 2: BSpline2Analytic.MotherDistanceSphereTorus
+2/2 Test #2: BSpline2Analytic.MotherDistanceSphereTorus ...   Passed    8.72 sec
+
+100% tests passed, 0 tests failed out of 2
+
+Total Test time (real) =   9.69 sec
