@@ -1,0 +1,29 @@
+{
+  "dataset_rows": 500,
+  "statuses": {
+    "Passed": 280,
+    "Unsupported": 206,
+    "ClassificationFailed": 9,
+    "NoCandidate": 5
+  },
+  "status_changes_vs_3985a1b": [],
+  "ordinary_polynomial_passes": 280,
+  "passes_by_type": {
+    "Plane": 100,
+    "Cylinder": 50,
+    "Cone": 40,
+    "Sphere": 40,
+    "Torus": 50
+  },
+  "max_bounds": {
+    "geometry_bound": 3.1309449449140086e-06,
+    "tangent_deg": 0.003627390381534092,
+    "normal_deg": 0.004193016408244379
+  },
+  "tests": {
+    "PairedValidation": "47491 assertions passed",
+    "PairedSphere": "40 ordinary polynomial cases passed",
+    "PairedDataset500": "280 ordinary polynomial cases passed",
+    "Regression": "3847 assertions passed"
+  }
+}

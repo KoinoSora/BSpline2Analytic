@@ -40,6 +40,8 @@
 
 独立实验验证器 `ValidatePairedConversion` 通过候选的有限矩形域、分段单调参数对应和正权重有理 Bernstein 误差界，验证非有理输入的位置、四边切向及法向。入口为 [`PairedConversionValidation.h`](include/PairedConversionValidation.h)，目前单独接入测试，现有转换流程仍使用原验证器。实现范围、状态含义与配对计时见[独立验证器测试报告](docs/testing/PAIRED_VALIDATION_2026-10-14.md)。
 
+独立验证器现已采用 U/V 两步提取和逐控制点坐标变换；可传入 `PairedValidationContext` 复用同一源面的准备结果。源面内容改变会自动失效，候选改变仍重新验证。首次验证及缓存命中的同批对比见[准备阶段优化报告](docs/testing/PAIRED_PREPARATION_2026-10-15.md)。
+
 ## 构建与运行
 
 需要 Windows x64、Visual Studio 2022 C++ 工具链、CMake 3.22 及以上、SGK 1.7.11 SDK 和有效本地许可证。`cmake`、`ctest` 需在 PATH 中。

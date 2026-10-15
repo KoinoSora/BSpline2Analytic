@@ -34,5 +34,24 @@ BezierCell Crop(const BezierCell &, double, double, double, double);
 Chart BuildChart(const AnalyticPatch &);
 void CheckPatch(const AnalyticPatch &);
 double RationalCoordinate(const Chart &, unsigned dimension, double analyticParameter);
-BV LocalSource(const BV &, const AnalyticParameters &);
+struct LocalFrame
+{
+    IV origin, x, y, z;
+};
+LocalFrame MakeLocalFrame(const AnalyticParameters &);
+void Localize(BV &, const LocalFrame &);
+std::vector<BezierCell> ExtractPolynomialCells(const sggk::BSplineSurface &,
+                                               PairedValidationReport &);
+// Untransformed source cells only. No pointer-identity or lossy hash keys.
+struct SourceCache
+{
+    unsigned degreeU = 0, degreeV = 0;
+    std::array<double, 4> domain{};
+    sggk::RealArray knotsU, knotsV;
+    sggk::UIntArray multsU, multsV;
+    std::vector<std::vector<V>> controls;
+    std::vector<BezierCell> cells;
+    bool Matches(const sggk::BSplineSurface &) const;
+    void Store(const sggk::BSplineSurface &, const std::vector<BezierCell> &);
+};
 } // namespace bspline2analytic::detail::paired

@@ -12,6 +12,16 @@ double Milliseconds(Clock::time_point t)
 {
     return std::chrono::duration<double, std::milli>(Clock::now() - t).count();
 }
+struct Measure
+{
+    double &elapsed;
+    Clock::time_point start = Clock::now();
+    explicit Measure(double &value) : elapsed(value) {}
+    ~Measure()
+    {
+        elapsed += Milliseconds(start);
+    }
+};
 struct Budget : std::runtime_error
 {
     using std::runtime_error::runtime_error;
@@ -249,6 +259,7 @@ class Validator
     const PairedValidationOptions &options;
     PairedValidationReport &out;
     ValidationTimer &timer;
+    SourceCache *sourceCache;
     Products products;
     std::vector<BezierCell> sourceCells;
     Chart chart;
@@ -421,8 +432,9 @@ class Validator
 
   public:
     Validator(const sggk::BSplineSurface &s, const AnalyticPatch &p,
-              const PairedValidationOptions &o, PairedValidationReport &r, ValidationTimer &t)
-        : source(s), patch(p), options(o), out(r), timer(t)
+              const PairedValidationOptions &o, PairedValidationReport &r, ValidationTimer &t,
+              SourceCache *cache)
+        : source(s), patch(p), options(o), out(r), timer(t), sourceCache(cache)
     {
     }
     bool Run()
@@ -440,12 +452,38 @@ class Validator
             throw Failure(Status::Unsupported, "Paired degree budget is 32 per direction");
         if (source.KnotsU().size() - 1 > options.maxCommonCells / (source.KnotsV().size() - 1))
             throw Budget("Source cell budget exhausted");
-        sourceCells = ExtractCells(source);
-        ++out.sourceExtractions;
+        bool cached = false;
+        if (sourceCache)
+        {
+            Measure measure(out.sourceCacheMs);
+            cached = sourceCache->Matches(source);
+            if (cached)
+            {
+                sourceCells = sourceCache->cells;
+                ++out.sourceCacheHits;
+            }
+        }
+        if (!cached)
+        {
+            {
+                Measure measure(out.sourceExtractionMs);
+                sourceCells = ExtractPolynomialCells(source, out);
+                ++out.sourceExtractions;
+            }
+            if (sourceCache)
+            {
+                Measure measure(out.sourceCacheMs);
+                sourceCache->Store(source, sourceCells);
+            }
+        }
         if (sourceCells.empty())
             throw Failure(Status::InvalidInput, "Empty source domain");
-        for (auto &c : sourceCells)
-            c.p = LocalSource(c.p, patch.parameters);
+        {
+            Measure measure(out.localTransformMs);
+            const auto frame = MakeLocalFrame(patch.parameters);
+            for (auto &c : sourceCells)
+                Localize(c.p, frame);
+        }
         auto start = Clock::now();
         chart = BuildChart(patch);
         out.nurbsMs += Milliseconds(start);
@@ -502,15 +540,15 @@ const char *PairedValidationStatusName(PairedValidationStatus s) noexcept
         return "NumericalFailure";
     }
 }
-PairedValidationReport ValidatePairedConversion(const sggk::BSplineSurface &s,
-                                                const AnalyticPatch &p,
-                                                const PairedValidationOptions &o)
+static PairedValidationReport ValidatePaired(const sggk::BSplineSurface &s, const AnalyticPatch &p,
+                                             const PairedValidationOptions &o,
+                                             detail::paired::SourceCache *cache)
 {
     PairedValidationReport out;
     detail::ValidationTimer timer(out.certificate.timing);
     try
     {
-        detail::paired::Validator validator(s, p, o, out, timer);
+        detail::paired::Validator validator(s, p, o, out, timer, cache);
         bool passed = validator.Run();
         out.status = passed ? PairedValidationStatus::Passed : PairedValidationStatus::NotCertified;
         out.certificate.message = passed ? "Positive-weight paired rational certificate: complete "
@@ -546,5 +584,29 @@ PairedValidationReport ValidatePairedConversion(const sggk::BSplineSurface &s,
     }
     timer.Finish();
     return out;
+}
+struct PairedValidationContext::Impl
+{
+    detail::paired::SourceCache cache;
+};
+PairedValidationContext::PairedValidationContext() : impl_(std::make_unique<Impl>()) {}
+PairedValidationContext::~PairedValidationContext() = default;
+PairedValidationContext::PairedValidationContext(PairedValidationContext &&) noexcept = default;
+PairedValidationContext &PairedValidationContext::operator=(PairedValidationContext &&) noexcept =
+    default;
+PairedValidationReport ValidatePairedConversion(const sggk::BSplineSurface &s,
+                                                const AnalyticPatch &p,
+                                                const PairedValidationOptions &o)
+{
+    return ValidatePaired(s, p, o, nullptr);
+}
+PairedValidationReport ValidatePairedConversion(const sggk::BSplineSurface &s,
+                                                const AnalyticPatch &p,
+                                                PairedValidationContext &context,
+                                                const PairedValidationOptions &o)
+{
+    if (!context.impl_)
+        context.impl_ = std::make_unique<PairedValidationContext::Impl>();
+    return ValidatePaired(s, p, o, &context.impl_->cache);
 }
 } // namespace bspline2analytic

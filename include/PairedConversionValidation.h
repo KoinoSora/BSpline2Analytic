@@ -1,5 +1,6 @@
 #pragma once
 #include "ApproximateConversion.h"
+#include <memory>
 
 namespace bspline2analytic
 {
@@ -37,14 +38,41 @@ struct PairedValidationReport
     unsigned mappingAttempts = 0, mappingPointEvaluations = 0;
     unsigned commonCells = 0, surfaceNodes = 0, boundaryNodes = 0;
     unsigned sourceExtractions = 0, targetPatches = 0;
+    unsigned sourceCacheHits = 0, uExtractionMatrices = 0, vExtractionMatrices = 0;
     // Subsets of certificate.timing.preparation; do not add to totalMs again.
     double nurbsMs = 0, mappingMs = 0;
+    double sourceExtractionMs = 0, sourceCacheMs = 0, localTransformMs = 0;
     bool Passed() const noexcept
     {
         return status == PairedValidationStatus::Passed && certificate.Passed();
     }
 };
+// Optional cache for sequential validations of one source against changing
+// candidates. Exact source-content comparison invalidates stale entries.
+// Candidate geometry, domains, maps and certificates are never cached.
+// Use a separate context per concurrent caller; it is not thread-safe.
+class PairedValidationContext
+{
+  public:
+    PairedValidationContext();
+    ~PairedValidationContext();
+    PairedValidationContext(PairedValidationContext &&) noexcept;
+    PairedValidationContext &operator=(PairedValidationContext &&) noexcept;
+    PairedValidationContext(const PairedValidationContext &) = delete;
+    PairedValidationContext &operator=(const PairedValidationContext &) = delete;
+
+  private:
+    struct Impl;
+    std::unique_ptr<Impl> impl_;
+    friend PairedValidationReport ValidatePairedConversion(const sggk::BSplineSurface &,
+                                                           const AnalyticPatch &,
+                                                           PairedValidationContext &,
+                                                           const PairedValidationOptions &);
+};
 PairedValidationReport ValidatePairedConversion(const sggk::BSplineSurface &, const AnalyticPatch &,
+                                                const PairedValidationOptions & = {});
+PairedValidationReport ValidatePairedConversion(const sggk::BSplineSurface &, const AnalyticPatch &,
+                                                PairedValidationContext &,
                                                 const PairedValidationOptions & = {});
 const char *PairedValidationStatusName(PairedValidationStatus) noexcept;
 } // namespace bspline2analytic

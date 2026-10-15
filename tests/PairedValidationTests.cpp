@@ -38,11 +38,51 @@ void Timing(const PairedValidationReport &r)
     Require(std::isfinite(t.totalMs) && t.totalMs >= 0 &&
                 std::abs(sum - t.totalMs) < 1e-7 * std::max(1.0, t.totalMs),
             "Exclusive paired timing mismatch");
-    Require(r.nurbsMs + r.mappingMs <= t.preparation.elapsedMs + 1e-5,
+    Require(r.nurbsMs + r.mappingMs + r.sourceExtractionMs + r.sourceCacheMs + r.localTransformMs <=
+                t.preparation.elapsedMs + 1e-5,
             "Nested preparation timings exceed preparation");
     if (r.Passed())
         Require(r.certificate.Passed() && std::isfinite(r.certificate.geometry.upperBound),
                 "Incomplete certificate accepted");
+}
+void CheckExtraction(const sggk::BSplineSurface &s)
+{
+    CheckApproximateInput(s, {});
+    auto reference = ExtractCells(s);
+    PairedValidationReport counts;
+    auto cells = paired::ExtractPolynomialCells(s, counts);
+    Require(cells.size() == reference.size() &&
+                cells.size() == size_t(counts.uExtractionMatrices) * counts.vExtractionMatrices,
+            "Extraction coverage or one-matrix-per-span count changed");
+    for (size_t i = 0; i < cells.size(); ++i)
+    {
+        const auto &a = cells[i], &b = reference[i];
+        Require(a.u0 == b.u0 && a.u1 == b.u1 && a.v0 == b.v0 && a.v1 == b.v1,
+                "Source extraction domain changed");
+        for (auto pair : {std::make_pair(&a.p.x, &b.p.x), std::make_pair(&a.p.y, &b.p.y),
+                          std::make_pair(&a.p.z, &b.p.z)})
+        {
+            Require(pair.first->c.size() == pair.second->c.size(), "Extraction degree changed");
+            for (size_t k = 0; k < pair.first->c.size(); ++k)
+            {
+                I x = pair.first->c[k], y = pair.second->c[k];
+                Require(x.finite() && y.finite() && x.lo <= y.hi && y.lo <= x.hi,
+                        "Independent extraction coefficient enclosures do not overlap");
+            }
+        }
+        for (double u : {.0, .31, 1.0})
+            for (double v : {.0, .73, 1.0})
+            {
+                IV value = Range(Evaluate(a.p, u, v));
+                V point = Get(s.CalcPoint(a.u0 + (a.u1 - a.u0) * u, a.v0 + (a.v1 - a.v0) * v));
+                for (auto pair :
+                     {std::make_pair(value.x, point.x), std::make_pair(value.y, point.y),
+                      std::make_pair(value.z, point.z)})
+                    Require(pair.first.lo - 1e-10 <= pair.second &&
+                                pair.second <= pair.first.hi + 1e-10,
+                            "SDK evaluation outside extraction enclosure");
+            }
+    }
 }
 sggk::BSplineSurfacePtr Plane(unsigned mode)
 {
@@ -148,13 +188,71 @@ void Unit()
     MaterializePatch(optimized);
     auto samples = SampleSurface(*flat, {});
     ConversionStatistics optimization;
-    Require(!ValidatePairedConversion(*flat, optimized, affine).Passed(),
+    PairedValidationContext optimizationContext;
+    Require(!ValidatePairedConversion(*flat, optimized, optimizationContext, affine).Passed(),
             "Displaced candidate unexpectedly passed before refinement");
     RefineCandidate(*flat, optimized, samples, {}, optimization);
-    auto afterOptimization = ValidatePairedConversion(*flat, optimized);
+    auto afterOptimization = ValidatePairedConversion(*flat, optimized, optimizationContext);
     Timing(afterOptimization);
-    Require(optimization.optimizationIterations > 0 && afterOptimization.Passed(),
+    Require(optimization.optimizationIterations > 0 && afterOptimization.Passed() &&
+                afterOptimization.sourceCacheHits == 1 && !afterOptimization.sourceExtractions,
             "Independent verification of an actually optimized candidate failed");
+    PairedValidationContext context;
+    auto cachedSource = Plane(0);
+    auto cachedPatch = RecoverApproxPatch(*cachedSource, patch.parameters);
+    auto cold = ValidatePairedConversion(*cachedSource, cachedPatch, context);
+    auto warm = ValidatePairedConversion(*cachedSource, cachedPatch, context);
+    Timing(cold);
+    Timing(warm);
+    Require(cold.Passed() && warm.Passed() && cold.sourceExtractions == 1 &&
+                !cold.sourceCacheHits && warm.sourceCacheHits == 1 && !warm.sourceExtractions &&
+                !warm.uExtractionMatrices && !warm.vExtractionMatrices &&
+                warm.certificate.geometry.upperBound == cold.certificate.geometry.upperBound,
+            "Prepared source was not reused exactly");
+    auto displaced = cachedPatch;
+    displaced.parameters.origin = sggk::Point3D(0, 0, .001);
+    auto changedCandidate = ValidatePairedConversion(*cachedSource, displaced, context, affine);
+    Require(!changedCandidate.Passed() && changedCandidate.sourceCacheHits == 1,
+            "Source cache retained a stale candidate certificate");
+    auto narrow = cachedPatch;
+    narrow.domain[1] *= .8;
+    Require(!ValidatePairedConversion(*cachedSource, narrow, context, affine).Passed(),
+            "Cached validation retained a stale candidate domain");
+    const auto oldPoint = cachedSource->ControlPoints()[1][1];
+    cachedSource->SetControlPoint(sggk::Point3D(oldPoint.X(), oldPoint.Y(), .001), 1, 1);
+    auto changedSource = ValidatePairedConversion(*cachedSource, cachedPatch, context, affine);
+    Require(!changedSource.Passed() && changedSource.sourceExtractions == 1 &&
+                !changedSource.sourceCacheHits,
+            "In-place source mutation reused stale cells");
+    cachedSource->SetControlPoint(oldPoint, 1, 1);
+    cachedSource->InsertUKnots(.31);
+    auto inserted = ValidatePairedConversion(*cachedSource, cachedPatch, context);
+    Require(inserted.Passed() && inserted.sourceExtractions == 1 && !inserted.sourceCacheHits &&
+                inserted.uExtractionMatrices == 2 && inserted.vExtractionMatrices == 1,
+            "Changed knots did not invalidate source preparation");
+    PairedValidationOptions smallBudget;
+    smallBudget.maxCommonCells = 1;
+    Require(ValidatePairedConversion(*cachedSource, cachedPatch, context, smallBudget).status ==
+                PairedValidationStatus::BudgetExceeded,
+            "Cached source bypassed a reduced cell budget");
+    auto movedContext = std::move(context);
+    Require(ValidatePairedConversion(*cachedSource, cachedPatch, movedContext).sourceCacheHits == 1,
+            "Moved context lost valid source preparation");
+    Require(ValidatePairedConversion(*cachedSource, cachedPatch, context).sourceExtractions == 1,
+            "Moved-from context was not reusable");
+    CheckExtraction(*cachedSource);
+    sggk::Point3DMatrix net(6, std::vector<sggk::Point3D>(7));
+    for (unsigned i = 0; i < 6; ++i)
+        for (unsigned j = 0; j < 7; ++j)
+            net[i][j] = sggk::Point3D(.3 * i, .2 * j, std::sin(double(i + 2 * j)));
+    auto asymmetric = std::make_shared<sggk::BSplineSurface>(
+        2, 3, net, sggk::RealArray{-.3, .1, .4, 1.7}, sggk::RealArray{2, 2.2, 3.3, 5},
+        sggk::UIntArray{3, 2, 1, 3}, sggk::UIntArray{4, 2, 1, 4});
+    CheckExtraction(*asymmetric);
+    asymmetric->ExchangeUV();
+    asymmetric->UReverse();
+    asymmetric->VReverse();
+    CheckExtraction(*asymmetric);
     PairedValidationOptions budget;
     budget.validation.maxValidationPieces = 1;
     auto limited = ValidatePairedConversion(
@@ -250,6 +348,7 @@ void Unit()
         if (flags & 4)
             polynomial->ExchangeUV();
         polynomial = NormalizeDatasetSurface(*polynomial);
+        CheckExtraction(*polynomial);
         auto recovered = RecoverApproxPatch(*polynomial, cylinder.parameters);
         auto result = ValidatePairedConversion(*polynomial, recovered);
         Timing(result);
@@ -319,7 +418,8 @@ int Dataset(const std::filesystem::path &dir, const std::filesystem::path &file,
     csv << "id,type,rational,collapsed,controls,classify_ms,candidates,old_status,new_status,old_"
            "ms,new_ms,speedup,geometry_bound,tangent_deg,normal_deg,attempts,u_segments,v_segments,"
            "common_cells,surface_nodes,boundary_nodes,prepare_ms,surface_ms,subdivide_ms,boundary_"
-           "ms,report_ms,nurbs_ms,mapping_ms,message\n";
+           "ms,report_ms,nurbs_ms,mapping_ms,extraction_ms,source_cache_ms,local_transform_ms,"
+           "source_extractions,cache_hits,u_matrices,v_matrices,message\n";
     unsigned passed = 0, notCertified = 0, skipped = 0;
     bool warmed[5]{};
     for (unsigned id = sphere ? 301u : 0u; id < (sphere ? 400u : 500u); id += sphere ? 2u : 1u)
@@ -436,7 +536,10 @@ int Dataset(const std::filesystem::path &dir, const std::filesystem::path &file,
             << t.preparation.elapsedMs << ',' << t.surfaceBounds.elapsedMs << ','
             << t.subdivision.elapsedMs << ',' << t.boundaryChecks.elapsedMs << ','
             << t.reporting.elapsedMs << ',' << newer.nurbsMs << ',' << newer.mappingMs << ','
-            << Quote(message) << '\n';
+            << newer.sourceExtractionMs << ',' << newer.sourceCacheMs << ','
+            << newer.localTransformMs << ',' << newer.sourceExtractions << ','
+            << newer.sourceCacheHits << ',' << newer.uExtractionMatrices << ','
+            << newer.vExtractionMatrices << ',' << Quote(message) << '\n';
         csv.flush();
         std::cout << id << " old=" << oldStatus << " new=" << newStatus << " ms=" << newMs
                   << std::endl;

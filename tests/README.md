@@ -10,6 +10,7 @@
 | `ReferenceCases.*`、`ApproximateCases.*` | 各测试共享的精确与非有理案例。 |
 | `ApproximateBenchmark.cpp`、`SummarizeDataset500.py` | 性能记录与 CSV 汇总。 |
 | `PairedValidationTests.cpp`、`SummarizePairedValidation.py` | 独立参数对应验证器专项、非有理球面及完整 Dataset500 分流对照；不替换正式转换入口。 |
+| `PairedPreparationBenchmark.cpp`、`BenchmarkPairedPreparation.py` | 同一程序对比指定提交的独立验证器、当前首次验证与源面缓存命中；记录准备子项和首次缓存建立成本。 |
 | `data/dataset500/` | 500 个固定 `.b2a` 输入及 `manifest.csv`；整理目录不重新生成数据。 |
 | `GeneralDataset.*`、`GeneralDatasetCertificate.cpp`、`GeneralDatasetTests.cpp` | 新增 600 个带独立证书的主案例、60 个专项及仅调用一般兜底的测试入口。 |
 | `SummarizeGeneralDataset.py` | 校验新 CSV 完整性并按来源类型、测试组汇总结果。 |
@@ -38,6 +39,8 @@
 极端测试运行器支持 `--first 96 --last 128`，只运行角跨度门槛组（右端不含）。在 SDK 工作目录并配置其 DLL 路径后，执行 `python <repo>/tests/RunExtremeDataset.py --exe <repo>/build/Release/BSpline2AnalyticExtremeTests.exe --data <repo>/tests/data/extreme200 --output <result.csv> --first 96 --last 128`。`--resume` 仅接受同一选定范围的连续前缀。每个子进程额外保存 `case-NNN-fits.csv`，保留专用分支的逐等参线拟合诊断，包括回退前的拒绝原因；采样拟合误差不等于连续界。32 例的几何转换仍有未通过结果时，运行器返回 1，不能把定向单元测试通过等同于整组转换通过。结果见 [门槛修复报告](../docs/testing/CLASSIFICATION_GATE_REPORT_2026-10-14.md)。
 
 ## 等参专用路径计时
+
+准备阶段优化的复现方式：先构建当前 Release 库，再执行 `python tests/BenchmarkPairedPreparation.py --baseline 3985a1b --build-dir build-specialized-timing --output <comparison.csv> --runs 3`。脚本提取旧实现到忽略的构建目录，只重命名私有命名空间和公开函数，并增加两个子计时器；两版共用未修改的区间基础运算和同一编译设置。40 个普通非有理球面的三种模式轮换顺序，各测三次；缓存首次填充另列，不能把缓存命中耗时当作首次验证耗时。见[准备阶段优化报告](../docs/testing/PAIRED_PREPARATION_2026-10-15.md)。
 
 `Build.ps1 -Dataset500Only` 当前直接调用 `Recognize`（200 个有理输入）及 `ConvertApproximate`（300 个非有理输入），不进入一般兜底。固定 500 例全部重载并核验来源证书，40 个退化案例保留退化预期。
 

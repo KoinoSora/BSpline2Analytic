@@ -1,0 +1,17 @@
+CMake is re-running because D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-specialized-timing/CMakeFiles/generate.stamp is out-of-date.
+  the file 'D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/CMakeLists.txt'
+  is newer than 'D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-specialized-timing/CMakeFiles/generate.stamp.depend'
+  result='-1'
+-- Selecting Windows SDK version 10.0.26100.0 to target Windows 10.0.26200.
+-- Configuring done (6.5s)
+-- Generating done (1.7s)
+-- Build files have been written to: D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-specialized-timing
+适用于 .NET Framework MSBuild 版本 17.12.12+1cce77968
+
+  PairedRationalChart.cpp
+  PairedConversionValidation.cpp
+  PairedSourcePreparation.cpp
+  正在生成代码...
+  BSpline2Analytic.vcxproj -> D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-specialized-timing\Release\BSpline2Analytic.lib
+  PairedValidationTests.cpp
+  BSpline2AnalyticPairedValidationTests.vcxproj -> D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-specialized-timing\Release\BSpline2AnalyticPairedValidationTests.exe

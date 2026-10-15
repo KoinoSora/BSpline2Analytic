@@ -1,0 +1,48 @@
+{
+  "baseline": "3985a1bc218ef7231cae6dc4a42a7fefb3d1aa82",
+  "cases": 40,
+  "repetitions": 3,
+  "baseline_original_sha256": {
+    "PairedValidationInternal.h": "70d53b6802df9c7bb38383e3ae530c8211fa93a7a81aaea2477d564b8c61f9c3",
+    "PairedRationalChart.cpp": "8ad8e6f9e01e6f4331bd1b0eee405256842ec7c8da7c3d4fdedc78909d915cfd",
+    "PairedConversionValidation.cpp": "79f9ca8b401f7d5046b0e4f7713b39118f1ebde94e5a0a472177da47cd1390f2"
+  },
+  "current_library_sha256": "1d8f3a1a1c5e2ba356fd7c692a7d88ed5fb5df23503e89b2fe645ac90a54a82b",
+  "configuration": "Release /fp:strict",
+  "cpu_affinity_fixed": false,
+  "exclusive_machine": false,
+  "cache_fill_mean_ms": 18.311349999999997,
+  "means": {
+    "baseline": {
+      "wall_ms": 41.19444666666667,
+      "prepare_ms": 27.658131666666705,
+      "extract_ms": 24.87973583333333,
+      "local_ms": 2.561983333333333,
+      "cache_ms": 0.0,
+      "surface_ms": 10.846063333333332,
+      "boundary_ms": 2.5996650000000003
+    },
+    "new": {
+      "wall_ms": 17.217286666666663,
+      "prepare_ms": 3.911979999999998,
+      "extract_ms": 3.2807150000000003,
+      "local_ms": 0.4167049999999998,
+      "cache_ms": 0.0,
+      "surface_ms": 10.649610833333334,
+      "boundary_ms": 2.567764166666666
+    },
+    "cached": {
+      "wall_ms": 14.190863333333333,
+      "prepare_ms": 0.6767449999999999,
+      "extract_ms": 0.0,
+      "local_ms": 0.43777000000000016,
+      "cache_ms": 0.01996583333333333,
+      "surface_ms": 10.827116666666672,
+      "boundary_ms": 2.6006166666666664
+    }
+  },
+  "speedup": {
+    "new": 2.3926212918566736,
+    "cached": 2.9028851662536863
+  }
+}

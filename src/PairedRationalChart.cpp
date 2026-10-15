@@ -151,13 +151,23 @@ BezierCell Crop(const BezierCell &cell, double u0, double u1, double v0, double 
     c.v1 = v1;
     return c;
 }
-BV LocalSource(const BV &p, const AnalyticParameters &a)
+LocalFrame MakeLocalFrame(const AnalyticParameters &a)
 {
     IV z = Normalize(Exact(Get(a.axis))), x = Exact(Get(a.xDirection));
     x = Normalize(x - z * detail::Dot(x, z));
-    IV y = detail::Cross(z, x), o = Exact(Get(a.origin));
-    BV d = {p.x - C(o.x), p.y - C(o.y), p.z - C(o.z)};
-    return {detail::Dot(d, x), detail::Dot(d, y), detail::Dot(d, z)};
+    return {Exact(Get(a.origin)), x, detail::Cross(z, x), z};
+}
+void Localize(BV &p, const LocalFrame &f)
+{
+    // Affine transforms act directly on Bernstein control coefficients.
+    // A constant translation needs neither degree elevation nor temporaries.
+    for (size_t i = 0; i < p.x.c.size(); ++i)
+    {
+        IV d = IV{p.x.c[i], p.y.c[i], p.z.c[i]} - f.origin;
+        p.x.c[i] = detail::Dot(d, f.x);
+        p.y.c[i] = detail::Dot(d, f.y);
+        p.z.c[i] = detail::Dot(d, f.z);
+    }
 }
 void CheckPatch(const AnalyticPatch &p)
 {
