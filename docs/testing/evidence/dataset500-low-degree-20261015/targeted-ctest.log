@@ -1,0 +1,29 @@
+[OUTPUT]
+Internal ctest changing into directory: D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-specialized-timing
+
+[HANDLER_OUTPUT]
+Test project D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-specialized-timing
+
+    Start  2: BSpline2Analytic.PairedValidation
+1/5 Test  #2: BSpline2Analytic.PairedValidation .....   Passed    1.31 sec
+    Start  5: BSpline2Analytic.ClassificationGate
+2/5 Test  #5: BSpline2Analytic.ClassificationGate ...   Passed    0.49 sec
+    Start 13: BSpline2Analytic.Dataset500Audit
+3/5 Test #13: BSpline2Analytic.Dataset500Audit ......   Passed    8.18 sec
+    Start 16: BSpline2Analytic.Cone
+4/5 Test #16: BSpline2Analytic.Cone .................***Failed    0.16 sec
+Failed to open log output file.
+Failed to open log output file.
+FAIL Classification cache or deferred recovery regressed
+
+    Start 17: BSpline2Analytic.Regression
+5/5 Test #17: BSpline2Analytic.Regression ...........   Passed    0.17 sec
+
+80% tests passed, 1 tests failed out of 5
+
+Total Test time (real) =  10.33 sec
+
+The following tests FAILED:
+	 16 - BSpline2Analytic.Cone (Failed)
+[ERROR_MESSAGE]
+Errors while running CTest

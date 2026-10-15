@@ -737,7 +737,8 @@ void SpotCheck(const sggk::BSplineSurface &s, const AnalyticPatch &p,
             }
         }
 }
-int Dataset(const std::filesystem::path &dir, const std::filesystem::path &file, bool sphere)
+int Dataset(const std::filesystem::path &dir, const std::filesystem::path &file, bool sphere,
+            bool compareLegacy = true)
 {
     std::ofstream csv(file);
     Require(bool(csv), "Cannot open paired CSV");
@@ -758,6 +759,7 @@ int Dataset(const std::filesystem::path &dir, const std::filesystem::path &file,
     for (unsigned id = sphere ? 301u : 0u; id < (sphere ? 400u : 500u); id += sphere ? 2u : 1u)
     {
         auto c = ReadDatasetCase(dir / CaseFilename(id));
+        CheckDataset500Contract(c, id);
         Require(c.id == id, "Fixture identity mismatch");
         auto inputBound = BoundPair(*c.source, *c.input, c.refitted ? 1e-6 : 1e-9);
         Require(inputBound.passed, "Fixture source certificate failed");
@@ -819,11 +821,12 @@ int Dataset(const std::filesystem::path &dir, const std::filesystem::path &file,
                                 "Prepared classification changed candidate order/geometry");
                     if (!warmed[c.type] && !c.collapsedMask)
                     {
-                        (void)ValidateConversion(*c.input, p);
+                        if (compareLegacy) (void)ValidateConversion(*c.input, p);
                         (void)ValidatePairedConversion(*c.input, p);
                         warmed[c.type] = true;
                     }
                     auto oldRun = [&] {
+                        if (!compareLegacy) return;
                         auto t = std::chrono::steady_clock::now();
                         old = ValidateConversion(*c.input, p);
                         oldMs = std::chrono::duration<double, std::milli>(
@@ -848,7 +851,7 @@ int Dataset(const std::filesystem::path &dir, const std::filesystem::path &file,
                         newRun();
                     }
                     Timing(newer);
-                    oldStatus = old.Passed() ? "Passed" : "NotCertified";
+                    oldStatus = compareLegacy ? (old.Passed() ? "Passed" : "NotCertified") : "NotRun";
                     newStatus = PairedValidationStatusName(newer.status);
                     message = newer.certificate.message;
                     if (newer.Passed())
@@ -917,7 +920,7 @@ int main(int argc, char **argv)
     int code = 0;
     try
     {
-        Require(argc == 2 || argc == 4, "Expected --unit or --sphere/--dataset directory csv");
+        Require(argc == 2 || argc == 4, "Expected --unit or --sphere/--dataset[-new-only] directory csv");
         if (std::string(argv[1]) == "--unit")
         {
             Require(argc == 2, "Unexpected unit arguments");
@@ -926,9 +929,13 @@ int main(int argc, char **argv)
         else
         {
             Require(argc == 4 &&
-                        (std::string(argv[1]) == "--sphere" || std::string(argv[1]) == "--dataset"),
+                        (std::string(argv[1]) == "--sphere" || std::string(argv[1]) == "--dataset" ||
+                         std::string(argv[1]) == "--sphere-new-only" ||
+                         std::string(argv[1]) == "--dataset-new-only"),
                     "Invalid comparison arguments");
-            code = Dataset(argv[2], argv[3], std::string(argv[1]) == "--sphere");
+            const std::string mode = argv[1];
+            code = Dataset(argv[2], argv[3], mode.rfind("--sphere", 0) == 0,
+                           mode.find("-new-only") == std::string::npos);
         }
     }
     catch (const std::exception &e)

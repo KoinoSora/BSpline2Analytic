@@ -1,0 +1,39 @@
+{
+  "policy": "dataset500-degree5-v2",
+  "cases": 500,
+  "max_degree": 5,
+  "controls_exclusive_upper": 200,
+  "migrated_dataset_sha256": "4aa4e9a23990bcf0962cffe605c93aa9f1df9993e64e5d8e0dbefb1dee10e200",
+  "digest_format": "SHA256 of sorted 'case-NNN.b2a SHA256\\n' UTF-8 lines",
+  "previous_commit": "246e40173721e6cbbeaaf9dc7614bf35f5e023e2",
+  "control_bands": [
+    [
+      50,
+      79
+    ],
+    [
+      80,
+      109
+    ],
+    [
+      110,
+      139
+    ],
+    [
+      140,
+      169
+    ],
+    [
+      170,
+      199
+    ]
+  ],
+  "new_refit_degrees": [
+    3,
+    5
+  ],
+  "fit_selection_tolerance": 8e-07,
+  "refitted_source_tolerance": 1e-06,
+  "exact_source_tolerance": 1e-09,
+  "hash_bytes": "Windows fixture bytes (CRLF); see per-file hashes in migration evidence"
+}

@@ -116,7 +116,9 @@ if(BSPLINE2ANALYTIC_BUILD_TESTS)
     set_source_files_properties(tests/PairedSurfaceBounds.cpp PROPERTIES COMPILE_OPTIONS "/fp:strict")
     add_test(NAME BSpline2Analytic.Dataset500 COMMAND BSpline2AnalyticDataset500Tests
         "${CMAKE_CURRENT_SOURCE_DIR}/tests/data/dataset500" "${CMAKE_CURRENT_BINARY_DIR}/dataset500-$<CONFIG>.csv")
-    set_tests_properties(BSpline2Analytic.Dataset500 PROPERTIES
+    add_test(NAME BSpline2Analytic.Dataset500Audit COMMAND BSpline2AnalyticDataset500Tests --audit
+        "${CMAKE_CURRENT_SOURCE_DIR}/tests/data/dataset500")
+    set_tests_properties(BSpline2Analytic.Dataset500 BSpline2Analytic.Dataset500Audit PROPERTIES
         WORKING_DIRECTORY "${SGGK_SDK_DIR}"
         ENVIRONMENT_MODIFICATION "PATH=path_list_prepend:${SGGK_SDK_DIR}/x64-win/bin${_sgk_config}")
     add_test(NAME BSpline2Analytic.ConeDataset COMMAND BSpline2AnalyticDataset500Tests --cone-only

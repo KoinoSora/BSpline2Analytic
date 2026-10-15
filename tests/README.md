@@ -22,7 +22,8 @@ python tests/RunGeneralHybrid.py --exe build-general-hybrid/Release/BSpline2Anal
 | `ApproximateBenchmark.cpp`、`SummarizeDataset500.py` | 性能记录与 CSV 汇总。 |
 | `PairedValidationTests.cpp`、`SummarizePairedValidation.py` | 独立参数对应验证器专项、非有理球面及完整 Dataset500 分流对照；不替换正式转换入口。 |
 | `PairedPreparationBenchmark.cpp`、`BenchmarkPairedPreparation.py` | 同一程序对比指定提交的独立验证器、当前首次验证与源面缓存命中；记录准备子项和首次缓存建立成本。 |
-| `data/dataset500/` | 500 个固定 `.b2a` 输入及 `manifest.csv`；整理目录不重新生成数据。 |
+| `data/dataset500/` | `case-*.b2a` 当前为 `dataset500-degree5-v2`：两方向最高五次、控制点严格小于 200；一般路径数据另有独立清单。 |
+| `AuditDataset500Migration.py` | 对比迁移前后的 500 个文件，检查身份、来源、解析参数和变更范围，并记录全部 SHA-256。 |
 | `GeneralDataset.*`、`GeneralDatasetCertificate.cpp`、`GeneralDatasetTests.cpp` | 新增 600 个带独立证书的主案例、60 个专项及仅调用一般兜底的测试入口。 |
 | `SummarizeGeneralDataset.py` | 校验新 CSV 完整性并按来源类型、测试组汇总结果。 |
 
@@ -56,6 +57,12 @@ python tests/RunGeneralHybrid.py --exe build-general-hybrid/Release/BSpline2Anal
 准备阶段优化的复现方式：先构建当前 Release 库，再执行 `python tests/BenchmarkPairedPreparation.py --baseline 3985a1b --build-dir build-specialized-timing --output <comparison.csv> --runs 3`。脚本提取旧实现到忽略的构建目录，只重命名私有命名空间和公开函数，并增加两个子计时器；两版共用未修改的区间基础运算和同一编译设置。40 个普通非有理球面的三种模式轮换顺序，各测三次；缓存首次填充另列，不能把缓存命中耗时当作首次验证耗时。见[准备阶段优化报告](../docs/testing/PAIRED_PREPARATION_2026-10-15.md)。
 
 `Build.ps1 -Dataset500Only` 当前直接调用 `Recognize`（200 个有理输入）及 `ConvertApproximate`（300 个非有理输入），不进入一般兜底。固定 500 例全部重载并核验来源证书，40 个退化案例保留退化预期。
+
+低次数据集的迁移、证书与范围核验见[迁移报告](../docs/testing/DATASET500_LOW_DEGREE_2026-10-15.md)。数据检查可独立运行 `BSpline2AnalyticDataset500Tests --audit <dir>`；所有业务输入的 U/V 次数必须不超过 5，控制点必须小于 200。其他数据集和验证器高次运算单测保留各自合同。
+
+完整转换需要逐例超时保护时，运行 `python tests/RunSpecializedDataset500.py --exe <Release测试程序> --data tests/data/dataset500 --sdk <SDK根目录> --output <新结果.csv> --timeout 20`。该入口使用 `--case <dir> <csv> <id>`，每个子进程执行一次无预热转换，仍校验完整来源证书。进程时限包括初始化、读盘和认证，不等同于算法时间；四项算法耗时仅取内部计时器。超时／异常行保留在 500 行中，未知耗时留空，不能作为零耗时或通过。含未完成行的结果不能交给要求完整数值的旧汇总脚本。
+
+独立配对验证的 `--dataset-new-only <dir> <csv>`／`--sphere-new-only <dir> <csv>` 可跳过旧投影验证器对照，仍使用真实首候选、检查来源证书、误差和覆盖率；覆盖不足依旧返回失败。旧 `--dataset`／`--sphere` 对照模式不变。首候选验证不等同于带候选重试和优化的完整转换。
 
 CSV 标记 `timing_schema=specialized-v2`，分别输出分类计算、初值验证、优化计算、优化后验证及其调用次数。分类总计和优化总计分别包含对应验证；`validate_ms` 为零，不能再把四项明细加到阶段总计上。用 `python tests/SummarizeSpecializedDataset500.py <csv> <目录>` 校验、生成 `summary.json` 与按类型/分支、控制点档分组的 `groups.csv`。旧报告使用旧计时定义，不能直接比较 `classify_ms` 和 `optimize_ms`。
 

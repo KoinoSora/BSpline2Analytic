@@ -16,6 +16,11 @@ struct DatasetCase
 sggk::SurfaceType DatasetType(unsigned type);
 std::string CaseFilename(unsigned id);
 void GenerateDataset500(const std::filesystem::path &directory);
+// Dataset500 policy only; shared readers also serve unrelated high-degree fixtures.
+void CheckDataset500Contract(const DatasetCase &, unsigned expectedId);
+void AuditDataset500(const std::filesystem::path &directory);
+void RebuildLowDegreeDataset500(const std::filesystem::path &inputDirectory,
+                                const std::filesystem::path &outputDirectory);
 DatasetCase ReadDatasetCase(const std::filesystem::path &file);
 unsigned CollapsedMask(const sggk::BSplineSurface &s);
 sggk::BSplineSurfacePtr RebuildDatasetSource(unsigned type, unsigned bucket, unsigned variant);

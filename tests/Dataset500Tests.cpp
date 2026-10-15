@@ -73,8 +73,35 @@ struct SpecializedResult
     }
     std::string Message() const { return std::visit([](const auto &r) { return r.message; }, details); }
 };
+void ContractProbe(const std::filesystem::path &dir)
+{
+    auto rejected = [](const DatasetCase &c) {
+        try { CheckDataset500Contract(c, c.id); }
+        catch (const std::runtime_error &) { return true; }
+        return false;
+    };
+    auto plane = ReadDatasetCase(dir / CaseFilename(0));
+    CheckDataset500Contract(plane, 0);
+    auto high = plane;
+    // Keep both negative examples inside the 50..79 control band, so only
+    // the degree limit can reject them (not an incidental control-count change).
+    high.input = std::make_shared<sggk::BSplineSurface>(*plane.source);
+    high.input->UDegreeElevation(6 - high.input->DegreeU());
+    PadDatasetSurface(*high.input, 7, 8, plane.variant);
+    Require(rejected(high), "Dataset500 accepted degree 6 in U");
+    high.input = std::make_shared<sggk::BSplineSurface>(*plane.source);
+    high.input->VDegreeElevation(7 - high.input->DegreeV());
+    PadDatasetSurface(*high.input, 7, 8, plane.variant);
+    Require(rejected(high), "Dataset500 accepted degree 7 in V");
+    auto full = ReadDatasetCase(dir / CaseFilename(498));
+    CheckDataset500Contract(full, 498);
+    full.input = std::make_shared<sggk::BSplineSurface>(*full.source);
+    PadDatasetSurface(*full.input, 10, 20, full.variant);
+    Require(rejected(full), "Dataset500 accepted exactly 200 control points");
+}
 void Probe(const std::filesystem::path &dir)
 {
+    ContractProbe(dir);
     detail::BPoly x(1, 1), y(1, 1);
     for (unsigned i = 0; i < 2; ++i)
         for (unsigned j = 0; j < 2; ++j)
@@ -151,14 +178,14 @@ void Inspect(const std::filesystem::path &file)
     }
 }
 int Run(const std::filesystem::path &dir, const std::filesystem::path &csvFile,
-        bool coneOnly = false, bool spherePolynomialOnly = false)
+        bool coneOnly = false, bool spherePolynomialOnly = false, int singleCase = -1)
 {
     unsigned files = 0;
     for (const auto &f : std::filesystem::directory_iterator(dir))
         if (f.path().extension() == ".b2a" && f.path().filename().string().rfind("case-", 0) == 0)
             ++files;
     Require(files == 500, "Dataset must contain exactly 500 cases");
-    if (!coneOnly && !spherePolynomialOnly)
+    if (!coneOnly && !spherePolynomialOnly && singleCase < 0)
         Probe(dir);
     std::ofstream csv(csvFile);
     Require(bool(csv), "Cannot open benchmark CSV");
@@ -182,43 +209,18 @@ int Run(const std::filesystem::path &dir, const std::filesystem::path &csvFile,
                                               polynomial = 0;
     bool warmed[5][2]{};
     std::map<std::string, std::vector<double>> times;
-    const unsigned first = spherePolynomialOnly ? 301 : (coneOnly ? 200 : 0),
-                   last = spherePolynomialOnly ? 400 : (coneOnly ? 300 : 500),
+    const unsigned first = singleCase >= 0 ? unsigned(singleCase) :
+                               (spherePolynomialOnly ? 301 : (coneOnly ? 200 : 0)),
+                   last = singleCase >= 0 ? first + 1 :
+                               (spherePolynomialOnly ? 400 : (coneOnly ? 300 : 500)),
                    stride = spherePolynomialOnly ? 2 : 1,
                    count = (last - first + stride - 1) / stride;
     for (unsigned id = first; id < last; id += stride)
     {
         auto c = ReadDatasetCase(dir / CaseFilename(id));
-        Require(c.id == id && c.pair == id / 2 && c.type == id / 100 &&
-                    c.bucket == (id % 100) / 20 && c.variant == (id % 20) / 2 &&
-                    c.refitted == bool(id % 2) && c.seed == 0x500b2a17u + c.pair,
-                "Dataset metadata mismatch");
+        CheckDataset500Contract(c, id);
         unsigned controls = static_cast<unsigned>(c.input->ControlPoints().size() *
                                                   c.input->ControlPoints()[0].size());
-        const unsigned lo[] = {50, 80, 110, 140, 170}, hi[] = {79, 109, 139, 169, 200};
-        Require(controls >= lo[c.bucket] && controls <= hi[c.bucket],
-                "Control count outside allocated band");
-        Require(!c.refitted || !c.input->IsRational(),
-                "Refitted fixture still has rational weights");
-        unsigned expectedCollapsed = (c.type == 2 || c.type == 3) && c.variant >= 8 ? 1 : 0;
-        Require(bool(c.collapsedMask) == bool(expectedCollapsed) &&
-                    CollapsedMask(*c.input) == c.collapsedMask,
-                "Collapsed boundary mismatch");
-        // The generated boundary must be a point, not merely a short curve.
-        const auto &net = c.input->ControlPoints();
-        for (unsigned edge = 0; edge < 4; ++edge)
-            if (c.collapsedMask & (1u << edge))
-            {
-                const size_t nu = net.size(), nv = net[0].size();
-                auto origin = detail::Get(net[edge == 1 ? nu - 1 : 0][edge == 3 ? nv - 1 : 0]);
-                for (size_t j = 0; j < (edge < 2 ? nv : nu); ++j)
-                {
-                    auto point = detail::Get(net[edge < 2 ? (edge == 0 ? 0 : nu - 1) : j]
-                                                [edge < 2 ? j : (edge == 2 ? 0 : nv - 1)]);
-                    Require(point.x == origin.x && point.y == origin.y && point.z == origin.z,
-                            "Degenerate control row is not exactly collapsed");
-                }
-            }
         auto source = RebuildDatasetSource(c.type, c.bucket, c.variant);
         Require(BoundPair(*source, *c.source, 1e-9).passed,
                 "Stored analytic source does not match generator");
@@ -230,11 +232,12 @@ int Run(const std::filesystem::path &dir, const std::filesystem::path &csvFile,
         if (c.collapsedMask)
             ++collapsed[c.type];
         unsigned path = c.input->IsRational() ? 0 : 1;
-        if (!warmed[c.type][path] && !c.collapsedMask)
+        if (singleCase < 0 && !warmed[c.type][path] && !c.collapsedMask)
         {
             (void)SpecializedResult(*c.input);
             warmed[c.type][path] = true;
         }
+        std::cout << "BEGIN_CONVERT " << id << std::endl;
         SpecializedResult result(*c.input);
         Require(result.path == (path == 0 ? ConversionPath::RationalRecognition
                                           : ConversionPath::PolynomialApproximation),
@@ -350,7 +353,7 @@ int Run(const std::filesystem::path &dir, const std::filesystem::path &csvFile,
                       << "; success=" << success << " degenerate=" << degenerate
                       << " failures=" << failed << std::endl;
     }
-    for (unsigned type = first / 100; type < last / 100; ++type)
+    for (unsigned type = first / 100; singleCase < 0 && type < last / 100; ++type)
     {
         Require(collapsed[type] ==
                     ((type == 2 || type == 3) ? (spherePolynomialOnly ? 10u : 20u) : 0u),
@@ -360,8 +363,8 @@ int Run(const std::filesystem::path &dir, const std::filesystem::path &csvFile,
                 Require(bins[type][b][k] == (spherePolynomialOnly && k == 0 ? 0u : 10u),
                         "Dataset quota mismatch");
     }
-    Require(rational == (spherePolynomialOnly ? 0u : (coneOnly ? 50u : 200u)) &&
-                polynomial == (coneOnly || spherePolynomialOnly ? 50u : 300u),
+    Require(singleCase >= 0 || (rational == (spherePolynomialOnly ? 0u : (coneOnly ? 50u : 200u)) &&
+                polynomial == (coneOnly || spherePolynomialOnly ? 50u : 300u)),
             "Unexpected dispatch distribution");
     for (auto &[name, values] : times)
     {
@@ -383,9 +386,33 @@ int main(int argc, char **argv)
     int result = 1;
     try
     {
-        Require(argc >= 3, "Usage: Dataset500Tests --generate directory | [--cone-only | "
-                           "--sphere-polynomial-only] directory results.csv");
-        if (std::string(argv[1]) == "--sphere-polynomial-only")
+        Require(argc >= 3, "Usage: Dataset500Tests --generate directory | --audit directory | "
+                           "--case directory results.csv id | "
+                           "--rebuild-low-degree input_directory empty_output_directory | "
+                           "[--cone-only | --sphere-polynomial-only] directory results.csv");
+        if (std::string(argv[1]) == "--case")
+        {
+            Require(argc == 5, "Expected --case directory results.csv id (no warm-up)");
+            std::string idText = argv[4];
+            size_t consumed = 0;
+            int id = std::stoi(idText, &consumed);
+            Require(consumed == idText.size() && id >= 0 && id < 500, "Case ID must be 0..499");
+            result = Run(argv[2], argv[3], false, false, id);
+        }
+        else if (std::string(argv[1]) == "--rebuild-low-degree")
+        {
+            Require(argc == 4, "Expected --rebuild-low-degree input_directory empty_output_directory");
+            RebuildLowDegreeDataset500(argv[2], argv[3]);
+            result = 0;
+        }
+        else if (std::string(argv[1]) == "--audit")
+        {
+            Require(argc == 3, "Expected --audit directory");
+            ContractProbe(argv[2]);
+            AuditDataset500(argv[2]);
+            result = 0;
+        }
+        else if (std::string(argv[1]) == "--sphere-polynomial-only")
         {
             Require(argc == 4, "Expected --sphere-polynomial-only directory results.csv");
             result = Run(argv[2], argv[3], false, true);

@@ -1,0 +1,12 @@
+[OUTPUT]
+Internal ctest changing into directory: D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-specialized-timing
+
+[HANDLER_OUTPUT]
+Test project D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-specialized-timing
+
+    Start 13: BSpline2Analytic.Dataset500Audit
+1/1 Test #13: BSpline2Analytic.Dataset500Audit ...   Passed    7.80 sec
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =   7.82 sec

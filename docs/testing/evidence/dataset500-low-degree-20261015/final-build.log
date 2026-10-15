@@ -1,0 +1,5 @@
+适用于 .NET Framework MSBuild 版本 17.12.12+1cce77968
+
+  BSpline2Analytic.vcxproj -> D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-specialized-timing\Release\BSpline2Analytic.lib
+  Dataset500Tests.cpp
+  BSpline2AnalyticDataset500Tests.vcxproj -> D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-specialized-timing\Release\BSpline2AnalyticDataset500Tests.exe

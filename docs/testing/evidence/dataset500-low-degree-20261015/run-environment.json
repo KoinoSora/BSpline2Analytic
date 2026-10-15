@@ -1,0 +1,14 @@
+{
+  "baseline_commit": "246e40173721e6cbbeaaf9dc7614bf35f5e023e2",
+  "configuration": "Release",
+  "sdk": "1.7.11",
+  "compiler": "MSVC 19.42",
+  "measured_dataset_exe_sha256": "ca5c87c23b22427b2b0ebe5fe75ffd0748fb9a515f047105494b42eb68d95351",
+  "measured_paired_exe_sha256": "5ab7b56c1ab6e2125d92246e5cfa01e477a1cc6af560d980ce843adbc95cc1b8",
+  "cpu_affinity_fixed": false,
+  "exclusive_machine": false,
+  "production_warmup": false,
+  "production_watchdog_seconds": 20,
+  "idempotent_case_files_byte_identical": 500,
+  "fresh_generation_certified_cases": 500
+}

@@ -1,0 +1,63 @@
+{
+  "cases": 500,
+  "statuses": {
+    "Passed": 270,
+    "Unsupported": 212,
+    "ClassificationFailed": 7,
+    "NoCandidate": 11
+  },
+  "regular_polynomial_count": 280,
+  "regular_polynomial_passed": 270,
+  "regular_failures": [
+    {
+      "id": 309,
+      "status": "Unsupported",
+      "message": "Only regular ring torus charts supported"
+    },
+    {
+      "id": 333,
+      "status": "Unsupported",
+      "message": "Only regular ring torus charts supported"
+    },
+    {
+      "id": 341,
+      "status": "Unsupported",
+      "message": "Only regular ring torus charts supported"
+    },
+    {
+      "id": 343,
+      "status": "Unsupported",
+      "message": "Only regular ring torus charts supported"
+    },
+    {
+      "id": 355,
+      "status": "Unsupported",
+      "message": "Only regular ring torus charts supported"
+    },
+    {
+      "id": 363,
+      "status": "Unsupported",
+      "message": "Only regular ring torus charts supported"
+    },
+    {
+      "id": 365,
+      "status": "Unsupported",
+      "message": "Only regular ring torus charts supported"
+    },
+    {
+      "id": 367,
+      "status": "Unsupported",
+      "message": "Only regular ring torus charts supported"
+    },
+    {
+      "id": 381,
+      "status": "Unsupported",
+      "message": "Only regular ring torus charts supported"
+    },
+    {
+      "id": 389,
+      "status": "Unsupported",
+      "message": "Only regular ring torus charts supported"
+    }
+  ]
+}

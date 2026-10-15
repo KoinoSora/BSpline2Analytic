@@ -1,0 +1,21 @@
+[OUTPUT]
+Internal ctest changing into directory: D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-specialized-timing
+
+[HANDLER_OUTPUT]
+Test project D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-specialized-timing
+
+    Start 14: BSpline2Analytic.Cone
+1/1 Test #14: BSpline2Analytic.Cone ............***Failed    0.19 sec
+Failed to open log output file.
+Failed to open log output file.
+FAIL Classification cache or deferred recovery regressed
+
+
+0% tests passed, 1 tests failed out of 1
+
+Total Test time (real) =   0.20 sec
+
+The following tests FAILED:
+	 14 - BSpline2Analytic.Cone (Failed)
+[ERROR_MESSAGE]
+Errors while running CTest

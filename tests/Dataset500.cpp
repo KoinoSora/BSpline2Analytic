@@ -258,6 +258,187 @@ void Pad(sggk::BSplineSurface &s, unsigned nu, unsigned nv, unsigned variant)
         }
     }
 }
+struct CollocationAxis
+{
+    sggk::RealArray knots, nodes;
+    sggk::UIntArray mults;
+    std::vector<std::vector<double>> matrix;
+    CollocationAxis(unsigned p, unsigned n)
+    {
+        Require((p == 3 || p == 5) && n > p, "Invalid low-degree fit dimensions");
+        std::vector<double> full;
+        for (unsigned i = 0; i <= n - p; ++i)
+        {
+            double t = double(i) / (n - p);
+            unsigned mult = i == 0 || i == n - p ? p + 1 : 1;
+            knots.push_back(t);
+            mults.push_back(mult);
+            full.insert(full.end(), mult, t);
+        }
+        // Greville interpolation on a clamped spline space. Extra accuracy comes
+        // from simple internal knots, never from increasing the degree.
+        for (unsigned i = 0; i < n; ++i)
+        {
+            double t = 0;
+            for (unsigned j = 1; j <= p; ++j)
+                t += full[i + j];
+            t /= p;
+            nodes.push_back(t);
+            unsigned span =
+                t == 1 ? n - 1
+                       : static_cast<unsigned>(std::upper_bound(full.begin(), full.end(), t) -
+                                               full.begin() - 1);
+            std::vector<double> b(p + 1), left(p + 1), right(p + 1), row(n);
+            b[0] = 1;
+            for (unsigned j = 1; j <= p; ++j)
+            {
+                left[j] = t - full[span + 1 - j];
+                right[j] = full[span + j] - t;
+                double saved = 0;
+                for (unsigned k = 0; k < j; ++k)
+                {
+                    double temp = b[k] / (right[k + 1] + left[j - k]);
+                    b[k] = saved + right[k + 1] * temp;
+                    saved = left[j - k] * temp;
+                }
+                b[j] = saved;
+            }
+            for (unsigned j = 0; j <= p; ++j)
+                row[span - p + j] = b[j];
+            matrix.push_back(std::move(row));
+        }
+    }
+    std::vector<V> Solve(const std::vector<V> &values) const
+    {
+        const size_t n = nodes.size();
+        std::vector<V> out(n);
+        for (unsigned d = 0; d < 3; ++d)
+        {
+            std::vector<double> b(n), x;
+            for (size_t i = 0; i < n; ++i)
+                b[i] = d == 0 ? values[i].x : (d == 1 ? values[i].y : values[i].z);
+            Require(SolveLeastSquares(matrix, b, x), "Spline collocation is rank deficient");
+            for (size_t i = 0; i < n; ++i)
+            {
+                if (d == 0)
+                    out[i].x = x[i];
+                else if (d == 1)
+                    out[i].y = x[i];
+                else
+                    out[i].z = x[i];
+            }
+        }
+        return out;
+    }
+};
+sggk::BSplineSurfacePtr FitSpline(const sggk::BSplineSurface &s, unsigned p, unsigned q,
+                                  unsigned nu, unsigned nv)
+{
+    CollocationAxis u(p, nu), v(q, nv);
+    V origin = Get(s.ControlPoints()[0][0]);
+    std::vector<std::vector<V>> a(nu, std::vector<V>(nv));
+    for (unsigned i = 0; i < nu; ++i)
+        for (unsigned j = 0; j < nv; ++j)
+            a[i][j] = Get(s.CalcPoint(u.nodes[i], v.nodes[j])) - origin;
+    for (unsigned j = 0; j < nv; ++j)
+    {
+        std::vector<V> column(nu);
+        for (unsigned i = 0; i < nu; ++i)
+            column[i] = a[i][j];
+        auto solved = u.Solve(column);
+        for (unsigned i = 0; i < nu; ++i)
+            a[i][j] = solved[i];
+    }
+    sggk::Point3DMatrix cp(nu, std::vector<sggk::Point3D>(nv));
+    for (unsigned i = 0; i < nu; ++i)
+    {
+        auto solved = v.Solve(a[i]);
+        for (unsigned j = 0; j < nv; ++j)
+            cp[i][j] = Point(solved[j] + origin);
+    }
+    return std::make_shared<sggk::BSplineSurface>(p, q, cp, u.knots, v.knots, u.mults, v.mults);
+}
+sggk::BSplineSurfacePtr TryFitLowDegree(const DatasetCase &c, unsigned targetU, unsigned targetV)
+{
+    // The stored source may already have exchanged UV. Detect linear directions
+    // from that source instead of assuming that V is the cylinder/cone axis.
+    unsigned p = c.source->DegreeU() == 1 ? 3 : 5;
+    unsigned q = c.source->DegreeV() == 1 ? 3 : 5;
+    const unsigned maxU = p == 3 ? p + 1 : targetU, maxV = q == 3 ? q + 1 : targetV;
+    Require(p < targetU && q < targetV && targetU * targetV < 200,
+            "Low-degree fit exceeds control budget");
+    for (unsigned extra = 0; extra <= maxU + maxV - p - q - 2; ++extra)
+        for (unsigned nu = p + 1; nu <= maxU; ++nu)
+        {
+            const int nvValue = int(p + q + 2 + extra) - int(nu);
+            if (nvValue < int(q + 1) || nvValue > int(maxV))
+                continue;
+            auto poly = FitSpline(*c.source, p, q, nu, static_cast<unsigned>(nvValue));
+            Snap(*poly, c.collapsedMask, *c.source);
+            // Sampling only rejects poor trials. Acceptance always requires the
+            // independent continuous interval certificate after padding/snapping.
+            double sampled = 0;
+            for (unsigned i = 0; i <= 24; ++i)
+                for (unsigned j = 0; j <= 24; ++j)
+                    sampled = std::max(
+                        sampled, Norm(Get(c.source->CalcPoint(double(i) / 24, double(j) / 24)) -
+                                      Get(poly->CalcPoint(double(i) / 24, double(j) / 24))));
+            if (!(sampled < 8e-7))
+                continue;
+            Pad(*poly, targetU, targetV, c.variant);
+            Snap(*poly, c.collapsedMask, *c.source);
+            if (BoundPair(*c.source, *poly, 8e-7).passed)
+                return poly;
+        }
+    return {};
+}
+sggk::BSplineSurfacePtr FitLowDegree(const DatasetCase &c, unsigned targetU, unsigned targetV)
+{
+    if (auto fit = TryFitLowDegree(c, targetU, targetV))
+        return fit;
+    // Keep the original grid whenever possible. If it is insufficient, allocate
+    // more controls within the SAME workload band, preferring smaller products.
+    const unsigned hi[] = {79, 109, 139, 169, 199};
+    unsigned minU = c.source->DegreeU() == 1 ? 4 : 6;
+    unsigned minV = c.source->DegreeV() == 1 ? 4 : 6;
+    std::vector<std::pair<unsigned, unsigned>> grids;
+    for (unsigned nu = minU; nu * minV <= hi[c.bucket]; ++nu)
+        for (unsigned nv = minV; nu * nv <= hi[c.bucket]; ++nv)
+            if (nu * nv >= targetU * targetV && (nu != targetU || nv != targetV))
+                grids.emplace_back(nu, nv);
+    std::sort(grids.begin(), grids.end(), [](auto a, auto b) {
+        if (a.first * a.second != b.first * b.second)
+            return a.first * a.second < b.first * b.second;
+        int da = std::abs(int(a.first) - int(a.second)),
+            db = std::abs(int(b.first) - int(b.second));
+        return da == db ? a < b : da < db;
+    });
+    for (const auto &[nu, nv] : grids)
+        if (auto fit = TryFitLowDegree(c, nu, nv))
+            return fit;
+    throw std::runtime_error("No certified degree-3/5 spline within control band for pair " +
+                             std::to_string(c.pair));
+}
+void ManifestHeader(std::ostream &o)
+{
+    o << "id,pair,type,source_kind,bucket,nu,nv,degree_u,degree_v,collapsed_mask,distance_upper\n"
+      << std::setprecision(17);
+}
+void ManifestRow(std::ostream &o, const DatasetCase &c)
+{
+    o << c.id << ',' << c.pair << ',' << TypeName(c.truth.type) << ','
+      << (c.refitted ? "refitted" : "analytic") << ',' << c.bucket << ','
+      << c.input->ControlPoints().size() << ',' << c.input->ControlPoints()[0].size() << ','
+      << c.input->DegreeU() << ',' << c.input->DegreeV() << ',' << c.collapsedMask << ','
+      << c.storedBound << '\n';
+}
+void CheckIdentity(const DatasetCase &c, unsigned id)
+{
+    Require(id < 500 && c.id == id && c.pair == id / 2 && c.type == id / 100 &&
+                c.bucket == (id % 100) / 20 && c.variant == (id % 20) / 2 &&
+                c.refitted == bool(id % 2) && c.seed == 0x500b2a17u + c.pair,
+            "Dataset500 metadata mismatch: " + std::to_string(id));
+}
 void Orient(sggk::BSplineSurface &s, unsigned variant)
 {
     if (variant & 1)
@@ -362,10 +543,22 @@ DatasetCase Reference(unsigned type, unsigned bucket, unsigned variant)
     return c;
 }
 } // namespace
-void SaveDatasetCase(const DatasetCase &c, const std::filesystem::path &file) { Save(c, file); }
-sggk::BSplineSurfacePtr NormalizeDatasetSurface(const sggk::BSplineSurface &s) { return Normalize(s); }
-sggk::BSplineSurfacePtr FitDatasetPolynomial(const sggk::BSplineSurface &s, unsigned p, unsigned q) { return Fit(s, p, q); }
-void PadDatasetSurface(sggk::BSplineSurface &s, unsigned nu, unsigned nv, unsigned variant) { Pad(s, nu, nv, variant); }
+void SaveDatasetCase(const DatasetCase &c, const std::filesystem::path &file)
+{
+    Save(c, file);
+}
+sggk::BSplineSurfacePtr NormalizeDatasetSurface(const sggk::BSplineSurface &s)
+{
+    return Normalize(s);
+}
+sggk::BSplineSurfacePtr FitDatasetPolynomial(const sggk::BSplineSurface &s, unsigned p, unsigned q)
+{
+    return Fit(s, p, q);
+}
+void PadDatasetSurface(sggk::BSplineSurface &s, unsigned nu, unsigned nv, unsigned variant)
+{
+    Pad(s, nu, nv, variant);
+}
 unsigned CollapsedMask(const sggk::BSplineSurface &s)
 {
     const auto &cp = s.ControlPoints();
@@ -413,13 +606,143 @@ DatasetCase ReadDatasetCase(const std::filesystem::path &file)
     Require(in.eof(), "Trailing dataset data");
     return c;
 }
+void CheckDataset500Contract(const DatasetCase &c, unsigned id)
+{
+    CheckIdentity(c, id);
+    Require(c.source && c.input, "Missing Dataset500 surface");
+    Require(c.source->DegreeU() <= 5 && c.source->DegreeV() <= 5 && c.input->DegreeU() <= 5 &&
+                c.input->DegreeV() <= 5,
+            "Dataset500 degree exceeds 5: " + std::to_string(id));
+    const auto &net = c.input->ControlPoints();
+    const size_t nu = net.size(), nv = net[0].size(), controls = nu * nv;
+    const unsigned lo[] = {50, 80, 110, 140, 170}, hi[] = {79, 109, 139, 169, 199};
+    Require(controls >= lo[c.bucket] && controls <= hi[c.bucket],
+            "Dataset500 control count outside allocated band: " + std::to_string(id));
+    Require(c.input->IsRational() == (!c.refitted && c.type != 0),
+            "Dataset500 rationality mismatch");
+    Require(std::isfinite(c.storedBound) && c.storedBound >= 0 &&
+                c.storedBound < (c.refitted ? 1e-6 : 1e-9),
+            "Invalid stored fixture bound");
+    bool expectedCollapsed = (c.type == 2 || c.type == 3) && c.variant >= 8;
+    Require(bool(c.collapsedMask) == expectedCollapsed &&
+                CollapsedMask(*c.source) == c.collapsedMask &&
+                CollapsedMask(*c.input) == c.collapsedMask,
+            "Collapsed boundary mismatch");
+    for (unsigned edge = 0; edge < 4; ++edge)
+        if (c.collapsedMask & (1u << edge))
+        {
+            auto origin = Get(net[edge == 1 ? nu - 1 : 0][edge == 3 ? nv - 1 : 0]);
+            for (size_t j = 0; j < (edge < 2 ? nv : nu); ++j)
+            {
+                auto point = Get(net[edge < 2 ? (edge == 0 ? 0 : nu - 1) : j]
+                                    [edge < 2 ? j : (edge == 2 ? 0 : nv - 1)]);
+                Require(point.x == origin.x && point.y == origin.y && point.z == origin.z,
+                        "Degenerate control row is not exactly collapsed");
+            }
+        }
+}
+void AuditDataset500(const std::filesystem::path &dir)
+{
+    unsigned files = 0, rational = 0, collapsed = 0;
+    for (const auto &f : std::filesystem::directory_iterator(dir))
+        if (f.path().extension() == ".b2a" && f.path().filename().string().rfind("case-", 0) == 0)
+            ++files;
+    Require(files == 500, "Dataset must contain exactly 500 cases");
+    for (unsigned id = 0; id < 500; ++id)
+    {
+        auto c = ReadDatasetCase(dir / CaseFilename(id));
+        CheckDataset500Contract(c, id);
+        auto source = RebuildDatasetSource(c.type, c.bucket, c.variant);
+        Require(BoundPair(*source, *c.source, 1e-9).passed, "Stored source differs from generator");
+        Require(BoundPair(*c.source, *c.input, c.refitted ? 1e-6 : 1e-9).passed,
+                "Reloaded fixture certificate failed: " + std::to_string(id));
+        rational += c.input->IsRational();
+        collapsed += bool(c.collapsedMask);
+        if (id % 100 == 99)
+            std::cout << "Audited " << id + 1 << "/500" << std::endl;
+    }
+    Require(rational == 200 && collapsed == 40, "Dataset500 quota mismatch");
+}
+void RebuildLowDegreeDataset500(const std::filesystem::path &inputDir,
+                                const std::filesystem::path &outputDir)
+{
+    Require(!std::filesystem::exists(outputDir) || std::filesystem::is_empty(outputDir),
+            "Migration output directory must be empty; original data is never overwritten");
+    std::filesystem::create_directories(outputDir);
+    std::ofstream manifest(outputDir / "manifest.csv"), changes(outputDir / "migration.csv");
+    Require(bool(manifest) && bool(changes), "Cannot write migration evidence");
+    ManifestHeader(manifest);
+    changes << std::setprecision(17)
+            << "id,changed,old_degree_u,old_degree_v,new_degree_u,new_degree_v,old_nu,old_nv,"
+               "new_nu,new_nv,old_spans_u,old_spans_v,new_spans_u,new_spans_v,certified_bound\n";
+    unsigned changed = 0;
+    for (unsigned id = 0; id < 500; ++id)
+    {
+        auto c = ReadDatasetCase(inputDir / CaseFilename(id));
+        CheckIdentity(c, id);
+        const auto old = c.input;
+        unsigned nu = static_cast<unsigned>(old->ControlPoints().size());
+        unsigned nv = static_cast<unsigned>(old->ControlPoints()[0].size());
+        bool rebuild = old->DegreeU() > 5 || old->DegreeV() > 5 || nu * nv >= 200;
+        if (rebuild)
+        {
+            if (nu * nv >= 200)
+            {
+                Require(nu * nv == 200 && c.bucket == 4, "Unexpected legacy control budget");
+                nu = nv = 14;
+            }
+            if (c.refitted)
+            {
+                c.input = FitLowDegree(c, nu, nv);
+                nu = static_cast<unsigned>(c.input->ControlPoints().size());
+                nv = static_cast<unsigned>(c.input->ControlPoints()[0].size());
+            }
+            else
+            {
+                // Rebuild an exact representation from the already oriented source.
+                c.input = std::make_shared<sggk::BSplineSurface>(*c.source);
+                Require(old->DegreeU() <= 5 && old->DegreeV() <= 5 &&
+                            old->DegreeU() >= c.source->DegreeU() &&
+                            old->DegreeV() >= c.source->DegreeV(),
+                        "Unexpected high-degree exact input");
+                c.input->UDegreeElevation(old->DegreeU() - c.source->DegreeU());
+                c.input->VDegreeElevation(old->DegreeV() - c.source->DegreeV());
+                Pad(*c.input, nu, nv, c.variant);
+                Snap(*c.input, c.collapsedMask, *c.source);
+            }
+            auto bound = BoundPair(*c.source, *c.input, c.refitted ? 1e-6 : 1e-9);
+            Require(bound.passed, "Migrated fixture is not certified: " + std::to_string(id));
+            c.storedBound = bound.upper;
+            CheckDataset500Contract(c, id);
+            Save(c, outputDir / CaseFilename(id));
+            ++changed;
+        }
+        else
+        {
+            CheckDataset500Contract(c, id);
+            std::filesystem::copy_file(inputDir / CaseFilename(id), outputDir / CaseFilename(id));
+        }
+        ManifestRow(manifest, c);
+        changes << id << ',' << rebuild << ',' << old->DegreeU() << ',' << old->DegreeV() << ','
+                << c.input->DegreeU() << ',' << c.input->DegreeV() << ','
+                << old->ControlPoints().size() << ',' << old->ControlPoints()[0].size() << ',' << nu
+                << ',' << nv << ',' << old->KnotsU().size() - 1 << ',' << old->KnotsV().size() - 1
+                << ',' << c.input->KnotsU().size() - 1 << ',' << c.input->KnotsV().size() - 1 << ','
+                << c.storedBound << '\n';
+        if (id % 20 == 19)
+            std::cout << "Migrated " << id + 1 << "/500; changed=" << changed << std::endl;
+    }
+    Require(bool(manifest) && bool(changes), "Migration evidence write failed");
+    manifest.close();
+    changes.close();
+    // Read every file back and independently certify the complete batch before use.
+    AuditDataset500(outputDir);
+}
 void GenerateDataset500(const std::filesystem::path &dir)
 {
     std::filesystem::create_directories(dir);
     std::ofstream manifest(dir / "manifest.csv");
-    manifest
-        << "id,pair,type,source_kind,bucket,nu,nv,degree_u,degree_v,collapsed_mask,distance_upper\n"
-        << std::setprecision(17);
+    ManifestHeader(manifest);
     for (unsigned type = 0; type < 5; ++type)
         for (unsigned bucket = 0; bucket < 5; ++bucket)
             for (unsigned variant = 0; variant < 10; ++variant)
@@ -430,11 +753,6 @@ void GenerateDataset500(const std::filesystem::path &dir)
                 {
                     nu = 5;
                     nv = 10;
-                }
-                if (type == 4 && bucket == 4 && variant == 9)
-                {
-                    nu = 10;
-                    nv = 20;
                 }
                 for (unsigned mode = 0; mode < 2; ++mode)
                 {
@@ -454,29 +772,7 @@ void GenerateDataset500(const std::filesystem::path &dir)
                         Snap(*c.input, c.collapsedMask, *base.source);
                     }
                     else
-                    {
-                        bool passed = false;
-                        for (unsigned degree :
-                             type == 0 ? std::vector<unsigned>{3} : std::vector<unsigned>{5, 7, 9})
-                        {
-                            unsigned p = degree, q = type >= 3 ? degree : 3;
-                            if (p >= nu || q >= nv)
-                                continue;
-                            auto poly = Fit(*base.source, p, q);
-                            Snap(*poly, c.collapsedMask, *base.source);
-                            Pad(*poly, nu, nv, variant);
-                            Snap(*poly, c.collapsedMask, *base.source);
-                            auto check = BoundPair(*base.source, *poly, 8e-7);
-                            if (check.passed)
-                            {
-                                c.input = poly;
-                                passed = true;
-                                break;
-                            }
-                        }
-                        Require(passed, "No certified polynomial within control budget for pair " +
-                                            std::to_string(c.pair));
-                    }
+                        c.input = FitLowDegree(c, nu, nv);
                     c.source = std::make_shared<sggk::BSplineSurface>(*base.source);
                     Orient(*c.source, variant);
                     Orient(*c.input, variant);
@@ -488,19 +784,15 @@ void GenerateDataset500(const std::filesystem::path &dir)
                     auto bound = BoundPair(*c.source, *c.input, mode ? 1e-6 : 1e-9);
                     Require(bound.passed, "Final pair bound failed: " + std::to_string(c.id));
                     c.storedBound = bound.upper;
-                    const auto &cp = c.input->ControlPoints();
-                    Require(cp.size() * cp[0].size() >= 50 && cp.size() * cp[0].size() <= 200,
-                            "Control count outside [50,200]");
+                    CheckDataset500Contract(c, c.id);
                     Save(c, dir / CaseFilename(c.id));
-                    manifest << c.id << ',' << c.pair << ',' << TypeName(c.truth.type) << ','
-                             << (mode ? "refitted" : "analytic") << ',' << bucket << ','
-                             << cp.size() << ',' << cp[0].size() << ',' << c.input->DegreeU() << ','
-                             << c.input->DegreeV() << ',' << c.collapsedMask << ',' << bound.upper
-                             << '\n';
+                    ManifestRow(manifest, c);
                 }
                 if (variant == 9)
                     std::cout << "Generated " << (2 * base.pair + 2) << "/500" << std::endl;
             }
     Require(bool(manifest), "Manifest write failed");
+    manifest.close();
+    AuditDataset500(dir);
 }
 } // namespace bspline2analytic::tests

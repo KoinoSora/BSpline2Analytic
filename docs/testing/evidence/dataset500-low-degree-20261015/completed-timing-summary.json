@@ -1,0 +1,141 @@
+{
+  "scope": "Successful regular conversions only; excludes ten timed-out regular cases, not a full-population speed claim",
+  "groups": {
+    "all-successful-regular": {
+      "count": 450,
+      "under_10ms": 178,
+      "classify_compute_ms": {
+        "sum": 580.3963000000001,
+        "mean": 1.2897695555555555,
+        "p95": 2.9644,
+        "max": 4.8275
+      },
+      "classify_validate_ms": {
+        "sum": 39075.6449,
+        "mean": 86.83476644444444,
+        "p95": 358.9555,
+        "max": 1252.5757
+      },
+      "optimize_compute_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0
+      },
+      "optimize_validate_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0
+      },
+      "classify_optimize_ms": {
+        "sum": 39656.0412,
+        "mean": 88.124536,
+        "p95": 361.5639,
+        "max": 1256.3067
+      }
+    },
+    "rational": {
+      "count": 180,
+      "under_10ms": 174,
+      "classify_compute_ms": {
+        "sum": 78.25240000000004,
+        "mean": 0.43473555555555554,
+        "p95": 0.6935,
+        "max": 0.9892000000000001
+      },
+      "classify_validate_ms": {
+        "sum": 374.0266,
+        "mean": 2.0779255555555554,
+        "p95": 8.2543,
+        "max": 18.9295
+      },
+      "optimize_compute_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0
+      },
+      "optimize_validate_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0
+      },
+      "classify_optimize_ms": {
+        "sum": 452.27900000000005,
+        "mean": 2.512661111111111,
+        "p95": 8.9739,
+        "max": 19.751
+      }
+    },
+    "polynomial": {
+      "count": 270,
+      "under_10ms": 4,
+      "classify_compute_ms": {
+        "sum": 502.14390000000003,
+        "mean": 1.8597922222222223,
+        "p95": 3.1113,
+        "max": 4.8275
+      },
+      "classify_validate_ms": {
+        "sum": 38701.618299999995,
+        "mean": 143.33932703703704,
+        "p95": 463.0402,
+        "max": 1252.5757
+      },
+      "optimize_compute_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0
+      },
+      "optimize_validate_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0
+      },
+      "classify_optimize_ms": {
+        "sum": 39203.7622,
+        "mean": 145.19911925925925,
+        "p95": 467.00840000000005,
+        "max": 1256.3067
+      }
+    },
+    "Sphere": {
+      "count": 70,
+      "under_10ms": 40,
+      "classify_compute_ms": {
+        "sum": 89.96729999999998,
+        "mean": 1.2852471428571428,
+        "p95": 3.8149,
+        "max": 4.1742
+      },
+      "classify_validate_ms": {
+        "sum": 6686.2502,
+        "mean": 95.51786,
+        "p95": 399.5325,
+        "max": 477.6557
+      },
+      "optimize_compute_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0
+      },
+      "optimize_validate_ms": {
+        "sum": 0.0,
+        "mean": 0.0,
+        "p95": 0.0,
+        "max": 0.0
+      },
+      "classify_optimize_ms": {
+        "sum": 6776.2175,
+        "mean": 96.80310714285714,
+        "p95": 403.7067,
+        "max": 481.60170000000005
+      }
+    }
+  }
+}

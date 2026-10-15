@@ -1,0 +1,43 @@
+{
+  "cases": 500,
+  "warmup": false,
+  "watchdog_seconds": 20.0,
+  "statuses": {
+    "Success": 450,
+    "Degenerate": 25,
+    "Unresolved": 2,
+    "NoCandidate": 11,
+    "InvalidInput": 2,
+    "ProcessTimeout": 10
+  },
+  "unexpected_ids": [
+    237,
+    239,
+    277,
+    297,
+    299,
+    309,
+    317,
+    319,
+    333,
+    337,
+    339,
+    341,
+    343,
+    355,
+    357,
+    359,
+    363,
+    365,
+    367,
+    377,
+    379,
+    381,
+    389,
+    397,
+    399
+  ],
+  "qualified_inputs": 500,
+  "successful_regular_under_10ms": 178,
+  "regular_denominator": 460
+}

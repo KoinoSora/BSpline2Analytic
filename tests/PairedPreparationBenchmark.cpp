@@ -104,6 +104,7 @@ int main(int argc, char **argv)
         for (unsigned id = 301; id < 400; id += 2)
         {
             auto c = ReadDatasetCase(std::filesystem::path(argv[1]) / CaseFilename(id));
+            CheckDataset500Contract(c, id);
             if (c.collapsedMask)
                 continue;
             Require(!c.input->IsRational(), "Wrong input representation");
