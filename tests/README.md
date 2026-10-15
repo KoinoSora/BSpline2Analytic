@@ -1,19 +1,21 @@
 # 测试代码与固定输入
 
-`GeneralRationalBoundaryTests.cpp` 和 `RunGeneralRationalBoundarySelected.py` 提供新 NURBS 域直线合同的单测及慢例定向比较。选取 17 个旧案例和 5 个双五次、200 控制点的压力样本，旧合同拒绝/新合同通过分别列出；不把未认证路径缩短视为成功转换加速。复现与限制见[报告](../docs/testing/GENERAL_RATIONAL_BOUNDARY_2026-10-15.md)。
+`GeneralRationalBoundaryTests.cpp` 和 `RunGeneralRationalBoundarySelected.py` 仅运行新 NURBS 域直线验证器。默认选取 17 个历史案例和 5 个双五次、200 控制点压力样本；每例重复 5 次，共 110 行结果，CSV 的 `mode` 只允许 `rational`。已有数据仍可使用，旧验证器不再参与对照。
 
 本目录保存测试实现、案例生成器和数据；测试说明与报告统一放在 [docs/testing/](../docs/testing/TEST_REPORT.md)。
 
-独立混合验证器的单测为 `BSpline2Analytic.GeneralHybridUnit`。批量运行使用真实分类候选，不执行母面优化、不调用旧验证器；源数据证书与输出独立证书在计时外执行。示例（仓库根目录）：
+2026-10-15 起，`ValidateGeneralHybrid` 已废弃：保留实现及历史测试代码，移除旧 CMake 测试目标和 CTest 注册，`RunGeneralHybrid.py`、`CompareGeneralHybridSelected.py` 的入口直接退出。不得按历史报告命令重跑。新验证器测试中的旧版调用也已移除。
+
+新验证器的历史输入使用真实分类候选；压力样本使用已知母面和固定参数图。来源证书和输出审计在计时外执行。新测试命令使用独立参数形式，使误用旧可执行文件时先报参数错误，不进入旧/新对比循环。修改后需重新配置并构建（仓库根目录）：
 
 ```powershell
 cmake -S . -B build-general-hybrid -A x64
-cmake --build build-general-hybrid --config Release --target BSpline2AnalyticGeneralHybridTests --parallel 2
-ctest --test-dir build-general-hybrid -C Release -R '^BSpline2Analytic.GeneralHybridUnit$' --output-on-failure
-python tests/RunGeneralHybrid.py --exe build-general-hybrid/Release/BSpline2AnalyticGeneralHybridTests.exe --sdk ../../../SGGK --data tests/data/dataset500 --output build-general-hybrid/results.csv --runs 3 --timeout 30
+cmake --build build-general-hybrid --config Release --target BSpline2AnalyticGeneralRationalBoundaryTests --parallel 2
+ctest --test-dir build-general-hybrid -C Release -R '^BSpline2Analytic.GeneralRationalBoundaryUnit$' --output-on-failure
+python tests/RunGeneralRationalBoundarySelected.py --exe build-general-hybrid/Release/BSpline2AnalyticGeneralRationalBoundaryTests.exe --sdk ../../../SGGK --data tests/data/dataset500 --output build-general-hybrid/rational-only.csv --runs 5
 ```
 
-默认覆盖 600 个主案例和 60 个专项；`--first/--last` 使用半开区间，0–499 为正例、500–599 为负例、600–659 为专项。CSV 保留每次测量；摘要按同例三次中位数统计分位数，另列三次均接受且均不超过 10 ms 的案例数。每例进程看门狗包含数据认证和输出审计；超时阶段、异常及未完成案例单独记录，不能从验收分母中剔除。运行器退出 0 表示完成测量且接受结果全部通过独立审计，不等同于全部正例通过或性能达标。结果合同与局限见[测试报告](../docs/testing/GENERAL_HYBRID_VALIDATION_2026-10-15.md)。
+每例进程看门狗包含数据认证和输出审计；异常、超时和未完成案例记录为失败。运行器退出 0 表示完成测量且接受输出通过审计，不等同于全部正例通过或性能达标。首次实现时的 220 行新旧对照已归档于[历史报告](../docs/testing/GENERAL_RATIONAL_BOUNDARY_2026-10-15.md)，不再复跑旧验证器。
 
 | 文件/目录 | 职责 |
 | --- | --- |

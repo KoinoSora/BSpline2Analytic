@@ -52,7 +52,7 @@ def summarize(rows, failures):
     return {'groups': result, 'watchdog_or_process_failures': failures}
 
 
-def main():
+def archived_main():
     p = argparse.ArgumentParser()
     p.add_argument('--exe', required=True, type=Path)
     p.add_argument('--sdk', required=True, type=Path)
@@ -122,6 +122,10 @@ def main():
     a.output.with_suffix('.summary.json').write_text(json.dumps(summary, indent=2), encoding='utf-8')
     print(json.dumps(summary, indent=2), flush=True)
     return int(bool(failures) or any(g['audit_failures'] for g in summary['groups'].values()))
+
+
+def main():
+    raise SystemExit('ValidateGeneralHybrid is retired. Historical runner retained; execution disabled. Use RunGeneralRationalBoundarySelected.py.')
 
 
 if __name__ == '__main__':

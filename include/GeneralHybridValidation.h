@@ -40,6 +40,8 @@ struct GeneralHybridReport
                boundaryTangent == CheckState::Passed;
     }
 };
+// Retired on 2026-10-15. Preserve code; do not run tests or use as a benchmark.
+// Current validator: ValidateGeneralRationalBoundaries. Shared status stays usable.
 GeneralHybridReport ValidateGeneralHybrid(const sggk::BSplineSurface &, const AnalyticParameters &,
                                          const GeneralHybridOptions & = {});
 const char *HybridValidationStatusName(HybridValidationStatus) noexcept;

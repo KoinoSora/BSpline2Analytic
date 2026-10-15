@@ -6,6 +6,10 @@
 
 仓库为 https://github.com/KoinoSora/BSpline2Analytic，保持私有。SDK、许可证、凭据及构建产物不进入仓库。完整流程和失败处理以所链接的 Skill 为准。
 
+## 一般兜底验证器约束
+
+2026-10-15 用户明确要求：旧解析 UV 直线边界验证器 `ValidateGeneralHybrid` 废弃，保留实现和历史测试代码，但今后不再运行其单测、数据集测试或性能对照。历史报告和测量文件仅供查阅，不按其中旧命令重跑。当前开发和测试使用 `ValidateGeneralRationalBoundaries`；其测试也不得调用旧验证器作为对照。共享类型和边界提取代码仍可复用。本约束适用于上述一般兜底旧验证器；后续用户明确修改约束时再调整。
+
 ## 文件分类
 
 公开接口放在 `include/`，算法实现和内部头文件放在 `src/`，示例放在 `examples/`，测试代码与固定数据放在 `tests/`。算法、测试和需求文档分别放在 `docs/algorithm/`、`docs/testing/`、`docs/requirements/`；根目录保留构建入口与导航。路径调整时同步更新 CMake 和相对文档链接。

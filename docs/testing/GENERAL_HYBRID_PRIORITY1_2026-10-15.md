@@ -1,5 +1,7 @@
 # 独立验证器第一优先级优化：小样本对比
 
+> 已归档：2026-10-15 起 `ValidateGeneralHybrid` 废弃，保留代码但不再运行本报告的测试或性能对照。当前验证器及命令见[测试说明](../../tests/README.md)。
+
 日期：2026-10-15。基线算法提交：`246e40173721e6cbbeaaf9dc7614bf35f5e023e2`。
 Windows x64、MSVC Release、区间算法 `/fp:strict`、SGK 1.7.11。
 

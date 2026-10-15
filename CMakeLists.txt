@@ -46,21 +46,13 @@ if(BSPLINE2ANALYTIC_BUILD_TESTS)
     target_link_libraries(BSpline2AnalyticGeneralRationalBoundaryTests PRIVATE BSpline2Analytic)
     target_include_directories(BSpline2AnalyticGeneralRationalBoundaryTests PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src")
     target_compile_options(BSpline2AnalyticGeneralRationalBoundaryTests PRIVATE /W4 /utf-8 /fp:strict)
-    add_test(NAME BSpline2Analytic.GeneralRationalBoundaryUnit COMMAND BSpline2AnalyticGeneralRationalBoundaryTests --unit
+    add_test(NAME BSpline2Analytic.GeneralRationalBoundaryUnit COMMAND BSpline2AnalyticGeneralRationalBoundaryTests --rational-unit
         "${CMAKE_CURRENT_SOURCE_DIR}/tests/data/dataset500")
     set_tests_properties(BSpline2Analytic.GeneralRationalBoundaryUnit PROPERTIES TIMEOUT 120
         WORKING_DIRECTORY "${SGGK_SDK_DIR}"
         ENVIRONMENT_MODIFICATION "PATH=path_list_prepend:${SGGK_SDK_DIR}/x64-win/bin${_sgk_config}")
-    add_executable(BSpline2AnalyticGeneralHybridTests tests/GeneralHybridTests.cpp
-        tests/GeneralDataset.cpp tests/GeneralDatasetCertificate.cpp)
-    target_link_libraries(BSpline2AnalyticGeneralHybridTests PRIVATE BSpline2Analytic)
-    target_include_directories(BSpline2AnalyticGeneralHybridTests PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src")
-    target_compile_options(BSpline2AnalyticGeneralHybridTests PRIVATE /W4 /utf-8 /fp:strict)
-    add_test(NAME BSpline2Analytic.GeneralHybridUnit COMMAND BSpline2AnalyticGeneralHybridTests --unit
-        "${CMAKE_CURRENT_SOURCE_DIR}/tests/data/dataset500")
-    set_tests_properties(BSpline2Analytic.GeneralHybridUnit PROPERTIES TIMEOUT 120
-        WORKING_DIRECTORY "${SGGK_SDK_DIR}"
-        ENVIRONMENT_MODIFICATION "PATH=path_list_prepend:${SGGK_SDK_DIR}/x64-win/bin${_sgk_config}")
+    # ValidateGeneralHybrid is retired: preserve its implementation/shared helpers
+    # and historical test source, but do not build or register its tests.
     add_executable(BSpline2AnalyticPairedValidationTests tests/PairedValidationTests.cpp
         tests/Dataset500.cpp tests/PairedSurfaceBounds.cpp tests/ApproximateCases.cpp)
     target_link_libraries(BSpline2AnalyticPairedValidationTests PRIVATE BSpline2Analytic)

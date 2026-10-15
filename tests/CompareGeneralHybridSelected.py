@@ -24,7 +24,7 @@ def sha(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def main():
+def archived_main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--variant', action='append', required=True, help='name=executable')
     parser.add_argument('--sdk', type=Path, required=True)
@@ -101,6 +101,10 @@ def main():
     print(json.dumps({k: v['mean_of_case_medians'] for k, v in summary['variants'].items()}, indent=2))
     print(f'Invariant differences: {len(differences)}; bound changes: {len(bound_changes)}')
     return int(bool(differences))
+
+
+def main():
+    raise SystemExit('ValidateGeneralHybrid is retired. Historical comparisons must not run. Use RunGeneralRationalBoundarySelected.py.')
 
 
 if __name__ == '__main__':

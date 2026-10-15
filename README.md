@@ -44,7 +44,7 @@
 
 位置误差界现采用快速连续保守界、缓存直接升阶与可分离权重乘法；快速界不够紧时仍执行控制系数求界和必要的细分，容差保持不变。40 个普通非有理球面的同批位置计算加速 4.24 倍，详见[位置误差界优化报告](docs/testing/PAIRED_POSITION_2026-10-15.md)。
 
-新增独立入口 [`ValidateGeneralRationalBoundaries`](include/GeneralRationalBoundaryValidation.h)：线性约束定义于母面 NURBS 参数域，输出解析母面参数及四条三维 NURBS 边界，不输出解析 UV PCurve。内部保持增强 Greville 采样，边界采用有理误差样条位置/切向连续认证，并覆盖 SDK 输出系数。它与旧解析 UV 直线合同不同，尚未替换正式入口。范围和慢例测试见[新边界验证报告](docs/testing/GENERAL_RATIONAL_BOUNDARY_2026-10-15.md)。
+当前一般兜底验证器为独立入口 [`ValidateGeneralRationalBoundaries`](include/GeneralRationalBoundaryValidation.h)：线性约束定义于母面 NURBS 参数域，输出解析母面参数及四条三维 NURBS 边界，不输出解析 UV PCurve。内部保持增强 Greville 采样，边界采用有理误差样条位置/切向连续认证，并覆盖 SDK 输出系数，尚未替换正式入口。旧 `ValidateGeneralHybrid` 已废弃，保留代码但不再测试，也不再作为对照运行。范围和历史慢例测试见[新边界验证报告](docs/testing/GENERAL_RATIONAL_BOUNDARY_2026-10-15.md)，当前命令见[测试说明](tests/README.md)。
 
 ## 构建与运行
 
@@ -98,9 +98,9 @@ if (result.Succeeded()) {
 
 `path` 标识最终尝试分支，`details` 为三种结果之一，保留该模块报告；`Timing()` 汇总所有尝试。统一入口在专用模块成功后同样恢复并验证线性 PCurve，成功才发布 `result.patch`。母面对象本身不包含裁剪；有限域由四条 PCurve 围成的简单参数四边形定义，允许退化为三角形。失败统一返回 `ConversionFailed`，并保留模块及候选的诊断信息。原独立接口仍遵循各自历史验收合同。
 
-## 独立混合验证器
+## 已废弃的独立混合验证器
 
-实验接口 `GeneralHybridValidation.h::ValidateGeneralHybrid(source, mother, options)` 提供内部增强 Greville 采样、有限域样点检查，以及四边位置和切向连续认证。它不调用优化器，也未接入 `ConvertGeneral` 或统一入口。`GeneralHybridReport::certifiesInteriorContinuum` 恒为 `false`；`Passed()` 仅表示这份混合验收合同通过，不能作为全域曲面距离证书。精确退化为点的源边界通过 `tangentNotApplicable` 单独标明。实现及 600+60 数据测试见[独立混合验证器报告](docs/testing/GENERAL_HYBRID_VALIDATION_2026-10-15.md)。
+`GeneralHybridValidation.h::ValidateGeneralHybrid` 于 2026-10-15 废弃。实现、共享类型和历史测试代码保留；其 CMake 测试目标和 CTest 注册已移除，旧批量/对照脚本停止执行。后续不运行该验证器的单测、数据集或性能比较，新验证器测试也不调用它。旧[独立混合验证器报告](docs/testing/GENERAL_HYBRID_VALIDATION_2026-10-15.md)仅作为历史记录查阅。
 
 ## 一般情况与线性 PCurve
 

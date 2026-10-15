@@ -113,7 +113,6 @@ void Unit(const std::filesystem::path &data)
         auto r=ValidateGeneralRationalBoundaries(*s,a,o);
         Require(r.Passed(),"Rational skew fixture rejected type "+std::to_string(type)+": "+r.message);Audit(*s,r);
         Require(r.maxTargetDegree<=4&&!r.certifiesInteriorContinuum,"Wrong certificate contract");
-        if(type==1||type==3||type==4)Require(!ValidateGeneralHybrid(*s,a).Passed(),"Analytic-UV gate unexpectedly accepted skew rational trace");
         s->UReverse();auto reverse=ValidateGeneralRationalBoundaries(*s,a,o);
         Require(reverse.Passed(),"Reversed rational boundary rejected");Audit(*s,reverse);
         o.maxBoundaryNodes=1;auto budget=ValidateGeneralRationalBoundaries(*s,a,o);
@@ -184,28 +183,19 @@ void Case(const std::filesystem::path &data,const std::filesystem::path &csv,uns
     {auto cert=fixture.group==GeneralFixtureGroup::Infeasible?CertifyNoQuartic(*fixture.input,fixture.exclusionRadius):CertifyAnalyticPair(fixture,fixture.pairTolerance);Require(cert.passed,"Legacy fixture certificate failed");}
     std::ofstream out(csv);out<<std::setprecision(17);
     out<<"id,synthetic,mode,run,status,accepted,attempts,chart_attempts,nodes,refinements,max_degree,sampling_ms,recovery_ms,prepare_ms,boundary_ms,validate_ms,classify_ms,pipeline_ms,boundary_bound,tangent_deg,mother_bound,audit_sample_max,message\n";
-    for(unsigned run=0;run<repeats;++run)for(unsigned mode=0;mode<2;++mode)
+    for(unsigned run=0;run<repeats;++run)
     {
         auto start=std::chrono::steady_clock::now();GeneralRationalBoundaryOptions options;
         if(synthetic)options.chartDomain=domain;
         SurfaceSampleContext samples(*fixture.input,options.general.fitting.sampling.maxSamples);
-        GeneralRationalBoundaryReport r;GeneralHybridReport old;unsigned attempts=0,charts=0,nodes=0,refinements=0;
+        GeneralRationalBoundaryReport r;unsigned attempts=0,charts=0,nodes=0,refinements=0;
         double classify=0,validate=0,sampling=0,recovery=0,prepare=0,boundary=0;bool passed=false;
         auto attempt=[&](const AnalyticParameters &a)
         {
             ++attempts;
-            if(mode)
-            {
-                r=rb::Validate(samples,a,options);passed=r.Passed();validate+=r.totalMs;sampling+=r.samplingMs;
-                recovery+=r.recoveryMs;prepare+=r.preparationMs;boundary+=r.boundaryMs;
-                charts+=r.chartAttempts;nodes+=r.boundaryNodes;refinements+=r.mappingRefinements;
-            }
-            else
-            {
-                old=ValidateGeneralHybridWithSamples(*fixture.input,a,{},samples);passed=old.Passed();validate+=old.totalMs;
-                sampling+=old.samplingMs;recovery+=old.recoveryMs;prepare+=old.preparationMs;boundary+=old.boundaryMs;
-                charts+=old.chartAttempts;nodes+=old.boundaryNodes;refinements+=old.mappingRefinements;
-            }
+            r=rb::Validate(samples,a,options);passed=r.Passed();validate+=r.totalMs;sampling+=r.samplingMs;
+            recovery+=r.recoveryMs;prepare+=r.preparationMs;boundary+=r.boundaryMs;
+            charts+=r.chartAttempts;nodes+=r.boundaryNodes;refinements+=r.mappingRefinements;
         };
         if(synthetic)attempt(fixture.truth); // Explicit-chart validator benchmark, not classifier timing.
         else
@@ -220,12 +210,10 @@ void Case(const std::filesystem::path &data,const std::filesystem::path &csv,uns
             }
         }
         double pipeline=Ms(start),audit=0;
-        if(passed&&mode)audit=Audit(*fixture.input,r);
-        if(passed&&!mode&&!synthetic)
-        {auto f=fixture;f.truth=old.patch->Parameters();f.corners=old.patch->Corners();f.bend=0;Require(CertifyAnalyticPair(f,1e-5).passed,"Legacy output audit failed");}
-        out<<id<<','<<synthetic<<','<<(mode?"rational":"analytic_uv")<<','<<run<<','<<HybridValidationStatusName(mode?r.status:old.status)<<','<<passed<<','<<attempts<<','<<charts<<','<<nodes<<','<<refinements<<','<<r.maxTargetDegree<<','
+        if(passed)audit=Audit(*fixture.input,r);
+        out<<id<<','<<synthetic<<",rational,"<<run<<','<<HybridValidationStatusName(r.status)<<','<<passed<<','<<attempts<<','<<charts<<','<<nodes<<','<<refinements<<','<<r.maxTargetDegree<<','
            <<sampling<<','<<recovery<<','<<prepare<<','<<boundary<<','<<validate<<','<<classify<<','<<pipeline<<','
-           <<(mode?r.boundaryDistanceUpperBound:old.boundaryDistanceUpperBound)<<','<<(mode?r.boundaryTangentUpperBoundDeg:old.boundaryTangentUpperBoundDeg)<<','<<r.outputMotherDistanceUpperBound<<','<<audit<<','<<Quote(mode?r.message:old.message)<<'\n';out.flush();
+           <<r.boundaryDistanceUpperBound<<','<<r.boundaryTangentUpperBoundDeg<<','<<r.outputMotherDistanceUpperBound<<','<<audit<<','<<Quote(r.message)<<'\n';out.flush();
     }
 }
 }
@@ -233,9 +221,16 @@ int main(int argc,char **argv)
 {
     sggk::init();try
     {
-        Require(argc>=3,"Usage: --unit data | --case data csv id repeats synthetic");
-        if(std::string(argv[1])=="--unit")Unit(argv[2]);
-        else{Require(argc==7,"Invalid benchmark arguments");Case(argv[2],argv[3],unsigned(std::stoul(argv[4])),unsigned(std::stoul(argv[5])),std::stoi(argv[6])!=0);}
+        Require(argc>=3,"Usage: --rational-unit data | --rational-case data csv id repeats synthetic --rational-only");
+        if(std::string(argv[1])=="--rational-unit"){Require(argc==3,"Invalid unit arguments");Unit(argv[2]);}
+        else
+        {
+            // The distinct command and arity make pre-retirement binaries fail
+            // before entering their old/new comparison loop.
+            Require(std::string(argv[1])=="--rational-case"&&argc==8&&std::string(argv[7])=="--rational-only",
+                "Invalid rational-only benchmark arguments");
+            Case(argv[2],argv[3],unsigned(std::stoul(argv[4])),unsigned(std::stoul(argv[5])),std::stoi(argv[6])!=0);
+        }
         return 0;
     }
     catch(const std::exception &e){std::cerr<<e.what()<<'\n';return 1;}

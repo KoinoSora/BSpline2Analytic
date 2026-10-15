@@ -1,8 +1,7 @@
-"""Targeted comparison: prior slow fixtures and five 200-control rational fixtures.
+"""Rational-only validation: prior slow fixtures and five 200-control fixtures.
 
-The contracts differ. Fast rejection under the new contract is NOT a speedup
-of a successful old conversion. Synthetic cases benchmark a supplied mother
-and fixed chart, while legacy fixtures use real classified candidates.
+ValidateGeneralHybrid is retired and must not run. Synthetic cases benchmark a
+supplied mother and fixed chart; historical fixtures use classified candidates.
 """
 import argparse
 import csv
@@ -41,7 +40,7 @@ def main():
         if target.exists():
             target.unlink()
         try:
-            r = subprocess.run([str(exe), '--case', str(data), str(target), str(case), str(a.runs), str(synthetic)],
+            r = subprocess.run([str(exe), '--rational-case', str(data), str(target), str(case), str(a.runs), str(synthetic), '--rational-only'],
                                cwd=sdk, env=env, capture_output=True, text=True, encoding='utf-8',
                                errors='replace', timeout=60)
             target.with_suffix('.log').write_text(r.stdout + r.stderr, encoding='utf-8')
@@ -51,18 +50,21 @@ def main():
             failures.append(dict(synthetic=synthetic, case=case, timeout=True))
         current = list(csv.DictReader(target.open(encoding='utf-8'))) if target.exists() else []
         rows.extend(current)
-        if len(current) != 2*a.runs:
+        if len(current) != a.runs:
             failures.append(dict(synthetic=synthetic, case=case, incomplete_rows=len(current)))
+        if any(r['mode'] != 'rational' for r in current):
+            failures.append(dict(synthetic=synthetic, case=case, unexpected_validator=True))
         print(f'Completed synthetic={synthetic} id={case}: rows={len(current)}', flush=True)
     with output.open('w', newline='', encoding='utf-8') as f:
-        writer = csv.DictWriter(f, fieldnames=list(rows[0]), quoting=csv.QUOTE_ALL)
-        writer.writeheader(); writer.writerows(rows)
-    summary = dict(failures=failures, runs=a.runs, rows=len(rows),
+        if rows:
+            writer = csv.DictWriter(f, fieldnames=list(rows[0]), quoting=csv.QUOTE_ALL)
+            writer.writeheader(); writer.writerows(rows)
+    summary = dict(validator='rational_boundary', failures=failures, runs=a.runs, rows=len(rows),
                    exe_sha256=hashlib.sha256(exe.read_bytes()).hexdigest(), inputs_sha256=hashes,
                    cpu_affinity_fixed=False, exclusive_machine=False, cases=[])
     for synthetic, case in [(0, i) for i in LEGACY] + [(1, i) for i in range(5)]:
         entry = dict(synthetic=synthetic, id=case)
-        for mode in ('analytic_uv', 'rational'):
+        for mode in ('rational',):
             selected = [r for r in rows if r['synthetic'] == str(synthetic) and r['id'] == str(case) and r['mode'] == mode]
             entry[mode] = dict(accepted_runs=sum(r['accepted'] == '1' for r in selected),
                 outcomes=sorted(set(r['status'] for r in selected)),
