@@ -1,0 +1,74 @@
+301: Success (0.504s including loading/audits)
+303: Success (0.335s including loading/audits)
+305: Success (0.286s including loading/audits)
+307: Success (0.280s including loading/audits)
+309: Success (0.295s including loading/audits)
+311: Success (0.278s including loading/audits)
+313: Success (0.308s including loading/audits)
+315: Success (0.291s including loading/audits)
+317: NoCandidate (0.198s including loading/audits)
+319: NoCandidate (0.175s including loading/audits)
+321: Success (0.396s including loading/audits)
+323: Success (0.439s including loading/audits)
+325: Success (0.414s including loading/audits)
+327: Success (0.431s including loading/audits)
+329: Success (0.420s including loading/audits)
+331: Success (0.423s including loading/audits)
+333: Success (0.349s including loading/audits)
+335: Success (0.418s including loading/audits)
+337: NoCandidate (0.234s including loading/audits)
+339: NoCandidate (0.183s including loading/audits)
+341: Success (0.358s including loading/audits)
+343: Success (0.505s including loading/audits)
+345: Success (0.513s including loading/audits)
+347: Success (0.392s including loading/audits)
+349: Success (0.544s including loading/audits)
+351: Success (0.465s including loading/audits)
+353: Success (0.383s including loading/audits)
+355: Success (0.512s including loading/audits)
+357: NoCandidate (0.214s including loading/audits)
+359: NoCandidate (0.190s including loading/audits)
+361: Success (0.537s including loading/audits)
+363: Success (0.565s including loading/audits)
+365: Success (0.589s including loading/audits)
+367: Success (0.378s including loading/audits)
+369: Success (0.563s including loading/audits)
+371: Success (0.662s including loading/audits)
+373: Success (0.488s including loading/audits)
+375: Success (0.666s including loading/audits)
+377: NoCandidate (0.226s including loading/audits)
+379: NoCandidate (0.185s including loading/audits)
+381: Success (0.586s including loading/audits)
+383: Success (0.758s including loading/audits)
+385: Success (0.776s including loading/audits)
+387: Success (0.524s including loading/audits)
+389: Success (0.697s including loading/audits)
+391: Success (0.745s including loading/audits)
+393: Success (0.520s including loading/audits)
+395: Success (0.702s including loading/audits)
+397: NoCandidate (0.236s including loading/audits)
+399: NoCandidate (0.198s including loading/audits)
+{
+  "cases": 50,
+  "warmup": false,
+  "watchdog_seconds": 20.0,
+  "statuses": {
+    "Success": 40,
+    "NoCandidate": 10
+  },
+  "unexpected_ids": [
+    317,
+    319,
+    337,
+    339,
+    357,
+    359,
+    377,
+    379,
+    397,
+    399
+  ],
+  "qualified_inputs": 50,
+  "successful_regular_under_10ms": 0,
+  "regular_denominator": 40
+}

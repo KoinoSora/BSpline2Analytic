@@ -807,6 +807,9 @@ int Dataset(const std::filesystem::path &dir, const std::filesystem::path &file,
                 {
                     // First actual recovered candidate; never substitute fixture truth.
                     const auto &p = list.front();
+                    if (sphere && !c.collapsedMask)
+                        Require(p.parameters.type == sggk::SurfaceType::Sphere,
+                                "Regular sphere must precede near-sphere torus candidates");
                     SurfaceSampleContext referenceSamples(*c.input, 50000);
                     auto ordinary = ClassifyApproximate(*c.input, ConversionOptions{}, nullptr,
                                                         true, &referenceSamples);

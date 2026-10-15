@@ -461,9 +461,16 @@ std::vector<AnalyticPatch> RecoverRankedCandidates(const ClassificationSamples &
     const bool hasSphere = std::any_of(families.begin(), families.end(), [&](const Family &f) {
         return f.type == sggk::SurfaceType::Sphere && f.score < distanceTolerance;
     });
+    // This margin changes candidate priority only; acceptance still uses the
+    // requested distance tolerance. Preserve ordinary ring-torus priority.
+    constexpr double nearSphereRadiusFactor = 5.0;
+    const double nearSphereRadiusTolerance = nearSphereRadiusFactor * distanceTolerance;
     auto deferTorus = [&](const Family &f) {
-        return hasSphere && f.type == sggk::SurfaceType::Torus && f.legacy.best != missing &&
-               std::abs(seeds[f.legacy.best].parameters.majorRadius) <= distanceTolerance;
+        if (!hasSphere || f.type != sggk::SurfaceType::Torus || f.legacy.best == missing)
+            return false;
+        const auto &parameters = seeds[f.legacy.best].parameters;
+        const double majorRadius = std::abs(parameters.majorRadius);
+        return majorRadius <= nearSphereRadiusTolerance && majorRadius < parameters.radius;
     };
     std::stable_sort(families.begin(), families.end(), [&](const Family &a, const Family &b) {
         if (deferTorus(a) != deferTorus(b))

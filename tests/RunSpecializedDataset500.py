@@ -1,7 +1,8 @@
-"""Run all 500 specialized cases with a per-case process watchdog and no warm-up.
+"""Run specialized Dataset500 cases with a per-case watchdog and no warm-up.
 
 The watchdog includes loading/certification; measured stages come only from the
-C++ timers. Missing measurements remain empty, never zero. No case is omitted.
+C++ timers. Missing measurements remain empty, never zero. Every selected case
+is retained, including collapsed inputs and failures.
 """
 import argparse
 import collections
@@ -32,12 +33,18 @@ def main():
     for name in ("exe", "data", "sdk", "output"):
         parser.add_argument("--" + name, required=True, type=Path)
     parser.add_argument("--timeout", type=float, default=20)
+    parser.add_argument("--sphere-polynomial-only", action="store_true",
+                        help="Select all 50 nonrational spheres, including 10 collapsed cases")
     args = parser.parse_args()
     if not math.isfinite(args.timeout) or args.timeout <= 0:
         parser.error("timeout must be finite and positive")
     manifest = read(args.data / "manifest.csv")
     if [int(r["id"]) for r in manifest] != list(range(500)):
         raise ValueError("Expected the complete ordered 500-case manifest")
+    if args.sphere_polynomial_only:
+        manifest = [r for r in manifest if r["type"] == "Sphere" and r["source_kind"] == "refitted"]
+        if [int(r["id"]) for r in manifest] != list(range(301, 400, 2)):
+            raise ValueError("Expected the complete 50-case nonrational sphere subset")
     args.output.parent.mkdir(parents=True, exist_ok=True)
     parts = args.output.with_suffix(".parts")
     if parts.exists():
@@ -91,13 +98,13 @@ def main():
             print(f"{id_}: {row['status']} ({elapsed:.3f}s including loading/audits)", flush=True)
     unexpected = [int(r["id"]) for r in results
                   if r["status"] != ("Degenerate" if int(r["collapsed_mask"]) else "Success")]
-    summary = {"cases": 500, "warmup": False, "watchdog_seconds": args.timeout,
+    summary = {"cases": len(manifest), "warmup": False, "watchdog_seconds": args.timeout,
                "statuses": dict(collections.Counter(r["status"] for r in results)),
                "unexpected_ids": unexpected,
                "qualified_inputs": sum(int(r["fixture_qualified"]) for r in results),
                "successful_regular_under_10ms": sum(r["status"] == "Success" and
                    float(r["classify_optimize_ms"]) < 10 for r in results),
-               "regular_denominator": 460}
+               "regular_denominator": sum(not int(r["collapsed_mask"]) for r in manifest)}
     args.output.with_suffix(".summary.json").write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(summary, indent=2))
     return bool(unexpected)

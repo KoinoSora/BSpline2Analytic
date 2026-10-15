@@ -1,0 +1,143 @@
+{
+  "scope": "50 nonrational spheres; 40 regular and 10 collapsed",
+  "production_exit_code": 1,
+  "production_statuses": {
+    "Success": 40,
+    "NoCandidate": 10
+  },
+  "paired_ctest_exit_code": 0,
+  "paired_statuses": {
+    "Passed": 40,
+    "NoCandidate": 10
+  },
+  "watchdog_seconds": 20,
+  "timeouts": 0,
+  "formerly_timed_out_ids": [
+    309,
+    333,
+    341,
+    343,
+    355,
+    363,
+    365,
+    367,
+    381,
+    389
+  ],
+  "formerly_timed_out_now_success": 10,
+  "unchanged_degenerate_no_candidate_ids": [
+    317,
+    319,
+    337,
+    339,
+    357,
+    359,
+    377,
+    379,
+    397,
+    399
+  ],
+  "regular_classification_validation_calls": {
+    "1": 40
+  },
+  "production_regular": {
+    "classify_compute_ms": {
+      "mean_ms": 3.0039025,
+      "max_ms": 5.2993
+    },
+    "classify_validate_ms": {
+      "mean_ms": 268.6562,
+      "max_ms": 509.258
+    },
+    "optimize_compute_ms": {
+      "mean_ms": 0.0,
+      "max_ms": 0.0
+    },
+    "optimize_validate_ms": {
+      "mean_ms": 0.0,
+      "max_ms": 0.0
+    },
+    "classify_optimize_ms": {
+      "mean_ms": 271.6601025,
+      "max_ms": 514.2965
+    }
+  },
+  "paired_regular": {
+    "classify_ms": {
+      "mean_ms": 3.0063625,
+      "max_ms": 6.5986
+    },
+    "new_ms": {
+      "mean_ms": 8.4360625,
+      "max_ms": 19.2503
+    }
+  },
+  "production_initial_stages": {
+    "initial_prepare_ms": {
+      "mean_ms": 17.4008725,
+      "max_ms": 43.0861
+    },
+    "initial_surface_bounds_ms": {
+      "mean_ms": 30.730187500000003,
+      "max_ms": 75.4509
+    },
+    "initial_subdivide_ms": {
+      "mean_ms": 0.006354999999999998,
+      "max_ms": 0.02049999999999998
+    },
+    "initial_boundary_ms": {
+      "mean_ms": 220.46479250000004,
+      "max_ms": 397.1938999999998
+    },
+    "initial_report_ms": {
+      "mean_ms": 0.0507325,
+      "max_ms": 0.152
+    }
+  },
+  "paired_stages": {
+    "prepare_ms": {
+      "mean_ms": 3.497790000000001,
+      "max_ms": 8.23759999999995
+    },
+    "surface_ms": {
+      "mean_ms": 3.235892499999999,
+      "max_ms": 8.026699999999998
+    },
+    "subdivide_ms": {
+      "mean_ms": 0.0,
+      "max_ms": 0.0
+    },
+    "boundary_ms": {
+      "mean_ms": 1.6145275,
+      "max_ms": 3.3461
+    },
+    "report_ms": {
+      "mean_ms": 0.0864625,
+      "max_ms": 0.5584
+    }
+  },
+  "formerly_timed_out_production": {
+    "classify_compute_ms": {
+      "mean_ms": 3.04306,
+      "max_ms": 4.3598
+    },
+    "classify_validate_ms": {
+      "mean_ms": 268.50091,
+      "max_ms": 454.0296
+    },
+    "classify_optimize_ms": {
+      "mean_ms": 271.54397,
+      "max_ms": 458.2952
+    }
+  },
+  "formerly_timed_out_paired": {
+    "new_ms": {
+      "mean_ms": 8.35086,
+      "max_ms": 15.9459
+    }
+  },
+  "production_under10ms": 0,
+  "paired_validation_under10ms": 28,
+  "regular_denominator": 40,
+  "old_new_data_identical": true
+}
