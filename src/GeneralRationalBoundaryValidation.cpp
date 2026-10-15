@@ -13,7 +13,7 @@ class Certifier
 {
     SurfaceSampleContext &samples;const Trim &trim;const Target &target;
     const GeneralRationalBoundaryOptions &options;GeneralRationalBoundaryReport &report;
-    paired::Products products;double distance=0,ratio=0,limit;
+    paired::Products products;CurveErrors errors;double distance=0,ratio=0,limit;
     bool Visit(const BezierCell &s,unsigned edge,double lo,double hi,unsigned depth)
     {
         if(++report.boundaryNodes>options.maxBoundaryNodes)throw Budget("Rational boundary node budget exhausted");
@@ -29,24 +29,27 @@ class Certifier
         for(const auto &p:target.edges[edge])if(p.u0<=lo&&hi<=p.u1){part=&p;break;}
         if(!part)return false;
         auto t=paired::Crop(*part,lo,hi,0,1);
-        auto g=products.Subtract(products.MulShared(t.p,s.w),products.MulShared(s.p,t.w));
-        auto h=products.Mul(t.w,s.w);
-        double bound=paired::PositionBoxUpper(g,h);
+        bool fused=false;auto error=errors.Build(s,t,products,fused);
+        report.fusedErrorBuilds+=fused;
+        double bound=paired::PositionBoxUpper(error.numerator,error.denominator);
         if(bound>=options.general.fitting.validation.distanceTolerance)
-            bound=std::min(bound,paired::PositionControlUpper(g,h,products));
+            bound=std::min(bound,paired::PositionControlUpper(error.numerator,error.denominator,products));
         double angleRatio=INFINITY;
-        if(trim.collapsed[edge])angleRatio=0;
+        if(!(bound<options.general.fitting.validation.distanceTolerance))++report.positionOnlyNodes;
+        else if(trim.collapsed[edge])angleRatio=0;
         else
         {
-            auto derivative=[&](const BezierCell &c)
+            auto st=TangentNumerator(s,products);
+            ++report.tangentFastChecks;
+            angleRatio=ResidualTangentRatio(error,s,st,bound);
+            if(angleRatio<limit)++report.tangentFastAccepted;
+            else
             {
-                if(!c.w.u&&!c.w.v)return Derivative(c.p,true)*c.w.c[0];
-                return products.Subtract(products.MulShared(Derivative(c.p,true),c.w),
-                    products.MulShared(c.p,Derivative(c.w,true)));
-            };
-            auto st=derivative(s),tt=derivative(t);
-            I dot=products.Dot(st,tt).range();IV cross=Range(products.Cross(st,tt));
-            if(dot.lo>0)angleRatio=(Sqrt(Sqr(cross.x)+Sqr(cross.y)+Sqr(cross.z))/I(dot.lo)).hi;
+                ++report.tangentFallbacks;
+                auto tt=TangentNumerator(t,products);
+                I dot=products.Dot(st,tt).range();IV cross=Range(products.Cross(st,tt));
+                if(dot.lo>0)angleRatio=std::min(angleRatio,(Sqrt(Sqr(cross.x)+Sqr(cross.y)+Sqr(cross.z))/I(dot.lo)).hi);
+            }
         }
         if(bound<options.general.fitting.validation.distanceTolerance&&angleRatio<limit)
         {

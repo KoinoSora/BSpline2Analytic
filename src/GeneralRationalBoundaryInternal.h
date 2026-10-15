@@ -21,6 +21,23 @@ struct Target
     std::array<std::vector<BezierCell>,4> edges; // Actual exported curves, centered.
     double motherBound=0;
 };
+struct CurveError
+{
+    BV numerator;
+    BPoly denominator;
+};
+// One-dimensional homogeneous error, in a COMMON local parameter [0,1].
+// Rebuild after changing the source/target correspondence.
+class CurveErrors
+{
+    std::map<std::pair<unsigned,unsigned>,std::vector<I>> factors;
+public:
+    CurveError Build(const BezierCell &source,const BezierCell &target,paired::Products &,bool &fused);
+};
+BV TangentNumerator(const BezierCell &,paired::Products &);
+// Sufficient same-direction angle bound from E'=T'-S'. INFINITY is inconclusive.
+double ResidualTangentRatio(const CurveError &,const BezierCell &source,
+                            const BV &sourceTangentNumerator,double distanceUpper);
 // Test-visible, exact tensor-to-line composition in homogeneous Bernstein form.
 BezierCell ComposeLine(const paired::TargetCell &,sggk::Point2D,sggk::Point2D,
                        double,double,paired::Products &);

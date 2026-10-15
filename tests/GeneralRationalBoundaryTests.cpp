@@ -5,6 +5,7 @@
 #include <fstream>
 #include <iomanip>
 #include <iostream>
+#include <tuple>
 
 using namespace bspline2analytic;
 using namespace bspline2analytic::detail;
@@ -104,8 +105,77 @@ double Audit(const sggk::BSplineSurface &s,const GeneralRationalBoundaryReport &
     }
     return maximum;
 }
+void ErrorKernelUnit()
+{
+    rb::CurveErrors errors;paired::Products products;
+    auto value=[](const BPoly &p,long double x)
+    {
+        std::vector<long double> c;for(I a:p.c)c.push_back(a.lo);
+        for(unsigned n=p.u;n>0;--n)for(unsigned i=0;i<n;++i)c[i]=(1-x)*c[i]+x*c[i+1];
+        return c[0];
+    };
+    auto contains=[](I box,long double x){return box.lo<=x&&x<=box.hi;};
+    // Independent de Casteljau evaluation on exact dyadic input coefficients;
+    // exercise unequal degrees and both constant/nonconstant weight paths.
+    for(unsigned p=1;p<=6;++p)for(unsigned q=1;q<=4;++q)for(unsigned mode=0;mode<4;++mode)
+    {
+        auto cell=[](unsigned n,bool rational,int sign)
+        {
+            BezierCell c;c.p={BPoly(n,0),BPoly(n,0),BPoly(n,0)};c.w=BPoly(rational?n:0,0,I(1));
+            for(unsigned i=0;i<=n;++i)
+            {
+                c.p.x.c[i]=I(sign*(int(i)-2)*.25);c.p.y.c[i]=I((i*i+1)*.125);
+                c.p.z.c[i]=I(sign*(int(i%3)-1)*.5);
+                if(rational)c.w.c[i]=I(1+i*.25);
+            }
+            return c;
+        };
+        auto s=cell(p,(mode&1)!=0,1),t=cell(q,(mode&2)!=0,-1);bool fused=false;
+        auto e=errors.Build(s,t,products,fused);Require(fused==(mode==3),"Wrong fused error path");
+        for(unsigned i=0;i<=8;++i)
+        {
+            double x=i*.125;IV g=Range(Evaluate(e.numerator,x,0));I h=Evaluate(e.denominator,x,0).range();
+            long double sw=value(s.w,x),tw=value(t.w,x);
+            Require(contains(h,sw*tw),"Error denominator failed to enclose exact value");
+            for(auto axis:{std::make_tuple(&s.p.x,&t.p.x,g.x),std::make_tuple(&s.p.y,&t.p.y,g.y),std::make_tuple(&s.p.z,&t.p.z,g.z)})
+                Require(contains(std::get<2>(axis)/h,value(*std::get<1>(axis),x)/tw-value(*std::get<0>(axis),x)/sw),
+                        "Fused/constant-weight residual failed independent evaluation");
+        }
+    }
+    auto line=[](double speed,double slope,double offset)
+    {BezierCell c;c.p={BPoly(1,0),BPoly(1,0),BPoly(1,0)};c.p.x.c={I(0),I(speed)};c.p.y.c={I(offset),I(offset+slope)};return c;};
+    auto ratio=[&](const BezierCell &s,const BezierCell &t)
+    {bool fused=false;auto e=errors.Build(s,t,products,fused);return rb::ResidualTangentRatio(e,s,rb::TangentNumerator(s,products),paired::PositionBoxUpper(e.numerator,e.denominator));};
+    auto s=line(1,0,0);
+    double close=ratio(s,line(1,1e-4,0));
+    Require(close>=1e-4&&close<std::tan(.1*Pi/180),"Close tangent bound invalid");
+    Require(ratio(s,line(1,.01,0))>=.01,"Angular violation understated");
+    Require(ratio(s,line(1,0,1e-6))<1e-12,"Translation should have near-zero derivative error");
+    auto fast=line(2,0,0);Require(!std::isfinite(ratio(s,fast)),"Speed mismatch must be inconclusive");
+    auto st=rb::TangentNumerator(s,products),tt=rb::TangentNumerator(fast,products);
+    IV cross=Range(products.Cross(st,tt));
+    Require(products.Dot(st,tt).range().lo>0&&Sqrt(Sqr(cross.x)+Sqr(cross.y)+Sqr(cross.z)).hi<1e-12,
+            "Full tangent fallback should accept parallel speed mismatch");
+    Require(!std::isfinite(ratio(s,line(-1,0,0))),"Opposite direction accepted by residual criterion");
+    Require(!std::isfinite(ratio(line(0,0,0),s)),"Zero source speed accepted");
+    // Same straight line in rational quadratic form, with W=1+t.
+    BezierCell rational;rational.p={BPoly(2,0),BPoly(2,0),BPoly(2,0)};
+    rational.p.x.c={I(0),I(.5),I(2)};rational.w=BPoly(2,0);rational.w.c={I(1),I(1.5),I(2)};
+    auto tilted=rational;tilted.p.y=rational.p.x*I(1e-5);
+    double rationalRatio=ratio(rational,tilted);
+    Require(rationalRatio>=1e-5&&rationalRatio<std::tan(.1*Pi/180),"Rational derivative bound invalid");
+    for(double scale:{1./1024,1024.})
+    {
+        auto scaled=rational;scaled.p=scaled.p*I(scale);scaled.w=scaled.w*I(scale);
+        double scaledRatio=ratio(scaled,tilted);
+        Require(scaledRatio>=1e-5&&scaledRatio<std::tan(.1*Pi/180),"Homogeneous scaling changed tangent certificate");
+    }
+    auto invalid=s;invalid.w.c[0]=I(-1,1);
+    Require(!std::isfinite(ratio(invalid,s)),"Nonpositive denominator accepted");
+}
 void Unit(const std::filesystem::path &data)
 {
+    ErrorKernelUnit();
     const std::array<double,4> domain{.2,.9,.6,1.2};
     for(unsigned type=0;type<5;++type)
     {
@@ -119,6 +189,13 @@ void Unit(const std::filesystem::path &data)
         Require(budget.status==HybridValidationStatus::BudgetExceeded&&!budget.patch,"Budget leaked output");
     }
     auto plane=Mother(0);auto flat=Fixture(plane,domain,false);
+    auto variableSpeed=Fixture(plane,domain,false);variableSpeed->UDegreeElevation(3-variableSpeed->DegreeU());
+    for(unsigned j=0;j<variableSpeed->ControlPoints().front().size();++j)
+        variableSpeed->SetControlPoint(Point(Get(variableSpeed->ControlPoints()[1][j])+Get(plane.xDirection)*1e-6),1,j);
+    GeneralRationalBoundaryOptions speedOptions;speedOptions.chartDomain=domain;
+    speedOptions.general.fitting.validation.boundaryTangentToleranceDeg=1e-6;
+    auto speedReport=ValidateGeneralRationalBoundaries(*variableSpeed,plane,speedOptions);
+    Require(speedReport.Passed()&&speedReport.tangentFallbacks>0,"Parallel variable-speed boundary must pass via full tangent fallback");
     GeneralRationalBoundaryOptions bad;bad.general.fitting.validation.distanceTolerance=-1;
     Require(ValidateGeneralRationalBoundaries(*flat,plane,bad).status==HybridValidationStatus::InvalidInput,"Invalid tolerance accepted");
     auto wrong=plane;wrong.origin=Point(Get(plane.origin)+Get(plane.axis)*.01);
@@ -127,7 +204,8 @@ void Unit(const std::filesystem::path &data)
     for(unsigned i=0;i<4;++i)for(unsigned j=1;j<3;++j)
         bump->SetControlPoint(Point(Get(bump->ControlPoints()[i][j])+Get(plane.axis)*1e-7),i,j);
     GeneralRationalBoundaryOptions tight;tight.general.fitting.validation.boundaryTangentToleranceDeg=1e-8;
-    Require(!ValidateGeneralRationalBoundaries(*bump,plane,tight).Passed(),"Tangent violation accepted");
+    auto tangentFailure=ValidateGeneralRationalBoundaries(*bump,plane,tight);
+    Require(!tangentFailure.Passed()&&tangentFailure.tangentFallbacks>0,"Tangent violation must remain rejected through full fallback");
     auto outside=Fixture(plane,domain,false);outside->UDegreeElevation(3-outside->DegreeU());outside->VDegreeElevation(3-outside->DegreeV());
     for(unsigned i=1;i<3;++i)for(unsigned j=1;j<3;++j)
         outside->SetControlPoint(Point(Get(outside->ControlPoints()[i][j])+Get(plane.xDirection)*10),i,j);
@@ -182,13 +260,14 @@ void Case(const std::filesystem::path &data,const std::filesystem::path &csv,uns
     else
     {auto cert=fixture.group==GeneralFixtureGroup::Infeasible?CertifyNoQuartic(*fixture.input,fixture.exclusionRadius):CertifyAnalyticPair(fixture,fixture.pairTolerance);Require(cert.passed,"Legacy fixture certificate failed");}
     std::ofstream out(csv);out<<std::setprecision(17);
-    out<<"id,synthetic,mode,run,status,accepted,attempts,chart_attempts,nodes,refinements,max_degree,sampling_ms,recovery_ms,prepare_ms,boundary_ms,validate_ms,classify_ms,pipeline_ms,boundary_bound,tangent_deg,mother_bound,audit_sample_max,message\n";
+    out<<"id,synthetic,mode,run,status,accepted,attempts,chart_attempts,nodes,refinements,max_degree,sampling_ms,recovery_ms,prepare_ms,boundary_ms,validate_ms,classify_ms,pipeline_ms,boundary_bound,tangent_deg,mother_bound,audit_sample_max,message,fused_errors,position_only,fast_checks,fast_accepted,tangent_fallbacks,source_degree_u,source_degree_v,source_controls\n";
     for(unsigned run=0;run<repeats;++run)
     {
         auto start=std::chrono::steady_clock::now();GeneralRationalBoundaryOptions options;
         if(synthetic)options.chartDomain=domain;
         SurfaceSampleContext samples(*fixture.input,options.general.fitting.sampling.maxSamples);
         GeneralRationalBoundaryReport r;unsigned attempts=0,charts=0,nodes=0,refinements=0;
+        unsigned fused=0,positionOnly=0,fastChecks=0,fastAccepted=0,fallbacks=0;
         double classify=0,validate=0,sampling=0,recovery=0,prepare=0,boundary=0;bool passed=false;
         auto attempt=[&](const AnalyticParameters &a)
         {
@@ -196,6 +275,8 @@ void Case(const std::filesystem::path &data,const std::filesystem::path &csv,uns
             r=rb::Validate(samples,a,options);passed=r.Passed();validate+=r.totalMs;sampling+=r.samplingMs;
             recovery+=r.recoveryMs;prepare+=r.preparationMs;boundary+=r.boundaryMs;
             charts+=r.chartAttempts;nodes+=r.boundaryNodes;refinements+=r.mappingRefinements;
+            fused+=r.fusedErrorBuilds;positionOnly+=r.positionOnlyNodes;fastChecks+=r.tangentFastChecks;
+            fastAccepted+=r.tangentFastAccepted;fallbacks+=r.tangentFallbacks;
         };
         if(synthetic)attempt(fixture.truth); // Explicit-chart validator benchmark, not classifier timing.
         else
@@ -213,7 +294,9 @@ void Case(const std::filesystem::path &data,const std::filesystem::path &csv,uns
         if(passed)audit=Audit(*fixture.input,r);
         out<<id<<','<<synthetic<<",rational,"<<run<<','<<HybridValidationStatusName(r.status)<<','<<passed<<','<<attempts<<','<<charts<<','<<nodes<<','<<refinements<<','<<r.maxTargetDegree<<','
            <<sampling<<','<<recovery<<','<<prepare<<','<<boundary<<','<<validate<<','<<classify<<','<<pipeline<<','
-           <<r.boundaryDistanceUpperBound<<','<<r.boundaryTangentUpperBoundDeg<<','<<r.outputMotherDistanceUpperBound<<','<<audit<<','<<Quote(r.message)<<'\n';out.flush();
+           <<r.boundaryDistanceUpperBound<<','<<r.boundaryTangentUpperBoundDeg<<','<<r.outputMotherDistanceUpperBound<<','<<audit<<','<<Quote(r.message)<<','
+           <<fused<<','<<positionOnly<<','<<fastChecks<<','<<fastAccepted<<','<<fallbacks<<','<<fixture.input->DegreeU()<<','<<fixture.input->DegreeV()<<','
+           <<fixture.input->ControlPoints().size()*fixture.input->ControlPoints().front().size()<<'\n';out.flush();
     }
 }
 }

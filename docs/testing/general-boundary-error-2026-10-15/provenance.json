@@ -1,0 +1,20 @@
+{
+  "baseline_commit": "d5bb72e76956e2e74b80779e71d4929c29a03c9f",
+  "recorded_at": "2026-10-15T17:07:33.6265581+08:00",
+  "configuration": "MSVC x64 Release /fp:strict",
+  "source_sha256": {
+    "CMakeLists.txt": "4cfbab656b7753d82e95e7a646ca7391437da4fa04e9ed63f216d2a7cdacb223",
+    "src/GeneralBoundaryError.cpp": "057614f0cd6c188f26f470bc8323d62e4c40cf34221f07e506c397ca828a4bb8",
+    "src/GeneralRationalBoundaryValidation.cpp": "075021f949ec765e7adf4eeb8de2613b8d7031e09c0aa0069231a68928b561c9",
+    "src/GeneralRationalBoundaryInternal.h": "354ef699453a394e785c8993e1eef4374d94501075b61d20aff10d58c0cd8bd4",
+    "include/GeneralRationalBoundaryValidation.h": "2ac00428ce4ec53888c5dee552517a95ab677f667d2b7e6653ca1263782078dd",
+    "tests/GeneralRationalBoundaryTests.cpp": "c467c2f76bdd54a2b8143ac02655912dc7fdfb09e166e6cec30cb6b33830613d",
+    "tests/CompareGeneralRationalBoundarySelected.py": "acde1f00a5ae3c4c404aeb58a30748b5b68aad3a1ec06bbdbd0f858411087bc2"
+  },
+  "unit_assertions": 9920,
+  "baseline_exe_sha256": "ce2087d3200b14b98fa6754c1dfcd465e81163d24f2025c3790761bc87a7cef2",
+  "optimized_exe_sha256": "77de854602e4667a29ddbbe7eb70f5b78fbd4fc6d8785ff5fc05d1eb2c4d3974",
+  "initial_batch": "Same production changes; before adding full-validator fallback integration assertions",
+  "final_batch": "Final test executable; 12 selected cases x 2 variants x 5 alternating rounds",
+  "retired_validators_executed": false
+}

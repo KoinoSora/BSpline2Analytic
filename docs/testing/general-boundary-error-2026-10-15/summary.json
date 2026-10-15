@@ -1,0 +1,623 @@
+{
+  "validator": "rational_boundary",
+  "runs": 5,
+  "rows": 120,
+  "failures": [],
+  "executables_sha256": {
+    "baseline": "ce2087d3200b14b98fa6754c1dfcd465e81163d24f2025c3790761bc87a7cef2",
+    "optimized": "77de854602e4667a29ddbbe7eb70f5b78fbd4fc6d8785ff5fc05d1eb2c4d3974"
+  },
+  "inputs_sha256": {
+    "general-000.b2a": "0a42b7790ebbe24247e4672092b7fec883990260ecb1973c7763bbbffa4dd792",
+    "general-100.b2a": "b2066229e4672c257bbd1ac054356f152ae2de7d09c89bea00aab1bbb91139c4",
+    "general-200.b2a": "e8d464a4c20e98928a4dd5bf087c0e0ca3ddcb41f45208e833bc6a0f4bd4a7e6",
+    "general-218.b2a": "28e8534936809ef71defcd2f605a06806fbfc45542e2a72272312891c393ab55",
+    "general-318.b2a": "ded89bcccb4ac430750217d51a82ce489b659648ee2504f17ed721dc6ee28514",
+    "general-254.b2a": "bc7aa1afb8adcd49e6a014d1e4852010eb6b10f3f86eb9276b35005e58f657de",
+    "general-500.b2a": "718e3b16b7bd7c22c0129757af68cbf5213735b8c1001533971a5d205cb9fcf0"
+  },
+  "cpu_affinity_fixed": false,
+  "exclusive_machine": false,
+  "cases": [
+    {
+      "synthetic": 0,
+      "id": 0,
+      "baseline": {
+        "accepted_runs": 5,
+        "outcomes": [
+          "Passed"
+        ],
+        "medians": {
+          "pipeline_ms": 2.1571,
+          "validate_ms": 1.2845,
+          "classify_ms": 0.8161,
+          "sampling_ms": 0.03,
+          "recovery_ms": 0.2559,
+          "prepare_ms": 0.4699,
+          "boundary_ms": 0.5955,
+          "nodes": 18.0,
+          "refinements": 0.0,
+          "max_degree": 2.0
+        },
+        "max_pipeline_ms": 2.8136
+      },
+      "optimized": {
+        "accepted_runs": 5,
+        "outcomes": [
+          "Passed"
+        ],
+        "medians": {
+          "pipeline_ms": 1.882,
+          "validate_ms": 0.9838,
+          "classify_ms": 0.9060999999999999,
+          "sampling_ms": 0.0266,
+          "recovery_ms": 0.2142,
+          "prepare_ms": 0.4246,
+          "boundary_ms": 0.3091,
+          "nodes": 18.0,
+          "refinements": 0.0,
+          "max_degree": 2.0,
+          "fused_errors": 0.0,
+          "position_only": 0.0,
+          "fast_checks": 18.0,
+          "fast_accepted": 18.0,
+          "tangent_fallbacks": 0.0,
+          "source_degree_u": 3.0,
+          "source_degree_v": 3.0,
+          "source_controls": 50.0
+        },
+        "max_pipeline_ms": 2.8005
+      }
+    },
+    {
+      "synthetic": 0,
+      "id": 100,
+      "baseline": {
+        "accepted_runs": 5,
+        "outcomes": [
+          "Passed"
+        ],
+        "medians": {
+          "pipeline_ms": 7.9677,
+          "validate_ms": 7.0956,
+          "classify_ms": 0.7799,
+          "sampling_ms": 0.03,
+          "recovery_ms": 0.19799999999999998,
+          "prepare_ms": 1.3015,
+          "boundary_ms": 5.5682,
+          "nodes": 52.0,
+          "refinements": 22.0,
+          "max_degree": 3.0
+        },
+        "max_pipeline_ms": 8.2786
+      },
+      "optimized": {
+        "accepted_runs": 5,
+        "outcomes": [
+          "Passed"
+        ],
+        "medians": {
+          "pipeline_ms": 4.1139,
+          "validate_ms": 3.3476,
+          "classify_ms": 0.7368,
+          "sampling_ms": 0.0297,
+          "recovery_ms": 0.2492,
+          "prepare_ms": 1.3484,
+          "boundary_ms": 1.6986,
+          "nodes": 52.0,
+          "refinements": 22.0,
+          "max_degree": 3.0,
+          "fused_errors": 46.0,
+          "position_only": 22.0,
+          "fast_checks": 30.0,
+          "fast_accepted": 30.0,
+          "tangent_fallbacks": 0.0,
+          "source_degree_u": 6.0,
+          "source_degree_v": 6.0,
+          "source_controls": 63.0
+        },
+        "max_pipeline_ms": 4.9224
+      }
+    },
+    {
+      "synthetic": 0,
+      "id": 200,
+      "baseline": {
+        "accepted_runs": 5,
+        "outcomes": [
+          "Passed"
+        ],
+        "medians": {
+          "pipeline_ms": 7.4447,
+          "validate_ms": 6.7364,
+          "classify_ms": 0.6843,
+          "sampling_ms": 0.0371,
+          "recovery_ms": 0.6308,
+          "prepare_ms": 1.5335,
+          "boundary_ms": 4.5082,
+          "nodes": 32.0,
+          "refinements": 12.0,
+          "max_degree": 4.0
+        },
+        "max_pipeline_ms": 7.7338
+      },
+      "optimized": {
+        "accepted_runs": 5,
+        "outcomes": [
+          "Passed"
+        ],
+        "medians": {
+          "pipeline_ms": 4.391,
+          "validate_ms": 3.4356,
+          "classify_ms": 0.7085,
+          "sampling_ms": 0.0378,
+          "recovery_ms": 0.6364000000000001,
+          "prepare_ms": 1.5464,
+          "boundary_ms": 1.2037,
+          "nodes": 32.0,
+          "refinements": 12.0,
+          "max_degree": 4.0,
+          "fused_errors": 32.0,
+          "position_only": 12.0,
+          "fast_checks": 20.0,
+          "fast_accepted": 20.0,
+          "tangent_fallbacks": 0.0,
+          "source_degree_u": 6.0,
+          "source_degree_v": 6.0,
+          "source_controls": 63.0
+        },
+        "max_pipeline_ms": 4.4841
+      }
+    },
+    {
+      "synthetic": 0,
+      "id": 218,
+      "baseline": {
+        "accepted_runs": 5,
+        "outcomes": [
+          "Passed"
+        ],
+        "medians": {
+          "pipeline_ms": 8.6092,
+          "validate_ms": 7.8797,
+          "classify_ms": 0.6636,
+          "sampling_ms": 0.034999999999999996,
+          "recovery_ms": 0.6222,
+          "prepare_ms": 1.439,
+          "boundary_ms": 5.7303,
+          "nodes": 42.0,
+          "refinements": 17.0,
+          "max_degree": 4.0
+        },
+        "max_pipeline_ms": 8.7658
+      },
+      "optimized": {
+        "accepted_runs": 5,
+        "outcomes": [
+          "Passed"
+        ],
+        "medians": {
+          "pipeline_ms": 4.2953,
+          "validate_ms": 3.6083,
+          "classify_ms": 0.6777,
+          "sampling_ms": 0.0346,
+          "recovery_ms": 0.617,
+          "prepare_ms": 1.4348,
+          "boundary_ms": 1.5096,
+          "nodes": 42.0,
+          "refinements": 17.0,
+          "max_degree": 4.0,
+          "fused_errors": 42.0,
+          "position_only": 17.0,
+          "fast_checks": 24.0,
+          "fast_accepted": 24.0,
+          "tangent_fallbacks": 0.0,
+          "source_degree_u": 6.0,
+          "source_degree_v": 6.0,
+          "source_controls": 63.0
+        },
+        "max_pipeline_ms": 4.3984
+      }
+    },
+    {
+      "synthetic": 0,
+      "id": 318,
+      "baseline": {
+        "accepted_runs": 5,
+        "outcomes": [
+          "Passed"
+        ],
+        "medians": {
+          "pipeline_ms": 3.6696,
+          "validate_ms": 2.8515,
+          "classify_ms": 0.8109999999999999,
+          "sampling_ms": 0.030000000000000002,
+          "recovery_ms": 0.1968,
+          "prepare_ms": 1.2591,
+          "boundary_ms": 1.358,
+          "nodes": 14.0,
+          "refinements": 3.0,
+          "max_degree": 3.0
+        },
+        "max_pipeline_ms": 3.7359
+      },
+      "optimized": {
+        "accepted_runs": 5,
+        "outcomes": [
+          "Passed"
+        ],
+        "medians": {
+          "pipeline_ms": 2.7908,
+          "validate_ms": 2.0258,
+          "classify_ms": 0.7595,
+          "sampling_ms": 0.030699999999999998,
+          "recovery_ms": 0.2063,
+          "prepare_ms": 1.2809,
+          "boundary_ms": 0.5065,
+          "nodes": 14.0,
+          "refinements": 3.0,
+          "max_degree": 3.0,
+          "fused_errors": 12.0,
+          "position_only": 3.0,
+          "fast_checks": 8.0,
+          "fast_accepted": 8.0,
+          "tangent_fallbacks": 0.0,
+          "source_degree_u": 6.0,
+          "source_degree_v": 6.0,
+          "source_controls": 63.0
+        },
+        "max_pipeline_ms": 3.3878
+      }
+    },
+    {
+      "synthetic": 0,
+      "id": 254,
+      "baseline": {
+        "accepted_runs": 0,
+        "outcomes": [
+          "NotCertified"
+        ],
+        "medians": {
+          "pipeline_ms": 3.2027,
+          "validate_ms": 1.8602999999999996,
+          "classify_ms": 1.3211,
+          "sampling_ms": 0.25010000000000004,
+          "recovery_ms": 1.4363,
+          "prepare_ms": 0.0,
+          "boundary_ms": 0.0,
+          "nodes": 0.0,
+          "refinements": 0.0,
+          "max_degree": 0.0
+        },
+        "max_pipeline_ms": 3.2592
+      },
+      "optimized": {
+        "accepted_runs": 0,
+        "outcomes": [
+          "NotCertified"
+        ],
+        "medians": {
+          "pipeline_ms": 3.1843,
+          "validate_ms": 1.8701999999999996,
+          "classify_ms": 1.3035,
+          "sampling_ms": 0.24829999999999997,
+          "recovery_ms": 1.4408999999999998,
+          "prepare_ms": 0.0,
+          "boundary_ms": 0.0,
+          "nodes": 0.0,
+          "refinements": 0.0,
+          "max_degree": 0.0,
+          "fused_errors": 0.0,
+          "position_only": 0.0,
+          "fast_checks": 0.0,
+          "fast_accepted": 0.0,
+          "tangent_fallbacks": 0.0,
+          "source_degree_u": 6.0,
+          "source_degree_v": 6.0,
+          "source_controls": 120.0
+        },
+        "max_pipeline_ms": 3.6232
+      }
+    },
+    {
+      "synthetic": 0,
+      "id": 500,
+      "baseline": {
+        "accepted_runs": 0,
+        "outcomes": [
+          "NotCertified"
+        ],
+        "medians": {
+          "pipeline_ms": 2.0629,
+          "validate_ms": 0.6910999999999998,
+          "classify_ms": 1.3327999999999998,
+          "sampling_ms": 0.45219999999999994,
+          "recovery_ms": 0.0,
+          "prepare_ms": 0.0,
+          "boundary_ms": 0.0,
+          "nodes": 0.0,
+          "refinements": 0.0,
+          "max_degree": 0.0
+        },
+        "max_pipeline_ms": 2.1222
+      },
+      "optimized": {
+        "accepted_runs": 0,
+        "outcomes": [
+          "NotCertified"
+        ],
+        "medians": {
+          "pipeline_ms": 2.1058,
+          "validate_ms": 0.7082999999999997,
+          "classify_ms": 1.3780999999999999,
+          "sampling_ms": 0.4518999999999999,
+          "recovery_ms": 0.0,
+          "prepare_ms": 0.0,
+          "boundary_ms": 0.0,
+          "nodes": 0.0,
+          "refinements": 0.0,
+          "max_degree": 0.0,
+          "fused_errors": 0.0,
+          "position_only": 0.0,
+          "fast_checks": 0.0,
+          "fast_accepted": 0.0,
+          "tangent_fallbacks": 0.0,
+          "source_degree_u": 3.0,
+          "source_degree_v": 3.0,
+          "source_controls": 100.0
+        },
+        "max_pipeline_ms": 3.1789
+      }
+    },
+    {
+      "synthetic": 1,
+      "id": 0,
+      "baseline": {
+        "accepted_runs": 5,
+        "outcomes": [
+          "Passed"
+        ],
+        "medians": {
+          "pipeline_ms": 4.4686,
+          "validate_ms": 4.4593,
+          "classify_ms": 0.0,
+          "sampling_ms": 0.9388,
+          "recovery_ms": 0.45740000000000003,
+          "prepare_ms": 2.2784,
+          "boundary_ms": 0.7663,
+          "nodes": 40.0,
+          "refinements": 0.0,
+          "max_degree": 2.0
+        },
+        "max_pipeline_ms": 4.6017
+      },
+      "optimized": {
+        "accepted_runs": 5,
+        "outcomes": [
+          "Passed"
+        ],
+        "medians": {
+          "pipeline_ms": 3.9226,
+          "validate_ms": 3.915,
+          "classify_ms": 0.0,
+          "sampling_ms": 0.7835,
+          "recovery_ms": 0.4585,
+          "prepare_ms": 2.2768,
+          "boundary_ms": 0.3728,
+          "nodes": 40.0,
+          "refinements": 0.0,
+          "max_degree": 2.0,
+          "fused_errors": 0.0,
+          "position_only": 0.0,
+          "fast_checks": 40.0,
+          "fast_accepted": 40.0,
+          "tangent_fallbacks": 0.0,
+          "source_degree_u": 5.0,
+          "source_degree_v": 5.0,
+          "source_controls": 200.0
+        },
+        "max_pipeline_ms": 4.2374
+      }
+    },
+    {
+      "synthetic": 1,
+      "id": 1,
+      "baseline": {
+        "accepted_runs": 5,
+        "outcomes": [
+          "Passed"
+        ],
+        "medians": {
+          "pipeline_ms": 7.4536,
+          "validate_ms": 7.4492,
+          "classify_ms": 0.0,
+          "sampling_ms": 0.9271,
+          "recovery_ms": 0.5441,
+          "prepare_ms": 2.41,
+          "boundary_ms": 3.4748,
+          "nodes": 40.0,
+          "refinements": 0.0,
+          "max_degree": 3.0
+        },
+        "max_pipeline_ms": 7.5498
+      },
+      "optimized": {
+        "accepted_runs": 5,
+        "outcomes": [
+          "Passed"
+        ],
+        "medians": {
+          "pipeline_ms": 5.0235,
+          "validate_ms": 5.018,
+          "classify_ms": 0.0,
+          "sampling_ms": 0.901,
+          "recovery_ms": 0.5509000000000001,
+          "prepare_ms": 2.3776,
+          "boundary_ms": 1.1622,
+          "nodes": 40.0,
+          "refinements": 0.0,
+          "max_degree": 3.0,
+          "fused_errors": 40.0,
+          "position_only": 0.0,
+          "fast_checks": 40.0,
+          "fast_accepted": 40.0,
+          "tangent_fallbacks": 0.0,
+          "source_degree_u": 5.0,
+          "source_degree_v": 5.0,
+          "source_controls": 200.0
+        },
+        "max_pipeline_ms": 5.6281
+      }
+    },
+    {
+      "synthetic": 1,
+      "id": 2,
+      "baseline": {
+        "accepted_runs": 5,
+        "outcomes": [
+          "Passed"
+        ],
+        "medians": {
+          "pipeline_ms": 9.0998,
+          "validate_ms": 9.095,
+          "classify_ms": 0.0,
+          "sampling_ms": 0.9691,
+          "recovery_ms": 0.6393000000000001,
+          "prepare_ms": 2.5874,
+          "boundary_ms": 4.6823,
+          "nodes": 40.0,
+          "refinements": 0.0,
+          "max_degree": 4.0
+        },
+        "max_pipeline_ms": 9.4966
+      },
+      "optimized": {
+        "accepted_runs": 5,
+        "outcomes": [
+          "Passed"
+        ],
+        "medians": {
+          "pipeline_ms": 5.5671,
+          "validate_ms": 5.5611,
+          "classify_ms": 0.0,
+          "sampling_ms": 0.9369999999999999,
+          "recovery_ms": 0.6384,
+          "prepare_ms": 2.6047,
+          "boundary_ms": 1.3789,
+          "nodes": 40.0,
+          "refinements": 0.0,
+          "max_degree": 4.0,
+          "fused_errors": 40.0,
+          "position_only": 0.0,
+          "fast_checks": 40.0,
+          "fast_accepted": 40.0,
+          "tangent_fallbacks": 0.0,
+          "source_degree_u": 5.0,
+          "source_degree_v": 5.0,
+          "source_controls": 200.0
+        },
+        "max_pipeline_ms": 6.8672
+      }
+    },
+    {
+      "synthetic": 1,
+      "id": 3,
+      "baseline": {
+        "accepted_runs": 5,
+        "outcomes": [
+          "Passed"
+        ],
+        "medians": {
+          "pipeline_ms": 7.4859,
+          "validate_ms": 7.4806,
+          "classify_ms": 0.0,
+          "sampling_ms": 0.9242,
+          "recovery_ms": 0.5660999999999999,
+          "prepare_ms": 2.3904,
+          "boundary_ms": 3.5028,
+          "nodes": 40.0,
+          "refinements": 0.0,
+          "max_degree": 3.0
+        },
+        "max_pipeline_ms": 7.5238
+      },
+      "optimized": {
+        "accepted_runs": 5,
+        "outcomes": [
+          "Passed"
+        ],
+        "medians": {
+          "pipeline_ms": 5.0974,
+          "validate_ms": 5.0928,
+          "classify_ms": 0.0,
+          "sampling_ms": 0.9338,
+          "recovery_ms": 0.5787,
+          "prepare_ms": 2.3958,
+          "boundary_ms": 1.1751,
+          "nodes": 40.0,
+          "refinements": 0.0,
+          "max_degree": 3.0,
+          "fused_errors": 40.0,
+          "position_only": 0.0,
+          "fast_checks": 40.0,
+          "fast_accepted": 40.0,
+          "tangent_fallbacks": 0.0,
+          "source_degree_u": 5.0,
+          "source_degree_v": 5.0,
+          "source_controls": 200.0
+        },
+        "max_pipeline_ms": 5.4304
+      }
+    },
+    {
+      "synthetic": 1,
+      "id": 4,
+      "baseline": {
+        "accepted_runs": 5,
+        "outcomes": [
+          "Passed"
+        ],
+        "medians": {
+          "pipeline_ms": 8.7206,
+          "validate_ms": 8.7159,
+          "classify_ms": 0.0,
+          "sampling_ms": 0.9632000000000001,
+          "recovery_ms": 0.6466000000000001,
+          "prepare_ms": 2.5662,
+          "boundary_ms": 4.4787,
+          "nodes": 40.0,
+          "refinements": 0.0,
+          "max_degree": 4.0
+        },
+        "max_pipeline_ms": 8.9097
+      },
+      "optimized": {
+        "accepted_runs": 5,
+        "outcomes": [
+          "Passed"
+        ],
+        "medians": {
+          "pipeline_ms": 5.5877,
+          "validate_ms": 5.5825,
+          "classify_ms": 0.0,
+          "sampling_ms": 0.945,
+          "recovery_ms": 0.6355,
+          "prepare_ms": 2.5489,
+          "boundary_ms": 1.35,
+          "nodes": 40.0,
+          "refinements": 0.0,
+          "max_degree": 4.0,
+          "fused_errors": 40.0,
+          "position_only": 0.0,
+          "fast_checks": 40.0,
+          "fast_accepted": 40.0,
+          "tangent_fallbacks": 0.0,
+          "source_degree_u": 5.0,
+          "source_degree_v": 5.0,
+          "source_controls": 200.0
+        },
+        "max_pipeline_ms": 5.6265
+      }
+    }
+  ]
+}

@@ -17,6 +17,8 @@ python tests/RunGeneralRationalBoundarySelected.py --exe build-general-hybrid/Re
 
 每例进程看门狗包含数据认证和输出审计；异常、超时和未完成案例记录为失败。运行器退出 0 表示完成测量且接受输出通过审计，不等同于全部正例通过或性能达标。首次实现时的 220 行新旧对照已归档于[历史报告](../docs/testing/GENERAL_RATIONAL_BOUNDARY_2026-10-15.md)，不再复跑旧验证器。
 
+`CompareGeneralRationalBoundarySelected.py` 用于当前 NURBS 验证器修改前后的定向比较：7 个历史案例（含慢例、退化边、未认证/负例）及 5 个双五次压力案例，各版本默认 5 次，交替先后顺序。仅接受 rational-only 程序，不运行退休验证器。新增 CSV 字段记录联合构造、位置未通过时跳过切向、快速切向及完整后备次数，并记录源次数和控制点数。命令、计时口径及结果见[连续边界误差曲线优化报告](../docs/testing/GENERAL_BOUNDARY_ERROR_2026-10-15.md)。
+
 | 文件/目录 | 职责 |
 | --- | --- |
 | `RecognitionTests.cpp`、`ApproximateConversionTests.cpp` | 有理识别与非有理转换回归。 |

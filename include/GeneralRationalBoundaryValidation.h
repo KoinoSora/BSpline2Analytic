@@ -32,6 +32,8 @@ struct GeneralRationalBoundaryReport
     std::optional<GeneralBoundaryPatch> patch;
     unsigned samples = 0, chartAttempts = 0, boundaryNodes = 0, boundarySegments = 0;
     unsigned mappingRefinements = 0, targetSegments = 0, maxTargetDegree = 0;
+    unsigned fusedErrorBuilds = 0, positionOnlyNodes = 0;
+    unsigned tangentFastChecks = 0, tangentFastAccepted = 0, tangentFallbacks = 0;
     double interiorSampleMaxDistance = 0, interiorSampleMaxFiniteDistance = 0;
     double boundaryDistanceUpperBound = INFINITY, boundaryTangentUpperBoundDeg = INFINITY;
     // Certified output-curve distance to the ideal rational trace on the mother.
