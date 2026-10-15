@@ -1,11 +1,13 @@
 #include "GeneralRationalBoundaryInternal.h"
 #include "GeneralDataset.h"
+#include "GeneralExtremeDataset.h"
 #include <Foundation/init.h>
 #include <chrono>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
 #include <tuple>
+#include <sstream>
 
 using namespace bspline2analytic;
 using namespace bspline2analytic::detail;
@@ -73,7 +75,7 @@ double MotherDistance(const AnalyticParameters &a,V point)
     default:return std::abs(std::hypot(rho-a.majorRadius,p.z)-a.radius);
     }
 }
-double Audit(const sggk::BSplineSurface &s,const GeneralRationalBoundaryReport &r)
+double Audit(const sggk::BSplineSurface &s,const GeneralRationalBoundaryReport &r,double motherTolerance=1e-8)
 {
     Require(r.Passed(),"Cannot audit failed output");double maximum=0;const auto &patch=*r.patch;
     SurfaceSampleContext samples(s);
@@ -89,7 +91,7 @@ double Audit(const sggk::BSplineSurface &s,const GeneralRationalBoundaryReport &
         for(unsigned i=0;i<=32;++i)
         {
             double f=double(i)/32;
-            Require(MotherDistance(patch.mother,Get(curve.CalcPoint(f)))<1e-8,"Exported boundary off mother");
+            Require(MotherDistance(patch.mother,Get(curve.CalcPoint(f)))<motherTolerance,"Exported boundary off mother");
             double u=e<2?(e==0?s.MinParamU():s.MaxParamU()):s.MinParamU()+(s.MaxParamU()-s.MinParamU())*f;
             double v=e<2?s.MinParamV()+(s.MaxParamV()-s.MinParamV())*f:(e==2?s.MinParamV():s.MaxParamV());
             auto point=samples.At(u,v);double parameter=f;
@@ -252,6 +254,126 @@ void Unit(const std::filesystem::path &data)
     }
     std::cout<<"Rational boundary unit assertions="<<assertions<<'\n';
 }
+void FullCase(const std::filesystem::path &data,const std::filesystem::path &csv,
+              const std::string &suite,unsigned id,unsigned repeats)
+{
+    bool synthetic=suite=="synthetic",extra=suite=="extra",extreme=suite=="extreme";
+    Require(synthetic||extra||extreme||suite=="main","Unknown rational suite");
+    Require(repeats>0&&id<(synthetic?5u:extra?60u:extreme?320u:600u),"Invalid full-suite range");
+    GeneralFixture c;std::string group;FixtureCertificate cert;double certificateMs=0;
+    const std::array<double,4> domain{.2,.9,.6,1.2};
+    if(synthetic)
+    {c.truth=Mother(id);c.type=id;c.input=Fixture(c.truth,domain,true,true);c.id=id;group="nurbs_chart_pressure";cert.upper=std::numeric_limits<double>::quiet_NaN();}
+    else
+    {
+        c=ReadGeneralFixture(data/(extreme?GeneralExtremeFilename(id):GeneralFixtureFilename(id,extra)));
+        Require(c.id==id,"Fixture identity mismatch");group=FixtureGroupName(c.group);
+        std::cout<<"BEGIN_INPUT_CERT"<<std::endl;auto t=std::chrono::steady_clock::now();
+        if(extreme)
+        {
+            auto spec=GeneralExtremeSpecs()[id];group=spec.group;
+            cert=CertifyGeneralExtremePair(c,spec.sag>0?std::min(1e-6,spec.sag*.1):1e-6);
+        }
+        else cert=c.group==GeneralFixtureGroup::Infeasible?CertifyNoQuartic(*c.input,c.exclusionRadius):CertifyAnalyticPair(c,c.pairTolerance);
+        certificateMs=Ms(t);Require(cert.passed,"Input certificate failed: "+cert.message);
+    }
+    GeneralRationalBoundaryOptions options;
+    bool supplied=synthetic||(extra&&(id<20||id>=40));
+    if(synthetic)options.chartDomain=domain;
+    if(extra&&c.group==GeneralFixtureGroup::InvalidOptions)
+    {if(id%2)options.general.fitting.validation.distanceTolerance=-1;else options.general.fitting.sampling.maxSamples=0;}
+    if(extra&&c.group==GeneralFixtureGroup::ValidationBudget)options.maxBoundaryNodes=1;
+    if(extra&&c.group==GeneralFixtureGroup::SpherePriority)options.general.similarScoreAbsoluteRatio=1e6;
+    const std::string header="suite,id,run,mode,group,source_type,rational,degree_u,degree_v,controls,source_certified,source_bound,certificate_ms,entry,status,accepted,audit_status,audit_sample_max,classify_ms,validate_ms,sampling_ms,recovery_ms,prepare_ms,boundary_ms,total_ms,attempts,chart_attempts,nodes,refinements,fast_checks,fast_accepted,tangent_fallbacks,position_only,fused_errors,boundary_bound,tangent_deg,mother_bound,output_type,raw_candidates,full_scores,message,audit_message\n";
+    std::vector<std::string> rows;bool anyFailure=false;
+    auto save=[&]{std::ofstream out(csv);Require(bool(out),"Cannot write full-suite CSV");out<<header;for(const auto &row:rows)out<<row;};
+    auto attemptPath=csv.parent_path()/(csv.stem().string()+"-attempts.csv");
+    std::ofstream attemptsFile(attemptPath);Require(bool(attemptsFile),"Cannot write attempt diagnostics");
+    attemptsFile<<"suite,id,run,attempt,type,status,accepted,charts,nodes,refinements,sampling_ms,recovery_ms,prepare_ms,boundary_ms,total_ms,message\n"<<std::setprecision(17);
+    struct Attempt{sggk::SurfaceType type;GeneralRationalBoundaryReport report;};
+    for(unsigned run=0;run<repeats;++run)
+    {
+        std::cout<<"BEGIN_ALGORITHM "<<run<<std::endl;
+        auto start=std::chrono::steady_clock::now();GeneralRationalBoundaryReport r;
+        GeneralClassificationDiagnostics classification;std::vector<Attempt> attempts;
+        double classify=0,validate=0,sampling=0,recovery=0,prepare=0,boundary=0;
+        unsigned charts=0,nodes=0,refinements=0,fast=0,fastAccepted=0,fallback=0,position=0,fused=0;
+        try
+        {
+            SurfaceSampleContext samples(*c.input,options.general.fitting.sampling.maxSamples);
+            auto attempt=[&](const AnalyticParameters &a)
+            {
+                r=rb::Validate(samples,a,options);validate+=r.totalMs;sampling+=r.samplingMs;recovery+=r.recoveryMs;
+                prepare+=r.preparationMs;boundary+=r.boundaryMs;charts+=r.chartAttempts;nodes+=r.boundaryNodes;
+                refinements+=r.mappingRefinements;fast+=r.tangentFastChecks;fastAccepted+=r.tangentFastAccepted;
+                fallback+=r.tangentFallbacks;position+=r.positionOnlyNodes;fused+=r.fusedErrorBuilds;
+                attempts.push_back({a.type,r});
+            };
+            if(supplied)attempt(c.truth);
+            else
+            {
+                auto t=std::chrono::steady_clock::now();auto pool=InitializeGeneralCandidates(samples,options.general,classification);classify+=Ms(t);
+                for(;;)
+                {
+                    t=std::chrono::steady_clock::now();auto batch=NextGeneralCandidateBatch(pool,samples,options.general,classification);classify+=Ms(t);
+                    if(batch.empty())break;
+                    for(const auto &candidate:batch){attempt(candidate.parameters);if(r.Passed())break;}
+                    if(r.Passed())break;
+                }
+                if(attempts.empty())r.message="No classified candidate available";
+            }
+        }
+        catch(const std::exception &e){r.patch.reset();r.status=HybridValidationStatus::NotCertified;r.message=std::string("Algorithm exception: ")+e.what();}
+        double total=Ms(start);bool passed=r.Passed();anyFailure|=!passed;
+        std::cout<<"END_ALGORITHM "<<run<<std::endl;
+        std::string auditStatus=passed?"pending":"not_applicable",auditMessage;double audit=std::numeric_limits<double>::quiet_NaN();
+        auto line=[&]
+        {
+            std::ostringstream out;out<<std::setprecision(17)<<suite<<','<<id<<','<<run<<",rational,"<<group<<','<<(c.type<5?TypeName(c.truth.type):"Freeform")<<','<<c.input->IsRational()<<','
+                <<c.input->DegreeU()<<','<<c.input->DegreeV()<<','<<c.input->ControlPoints().size()*c.input->ControlPoints().front().size()<<','<<(synthetic?-1:int(cert.passed))<<','<<cert.upper<<','<<certificateMs<<','
+                <<(synthetic?"fixed_chart":supplied?"supplied_mother":"classified")<<','<<HybridValidationStatusName(r.status)<<','<<passed<<','<<auditStatus<<','<<audit<<','
+                <<classify<<','<<validate<<','<<sampling<<','<<recovery<<','<<prepare<<','<<boundary<<','<<total<<','<<attempts.size()<<','<<charts<<','<<nodes<<','<<refinements<<','
+                <<fast<<','<<fastAccepted<<','<<fallback<<','<<position<<','<<fused<<','<<r.boundaryDistanceUpperBound<<','<<r.boundaryTangentUpperBoundDeg<<','<<r.outputMotherDistanceUpperBound<<','
+                <<(passed?TypeName(r.patch->mother.type):"Unknown")<<','<<classification.rawCandidateCount<<','<<classification.fullScoreCount<<','<<Quote(r.message)<<','<<Quote(auditMessage)<<'\n';
+            return out.str();
+        };
+        // Save measured algorithm time before the independent SDK audit, so
+        // an audit watchdog cannot erase an already completed algorithm result.
+        rows.push_back(line());save();
+        for(size_t i=0;i<attempts.size();++i)
+        {
+            const auto &a=attempts[i];const auto &v=a.report;
+            attemptsFile<<suite<<','<<id<<','<<run<<','<<i<<','<<TypeName(a.type)<<','<<HybridValidationStatusName(v.status)<<','<<v.Passed()<<','<<v.chartAttempts<<','<<v.boundaryNodes<<','<<v.mappingRefinements<<','
+                <<v.samplingMs<<','<<v.recoveryMs<<','<<v.preparationMs<<','<<v.boundaryMs<<','<<v.totalMs<<','<<Quote(v.message)<<'\n';
+        }
+        attemptsFile.flush();
+        if(passed)
+        {
+            std::cout<<"BEGIN_AUDIT "<<run<<std::endl;
+            try{audit=Audit(*c.input,r,1e-6);auditStatus="passed";}
+            catch(const std::exception &e){auditStatus="unresolved";auditMessage=e.what();}
+            rows.back()=line();save();std::cout<<"END_AUDIT "<<run<<std::endl;
+        }
+    }
+    // Diagnostic oracle only after all measured runs; never feeds the candidate pool.
+    if(anyFailure&&((suite=="main"&&id<500)||extreme))
+    {
+        std::cout<<"BEGIN_KNOWN_MOTHER_DIAGNOSTIC"<<std::endl;
+        auto known=ValidateGeneralRationalBoundaries(*c.input,c.truth);
+        std::ofstream out(csv.parent_path()/(csv.stem().string()+"-known.csv"));
+        out<<"suite,id,status,accepted,total_ms,charts,nodes,message\n"<<std::setprecision(17)<<suite<<','<<id<<','<<HybridValidationStatusName(known.status)<<','<<known.Passed()<<','
+            <<known.totalMs<<','<<known.chartAttempts<<','<<known.boundaryNodes<<','<<Quote(known.message)<<'\n';
+        std::cout<<"END_KNOWN_MOTHER_DIAGNOSTIC"<<std::endl;
+    }
+    if(extra&&id==49)
+    {
+        // This historical probe demonstrates the sampled-interior contract gap.
+        SurfaceSampleContext samples(*c.input);double sampled=0,peak=0;
+        for(const auto &p:samples.Greville(false))sampled=std::max(sampled,MotherDistance(c.truth,p.point));
+        for(unsigned i=0;i<=10000;++i)peak=std::max(peak,MotherDistance(c.truth,Get(c.input->CalcPoint(double(i)/10000,.5))));
+        std::ofstream out(csv.parent_path()/(csv.stem().string()+"-interior.csv"));out<<"greville_max,dense_witness_max\n"<<std::setprecision(17)<<sampled<<','<<peak<<'\n';
+    }
+}
 void Case(const std::filesystem::path &data,const std::filesystem::path &csv,unsigned id,unsigned repeats,bool synthetic)
 {
     auto fixture=synthetic?GeneralFixture{}:ReadGeneralFixture(data/GeneralFixtureFilename(id));
@@ -306,6 +428,11 @@ int main(int argc,char **argv)
     {
         Require(argc>=3,"Usage: --rational-unit data | --rational-case data csv id repeats synthetic --rational-only");
         if(std::string(argv[1])=="--rational-unit"){Require(argc==3,"Invalid unit arguments");Unit(argv[2]);}
+        else if(std::string(argv[1])=="--rational-full-case")
+        {
+            Require(argc==8&&std::string(argv[7])=="--rational-only","Invalid full-suite arguments");
+            FullCase(argv[2],argv[3],argv[4],unsigned(std::stoul(argv[5])),unsigned(std::stoul(argv[6])));
+        }
         else
         {
             // The distinct command and arity make pre-retirement binaries fail

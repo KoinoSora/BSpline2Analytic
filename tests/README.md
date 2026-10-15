@@ -19,6 +19,8 @@ python tests/RunGeneralRationalBoundarySelected.py --exe build-general-hybrid/Re
 
 `CompareGeneralRationalBoundarySelected.py` 用于当前 NURBS 验证器修改前后的定向比较：7 个历史案例（含慢例、退化边、未认证/负例）及 5 个双五次压力案例，各版本默认 5 次，交替先后顺序。仅接受 rational-only 程序，不运行退休验证器。新增 CSV 字段记录联合构造、位置未通过时跳过切向、快速切向及完整后备次数，并记录源次数和控制点数。命令、计时口径及结果见[连续边界误差曲线优化报告](../docs/testing/GENERAL_BOUNDARY_ERROR_2026-10-15.md)。
 
+`RunGeneralRationalBoundaryFull.py` 覆盖 600 主案例、60 专项、320 极端及 5 个构造压力样本，默认每例 3 次。`SummarizeGeneralRationalBoundaryFull.py` 检查计时关系、逐例汇总，并导出失败、超 10 ms 和已知母面诊断清单。当前使用“分类＋新验证器”入口，未包含正式转换的参数优化；来源证书、输出审计、诊断均在算法计时外。`--cases main:100 extreme:0` 可做运行器预检，`--resume` 必须匹配批次哈希。完整结果、合同差异和复现说明见[985 例全面测试报告](../docs/testing/GENERAL_RATIONAL_FULL_2026-10-15.md)。
+
 | 文件/目录 | 职责 |
 | --- | --- |
 | `RecognitionTests.cpp`、`ApproximateConversionTests.cpp` | 有理识别与非有理转换回归。 |

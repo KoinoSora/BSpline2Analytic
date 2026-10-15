@@ -56,7 +56,9 @@ if(BSPLINE2ANALYTIC_BUILD_TESTS)
         WORKING_DIRECTORY "${SGGK_SDK_DIR}"
         ENVIRONMENT_MODIFICATION "PATH=path_list_prepend:${SGGK_SDK_DIR}/x64-win/bin${_sgk_config}")
     add_executable(BSpline2AnalyticGeneralRationalBoundaryTests tests/GeneralRationalBoundaryTests.cpp
-        tests/GeneralDataset.cpp tests/GeneralDatasetCertificate.cpp)
+        tests/GeneralDataset.cpp tests/GeneralDatasetCertificate.cpp
+        tests/GeneralExtremeDataset.cpp tests/GeneralExtremeCertificate.cpp)
+    set_source_files_properties(tests/GeneralExtremeCertificate.cpp PROPERTIES COMPILE_OPTIONS "/fp:strict")
     target_link_libraries(BSpline2AnalyticGeneralRationalBoundaryTests PRIVATE BSpline2Analytic)
     target_include_directories(BSpline2AnalyticGeneralRationalBoundaryTests PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src")
     target_compile_options(BSpline2AnalyticGeneralRationalBoundaryTests PRIVATE /W4 /utf-8 /fp:strict)

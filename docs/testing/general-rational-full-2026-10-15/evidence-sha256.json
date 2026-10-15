@@ -1,0 +1,21 @@
+{
+  "artifacts_sha256": {
+    "attempts.csv.gz": "0aa101c651a401ebf419c02e1200b09c5981b36e261c9e21c39f7aeeee96a0b2",
+    "case-summary.csv": "6d07f3ed24f888163a7da0be806b2fbeceee796c1b2c88a2812a7d6440dab22b",
+    "executions.json": "80c4a699730805415228db9061a5fa7c3cf0fdbe10017cea8d3451dadb8f5957",
+    "extra-049-interior.csv": "31d1954f0ace26e6814544a418e2a015e74b14464dab3b91261b07f3c17aba80",
+    "extreme-040-attempts.csv": "e9e92ccad7d9f29adb1b6c1cf931d2761abbaef04a807c8d346b528e2f833e44",
+    "extreme-156-attempts.csv": "82760eea727a93e960e3a93165a2da9804941f0081645769a6f3c838ebccd528",
+    "failures.csv": "a7ae2e4b8f9b121856d869e4317cc2ac699b67ef13706ab363d4a9d9bdb2ff7f",
+    "frozen-source.json": "8e537383c36453792b13d46c6e7324ba1741016279db978428285fe38bcd17e0",
+    "known-mother.csv": "51bb2cb6ef23e877bbf1ddad09fd880f450a90353c50d601b31a38532e2e788d",
+    "not-accepted-cases.csv": "ee34a3d4d453c74c9766c52d1b1914f25b90fb5f33aac04478112788c6624f8d",
+    "over-10ms.csv": "358a2cdd832c5c353ec3684bb8a865b05a75b0efaedf3f6d84b3aaa9535e9084",
+    "results.csv": "adabd9e8185323d446ffa16f21759422f4c7bc75e4b0d4e122c564fa62f74e2f",
+    "run.json": "72c22c278191dd01a68977ef0dbd76f0a74da9051d8c22533acc9926bcfe741b",
+    "summary.json": "f42c24c92b21718209e72b60830b8985860ed3e8598e610e8b90837616a00157"
+  },
+  "runner_sha256": "0ed71054a4994e2917908c2a10a41bdc41ce775a7d2315b718404f781d1a42de",
+  "summarizer_sha256": "40fe0d3abe689b4da59c081407bee5ee0e0b374f4c56b5cfbc8d367c1718e940",
+  "attempts_uncompressed_sha256": "0387501e0855800710e40200b92f27ef920cdf63f2440d5d95e086347111833a"
+}
