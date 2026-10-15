@@ -1,0 +1,205 @@
+{
+  "cases": 12,
+  "runs": 5,
+  "rows": 180,
+  "invariant_differences": [],
+  "bound_changes": [],
+  "inputs_sha256": {
+    "general-000.b2a": "0a42b7790ebbe24247e4672092b7fec883990260ecb1973c7763bbbffa4dd792",
+    "general-100.b2a": "b2066229e4672c257bbd1ac054356f152ae2de7d09c89bea00aab1bbb91139c4",
+    "general-101.b2a": "49331a25ddc124af418269e6536587715f7eecabb39436c81878a2121016b1df",
+    "general-218.b2a": "28e8534936809ef71defcd2f605a06806fbfc45542e2a72272312891c393ab55",
+    "general-254.b2a": "bc7aa1afb8adcd49e6a014d1e4852010eb6b10f3f86eb9276b35005e58f657de",
+    "general-318.b2a": "ded89bcccb4ac430750217d51a82ce489b659648ee2504f17ed721dc6ee28514",
+    "general-400.b2a": "265539c55e6e729f255123087386bd716535a6a341d235fa96321d31c787d96d",
+    "general-401.b2a": "e49f6b0d43a01c0480ba3b31b4ae7c70ca39a52ef4830eba27e44e7ce7e40700",
+    "general-500.b2a": "718e3b16b7bd7c22c0129757af68cbf5213735b8c1001533971a5d205cb9fcf0",
+    "general-extra-000.b2a": "1f31ca1a3bd30361202cda1f5839953e68b44097e3387946b29983dd8142d03b",
+    "general-extra-050.b2a": "44fc489ec84f86d3fb9feae8e48cfacefb8600a32e15c395670b88c88153010c",
+    "general-extra-055.b2a": "7ae4d01a332616cd47218bdfbe214cc93a6f1f585ebbcbadcbb203cc4694ef79"
+  },
+  "exe_sha256": {
+    "baseline": "3d674d5eb01d5fc9904869504a334155dcd9d277bdf6d3e93ae88a8725316c24",
+    "cached": "b030c7cef105457a7f42d2826e2173953e6ba378146598b504fe9bb51b976bba",
+    "optimized": "e2e57fc0949b1bdabeadcae250449f46be793bf742482640907d1416aa2ff271"
+  },
+  "runner_sha256": "4ec79a77224a8319ae116edfbe0dfca0a55be96a9902bb41e608e8410bb83c21",
+  "cpu_affinity_fixed": false,
+  "exclusive_machine": false,
+  "variants": {
+    "baseline": {
+      "positive_case_medians": {
+        "0": {
+          "prepare_ms": 0.3156,
+          "boundary_ms": 1.3164,
+          "validate_ms": 1.7873,
+          "pipeline_ms": 2.1001
+        },
+        "100": {
+          "prepare_ms": 1.0867,
+          "boundary_ms": 3.0486,
+          "validate_ms": 4.2785,
+          "pipeline_ms": 4.7624
+        },
+        "101": {
+          "prepare_ms": 1.0576,
+          "boundary_ms": 2.0898,
+          "validate_ms": 3.2654,
+          "pipeline_ms": 3.6789
+        },
+        "218": {
+          "prepare_ms": 1.0748,
+          "boundary_ms": 3.8111,
+          "validate_ms": 5.2303,
+          "pipeline_ms": 5.7151
+        },
+        "254": {
+          "prepare_ms": 2.1384,
+          "boundary_ms": 9.5739,
+          "validate_ms": 38.9996,
+          "pipeline_ms": 39.9365
+        },
+        "318": {
+          "prepare_ms": 1.0954,
+          "boundary_ms": 3.179,
+          "validate_ms": 4.4662,
+          "pipeline_ms": 4.9959
+        },
+        "400": {
+          "prepare_ms": 1.0773,
+          "boundary_ms": 4.6417,
+          "validate_ms": 5.8773,
+          "pipeline_ms": 6.4361
+        },
+        "401": {
+          "prepare_ms": 1.0422,
+          "boundary_ms": 3.6497,
+          "validate_ms": 4.8391,
+          "pipeline_ms": 5.2948
+        }
+      },
+      "mean_of_case_medians": {
+        "prepare_ms": 1.111,
+        "boundary_ms": 3.9137750000000002,
+        "validate_ms": 8.5929625,
+        "pipeline_ms": 9.114975000000001
+      }
+    },
+    "cached": {
+      "positive_case_medians": {
+        "0": {
+          "prepare_ms": 0.3094,
+          "boundary_ms": 0.3391,
+          "validate_ms": 0.8298,
+          "pipeline_ms": 1.1297
+        },
+        "100": {
+          "prepare_ms": 1.1045,
+          "boundary_ms": 2.8282,
+          "validate_ms": 4.1382,
+          "pipeline_ms": 4.7423
+        },
+        "101": {
+          "prepare_ms": 1.0553,
+          "boundary_ms": 1.6466,
+          "validate_ms": 2.8456,
+          "pipeline_ms": 3.2802
+        },
+        "218": {
+          "prepare_ms": 1.115,
+          "boundary_ms": 3.6048,
+          "validate_ms": 5.0661,
+          "pipeline_ms": 5.5361
+        },
+        "254": {
+          "prepare_ms": 2.1408,
+          "boundary_ms": 8.2542,
+          "validate_ms": 36.9131,
+          "pipeline_ms": 37.8874
+        },
+        "318": {
+          "prepare_ms": 1.0855,
+          "boundary_ms": 2.7079,
+          "validate_ms": 3.9846,
+          "pipeline_ms": 4.5454
+        },
+        "400": {
+          "prepare_ms": 1.076,
+          "boundary_ms": 4.1525,
+          "validate_ms": 5.4604,
+          "pipeline_ms": 6.126
+        },
+        "401": {
+          "prepare_ms": 1.0542,
+          "boundary_ms": 3.2246,
+          "validate_ms": 4.4493,
+          "pipeline_ms": 4.9204
+        }
+      },
+      "mean_of_case_medians": {
+        "prepare_ms": 1.1175875,
+        "boundary_ms": 3.3447375,
+        "validate_ms": 7.9608875,
+        "pipeline_ms": 8.5209375
+      }
+    },
+    "optimized": {
+      "positive_case_medians": {
+        "0": {
+          "prepare_ms": 0.3245,
+          "boundary_ms": 0.3792,
+          "validate_ms": 0.8821,
+          "pipeline_ms": 1.3299
+        },
+        "100": {
+          "prepare_ms": 1.0822,
+          "boundary_ms": 2.4478,
+          "validate_ms": 3.6707,
+          "pipeline_ms": 4.1316
+        },
+        "101": {
+          "prepare_ms": 1.0575,
+          "boundary_ms": 1.4805,
+          "validate_ms": 2.6798,
+          "pipeline_ms": 3.1118
+        },
+        "218": {
+          "prepare_ms": 1.0711,
+          "boundary_ms": 2.9108,
+          "validate_ms": 4.3625,
+          "pipeline_ms": 4.8791
+        },
+        "254": {
+          "prepare_ms": 2.132,
+          "boundary_ms": 7.0623000000000005,
+          "validate_ms": 37.2531,
+          "pipeline_ms": 38.2521
+        },
+        "318": {
+          "prepare_ms": 1.0766,
+          "boundary_ms": 2.5117,
+          "validate_ms": 3.7641,
+          "pipeline_ms": 4.3411
+        },
+        "400": {
+          "prepare_ms": 1.062,
+          "boundary_ms": 3.4143999999999997,
+          "validate_ms": 4.6479,
+          "pipeline_ms": 5.1884
+        },
+        "401": {
+          "prepare_ms": 1.039,
+          "boundary_ms": 2.5204999999999997,
+          "validate_ms": 3.7083,
+          "pipeline_ms": 4.1846
+        }
+      },
+      "mean_of_case_medians": {
+        "prepare_ms": 1.1056125,
+        "boundary_ms": 2.8409,
+        "validate_ms": 7.621062500000001,
+        "pipeline_ms": 8.177325
+      }
+    }
+  }
+}

@@ -43,64 +43,100 @@ std::vector<I> Coefficients(const std::vector<double> &k,unsigned p,unsigned spa
 bool Zero(I x){return x.lo==0&&x.hi==0;}
 BPoly Constant(I x){return BPoly(0,0,x);}
 BPoly Linear(I a,I b){BPoly p(1,0);p.c={a,b};return p;}
+struct HybridThresholds
+{
+    double distanceTolerance,tangentRatioLimit;
+    HybridThresholds(double distance,double degrees):distanceTolerance(distance)
+    {
+        I angle=I(degrees)*IPi()/I(180);
+        tangentRatioLimit=(Sin(angle)/Cos(angle)).lo;
+    }
+};
+// A recovered chart owns its frame and PCurves. Never share this context across
+// chart attempts: spherical recovery can change the frame and edge directions.
+struct TargetBoundaryContext
+{
+    struct Edge {I u,v,du,dv;};
+    sggk::SurfaceType type;
+    paired::LocalFrame frame;
+    I radius,majorRadius,halfRadius,coneSlope;
+    std::array<Edge,4> edges;
+    explicit TargetBoundaryContext(const GeneralTrim &trim)
+        :type(trim.parameters.type),frame(paired::MakeLocalFrame(trim.parameters)),
+         radius(trim.parameters.radius),majorRadius(trim.parameters.majorRadius),
+         halfRadius(radius/I(2))
+    {
+        if(type==sggk::SurfaceType::Cone)
+            coneSlope=Sin(I(trim.parameters.halfAngle))/Cos(I(trim.parameters.halfAngle));
+        for(unsigned e=0;e<4;++e)
+        {
+            const auto &line=trim.edges[e];
+            edges[e]={I(line.start.X()),I(line.start.Y()),
+                I(line.end.X())-I(line.start.X()),I(line.end.Y())-I(line.start.Y())};
+        }
+    }
+};
 // Ten-term Taylor enclosure, including a uniform tenth-order remainder.
 // Tangents below use independently enclosed analytic derivatives, never the
 // derivative of this interval-valued positional approximation.
-BPoly Trig(const BPoly &angle,bool cosine,paired::Products &products)
+struct TrigPair {BPoly sin,cos;};
+TrigPair EncloseSinCos(const BPoly &angle,paired::Products &products)
 {
     I range=angle.range();
-    if(!range.finite())return Constant(I::Whole());
+    if(!range.finite())return {Constant(I::Whole()),Constant(I::Whole())};
     double center=range.lo+(range.hi-range.lo)*.5;
-    BPoly d=angle-Constant(I(center)),power=Constant(I(1)),out;
+    BPoly d=angle-Constant(I(center)),power=Constant(I(1));TrigPair out;
     I sn=Sin(I(center)),cs=Cos(I(center)),factorial(1);
+    const std::array<I,4> derivatives{sn,cs,-sn,-cs};
     for(unsigned k=0;k<10;++k)
     {
-        I c;
-        switch((k+unsigned(cosine))%4)
-        {case 0:c=sn;break;case 1:c=cs;break;case 2:c=-sn;break;default:c=-cs;}
-        out=out+power*(c/factorial);
+        // Share the angle powers, but retain separate enclosures for sin/cos.
+        out.sin=out.sin+power*(derivatives[k%4]/factorial);
+        out.cos=out.cos+power*(derivatives[(k+1)%4]/factorial);
         if(k<9)power=products.Mul(power,d);
         factorial=factorial*I(k+1);
     }
-    I remainder(1);
-    for(unsigned k=1;k<=10;++k)remainder=remainder*I(d.range().absMax())/I(k);
-    return out+Constant(I(-remainder.hi,remainder.hi));
+    I remainder(1),radius(d.range().absMax());
+    for(unsigned k=1;k<=10;++k)remainder=remainder*radius/I(k);
+    auto tail=Constant(I(-remainder.hi,remainder.hi));
+    return {out.sin+tail,out.cos+tail};
 }
 struct Target {BV point,tangent;};
-Target TargetBoundary(const GeneralTrim &trim,unsigned edge,double lo,double hi,
+Target TargetBoundary(const TargetBoundaryContext &a,unsigned edge,double lo,double hi,
                        paired::Products &products)
 {
-    const auto &line=trim.edges[edge];const auto &a=trim.parameters;
-    I du=I(line.end.X())-I(line.start.X()),dv=I(line.end.Y())-I(line.start.Y());
-    BPoly u=Linear(I(line.start.X())+du*I(lo),I(line.start.X())+du*I(hi));
-    BPoly v=Linear(I(line.start.Y())+dv*I(lo),I(line.start.Y())+dv*I(hi));
-    auto sn=[&](const BPoly &p){return Trig(p,false,products);};
-    auto cs=[&](const BPoly &p){return Trig(p,true,products);};
+    const auto &line=a.edges[edge];I du=line.du,dv=line.dv;
+    BPoly u=Linear(line.u+du*I(lo),line.u+du*I(hi));
+    BPoly v=Linear(line.v+dv*I(lo),line.v+dv*I(hi));
+    auto trig=[&](const BPoly &p){return EncloseSinCos(p,products);};
     BPoly zero=Constant(I(0));BV p,t;
     using T=sggk::SurfaceType;
     if(a.type==T::Plane){p={u,v,zero};t={Constant(du),Constant(dv),zero};}
     else if(a.type==T::Cylinder)
-    {auto c=cs(u),s=sn(u);p={c*I(a.radius),s*I(a.radius),v};t={s*(-du*I(a.radius)),c*(du*I(a.radius)),Constant(dv)};}
+    {auto q=trig(u);p={q.cos*a.radius,q.sin*a.radius,v};t={q.sin*(-du*a.radius),q.cos*(du*a.radius),Constant(dv)};}
     else if(a.type==T::Cone)
     {
-        auto c=cs(u),s=sn(u);I h=Sin(I(a.halfAngle))/Cos(I(a.halfAngle));
-        p={products.Mul(v,c)*h,products.Mul(v,s)*h,v};
-        t={(c*dv-products.Mul(v,s)*du)*h,(s*dv+products.Mul(v,c)*du)*h,Constant(dv)};
+        auto q=trig(u);I h=a.coneSlope;
+        auto vc=products.Mul(v,q.cos),vs=products.Mul(v,q.sin);
+        p={vc*h,vs*h,v};
+        t={(q.cos*dv-vs*du)*h,(q.sin*dv+vc*du)*h,Constant(dv)};
     }
     else if(a.type==T::Sphere)
     {
-        auto sp=sn(v+u),sm=sn(v-u),cp=cs(v+u),cm=cs(v-u);I r=I(a.radius)/I(2);
-        p={(sp+sm)*r,(cm-cp)*r,cs(v)*I(-a.radius)};
-        t={(cp*(dv+du)+cm*(dv-du))*r,(sp*(dv+du)-sm*(dv-du))*r,sn(v)*(I(a.radius)*dv)};
+        auto plus=trig(v+u),minus=trig(v-u),latitude=trig(v);I r=a.halfRadius;
+        p={(plus.sin+minus.sin)*r,(minus.cos-plus.cos)*r,latitude.cos*(-a.radius)};
+        t={(plus.cos*(dv+du)+minus.cos*(dv-du))*r,
+           (plus.sin*(dv+du)-minus.sin*(dv-du))*r,latitude.sin*(a.radius*dv)};
     }
     else
     {
-        auto sp=sn(u+v),sm=sn(u-v),cp=cs(u+v),cm=cs(u-v),su=sn(u),cu=cs(u);I r=I(a.radius)/I(2);
-        p={cu*I(a.majorRadius)+(cp+cm)*r,su*I(a.majorRadius)+(sp+sm)*r,sn(v)*I(a.radius)};
-        t={su*(-I(a.majorRadius)*du)-(sp*(du+dv)+sm*(du-dv))*r,
-           cu*(I(a.majorRadius)*du)+(cp*(du+dv)+cm*(du-dv))*r,cs(v)*(I(a.radius)*dv)};
+        auto plus=trig(u+v),minus=trig(u-v),longitude=trig(u),latitude=trig(v);I r=a.halfRadius;
+        p={longitude.cos*a.majorRadius+(plus.cos+minus.cos)*r,
+           longitude.sin*a.majorRadius+(plus.sin+minus.sin)*r,latitude.sin*a.radius};
+        t={longitude.sin*(-a.majorRadius*du)-(plus.sin*(du+dv)+minus.sin*(du-dv))*r,
+           longitude.cos*(a.majorRadius*du)+(plus.cos*(du+dv)+minus.cos*(du-dv))*r,latitude.cos*(a.radius*dv)};
     }
-    auto f=paired::MakeLocalFrame(a);
+    const auto &f=a.frame;
     auto rotate=[&](const BV &q){return BV{q.x*f.x.x+q.y*f.y.x+q.z*f.z.x,
         q.x*f.x.y+q.y*f.y.y+q.z*f.z.y,q.x*f.x.z+q.y*f.y.z+q.z*f.z.z};};
     return {rotate(p),rotate(t)}; // source is centered at the same origin
@@ -167,19 +203,19 @@ class BoundaryValidator
 {
     const sggk::BSplineSurface &source;const GeneralTrim &trim;
     const GeneralHybridOptions &options;SurfaceSampleContext &samples;GeneralHybridReport &out;
+    const HybridThresholds &thresholds;
+    const TargetBoundaryContext targetContext;
     paired::Products products;
-    double maxDistance=0,maxAngle=0;
+    double maxDistance=0,maxTangentRatio=0;
     bool Visit(const BezierCell &cell,unsigned edge,double a,double b,unsigned depth,bool collapsed)
     {
         if(++out.boundaryNodes>options.maxBoundaryPieces)throw Budget("Boundary node budget exhausted");
-        auto target=TargetBoundary(trim,edge,a,b,products);
+        auto target=TargetBoundary(targetContext,edge,a,b,products);
         auto error=products.Subtract(cell.p,products.MulShared(target.point,cell.w));
         double distance=paired::PositionBoxUpper(error,cell.w);
-        if(distance>=options.general.fitting.validation.distanceTolerance)
+        if(distance>=thresholds.distanceTolerance)
             distance=std::min(distance,paired::PositionControlUpper(error,cell.w,products));
         double ratio=INFINITY;
-        I limit=I(options.general.fitting.validation.boundaryTangentToleranceDeg)*IPi()/I(180);
-        I tanLimit=Sin(limit)/Cos(limit);
         if(collapsed)ratio=0;
         else
         {
@@ -191,10 +227,10 @@ class BoundaryValidator
             IV cross=Range(products.Cross(tangent,target.tangent));
             if(dot.lo>0)ratio=(Sqrt(Sqr(cross.x)+Sqr(cross.y)+Sqr(cross.z))/I(dot.lo)).hi;
         }
-        if(distance<options.general.fitting.validation.distanceTolerance&&ratio<tanLimit.lo)
+        if(distance<thresholds.distanceTolerance&&ratio<thresholds.tangentRatioLimit)
         {
             maxDistance=std::max(maxDistance,distance);
-            maxAngle=std::max(maxAngle,(Atan(I(ratio))*I(180)/IPi()).hi);
+            maxTangentRatio=std::max(maxTangentRatio,ratio);
             ++out.boundarySegments;return true;
         }
         if(depth>=options.maxBoundaryDepth)return false;
@@ -216,7 +252,8 @@ class BoundaryValidator
     }
 public:
     BoundaryValidator(const sggk::BSplineSurface &s,const GeneralTrim &t,const GeneralHybridOptions &o,
-        SurfaceSampleContext &c,GeneralHybridReport &r):source(s),trim(t),options(o),samples(c),out(r){}
+        SurfaceSampleContext &c,GeneralHybridReport &r,const HybridThresholds &limits)
+        :source(s),trim(t),options(o),samples(c),out(r),thresholds(limits),targetContext(t){}
     bool Run(const std::array<std::vector<BezierCell>,4> &edges)
     {
         unsigned collapsedCount=0;
@@ -242,7 +279,8 @@ public:
             }
         }
         out.collapsedEdges=collapsedCount;out.boundaryDistanceUpperBound=maxDistance;
-        out.boundaryTangentUpperBoundDeg=maxAngle;
+        // atan is monotone; only reporting needs degrees, not the acceptance test.
+        out.boundaryTangentUpperBoundDeg=(Atan(I(maxTangentRatio))*I(180)/IPi()).hi;
         out.boundaryPosition=out.boundaryTangent=CheckState::Passed;return true;
     }
 };
@@ -329,6 +367,11 @@ GeneralHybridReport ValidateGeneralHybridWithSamples(const sggk::BSplineSurface 
         {out.interiorSamples=CheckState::Exceeded;out.message="Interior sample distance exceeded";}
         else
         {
+            const auto thresholds=[&]
+            {
+                Measure timer(out.boundaryMs);
+                return HybridThresholds(v.distanceTolerance,v.boundaryTangentToleranceDeg);
+            }();
             std::optional<std::array<std::vector<BezierCell>,4>> edges;
             GeneralTrim trim;GeneralValidationReport recovery;
             auto recoveryStart=Clock::now();double before=out.samplingMs+out.preparationMs+out.boundaryMs;
@@ -342,7 +385,7 @@ GeneralHybridReport ValidateGeneralHybridWithSamples(const sggk::BSplineSurface 
                 }
                 if(!edges){Measure timer(out.preparationMs);edges=ExtractHybridBoundaries(s,Get(a.origin));}
                 Measure timer(out.boundaryMs);
-                BoundaryValidator validator(s,candidate,options,samples,out);
+                BoundaryValidator validator(s,candidate,options,samples,out,thresholds);
                 bool passed=validator.Run(*edges);
                 if(!passed)out.message="Boundary correspondence unresolved on edge "+std::to_string(out.failedBoundary);
                 if(passed)out.interiorSamples=CheckState::Passed;
