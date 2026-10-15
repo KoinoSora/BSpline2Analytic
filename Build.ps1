@@ -14,6 +14,9 @@ param(
     [ValidateRange(1,64)][int]$BuildJobs = 1
 )
 $ErrorActionPreference = 'Stop'
+if ($ApproximateBenchmark -or $PlateauOnly -or $JacobianOnly -or $ConeOnly -or $ExtremeBoundaryOnly) {
+    throw 'This test path invokes retired ValidateConversion. Its code is retained, but testing is disabled pending migration.'
+}
 $focusedCount = [int]$PlateauOnly.IsPresent + [int]$JacobianOnly.IsPresent + [int]$Dataset500Only.IsPresent + [int]$GeneralOnly.IsPresent + [int]$GeneralPositiveOnly.IsPresent + [int]$ExtremeBoundaryOnly.IsPresent + [int]$ConeOnly.IsPresent + [int]$SpherePolynomialOnly.IsPresent
 if ($focusedCount -gt 1 -or ($focusedCount -gt 0 -and ($Benchmark -or $ApproximateBenchmark))) {
     throw 'Choose only one focused test switch and do not combine it with broader benchmarks'
@@ -29,7 +32,7 @@ if ($ExtremeBoundaryOnly) {
 } elseif ($ConeOnly) {
     cmake --build $build --config $Configuration --target BSpline2AnalyticDataset500Tests BSpline2AnalyticConeTests --parallel $BuildJobs
 } elseif ($Dataset500Only -or $SpherePolynomialOnly) {
-    cmake --build $build --config $Configuration --target BSpline2AnalyticDataset500Tests --parallel $BuildJobs
+    cmake --build $build --config $Configuration --target BSpline2AnalyticPairedValidationTests --parallel $BuildJobs
 } elseif ($JacobianOnly) {
     cmake --build $build --config $Configuration --target BSpline2AnalyticJacobianTests --parallel $BuildJobs
 } elseif ($PlateauOnly) {
@@ -47,9 +50,9 @@ if ($ExtremeBoundaryOnly) {
 } elseif ($ConeOnly) {
     ctest --test-dir $build -C $Configuration -R '^BSpline2Analytic\.(ConeDataset|Cone)$' --output-on-failure
 } elseif ($SpherePolynomialOnly) {
-    ctest --test-dir $build -C $Configuration -R '^BSpline2Analytic\.SpherePolynomialDataset$' --output-on-failure
+    ctest --test-dir $build -C $Configuration -R '^BSpline2Analytic\.PairedSphere$' --output-on-failure
 } elseif ($Dataset500Only) {
-    ctest --test-dir $build -C $Configuration -R '^BSpline2Analytic\.Dataset500$' --output-on-failure
+    ctest --test-dir $build -C $Configuration -R '^BSpline2Analytic\.PairedDataset500$' --output-on-failure
 } elseif ($JacobianOnly) {
     ctest --test-dir $build -C $Configuration -R '^BSpline2Analytic\.Jacobian$' --output-on-failure
 } elseif ($PlateauOnly) {

@@ -1,0 +1,53 @@
+适用于 .NET Framework MSBuild 版本 17.12.12+1cce77968
+
+  1>Checking Build System
+  Building Custom Rule D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-specialized-timing/paired-new-only-20261015/source/CMakeLists.txt
+  BSpline2Analytic.cpp
+  SurfaceConversion.cpp
+  BoundaryAnalysis.cpp
+  AnalyticReconstruction.cpp
+  PatchRecovery.cpp
+  RecognitionValidation.cpp
+  Numerics.cpp
+  ApproximateGeometry.cpp
+  ApproximateNumerics.cpp
+  IsoCurveAnalysis.cpp
+  SurfaceSampling.cpp
+  SurfaceSampleContext.cpp
+  ApproximateEvaluation.cpp
+  AnalyticJacobian.cpp
+  PlaneOffsetRefinement.cpp
+  CandidateRefinement.cpp
+  ApproximateConversion.cpp
+  GeneralClassification.cpp
+  GeneralSeedNumerics.cpp
+  GeneralConversion.cpp
+  正在生成代码...
+  正在编译...
+  GeneralGeometry.cpp
+  GeneralPCurve.cpp
+  GeneralRefinement.cpp
+  GeneralSphereChart.cpp
+  正在生成代码...
+  IntervalBounds.cpp
+  PairedRationalChart.cpp
+  PairedConversionValidation.cpp
+  PairedSourcePreparation.cpp
+  PairedPositionBounds.cpp
+  PairedBoundaryValidation.cpp
+  ConversionValidation.cpp
+  GeneralConversionValidation.cpp
+  GeneralPairedBounds.cpp
+  GeneralHybridValidation.cpp
+  GeneralRationalBoundaryRecovery.cpp
+  GeneralRationalBoundaryCurves.cpp
+  GeneralRationalBoundaryValidation.cpp
+  正在生成代码...
+  BSpline2Analytic.vcxproj -> D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-specialized-timing\paired-new-only-20261015\out\Release\BSpline2Analytic.lib
+  Building Custom Rule D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-specialized-timing/paired-new-only-20261015/source/CMakeLists.txt
+  PairedValidationTests.cpp
+  Dataset500.cpp
+  PairedSurfaceBounds.cpp
+  ApproximateCases.cpp
+  正在生成代码...
+  BSpline2AnalyticPairedValidationTests.vcxproj -> D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-specialized-timing\paired-new-only-20261015\out\Release\BSpline2AnalyticPairedValidationTests.exe

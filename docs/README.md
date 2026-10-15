@@ -8,6 +8,7 @@
 | 算法 | [非有理转换实现说明](algorithm/APPROXIMATE_CONVERSION.md) | 参数优化、Jacobian、连续验收与三阶段计时。 |
 | 测试 | [测试报告](testing/TEST_REPORT.md) | 各轮回归和专项验证记录。 |
 | 测试 | [500 例测试集](testing/DATASET500.md) | 数据来源、配额、格式、生成与执行方式。 |
+| 测试 | [500 例新验证器五模块统计](testing/PAIRED_DATASET500_NEW_ONLY_2026-10-15.md) | 旧验证器停测；非有理首候选新验证与有理精确识别分列，五模块耗时和 10 ms 目标。 |
 | 测试 | [独立参数对应验证器](testing/PAIRED_VALIDATION_2026-10-14.md) | 分段单调映射、连续误差界、604 项断言与新旧验证器配对计时。 |
 | 测试 | [独立验证器准备阶段优化](testing/PAIRED_PREPARATION_2026-10-15.md) | 分离提取、控制点坐标变换、源面缓存及同批三模式比较。 |
 | 测试 | [独立验证器位置误差界优化](testing/PAIRED_POSITION_2026-10-15.md) | 快速连续上界、直接升阶、可分离权重乘法及 500 例覆盖。 |

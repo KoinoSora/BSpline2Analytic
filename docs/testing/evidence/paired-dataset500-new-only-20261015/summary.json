@@ -1,0 +1,1273 @@
+{
+  "source": "docs\\testing\\evidence\\paired-dataset500-new-only-20261015\\dataset500.csv",
+  "cases": 500,
+  "scope": "Polynomial first recovered candidate only; rational Recognize separately; no optimization or legacy projection validation",
+  "module_denominator": "Cases with validation_ran=1, including unsuccessful attempts",
+  "polynomial": {
+    "cases": 300,
+    "statuses": {
+      "Passed": 280,
+      "ClassificationFailed": 7,
+      "NoCandidate": 11,
+      "Unsupported": 2
+    },
+    "measured": 282,
+    "modules": {
+      "prepare_ms": {
+        "total_ms": 709.1572000000003,
+        "mean_ms": 2.5147418439716325,
+        "percent": 43.03763283102943
+      },
+      "surface_ms": {
+        "total_ms": 596.2834999999997,
+        "mean_ms": 2.1144804964538997,
+        "percent": 36.18750586781198
+      },
+      "subdivide_ms": {
+        "total_ms": 0.0,
+        "mean_ms": 0.0,
+        "percent": 0.0
+      },
+      "boundary_ms": {
+        "total_ms": 317.5694,
+        "mean_ms": 1.126132624113475,
+        "percent": 19.2727863942865
+      },
+      "report_ms": {
+        "total_ms": 24.7506,
+        "mean_ms": 0.08776808510638297,
+        "percent": 1.502074906872096
+      }
+    },
+    "validation": {
+      "count": 282,
+      "total_ms": 1647.7607,
+      "mean_ms": 5.84312304964539,
+      "median_ms": 4.75495,
+      "p95_ms": 14.106,
+      "max_ms": 23.1635,
+      "under_10ms": 243
+    },
+    "classification_compute": {
+      "count": 293,
+      "total_ms": 611.8322000000001,
+      "mean_ms": 2.0881645051194537,
+      "median_ms": 1.9209,
+      "p95_ms": 3.8327,
+      "max_ms": 6.3196,
+      "under_10ms": 293
+    },
+    "classification_compute_unrecorded": 7,
+    "classification_plus_first_validation": {
+      "count": 282,
+      "total_ms": 2236.5496,
+      "mean_ms": 7.93102695035461,
+      "median_ms": 6.7403,
+      "p95_ms": 17.419,
+      "max_ms": 28.636499999999998,
+      "under_10ms": 213
+    },
+    "successful_classification_plus_first_validation": {
+      "count": 280,
+      "total_ms": 2218.4173,
+      "mean_ms": 7.922918928571429,
+      "median_ms": 6.7403,
+      "p95_ms": 17.419,
+      "max_ms": 28.636499999999998,
+      "under_10ms": 212
+    },
+    "surface_nodes": 13388,
+    "boundary_nodes": 7246
+  },
+  "rational": {
+    "cases": 200,
+    "statuses": {
+      "Success": 180,
+      "Degenerate": 20
+    },
+    "recognition": {
+      "count": 200,
+      "total_ms": 512.2432,
+      "mean_ms": 2.561216,
+      "median_ms": 1.2421,
+      "p95_ms": 10.8352,
+      "max_ms": 26.7865,
+      "under_10ms": 188
+    },
+    "successful_recognition": {
+      "count": 180,
+      "total_ms": 507.8445,
+      "mean_ms": 2.8213583333333334,
+      "median_ms": 1.41425,
+      "p95_ms": 11.0327,
+      "max_ms": 26.7865,
+      "under_10ms": 168
+    },
+    "classification_compute_total_ms": 85.9881,
+    "classification_validation_total_ms": 420.6644
+  },
+  "by_type": {
+    "Plane": {
+      "cases": 100,
+      "polynomial": {
+        "cases": 100,
+        "statuses": {
+          "Passed": 100
+        },
+        "measured": 100,
+        "modules": {
+          "prepare_ms": {
+            "total_ms": 148.8100000000001,
+            "mean_ms": 1.4881000000000009,
+            "percent": 43.37238431529142
+          },
+          "surface_ms": {
+            "total_ms": 115.6691999999998,
+            "mean_ms": 1.156691999999998,
+            "percent": 33.71311737008464
+          },
+          "subdivide_ms": {
+            "total_ms": 0.0,
+            "mean_ms": 0.0,
+            "percent": 0.0
+          },
+          "boundary_ms": {
+            "total_ms": 67.4795,
+            "mean_ms": 0.674795,
+            "percent": 19.66767560919095
+          },
+          "report_ms": {
+            "total_ms": 11.1398,
+            "mean_ms": 0.111398,
+            "percent": 3.2468227054329892
+          }
+        },
+        "validation": {
+          "count": 100,
+          "total_ms": 343.0985,
+          "mean_ms": 3.430985,
+          "median_ms": 2.9487,
+          "p95_ms": 6.8562,
+          "max_ms": 8.446,
+          "under_10ms": 100
+        },
+        "classification_compute": {
+          "count": 100,
+          "total_ms": 165.2431,
+          "mean_ms": 1.652431,
+          "median_ms": 1.60085,
+          "p95_ms": 2.7522,
+          "max_ms": 4.3893,
+          "under_10ms": 100
+        },
+        "classification_compute_unrecorded": 0,
+        "classification_plus_first_validation": {
+          "count": 100,
+          "total_ms": 508.4323,
+          "mean_ms": 5.084323,
+          "median_ms": 4.5136,
+          "p95_ms": 9.494399999999999,
+          "max_ms": 11.1403,
+          "under_10ms": 96
+        },
+        "successful_classification_plus_first_validation": {
+          "count": 100,
+          "total_ms": 508.4323,
+          "mean_ms": 5.084323,
+          "median_ms": 4.5136,
+          "p95_ms": 9.494399999999999,
+          "max_ms": 11.1403,
+          "under_10ms": 96
+        },
+        "surface_nodes": 6845,
+        "boundary_nodes": 3146
+      },
+      "polynomial_passed": {
+        "cases": 100,
+        "statuses": {
+          "Passed": 100
+        },
+        "measured": 100,
+        "modules": {
+          "prepare_ms": {
+            "total_ms": 148.8100000000001,
+            "mean_ms": 1.4881000000000009,
+            "percent": 43.37238431529142
+          },
+          "surface_ms": {
+            "total_ms": 115.6691999999998,
+            "mean_ms": 1.156691999999998,
+            "percent": 33.71311737008464
+          },
+          "subdivide_ms": {
+            "total_ms": 0.0,
+            "mean_ms": 0.0,
+            "percent": 0.0
+          },
+          "boundary_ms": {
+            "total_ms": 67.4795,
+            "mean_ms": 0.674795,
+            "percent": 19.66767560919095
+          },
+          "report_ms": {
+            "total_ms": 11.1398,
+            "mean_ms": 0.111398,
+            "percent": 3.2468227054329892
+          }
+        },
+        "validation": {
+          "count": 100,
+          "total_ms": 343.0985,
+          "mean_ms": 3.430985,
+          "median_ms": 2.9487,
+          "p95_ms": 6.8562,
+          "max_ms": 8.446,
+          "under_10ms": 100
+        },
+        "classification_compute": {
+          "count": 100,
+          "total_ms": 165.2431,
+          "mean_ms": 1.652431,
+          "median_ms": 1.60085,
+          "p95_ms": 2.7522,
+          "max_ms": 4.3893,
+          "under_10ms": 100
+        },
+        "classification_compute_unrecorded": 0,
+        "classification_plus_first_validation": {
+          "count": 100,
+          "total_ms": 508.4323,
+          "mean_ms": 5.084323,
+          "median_ms": 4.5136,
+          "p95_ms": 9.494399999999999,
+          "max_ms": 11.1403,
+          "under_10ms": 96
+        },
+        "successful_classification_plus_first_validation": {
+          "count": 100,
+          "total_ms": 508.4323,
+          "mean_ms": 5.084323,
+          "median_ms": 4.5136,
+          "p95_ms": 9.494399999999999,
+          "max_ms": 11.1403,
+          "under_10ms": 96
+        },
+        "surface_nodes": 6845,
+        "boundary_nodes": 3146
+      },
+      "rational": {
+        "cases": 0,
+        "statuses": {},
+        "recognition": {
+          "count": 0,
+          "total_ms": null,
+          "mean_ms": null,
+          "median_ms": null,
+          "p95_ms": null,
+          "max_ms": null,
+          "under_10ms": 0
+        },
+        "successful_recognition": {
+          "count": 0,
+          "total_ms": null,
+          "mean_ms": null,
+          "median_ms": null,
+          "p95_ms": null,
+          "max_ms": null,
+          "under_10ms": 0
+        },
+        "classification_compute_total_ms": 0,
+        "classification_validation_total_ms": 0
+      }
+    },
+    "Cylinder": {
+      "cases": 100,
+      "polynomial": {
+        "cases": 50,
+        "statuses": {
+          "Passed": 50
+        },
+        "measured": 50,
+        "modules": {
+          "prepare_ms": {
+            "total_ms": 137.42020000000002,
+            "mean_ms": 2.7484040000000003,
+            "percent": 46.808322209191545
+          },
+          "surface_ms": {
+            "total_ms": 96.25059999999999,
+            "mean_ms": 1.9250119999999997,
+            "percent": 32.78505705586232
+          },
+          "subdivide_ms": {
+            "total_ms": 0.0,
+            "mean_ms": 0.0,
+            "percent": 0.0
+          },
+          "boundary_ms": {
+            "total_ms": 56.1383,
+            "mean_ms": 1.122766,
+            "percent": 19.12193138036662
+          },
+          "report_ms": {
+            "total_ms": 3.7716,
+            "mean_ms": 0.075432,
+            "percent": 1.2846893545795073
+          }
+        },
+        "validation": {
+          "count": 50,
+          "total_ms": 293.5807,
+          "mean_ms": 5.871614,
+          "median_ms": 5.0179,
+          "p95_ms": 16.3813,
+          "max_ms": 17.593,
+          "under_10ms": 43
+        },
+        "classification_compute": {
+          "count": 50,
+          "total_ms": 99.2079,
+          "mean_ms": 1.984158,
+          "median_ms": 1.8816000000000002,
+          "p95_ms": 3.8337,
+          "max_ms": 4.4493,
+          "under_10ms": 50
+        },
+        "classification_compute_unrecorded": 0,
+        "classification_plus_first_validation": {
+          "count": 50,
+          "total_ms": 392.8377,
+          "mean_ms": 7.8567540000000005,
+          "median_ms": 6.9199,
+          "p95_ms": 20.1263,
+          "max_ms": 20.8787,
+          "under_10ms": 39
+        },
+        "successful_classification_plus_first_validation": {
+          "count": 50,
+          "total_ms": 392.8377,
+          "mean_ms": 7.8567540000000005,
+          "median_ms": 6.9199,
+          "p95_ms": 20.1263,
+          "max_ms": 20.8787,
+          "under_10ms": 39
+        },
+        "surface_nodes": 1958,
+        "boundary_nodes": 1188
+      },
+      "polynomial_passed": {
+        "cases": 50,
+        "statuses": {
+          "Passed": 50
+        },
+        "measured": 50,
+        "modules": {
+          "prepare_ms": {
+            "total_ms": 137.42020000000002,
+            "mean_ms": 2.7484040000000003,
+            "percent": 46.808322209191545
+          },
+          "surface_ms": {
+            "total_ms": 96.25059999999999,
+            "mean_ms": 1.9250119999999997,
+            "percent": 32.78505705586232
+          },
+          "subdivide_ms": {
+            "total_ms": 0.0,
+            "mean_ms": 0.0,
+            "percent": 0.0
+          },
+          "boundary_ms": {
+            "total_ms": 56.1383,
+            "mean_ms": 1.122766,
+            "percent": 19.12193138036662
+          },
+          "report_ms": {
+            "total_ms": 3.7716,
+            "mean_ms": 0.075432,
+            "percent": 1.2846893545795073
+          }
+        },
+        "validation": {
+          "count": 50,
+          "total_ms": 293.5807,
+          "mean_ms": 5.871614,
+          "median_ms": 5.0179,
+          "p95_ms": 16.3813,
+          "max_ms": 17.593,
+          "under_10ms": 43
+        },
+        "classification_compute": {
+          "count": 50,
+          "total_ms": 99.2079,
+          "mean_ms": 1.984158,
+          "median_ms": 1.8816000000000002,
+          "p95_ms": 3.8337,
+          "max_ms": 4.4493,
+          "under_10ms": 50
+        },
+        "classification_compute_unrecorded": 0,
+        "classification_plus_first_validation": {
+          "count": 50,
+          "total_ms": 392.8377,
+          "mean_ms": 7.8567540000000005,
+          "median_ms": 6.9199,
+          "p95_ms": 20.1263,
+          "max_ms": 20.8787,
+          "under_10ms": 39
+        },
+        "successful_classification_plus_first_validation": {
+          "count": 50,
+          "total_ms": 392.8377,
+          "mean_ms": 7.8567540000000005,
+          "median_ms": 6.9199,
+          "p95_ms": 20.1263,
+          "max_ms": 20.8787,
+          "under_10ms": 39
+        },
+        "surface_nodes": 1958,
+        "boundary_nodes": 1188
+      },
+      "rational": {
+        "cases": 50,
+        "statuses": {
+          "Success": 50
+        },
+        "recognition": {
+          "count": 50,
+          "total_ms": 84.0042,
+          "mean_ms": 1.680084,
+          "median_ms": 1.26695,
+          "p95_ms": 4.4756,
+          "max_ms": 5.6435,
+          "under_10ms": 50
+        },
+        "successful_recognition": {
+          "count": 50,
+          "total_ms": 84.0042,
+          "mean_ms": 1.680084,
+          "median_ms": 1.26695,
+          "p95_ms": 4.4756,
+          "max_ms": 5.6435,
+          "under_10ms": 50
+        },
+        "classification_compute_total_ms": 20.481,
+        "classification_validation_total_ms": 61.8609
+      }
+    },
+    "Cone": {
+      "cases": 100,
+      "polynomial": {
+        "cases": 50,
+        "statuses": {
+          "Passed": 40,
+          "ClassificationFailed": 7,
+          "NoCandidate": 1,
+          "Unsupported": 2
+        },
+        "measured": 42,
+        "modules": {
+          "prepare_ms": {
+            "total_ms": 105.7139000000001,
+            "mean_ms": 2.516997619047621,
+            "percent": 44.95219620223025
+          },
+          "surface_ms": {
+            "total_ms": 78.267,
+            "mean_ms": 1.8635,
+            "percent": 33.281087351426365
+          },
+          "subdivide_ms": {
+            "total_ms": 0.0,
+            "mean_ms": 0.0,
+            "percent": 0.0
+          },
+          "boundary_ms": {
+            "total_ms": 48.1103,
+            "mean_ms": 1.1454833333333334,
+            "percent": 20.45770371680693
+          },
+          "report_ms": {
+            "total_ms": 3.0784000000000002,
+            "mean_ms": 0.07329523809523811,
+            "percent": 1.3090127295364704
+          }
+        },
+        "validation": {
+          "count": 42,
+          "total_ms": 235.1696,
+          "mean_ms": 5.59927619047619,
+          "median_ms": 5.07445,
+          "p95_ms": 10.6551,
+          "max_ms": 12.6331,
+          "under_10ms": 36
+        },
+        "classification_compute": {
+          "count": 43,
+          "total_ms": 87.8968,
+          "mean_ms": 2.0441116279069766,
+          "median_ms": 1.9567,
+          "p95_ms": 3.1618,
+          "max_ms": 3.3284,
+          "under_10ms": 43
+        },
+        "classification_compute_unrecorded": 7,
+        "classification_plus_first_validation": {
+          "count": 42,
+          "total_ms": 320.4494,
+          "mean_ms": 7.6297476190476194,
+          "median_ms": 6.914999999999999,
+          "p95_ms": 13.7396,
+          "max_ms": 15.4521,
+          "under_10ms": 31
+        },
+        "successful_classification_plus_first_validation": {
+          "count": 40,
+          "total_ms": 302.3171,
+          "mean_ms": 7.5579275,
+          "median_ms": 6.914999999999999,
+          "p95_ms": 13.7396,
+          "max_ms": 15.4521,
+          "under_10ms": 30
+        },
+        "surface_nodes": 1729,
+        "boundary_nodes": 1000
+      },
+      "polynomial_passed": {
+        "cases": 40,
+        "statuses": {
+          "Passed": 40
+        },
+        "measured": 40,
+        "modules": {
+          "prepare_ms": {
+            "total_ms": 98.7170000000001,
+            "mean_ms": 2.4679250000000024,
+            "percent": 44.48569289969283
+          },
+          "surface_ms": {
+            "total_ms": 73.09169999999999,
+            "mean_ms": 1.8272924999999998,
+            "percent": 32.93794300593084
+          },
+          "subdivide_ms": {
+            "total_ms": 0.0,
+            "mean_ms": 0.0,
+            "percent": 0.0
+          },
+          "boundary_ms": {
+            "total_ms": 47.0205,
+            "mean_ms": 1.1755125,
+            "percent": 21.189253350385492
+          },
+          "report_ms": {
+            "total_ms": 3.0781,
+            "mean_ms": 0.07695250000000001,
+            "percent": 1.387110743990846
+          }
+        },
+        "validation": {
+          "count": 40,
+          "total_ms": 221.9073,
+          "mean_ms": 5.5476825,
+          "median_ms": 5.07445,
+          "p95_ms": 10.6551,
+          "max_ms": 12.6331,
+          "under_10ms": 34
+        },
+        "classification_compute": {
+          "count": 40,
+          "total_ms": 80.3701,
+          "mean_ms": 2.0092525,
+          "median_ms": 1.9380000000000002,
+          "p95_ms": 3.1618,
+          "max_ms": 3.3284,
+          "under_10ms": 40
+        },
+        "classification_compute_unrecorded": 0,
+        "classification_plus_first_validation": {
+          "count": 40,
+          "total_ms": 302.3171,
+          "mean_ms": 7.5579275,
+          "median_ms": 6.914999999999999,
+          "p95_ms": 13.7396,
+          "max_ms": 15.4521,
+          "under_10ms": 30
+        },
+        "successful_classification_plus_first_validation": {
+          "count": 40,
+          "total_ms": 302.3171,
+          "mean_ms": 7.5579275,
+          "median_ms": 6.914999999999999,
+          "p95_ms": 13.7396,
+          "max_ms": 15.4521,
+          "under_10ms": 30
+        },
+        "surface_nodes": 1600,
+        "boundary_nodes": 962
+      },
+      "rational": {
+        "cases": 50,
+        "statuses": {
+          "Success": 40,
+          "Degenerate": 10
+        },
+        "recognition": {
+          "count": 50,
+          "total_ms": 69.2429,
+          "mean_ms": 1.384858,
+          "median_ms": 1.1061,
+          "p95_ms": 3.1518,
+          "max_ms": 4.9621,
+          "under_10ms": 50
+        },
+        "successful_recognition": {
+          "count": 40,
+          "total_ms": 67.4866,
+          "mean_ms": 1.687165,
+          "median_ms": 1.2076,
+          "p95_ms": 3.1518,
+          "max_ms": 4.9621,
+          "under_10ms": 40
+        },
+        "classification_compute_total_ms": 19.107,
+        "classification_validation_total_ms": 48.7067
+      }
+    },
+    "Sphere": {
+      "cases": 100,
+      "polynomial": {
+        "cases": 50,
+        "statuses": {
+          "Passed": 40,
+          "NoCandidate": 10
+        },
+        "measured": 40,
+        "modules": {
+          "prepare_ms": {
+            "total_ms": 145.89090000000004,
+            "mean_ms": 3.647272500000001,
+            "percent": 41.49967387015852
+          },
+          "surface_ms": {
+            "total_ms": 136.54579999999996,
+            "mean_ms": 3.413644999999999,
+            "percent": 38.841395647980015
+          },
+          "subdivide_ms": {
+            "total_ms": 0.0,
+            "mean_ms": 0.0,
+            "percent": 0.0
+          },
+          "boundary_ms": {
+            "total_ms": 66.0887,
+            "mean_ms": 1.6522175000000001,
+            "percent": 18.799387052261277
+          },
+          "report_ms": {
+            "total_ms": 3.0217,
+            "mean_ms": 0.0755425,
+            "percent": 0.8595434296001874
+          }
+        },
+        "validation": {
+          "count": 40,
+          "total_ms": 351.5471,
+          "mean_ms": 8.7886775,
+          "median_ms": 7.72035,
+          "p95_ms": 18.517,
+          "max_ms": 21.0697,
+          "under_10ms": 29
+        },
+        "classification_compute": {
+          "count": 50,
+          "total_ms": 129.666,
+          "mean_ms": 2.59332,
+          "median_ms": 2.4711499999999997,
+          "p95_ms": 4.5238,
+          "max_ms": 6.3196,
+          "under_10ms": 50
+        },
+        "classification_compute_unrecorded": 0,
+        "classification_plus_first_validation": {
+          "count": 40,
+          "total_ms": 460.5989,
+          "mean_ms": 11.5149725,
+          "median_ms": 10.219850000000001,
+          "p95_ms": 23.4227,
+          "max_ms": 25.8335,
+          "under_10ms": 20
+        },
+        "successful_classification_plus_first_validation": {
+          "count": 40,
+          "total_ms": 460.5989,
+          "mean_ms": 11.5149725,
+          "median_ms": 10.219850000000001,
+          "p95_ms": 23.4227,
+          "max_ms": 25.8335,
+          "under_10ms": 20
+        },
+        "surface_nodes": 1291,
+        "boundary_nodes": 858
+      },
+      "polynomial_passed": {
+        "cases": 40,
+        "statuses": {
+          "Passed": 40
+        },
+        "measured": 40,
+        "modules": {
+          "prepare_ms": {
+            "total_ms": 145.89090000000004,
+            "mean_ms": 3.647272500000001,
+            "percent": 41.49967387015852
+          },
+          "surface_ms": {
+            "total_ms": 136.54579999999996,
+            "mean_ms": 3.413644999999999,
+            "percent": 38.841395647980015
+          },
+          "subdivide_ms": {
+            "total_ms": 0.0,
+            "mean_ms": 0.0,
+            "percent": 0.0
+          },
+          "boundary_ms": {
+            "total_ms": 66.0887,
+            "mean_ms": 1.6522175000000001,
+            "percent": 18.799387052261277
+          },
+          "report_ms": {
+            "total_ms": 3.0217,
+            "mean_ms": 0.0755425,
+            "percent": 0.8595434296001874
+          }
+        },
+        "validation": {
+          "count": 40,
+          "total_ms": 351.5471,
+          "mean_ms": 8.7886775,
+          "median_ms": 7.72035,
+          "p95_ms": 18.517,
+          "max_ms": 21.0697,
+          "under_10ms": 29
+        },
+        "classification_compute": {
+          "count": 40,
+          "total_ms": 109.0103,
+          "mean_ms": 2.7252575,
+          "median_ms": 2.5572999999999997,
+          "p95_ms": 4.5238,
+          "max_ms": 6.3196,
+          "under_10ms": 40
+        },
+        "classification_compute_unrecorded": 0,
+        "classification_plus_first_validation": {
+          "count": 40,
+          "total_ms": 460.5989,
+          "mean_ms": 11.5149725,
+          "median_ms": 10.219850000000001,
+          "p95_ms": 23.4227,
+          "max_ms": 25.8335,
+          "under_10ms": 20
+        },
+        "successful_classification_plus_first_validation": {
+          "count": 40,
+          "total_ms": 460.5989,
+          "mean_ms": 11.5149725,
+          "median_ms": 10.219850000000001,
+          "p95_ms": 23.4227,
+          "max_ms": 25.8335,
+          "under_10ms": 20
+        },
+        "surface_nodes": 1291,
+        "boundary_nodes": 858
+      },
+      "rational": {
+        "cases": 50,
+        "statuses": {
+          "Success": 40,
+          "Degenerate": 10
+        },
+        "recognition": {
+          "count": 50,
+          "total_ms": 64.6366,
+          "mean_ms": 1.292732,
+          "median_ms": 0.84095,
+          "p95_ms": 3.8678,
+          "max_ms": 4.7036,
+          "under_10ms": 50
+        },
+        "successful_recognition": {
+          "count": 40,
+          "total_ms": 61.9942,
+          "mean_ms": 1.549855,
+          "median_ms": 1.3253,
+          "p95_ms": 3.8678,
+          "max_ms": 4.7036,
+          "under_10ms": 40
+        },
+        "classification_compute_total_ms": 21.2144,
+        "classification_validation_total_ms": 42.6625
+      }
+    },
+    "Torus": {
+      "cases": 100,
+      "polynomial": {
+        "cases": 50,
+        "statuses": {
+          "Passed": 50
+        },
+        "measured": 50,
+        "modules": {
+          "prepare_ms": {
+            "total_ms": 171.32220000000007,
+            "mean_ms": 3.4264440000000014,
+            "percent": 40.37144456844679
+          },
+          "surface_ms": {
+            "total_ms": 169.55089999999996,
+            "mean_ms": 3.391017999999999,
+            "percent": 39.95404425626253
+          },
+          "subdivide_ms": {
+            "total_ms": 0.0,
+            "mean_ms": 0.0,
+            "percent": 0.0
+          },
+          "boundary_ms": {
+            "total_ms": 79.7526,
+            "mean_ms": 1.595052,
+            "percent": 18.79340605064322
+          },
+          "report_ms": {
+            "total_ms": 3.7391,
+            "mean_ms": 0.074782,
+            "percent": 0.8811051246474731
+          }
+        },
+        "validation": {
+          "count": 50,
+          "total_ms": 424.3648,
+          "mean_ms": 8.487296,
+          "median_ms": 7.163449999999999,
+          "p95_ms": 19.1166,
+          "max_ms": 23.1635,
+          "under_10ms": 35
+        },
+        "classification_compute": {
+          "count": 50,
+          "total_ms": 129.8184,
+          "mean_ms": 2.596368,
+          "median_ms": 2.5456000000000003,
+          "p95_ms": 5.0333,
+          "max_ms": 5.8901,
+          "under_10ms": 50
+        },
+        "classification_compute_unrecorded": 0,
+        "classification_plus_first_validation": {
+          "count": 50,
+          "total_ms": 554.2313,
+          "mean_ms": 11.084626,
+          "median_ms": 9.6451,
+          "p95_ms": 23.8192,
+          "max_ms": 28.636499999999998,
+          "under_10ms": 27
+        },
+        "successful_classification_plus_first_validation": {
+          "count": 50,
+          "total_ms": 554.2313,
+          "mean_ms": 11.084626,
+          "median_ms": 9.6451,
+          "p95_ms": 23.8192,
+          "max_ms": 28.636499999999998,
+          "under_10ms": 27
+        },
+        "surface_nodes": 1565,
+        "boundary_nodes": 1054
+      },
+      "polynomial_passed": {
+        "cases": 50,
+        "statuses": {
+          "Passed": 50
+        },
+        "measured": 50,
+        "modules": {
+          "prepare_ms": {
+            "total_ms": 171.32220000000007,
+            "mean_ms": 3.4264440000000014,
+            "percent": 40.37144456844679
+          },
+          "surface_ms": {
+            "total_ms": 169.55089999999996,
+            "mean_ms": 3.391017999999999,
+            "percent": 39.95404425626253
+          },
+          "subdivide_ms": {
+            "total_ms": 0.0,
+            "mean_ms": 0.0,
+            "percent": 0.0
+          },
+          "boundary_ms": {
+            "total_ms": 79.7526,
+            "mean_ms": 1.595052,
+            "percent": 18.79340605064322
+          },
+          "report_ms": {
+            "total_ms": 3.7391,
+            "mean_ms": 0.074782,
+            "percent": 0.8811051246474731
+          }
+        },
+        "validation": {
+          "count": 50,
+          "total_ms": 424.3648,
+          "mean_ms": 8.487296,
+          "median_ms": 7.163449999999999,
+          "p95_ms": 19.1166,
+          "max_ms": 23.1635,
+          "under_10ms": 35
+        },
+        "classification_compute": {
+          "count": 50,
+          "total_ms": 129.8184,
+          "mean_ms": 2.596368,
+          "median_ms": 2.5456000000000003,
+          "p95_ms": 5.0333,
+          "max_ms": 5.8901,
+          "under_10ms": 50
+        },
+        "classification_compute_unrecorded": 0,
+        "classification_plus_first_validation": {
+          "count": 50,
+          "total_ms": 554.2313,
+          "mean_ms": 11.084626,
+          "median_ms": 9.6451,
+          "p95_ms": 23.8192,
+          "max_ms": 28.636499999999998,
+          "under_10ms": 27
+        },
+        "successful_classification_plus_first_validation": {
+          "count": 50,
+          "total_ms": 554.2313,
+          "mean_ms": 11.084626,
+          "median_ms": 9.6451,
+          "p95_ms": 23.8192,
+          "max_ms": 28.636499999999998,
+          "under_10ms": 27
+        },
+        "surface_nodes": 1565,
+        "boundary_nodes": 1054
+      },
+      "rational": {
+        "cases": 50,
+        "statuses": {
+          "Success": 50
+        },
+        "recognition": {
+          "count": 50,
+          "total_ms": 294.3595,
+          "mean_ms": 5.88719,
+          "median_ms": 3.753,
+          "p95_ms": 21.2396,
+          "max_ms": 26.7865,
+          "under_10ms": 38
+        },
+        "successful_recognition": {
+          "count": 50,
+          "total_ms": 294.3595,
+          "mean_ms": 5.88719,
+          "median_ms": 3.753,
+          "p95_ms": 21.2396,
+          "max_ms": 26.7865,
+          "under_10ms": 38
+        },
+        "classification_compute_total_ms": 25.1857,
+        "classification_validation_total_ms": 267.4343
+      }
+    }
+  },
+  "regular_failures": [],
+  "degenerate_results": [
+    {
+      "id": "216",
+      "type": "Cone",
+      "rational": "1",
+      "message": "Paired validator requires polynomial input; exact recognition: Boundary extent is below numerical resolution",
+      "status": "Degenerate"
+    },
+    {
+      "id": "217",
+      "type": "Cone",
+      "rational": "0",
+      "message": "Collapsed isocurve",
+      "status": "ClassificationFailed"
+    },
+    {
+      "id": "218",
+      "type": "Cone",
+      "rational": "1",
+      "message": "Paired validator requires polynomial input; exact recognition: Boundary extent is below numerical resolution",
+      "status": "Degenerate"
+    },
+    {
+      "id": "219",
+      "type": "Cone",
+      "rational": "0",
+      "message": "Collapsed isocurve",
+      "status": "ClassificationFailed"
+    },
+    {
+      "id": "236",
+      "type": "Cone",
+      "rational": "1",
+      "message": "Paired validator requires polynomial input; exact recognition: Boundary extent is below numerical resolution",
+      "status": "Degenerate"
+    },
+    {
+      "id": "237",
+      "type": "Cone",
+      "rational": "0",
+      "message": "Unresolved isocurve normalization",
+      "status": "ClassificationFailed"
+    },
+    {
+      "id": "238",
+      "type": "Cone",
+      "rational": "1",
+      "message": "Paired validator requires polynomial input; exact recognition: Boundary extent is below numerical resolution",
+      "status": "Degenerate"
+    },
+    {
+      "id": "239",
+      "type": "Cone",
+      "rational": "0",
+      "message": "",
+      "status": "NoCandidate"
+    },
+    {
+      "id": "256",
+      "type": "Cone",
+      "rational": "1",
+      "message": "Paired validator requires polynomial input; exact recognition: Boundary extent is below numerical resolution",
+      "status": "Degenerate"
+    },
+    {
+      "id": "257",
+      "type": "Cone",
+      "rational": "0",
+      "message": "Collapsed isocurve",
+      "status": "ClassificationFailed"
+    },
+    {
+      "id": "258",
+      "type": "Cone",
+      "rational": "1",
+      "message": "Paired validator requires polynomial input; exact recognition: Boundary extent is below numerical resolution",
+      "status": "Degenerate"
+    },
+    {
+      "id": "259",
+      "type": "Cone",
+      "rational": "0",
+      "message": "Collapsed isocurve",
+      "status": "ClassificationFailed"
+    },
+    {
+      "id": "276",
+      "type": "Cone",
+      "rational": "1",
+      "message": "Paired validator requires polynomial input; exact recognition: Boundary extent is below numerical resolution",
+      "status": "Degenerate"
+    },
+    {
+      "id": "277",
+      "type": "Cone",
+      "rational": "0",
+      "message": "Unresolved isocurve normalization",
+      "status": "ClassificationFailed"
+    },
+    {
+      "id": "278",
+      "type": "Cone",
+      "rational": "1",
+      "message": "Paired validator requires polynomial input; exact recognition: Boundary extent is below numerical resolution",
+      "status": "Degenerate"
+    },
+    {
+      "id": "279",
+      "type": "Cone",
+      "rational": "0",
+      "message": "Collapsed isocurve",
+      "status": "ClassificationFailed"
+    },
+    {
+      "id": "296",
+      "type": "Cone",
+      "rational": "1",
+      "message": "Paired validator requires polynomial input; exact recognition: Boundary extent is below numerical resolution",
+      "status": "Degenerate"
+    },
+    {
+      "id": "297",
+      "type": "Cone",
+      "rational": "0",
+      "message": "Collapsed parameter trace",
+      "status": "Unsupported"
+    },
+    {
+      "id": "298",
+      "type": "Cone",
+      "rational": "1",
+      "message": "Paired validator requires polynomial input; exact recognition: Boundary extent is below numerical resolution",
+      "status": "Degenerate"
+    },
+    {
+      "id": "299",
+      "type": "Cone",
+      "rational": "0",
+      "message": "Collapsed parameter trace",
+      "status": "Unsupported"
+    },
+    {
+      "id": "316",
+      "type": "Sphere",
+      "rational": "1",
+      "message": "Paired validator requires polynomial input; exact recognition: Boundary extent is below numerical resolution",
+      "status": "Degenerate"
+    },
+    {
+      "id": "317",
+      "type": "Sphere",
+      "rational": "0",
+      "message": "",
+      "status": "NoCandidate"
+    },
+    {
+      "id": "318",
+      "type": "Sphere",
+      "rational": "1",
+      "message": "Paired validator requires polynomial input; exact recognition: Boundary extent is below numerical resolution",
+      "status": "Degenerate"
+    },
+    {
+      "id": "319",
+      "type": "Sphere",
+      "rational": "0",
+      "message": "",
+      "status": "NoCandidate"
+    },
+    {
+      "id": "336",
+      "type": "Sphere",
+      "rational": "1",
+      "message": "Paired validator requires polynomial input; exact recognition: Boundary extent is below numerical resolution",
+      "status": "Degenerate"
+    },
+    {
+      "id": "337",
+      "type": "Sphere",
+      "rational": "0",
+      "message": "",
+      "status": "NoCandidate"
+    },
+    {
+      "id": "338",
+      "type": "Sphere",
+      "rational": "1",
+      "message": "Paired validator requires polynomial input; exact recognition: Boundary extent is below numerical resolution",
+      "status": "Degenerate"
+    },
+    {
+      "id": "339",
+      "type": "Sphere",
+      "rational": "0",
+      "message": "",
+      "status": "NoCandidate"
+    },
+    {
+      "id": "356",
+      "type": "Sphere",
+      "rational": "1",
+      "message": "Paired validator requires polynomial input; exact recognition: Boundary extent is below numerical resolution",
+      "status": "Degenerate"
+    },
+    {
+      "id": "357",
+      "type": "Sphere",
+      "rational": "0",
+      "message": "",
+      "status": "NoCandidate"
+    },
+    {
+      "id": "358",
+      "type": "Sphere",
+      "rational": "1",
+      "message": "Paired validator requires polynomial input; exact recognition: Boundary extent is below numerical resolution",
+      "status": "Degenerate"
+    },
+    {
+      "id": "359",
+      "type": "Sphere",
+      "rational": "0",
+      "message": "",
+      "status": "NoCandidate"
+    },
+    {
+      "id": "376",
+      "type": "Sphere",
+      "rational": "1",
+      "message": "Paired validator requires polynomial input; exact recognition: Boundary extent is below numerical resolution",
+      "status": "Degenerate"
+    },
+    {
+      "id": "377",
+      "type": "Sphere",
+      "rational": "0",
+      "message": "",
+      "status": "NoCandidate"
+    },
+    {
+      "id": "378",
+      "type": "Sphere",
+      "rational": "1",
+      "message": "Paired validator requires polynomial input; exact recognition: Boundary extent is below numerical resolution",
+      "status": "Degenerate"
+    },
+    {
+      "id": "379",
+      "type": "Sphere",
+      "rational": "0",
+      "message": "",
+      "status": "NoCandidate"
+    },
+    {
+      "id": "396",
+      "type": "Sphere",
+      "rational": "1",
+      "message": "Paired validator requires polynomial input; exact recognition: Boundary extent is below numerical resolution",
+      "status": "Degenerate"
+    },
+    {
+      "id": "397",
+      "type": "Sphere",
+      "rational": "0",
+      "message": "",
+      "status": "NoCandidate"
+    },
+    {
+      "id": "398",
+      "type": "Sphere",
+      "rational": "1",
+      "message": "Paired validator requires polynomial input; exact recognition: Boundary extent is below numerical resolution",
+      "status": "Degenerate"
+    },
+    {
+      "id": "399",
+      "type": "Sphere",
+      "rational": "0",
+      "message": "",
+      "status": "NoCandidate"
+    }
+  ]
+}

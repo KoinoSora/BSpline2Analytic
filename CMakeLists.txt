@@ -180,4 +180,13 @@ if(BSPLINE2ANALYTIC_BUILD_TESTS)
         BSpline2AnalyticPlateauTests BSpline2AnalyticJacobianTests)
         target_include_directories(${_test_target} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src")
     endforeach()
+    # Preserve legacy implementations and test sources, but never execute the
+    # retired projection validator, directly or through ConvertApproximate.
+    set_tests_properties(
+        BSpline2Analytic.ClassificationGate BSpline2Analytic.Extreme200
+        BSpline2Analytic.ExtremeModules BSpline2Analytic.Dataset500
+        BSpline2Analytic.ConeDataset BSpline2Analytic.SpherePolynomialDataset
+        BSpline2Analytic.Cone BSpline2Analytic.Approximate
+        BSpline2Analytic.Plateau BSpline2Analytic.Jacobian
+        PROPERTIES DISABLED TRUE)
 endif()

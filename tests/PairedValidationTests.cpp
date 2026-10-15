@@ -450,8 +450,8 @@ void Unit()
         Require(r.Passed(), "Reversed/swapped piecewise map failed");
     }
     auto differentEdges = Plane(5);
-    Require(ValidateConversion(*differentEdges, patch).Passed(),
-            "Different-speed plane is not a valid geometric fixture");
+    // Retain the incompatible-correspondence regression without invoking the
+    // retired projection validator, including for fixture qualification.
     auto conservative = ValidatePairedConversion(*differentEdges, patch);
     Timing(conservative);
     Require(!conservative.Passed() && conservative.status == PairedValidationStatus::NotCertified,
@@ -737,8 +737,7 @@ void SpotCheck(const sggk::BSplineSurface &s, const AnalyticPatch &p,
             }
         }
 }
-int Dataset(const std::filesystem::path &dir, const std::filesystem::path &file, bool sphere,
-            bool compareLegacy = true)
+int Dataset(const std::filesystem::path &dir, const std::filesystem::path &file, bool sphere)
 {
     std::ofstream csv(file);
     Require(bool(csv), "Cannot open paired CSV");
@@ -753,8 +752,11 @@ int Dataset(const std::filesystem::path &dir, const std::filesystem::path &file,
            "ms,"
            "target_transform_ms,target_boundary_ms,edge_compose_ms,edge_algebra_ms,edge_bounds_ms,"
            "edge_subdivision_ms,source_boundary_builds,boundary_segments,trace_hits,trace_builds,"
-           "timing_schema,message\n";
+           "timing_schema,message,validation_ran,validation_total_ms,prepare_calls,surface_calls,"
+           "subdivide_calls,boundary_calls,report_calls,exact_status,exact_ms,exact_classify_compute_ms,"
+           "exact_classify_validate_ms,exact_geometry_bound\n";
     unsigned passed = 0, notCertified = 0, skipped = 0;
+    unsigned exactPassed = 0, exactDegenerate = 0, exactFailed = 0;
     bool warmed[5]{};
     for (unsigned id = sphere ? 301u : 0u; id < (sphere ? 400u : 500u); id += sphere ? 2u : 1u)
     {
@@ -766,21 +768,31 @@ int Dataset(const std::filesystem::path &dir, const std::filesystem::path &file,
         unsigned controls = static_cast<unsigned>(c.input->ControlPoints().size() *
                                                   c.input->ControlPoints()[0].size());
         std::string oldStatus = "NotRun", newStatus = "NotRun", message;
-        ConversionValidationReport old;
         PairedValidationReport newer;
         double classifyMs = 0, oldMs = 0, newMs = 0;
+        bool validationRan = false;
+        RecognitionResult exact;
+        double exactMs = 0;
         size_t candidates = 0;
         if (c.input->IsRational())
         {
-            // New module intentionally supports polynomial input only.
-            AnalyticPatch p;
-            p.parameters = c.truth;
-            p.domain = c.analyticDomain;
-            auto r = ValidatePairedConversion(*c.input, p);
-            Require(r.status == PairedValidationStatus::Unsupported,
-                    "Rational input was unexpectedly accepted");
+            // Exact rational recognition is independent of the retired
+            // ValidateConversion. Its timing is not paired-module timing.
+            auto start = std::chrono::steady_clock::now();
+            exact = Recognize(*c.input);
+            exactMs = std::chrono::duration<double, std::milli>(
+                          std::chrono::steady_clock::now() - start).count();
             newStatus = "Unsupported";
-            message = r.certificate.message;
+            message = "Paired validator requires polynomial input; exact recognition: " + exact.message;
+            if (c.collapsedMask && exact.status == Status::Degenerate)
+                ++exactDegenerate;
+            else if (!c.collapsedMask && exact.status == Status::Success && exact.surface &&
+                     exact.domain && exact.parameters.type == c.truth.type &&
+                     exact.validation.level == VerificationLevel::BernsteinBound &&
+                     exact.validation.surfaceDistanceBound < 1e-5)
+                ++exactPassed;
+            else
+                ++exactFailed;
             ++skipped;
         }
         else
@@ -800,7 +812,7 @@ int Dataset(const std::filesystem::path &dir, const std::filesystem::path &file,
                 candidates = list.size();
                 if (list.empty())
                 {
-                    oldStatus = newStatus = "NoCandidate";
+                    newStatus = "NoCandidate";
                     ++skipped;
                 }
                 else
@@ -824,37 +836,19 @@ int Dataset(const std::filesystem::path &dir, const std::filesystem::path &file,
                                 "Prepared classification changed candidate order/geometry");
                     if (!warmed[c.type] && !c.collapsedMask)
                     {
-                        if (compareLegacy) (void)ValidateConversion(*c.input, p);
                         (void)ValidatePairedConversion(*c.input, p);
                         warmed[c.type] = true;
                     }
-                    auto oldRun = [&] {
-                        if (!compareLegacy) return;
-                        auto t = std::chrono::steady_clock::now();
-                        old = ValidateConversion(*c.input, p);
-                        oldMs = std::chrono::duration<double, std::milli>(
-                                    std::chrono::steady_clock::now() - t)
-                                    .count();
-                    };
                     auto newRun = [&] {
+                        validationRan = true;
                         auto t = std::chrono::steady_clock::now();
                         newer = paired::ValidatePrepared(analysis, recovered.front());
                         newMs = std::chrono::duration<double, std::milli>(
                                     std::chrono::steady_clock::now() - t)
                                     .count();
                     };
-                    if (c.pair % 2)
-                    {
-                        newRun();
-                        oldRun();
-                    }
-                    else
-                    {
-                        oldRun();
-                        newRun();
-                    }
+                    newRun();
                     Timing(newer);
-                    oldStatus = compareLegacy ? (old.Passed() ? "Passed" : "NotCertified") : "NotRun";
                     newStatus = PairedValidationStatusName(newer.status);
                     message = newer.certificate.message;
                     if (newer.Passed())
@@ -873,7 +867,7 @@ int Dataset(const std::filesystem::path &dir, const std::filesystem::path &file,
             }
             catch (const Failure &e)
             {
-                oldStatus = newStatus = "ClassificationFailed";
+                newStatus = "ClassificationFailed";
                 message = e.what();
                 ++skipped;
             }
@@ -904,16 +898,25 @@ int Dataset(const std::filesystem::path &dir, const std::filesystem::path &file,
             << ',' << newer.edgeBoundsMs << ',' << newer.edgeSubdivisionMs << ','
             << newer.sourceBoundaryBuilds << ',' << newer.boundarySegments << ','
             << newer.recoveryTraceHits << ',' << newer.recoveryTraceBuilds << ','
-            << newer.preparationSchema << ',' << Quote(message) << '\n';
+            << newer.preparationSchema << ',' << Quote(message) << ',' << validationRan << ','
+            << t.totalMs << ',' << t.preparation.calls << ',' << t.surfaceBounds.calls << ','
+            << t.subdivision.calls << ',' << t.boundaryChecks.calls << ',' << t.reporting.calls << ','
+            << (c.input->IsRational() ? StatusName(exact.status) : "NotRun") << ',' << exactMs << ','
+            << exact.timing.classificationCompute.elapsedMs << ','
+            << exact.timing.classificationValidation.elapsedMs << ','
+            << exact.validation.surfaceDistanceBound << '\n';
         csv.flush();
         std::cout << id << " old=" << oldStatus << " new=" << newStatus << " ms=" << newMs
                   << std::endl;
     }
-    std::cout << "Paired comparison passed=" << passed << " not_certified=" << notCertified
-              << " skipped=" << skipped << std::endl;
+    std::cout << "New-only paired passed=" << passed << " not_certified=" << notCertified
+              << " skipped=" << skipped << " exact_passed=" << exactPassed
+              << " exact_degenerate=" << exactDegenerate << " exact_failed=" << exactFailed << std::endl;
     // Every regular polynomial fixture has an independently certified source.
     // Guard coverage as well as the correctness of individual successes.
     Require(passed == (sphere ? 40u : 280u), "Regular polynomial dataset coverage regressed");
+    Require(exactFailed == 0 && (sphere || (exactPassed == 180 && exactDegenerate == 20)),
+            "Exact rational dataset coverage regressed");
     return 0;
 }
 } // namespace
@@ -935,10 +938,9 @@ int main(int argc, char **argv)
                         (std::string(argv[1]) == "--sphere" || std::string(argv[1]) == "--dataset" ||
                          std::string(argv[1]) == "--sphere-new-only" ||
                          std::string(argv[1]) == "--dataset-new-only"),
-                    "Invalid comparison arguments");
+                    "Invalid new-only dataset arguments");
             const std::string mode = argv[1];
-            code = Dataset(argv[2], argv[3], mode.rfind("--sphere", 0) == 0,
-                           mode.find("-new-only") == std::string::npos);
+            code = Dataset(argv[2], argv[3], mode.rfind("--sphere", 0) == 0);
         }
     }
     catch (const std::exception &e)

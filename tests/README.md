@@ -56,17 +56,25 @@ python tests/RunGeneralRationalBoundarySelected.py --exe build-general-hybrid/Re
 
 ## 等参专用路径计时
 
+2026-10-15 起，旧投影验证器 `ValidateConversion` 废弃，保留代码和历史数据但不再测试、预热或作对照。调用它的 CTest 项已禁用，`RunSpecializedDataset500.py` 已停止执行。正式 `ConvertApproximate` 尚未接入新验证器，其完整流程测试暂缓；以下历史报告中的旧命令不再作为执行入口。
+
+当前使用 `./Build.ps1 -Dataset500Only`（500 例）或 `-SpherePolynomialOnly`（50 个非有理球面），输出分别为 `build/paired-dataset500-Release.csv` 和 `build/paired-sphere-Release.csv`。程序 `BSpline2AnalyticPairedValidationTests` 的 `--dataset` / `--sphere` 与 `--dataset-new-only` / `--sphere-new-only` 均仅使用新验证器。非有理输入验证实际分类首候选，不运行候选重试或优化；200 个有理输入另外调用精确识别 `Recognize`，不套用五模块计时。
+
+CSV 的 `validation_ran` 标明是否实际进入新验证器。仅对此列为 1 的行汇总 `prepare_ms`、`surface_ms`、`subdivide_ms`、`boundary_ms`、`report_ms`，它们之和等于 `validation_total_ms`；边界内部细分包含在 `boundary_ms` 中。有理识别输出 `exact_status`、`exact_ms` 及分类计算/验证明细。未调用时旧兼容列中的零不是一次零耗时测量；`old_status` 恒为 `NotRun`。来源证书、预热、候选一致性审计与输出采样检查均不计入这五项。
+
+使用 `python tests/SummarizePairedDataset500.py <500例CSV> <输出目录>` 核验完整性、排除未调用的零值并按曲面类型统计五模块。最新结果和口径见 [500 例报告](../docs/testing/PAIRED_DATASET500_NEW_ONLY_2026-10-15.md)。
+
 位置误差界优化沿用比较工具：`python tests/BenchmarkPairedPreparation.py --baseline d345b30 --build-dir build-specialized-timing --output <comparison.csv> --runs 3`。新增位置内部计时 `compose_ms`、`product_ms`、`difference_ms`、`fast_bound_ms`、`tight_bound_ms`，均为 `surface_ms` 的子项；`fast_passes` 和 `tight_checks` 统计快速界成功及紧界调用的节点数。CSV 汇总兼容旧字段集合。实现范围、专项和同批比较见[位置误差界优化报告](../docs/testing/PAIRED_POSITION_2026-10-15.md)。
 
 准备阶段优化的复现方式：先构建当前 Release 库，再执行 `python tests/BenchmarkPairedPreparation.py --baseline 3985a1b --build-dir build-specialized-timing --output <comparison.csv> --runs 3`。脚本提取旧实现到忽略的构建目录，只重命名私有命名空间和公开函数，并增加两个子计时器；两版共用未修改的区间基础运算和同一编译设置。40 个普通非有理球面的三种模式轮换顺序，各测三次；缓存首次填充另列，不能把缓存命中耗时当作首次验证耗时。见[准备阶段优化报告](../docs/testing/PAIRED_PREPARATION_2026-10-15.md)。
 
-`Build.ps1 -Dataset500Only` 当前直接调用 `Recognize`（200 个有理输入）及 `ConvertApproximate`（300 个非有理输入），不进入一般兜底。固定 500 例全部重载并核验来源证书，40 个退化案例保留退化预期。
+历史完整转换测试直接调用 `Recognize`（200 个有理输入）及 `ConvertApproximate`（300 个非有理输入）。现已暂停这一旧验证器流程；固定数据的 40 个退化案例保留退化预期。
 
 低次数据集的迁移、证书与范围核验见[迁移报告](../docs/testing/DATASET500_LOW_DEGREE_2026-10-15.md)。数据检查可独立运行 `BSpline2AnalyticDataset500Tests --audit <dir>`；所有业务输入的 U/V 次数必须不超过 5，控制点必须小于 200。其他数据集和验证器高次运算单测保留各自合同。
 
-完整转换需要逐例超时保护时，运行 `python tests/RunSpecializedDataset500.py --exe <Release测试程序> --data tests/data/dataset500 --sdk <SDK根目录> --output <新结果.csv> --timeout 20`。该入口使用 `--case <dir> <csv> <id>`，每个子进程执行一次无预热转换，仍校验完整来源证书。进程时限包括初始化、读盘和认证，不等同于算法时间；四项算法耗时仅取内部计时器。超时／异常行保留在 500 行中，未知耗时留空，不能作为零耗时或通过。含未完成行的结果不能交给要求完整数值的旧汇总脚本。
+历史 `RunSpecializedDataset500.py` 曾提供完整转换的逐例看门狗，现保留源码但入口直接退出。历史 CSV 中进程时限包括初始化、读盘和认证，不等同于算法时间；超时／异常的未知耗时不能作为零耗时或通过。
 
-独立配对验证的 `--dataset-new-only <dir> <csv>`／`--sphere-new-only <dir> <csv>` 可跳过旧投影验证器对照，仍使用真实首候选、检查来源证书、误差和覆盖率；覆盖不足依旧返回失败。旧 `--dataset`／`--sphere` 对照模式不变。首候选验证不等同于带候选重试和优化的完整转换。
+独立验证测试仍检查来源证书、误差和覆盖率；覆盖不足依旧返回失败。首候选验证不等同于带候选重试和优化的完整转换。
 
 CSV 标记 `timing_schema=specialized-v2`，分别输出分类计算、初值验证、优化计算、优化后验证及其调用次数。分类总计和优化总计分别包含对应验证；`validate_ms` 为零，不能再把四项明细加到阶段总计上。用 `python tests/SummarizeSpecializedDataset500.py <csv> <目录>` 校验、生成 `summary.json` 与按类型/分支、控制点档分组的 `groups.csv`。旧报告使用旧计时定义，不能直接比较 `classify_ms` 和 `optimize_ms`。
 

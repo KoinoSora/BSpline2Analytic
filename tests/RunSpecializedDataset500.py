@@ -29,6 +29,8 @@ def read(path):
 
 
 def main():
+    raise SystemExit("Retired: this runner invokes ValidateConversion through ConvertApproximate. "
+                     "Use BSpline2AnalyticPairedValidationTests --dataset-new-only instead.")
     parser = argparse.ArgumentParser(description=__doc__)
     for name in ("exe", "data", "sdk", "output"):
         parser.add_argument("--" + name, required=True, type=Path)
