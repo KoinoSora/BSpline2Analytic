@@ -1,7 +1,7 @@
 """Rational-only validation: prior slow fixtures and five 200-control fixtures.
 
 ValidateGeneralHybrid is retired and must not run. Synthetic cases benchmark a
-supplied mother and fixed chart; historical fixtures use classified candidates.
+supplied mother and fixed chart; rebuilt V2 fixtures use classified candidates.
 """
 import argparse
 import csv
@@ -12,7 +12,7 @@ from pathlib import Path
 import statistics
 import subprocess
 
-LEGACY = (0, 100, 188, 200, 218, 230, 231, 254, 255, 284, 286, 288, 318, 388, 486, 488, 500)
+SELECTED = (0, 100, 188, 200, 218, 230, 231, 254, 255, 284, 286, 288, 318, 388, 486, 488, 500)
 
 
 def main():
@@ -23,6 +23,8 @@ def main():
     p.add_argument('--output', type=Path, required=True)
     p.add_argument('--runs', type=int, default=5)
     a = p.parse_args()
+    from RationalDatasetSupport import require_v2_data
+    require_v2_data(a.data)
     if a.runs < 1:
         p.error('--runs must be positive')
     exe, sdk, data, output = [x.resolve() for x in (a.exe, a.sdk, a.data, a.output)]
@@ -32,15 +34,15 @@ def main():
     key = next(k for k in env if k.lower() == 'path')
     env[key] = str(sdk / 'x64-win/bin') + os.pathsep + env[key]
     rows, failures, hashes = [], [], {}
-    for synthetic, case in [(0, i) for i in LEGACY] + [(1, i) for i in range(5)]:
-        if not synthetic:
-            path = data / f'general-{case:03}.b2a'
-            hashes[path.name] = hashlib.sha256(path.read_bytes()).hexdigest()
+    for synthetic, case in [(0, i) for i in SELECTED] + [(1, i) for i in range(5)]:
+        suite = 'synthetic' if synthetic else 'main'
+        path = data / suite / f'{suite}-{case:03}.b2a'
+        hashes[path.name] = hashlib.sha256(path.read_bytes()).hexdigest()
         target = work / f'{synthetic}-{case:03}.csv'
         if target.exists():
             target.unlink()
         try:
-            r = subprocess.run([str(exe), '--rational-case', str(data), str(target), str(case), str(a.runs), str(synthetic), '--rational-only'],
+            r = subprocess.run([str(exe), '--rational-case', str(data), str(target), str(case), str(a.runs), str(synthetic), '--rational-v2-only'],
                                cwd=sdk, env=env, capture_output=True, text=True, encoding='utf-8',
                                errors='replace', timeout=60)
             target.with_suffix('.log').write_text(r.stdout + r.stderr, encoding='utf-8')
@@ -59,10 +61,10 @@ def main():
         if rows:
             writer = csv.DictWriter(f, fieldnames=list(rows[0]), quoting=csv.QUOTE_ALL)
             writer.writeheader(); writer.writerows(rows)
-    summary = dict(validator='rational_boundary', failures=failures, runs=a.runs, rows=len(rows),
+    summary = dict(validator='rational_boundary', dataset_contract='rational-domain-v2', failures=failures, runs=a.runs, rows=len(rows),
                    exe_sha256=hashlib.sha256(exe.read_bytes()).hexdigest(), inputs_sha256=hashes,
                    cpu_affinity_fixed=False, exclusive_machine=False, cases=[])
-    for synthetic, case in [(0, i) for i in LEGACY] + [(1, i) for i in range(5)]:
+    for synthetic, case in [(0, i) for i in SELECTED] + [(1, i) for i in range(5)]:
         entry = dict(synthetic=synthetic, id=case)
         for mode in ('rational',):
             selected = [r for r in rows if r['synthetic'] == str(synthetic) and r['id'] == str(case) and r['mode'] == mode]

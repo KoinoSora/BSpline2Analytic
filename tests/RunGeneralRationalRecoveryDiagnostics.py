@@ -1,4 +1,4 @@
-"""Diagnose only the 240 historical main-suite failures; CURRENT validator only.
+"""Diagnose failures from a newly measured V2 main-suite baseline; CURRENT validator only.
 
 Run after the uninstrumented three-run benchmark. No diagnostic timing is
 reported as production performance. Oracle/frame swaps never feed candidates.
@@ -23,11 +23,9 @@ def sha(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def write(path, rows):
-    if not rows:
-        raise ValueError(f'No diagnostic rows: {path}')
+def write(path, rows, fields):
     with path.open('w', encoding='utf-8', newline='') as f:
-        w = csv.DictWriter(f, fieldnames=list(rows[0]))
+        w = csv.DictWriter(f, fieldnames=fields)
         w.writeheader()
         w.writerows(rows)
 
@@ -40,19 +38,29 @@ def main():
     p.add_argument('--timeout', type=float, default=120)
     p.add_argument('--resume', action='store_true')
     args = p.parse_args()
-    ids = [int(r['id']) for r in read(args.failures) if r['suite'] == 'main']
-    if len(ids) != 240 or len(set(ids)) != 240:
-        raise ValueError('Expected exactly 240 unique main failures')
+    from RationalDatasetSupport import require_v2_data
+    require_v2_data(args.data)
+    if json.loads((args.baseline/"run.json").read_text()).get("dataset_contract") != "rational-domain-v2":
+        raise ValueError("Diagnostics require a V2 baseline; old 240-case evidence is archived")
+    ids = [int(r['id']) for r in read(args.failures) if r['suite'] == 'main' and r.get('outcome') == 'not_certified_positive']
+    if not ids or len(set(ids)) != len(ids):
+        raise ValueError('Expected unique V2 main failure IDs')
     if args.cases:
         if len(set(args.cases)) != len(args.cases) or not set(args.cases) <= set(ids):
-            p.error('Cases must be unique members of the 240 failures')
+            p.error('Cases must be unique members of the V2 failures')
         ids = args.cases
     exe, sdk, data, output = (getattr(args, n).resolve() for n in ('exe', 'sdk', 'data', 'output'))
-    config = dict(exe_sha256=sha(exe), failures_sha256=sha(args.failures), cases=ids,
-                  inputs_sha256={str(i): sha(data/f'general-{i:03}.b2a') for i in ids},
+    config = dict(dataset_contract='rational-domain-v2', exe_sha256=sha(exe), failures_sha256=sha(args.failures), cases=ids,
+                  inputs_sha256={str(i): sha(data/'main'/f'main-{i:03}.b2a') for i in ids},
                   baseline_results_sha256=sha(args.baseline/'results.csv'),
                   baseline_attempts_sha256=sha(args.baseline/'attempts.csv'), timeout=args.timeout,
                   production_timing=False, parallel_processes=1)
+    baseline_config = json.loads((args.baseline/'run.json').read_text())
+    if baseline_config.get('fixed_chart'):
+        raise ValueError('Recovery diagnostics require a classified baseline')
+    for i in ids:
+        if baseline_config['inputs_sha256'][f'main:{i}'] != config['inputs_sha256'][str(i)]:
+            raise ValueError('Baseline input hash differs from V2 input')
     output.mkdir(parents=True, exist_ok=True)
     stamp = output/'run.json'
     if args.resume:
@@ -77,7 +85,7 @@ def main():
             start = time.perf_counter()
             with log.open('wb') as capture:
                 try:
-                    result = subprocess.run([str(exe), '--diagnose-main', str(data), str(prefix), str(case), '--rational-only'],
+                    result = subprocess.run([str(exe), '--diagnose-main', str(data), str(prefix), str(case), '--rational-v2-only'],
                                             cwd=sdk, env=env, stdout=capture, stderr=subprocess.STDOUT,
                                             timeout=args.timeout, creationflags=getattr(subprocess, 'CREATE_NO_WINDOW', 0))
                     code, timeout = result.returncode, False
@@ -97,7 +105,7 @@ def main():
             tables[name].extend(rows)
         if index % 10 == 0 or index + 1 == len(ids):
             print(f'{index+1}/{len(ids)} main:{case}: {execution["wall_seconds"]:.2f}s', flush=True)
-    baseline = {(r['id'], r['attempt']): r for r in read(args.baseline/'attempts.csv') if r['run'] == '0' and int(r['id']) in ids}
+    baseline = {(r['id'], r['attempt']): r for r in read(args.baseline/'attempts.csv') if r['suite'] == 'main' and r['run'] == '0' and int(r['id']) in ids}
     current = {(r['id'], r['candidate']): r for r in tables['candidates'] if r['mode'] == 'classified'}
     if set(baseline) != set(current):
         raise ValueError('Candidate sequence changed')
@@ -106,7 +114,9 @@ def main():
             if row[name] != baseline[key][name]:
                 raise ValueError(f'Instrumented result differs from baseline: {key} {name}')
     for name, rows in tables.items():
-        write(output/(name+'.csv'), rows)
+        with (parts/f'main-{ids[0]:03}-{name}.csv').open(encoding='utf-8-sig', newline='') as f:
+            fields = csv.DictReader(f).fieldnames
+        write(output/(name+'.csv'), rows, fields)
     (output/'executions.json').write_text(json.dumps(executions, indent=2), encoding='utf-8')
     print('All candidate decisions match uninstrumented baseline', flush=True)
     print('Recovery branches:', dict(collections.Counter(r['reason'] for r in tables['charts'] if r['mode'] == 'classified')), flush=True)

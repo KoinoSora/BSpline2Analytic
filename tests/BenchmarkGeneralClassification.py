@@ -6,6 +6,7 @@ import subprocess
 
 
 def main():
+    raise SystemExit("Retired analytic-UV fallback dataset entry; use rational-domain-v2 tools.")
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--baseline", required=True, help="Commit with the original two-argument classifier")
     args = parser.parse_args()

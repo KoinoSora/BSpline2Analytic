@@ -1,5 +1,6 @@
 #include "GeneralRationalBoundaryInternal.h"
 #include "GeneralDataset.h"
+#include "GeneralRationalDataset.h"
 #include <Foundation/init.h>
 #include <fstream>
 #include <iomanip>
@@ -97,11 +98,11 @@ struct Diagnostic
     std::array<std::vector<BezierCell>,4> source;V sourceOrigin;
     std::ofstream attempts,charts,witnesses;
     Diagnostic(const std::filesystem::path &data,const std::filesystem::path &prefix,unsigned id):
-        fixture(ReadGeneralFixture(data/GeneralFixtureFilename(id))),samples(*fixture.input),sourceOrigin(Get(fixture.truth.origin)),
+        fixture(ReadGeneralFixture(data/"main"/RationalFixtureName("main",id))),samples(*fixture.input),sourceOrigin(Get(fixture.truth.origin)),
         attempts(prefix.string()+"-candidates.csv"),charts(prefix.string()+"-charts.csv"),witnesses(prefix.string()+"-witnesses.csv")
     {
         Require(fixture.id==id,"Fixture identity mismatch");Require(attempts&&charts&&witnesses,"Cannot create diagnostics");
-        auto certificate=CertifyAnalyticPair(fixture,fixture.pairTolerance);Require(certificate.passed,"Source certificate failed");
+        auto certificate=CertifyRationalDomain(fixture);Require(certificate.passed,"Source certificate failed");
         source=ExtractHybridBoundaries(*fixture.input,sourceOrigin);
         attempts<<"id,mode,candidate,type,status,accepted,charts,nodes,interior_max,finite_max,boundary_bound,tangent_deg,center_delta,radius_delta,axis_abs_dot,origin_x,origin_y,origin_z,axis_x,axis_y,axis_z,xdir_x,xdir_y,xdir_z,radius,major_radius,half_angle,message\n"<<std::setprecision(17);
         charts<<"id,mode,candidate,type,chart,recovered,reason,edge,sample,source_fraction,value,limit,u0,u1,v0,v1,axis_x,axis_y,axis_z,xdir_x,xdir_y,xdir_z,exception\n"<<std::setprecision(17);
@@ -209,7 +210,9 @@ struct Diagnostic
             }
             if(passed)break;
         }
-        auto known=Analyze("known_mother",0,fixture.truth);
+        options.chartDomain=fixture.chartDomain;
+        auto known=Analyze("known_mother",0,fixture.truth); // V2 supplied reference chart, outside benchmark.
+        options.chartDomain.reset();
         if(firstMatching&&fixture.truth.type==sggk::SurfaceType::Sphere)
         {
             auto a=*firstMatching;a.axis=fixture.truth.axis;a.xDirection=fixture.truth.xDirection;
@@ -227,7 +230,7 @@ int main(int argc,char **argv)
     {
         Require(IntervalEnvironmentSupported(),"Unsupported interval environment");
         if(argc==2&&std::string(argv[1])=="--diagnostic-unit"){KernelUnit();return 0;}
-        Require(argc==6&&std::string(argv[1])=="--diagnose-main"&&std::string(argv[5])=="--rational-only","Invalid rational diagnostic arguments");
+        Require(argc==6&&std::string(argv[1])=="--diagnose-main"&&std::string(argv[5])=="--rational-v2-only","Invalid rational diagnostic arguments");
         Diagnostic run(argv[2],argv[3],unsigned(std::stoul(argv[4])));run.Run();return 0;
     }
     catch(const std::exception &e){std::cerr<<e.what()<<'\n';return 1;}

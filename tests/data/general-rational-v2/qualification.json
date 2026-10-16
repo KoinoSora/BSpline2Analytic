@@ -1,0 +1,85 @@
+{
+  "contract": "rational-domain-v2",
+  "cases": 985,
+  "source_certified": 985,
+  "representation_policy": {
+    "degree_min": 3,
+    "degree_max": 5,
+    "max_controls": 200,
+    "geometry_tolerance": 1e-05
+  },
+  "fallback_tests_run": false,
+  "suites": {
+    "main": {
+      "cases": 600,
+      "rational": 300,
+      "collapsed_cases": 40,
+      "min_degree": 3,
+      "max_degree": 5,
+      "over_biquintic": 0,
+      "control_range": [
+        50,
+        200
+      ],
+      "degree_increased": 24,
+      "controls_decreased": 0,
+      "scenarios": {}
+    },
+    "extra": {
+      "cases": 60,
+      "rational": 30,
+      "collapsed_cases": 4,
+      "min_degree": 3,
+      "max_degree": 5,
+      "over_biquintic": 0,
+      "control_range": [
+        28,
+        200
+      ],
+      "degree_increased": 1,
+      "controls_decreased": 0,
+      "scenarios": {}
+    },
+    "extreme": {
+      "cases": 320,
+      "rational": 160,
+      "collapsed_cases": 56,
+      "min_degree": 3,
+      "max_degree": 5,
+      "over_biquintic": 0,
+      "control_range": [
+        50,
+        200
+      ],
+      "degree_increased": 176,
+      "controls_decreased": 0,
+      "scenarios": {
+        "radius_arc": 64,
+        "cylinder_helix": 32,
+        "slender_cylinder_helix": 32,
+        "sphere_triangle": 48,
+        "cone_helix": 32,
+        "slender_cone": 32,
+        "torus_extreme": 32,
+        "world_coordinates": 48
+      }
+    },
+    "synthetic": {
+      "cases": 5,
+      "rational": 5,
+      "collapsed_cases": 0,
+      "min_degree": 5,
+      "max_degree": 5,
+      "over_biquintic": 0,
+      "control_range": [
+        200,
+        200
+      ],
+      "degree_increased": 1,
+      "controls_decreased": 0,
+      "scenarios": {}
+    }
+  },
+  "qualification_exe_sha256": "be50b55e9836171ac7435335aee3813901edc82cf0379225bc612c298d3ddbfc",
+  "migration_csv_sha256": "db3aa8366695db503a9fdb5a212f631b9fdda4d1cf267bf94a35a5292b8d780d"
+}

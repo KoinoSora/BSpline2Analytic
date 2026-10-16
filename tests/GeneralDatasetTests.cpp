@@ -365,6 +365,9 @@ void Diagnose(const std::filesystem::path &dir,unsigned id)
 }
 int main(int argc,char **argv)
 {
+    std::cerr << "Retired analytic-UV fallback dataset entry. Use GeneralRationalDatasetTests and rational-domain-v2.\n";
+    return 1;
+
     sggk::init();int code=2;
     try
     {

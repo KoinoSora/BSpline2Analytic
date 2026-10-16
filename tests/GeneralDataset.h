@@ -21,6 +21,10 @@ struct GeneralFixture
     double bend = 0;
     sggk::BSplineSurfacePtr input;
     double storedUpper = 0, exclusionRadius = 0, storedRankMargin = 0, pairTolerance = 1e-6;
+    // V2: corners belong to a specified rational mother chart, not analytic UV.
+    bool rationalDomain = false;
+    std::array<double,4> chartDomain{};
+    double storedTangentDeg = INFINITY;
 };
 struct FixtureCertificate
 {

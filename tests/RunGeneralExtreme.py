@@ -23,6 +23,7 @@ def read(path):
 
 
 def main():
+    raise SystemExit("Retired analytic-UV fallback dataset entry; use rational-domain-v2 tools.")
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--exe", required=True, type=Path)
     parser.add_argument("--sdk", required=True, type=Path)

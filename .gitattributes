@@ -1,0 +1,2 @@
+# Fixed-corpus provenance hashes cover file bytes, including line endings.
+/tests/data/general-rational-v2/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

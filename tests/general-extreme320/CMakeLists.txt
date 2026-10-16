@@ -22,3 +22,5 @@ add_test(NAME BSpline2Analytic.GeneralExtreme320 COMMAND "${Python3_EXECUTABLE}"
     --output "${CMAKE_CURRENT_BINARY_DIR}/results.csv")
 # Let the per-input watchdog finish the matrix and retain every result row.
 set_tests_properties(BSpline2Analytic.GeneralExtreme320 PROPERTIES TIMEOUT 11000)
+
+set_tests_properties(BSpline2Analytic.GeneralExtreme320 PROPERTIES DISABLED TRUE)

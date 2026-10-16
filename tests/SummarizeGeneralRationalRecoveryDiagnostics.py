@@ -1,4 +1,4 @@
-"""Validate and summarize the current-validator main-240 diagnostic evidence."""
+"""Validate and summarize the current-validator V2 diagnostic evidence."""
 import argparse
 import collections
 import csv
@@ -20,10 +20,14 @@ def main():
     args = p.parse_args()
     d = args.diagnostics
     candidates, charts, witnesses = [read(d/(name+'.csv')) for name in ('candidates', 'charts', 'witnesses')]
-    baseline = read(args.baseline/'results.csv')
+    config = json.loads((d/'run.json').read_text())
+    baseline_config = json.loads((args.baseline/'run.json').read_text())
+    if config.get('dataset_contract') != 'rational-domain-v2' or baseline_config.get('dataset_contract') != 'rational-domain-v2':
+        raise ValueError('Diagnostic summary requires V2 evidence')
     ids = sorted({int(r['id']) for r in candidates})
-    assert len(ids) == 240 and len(baseline) == 720
-    assert all(r['accepted'] == '0' and r['nodes'] == '0' and r['execution_status'] == 'completed' for r in baseline)
+    baseline = [r for r in read(args.baseline/'results.csv') if r['suite'] == 'main' and int(r['id']) in ids]
+    assert ids == sorted(config['cases']) and len(baseline) == len(ids)*baseline_config['runs']
+    assert all(r['accepted'] == '0' and r['execution_status'] == 'completed' for r in baseline)
     for r in witnesses:
         if r['outside_certified'] == '1':
             assert float(r['global_lower']) > float(r['proof_tolerance']) >= 1.1e-5
@@ -36,13 +40,15 @@ def main():
     unresolved = [r for r in charts if r['reason'] == 'RationalLineWitnessExceeded' and
                   (r['id'], r['mode'], r['candidate'], r['chart']) not in proof_keys]
     with (d/'unresolved-chart-exclusions.csv').open('w', encoding='utf-8', newline='') as f:
-        w = csv.DictWriter(f, fieldnames=list(charts[0]));w.writeheader();w.writerows(unresolved)
+        with (d/'charts.csv').open(encoding='utf-8-sig', newline='') as source:
+            fields = csv.DictReader(source).fieldnames
+        w = csv.DictWriter(f, fieldnames=fields);w.writeheader();w.writerows(unresolved)
     cases = []
     for case in ids:
         key = str(case)
         cr = [r for r in candidates if r['id'] == key]
         br = [r for r in baseline if r['id'] == key]
-        assert [int(r['run']) for r in br] == [0, 1, 2]
+        assert sorted(int(r['run']) for r in br) == list(range(baseline_config['runs']))
         known = next(r for r in cr if r['mode'] == 'known_mother')
         source_type = known['type']
         classified = [r for r in cr if r['mode'] == 'classified']
@@ -74,7 +80,7 @@ def main():
                             max_run_ms=max(r['max_ms'] for r in rows), matching_charts=sum(r['matching_chart_attempts'] for r in rows),
                             excluded_matching_charts=sum(r['matching_charts_with_distance_exclusion'] for r in rows),
                             known_pass_ids=[r['id'] for r in rows if r['known_status'] == 'Passed'])
-    summary = dict(cases=len(cases), benchmark_runs=len(baseline), diagnostic_timing_excluded=True,
+    summary = dict(dataset_contract='rational-domain-v2', known_mother_uses_reference_chart=True, cases=len(cases), benchmark_runs=len(baseline), diagnostic_timing_excluded=True,
                    classification_attempts=sum(r['mode'] == 'classified' for r in candidates), groups=groups,
                    classified_recovery_reasons=dict(collections.Counter(r['reason'] for r in charts if r['mode'] == 'classified')),
                    chart_rows=len(charts), witness_rows=len(witnesses),

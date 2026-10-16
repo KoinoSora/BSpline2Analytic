@@ -237,9 +237,10 @@ V ReadV(std::istream &s){V v;s>>v.x>>v.y>>v.z;return v;}
 void Save(const GeneralFixture &c,const std::filesystem::path &path)
 {
     std::ofstream o(path);Require(bool(o),"Cannot create fixture");o<<std::setprecision(17);
-    o<<"B2A_GENERAL_V1\n"<<c.id<<' '<<unsigned(c.group)<<' '<<c.type<<' '<<c.bucket<<' '<<c.variant<<' '<<c.seed<<' '<<c.rational<<' '<<c.extra<<' '<<c.collapsedMask<<'\n';
+    o<<(c.rationalDomain?"B2A_RATIONAL_DOMAIN_V2\n":"B2A_GENERAL_V1\n")<<c.id<<' '<<unsigned(c.group)<<' '<<c.type<<' '<<c.bucket<<' '<<c.variant<<' '<<c.seed<<' '<<c.rational<<' '<<c.extra<<' '<<c.collapsedMask<<'\n';
     WriteV(o,Get(c.truth.origin));WriteV(o,Get(c.truth.axis));WriteV(o,Get(c.truth.xDirection));
     o<<unsigned(c.truth.type)<<' '<<c.truth.radius<<' '<<c.truth.majorRadius<<' '<<c.truth.halfAngle<<'\n';
+    if(c.rationalDomain){for(double x:c.chartDomain)o<<x<<' ';o<<c.storedTangentDeg<<'\n';}
     for(const auto &p:c.corners)o<<p.X()<<' '<<p.Y()<<'\n';
     o<<c.bend<<' '<<c.storedUpper<<' '<<c.exclusionRadius<<' '<<c.storedRankMargin<<' '<<c.pairTolerance<<'\n';
     const auto &s=*c.input;const auto &p=s.ControlPoints();const auto &w=s.Weights();
@@ -286,11 +287,12 @@ unsigned FixtureCollapsedMask(const sggk::BSplineSurface &s)
 }
 GeneralFixture ReadGeneralFixture(const std::filesystem::path &path)
 {
-    std::ifstream in(path);std::string tag;in>>tag;Require(tag=="B2A_GENERAL_V1","Invalid general fixture header: "+path.string());
-    GeneralFixture c;unsigned group,type;in>>c.id>>group>>c.type>>c.bucket>>c.variant>>c.seed>>c.rational>>c.extra>>c.collapsedMask;
+    std::ifstream in(path);std::string tag;in>>tag;Require(tag=="B2A_GENERAL_V1"||tag=="B2A_RATIONAL_DOMAIN_V2","Invalid general fixture header: "+path.string());
+    GeneralFixture c;c.rationalDomain=tag=="B2A_RATIONAL_DOMAIN_V2";unsigned group,type;in>>c.id>>group>>c.type>>c.bucket>>c.variant>>c.seed>>c.rational>>c.extra>>c.collapsedMask;
     Require(group<8 && c.type<=5 && c.bucket<5,"Invalid fixture metadata");c.group=GeneralFixtureGroup(group);
     c.truth.origin=Point(ReadV(in));c.truth.axis=Direction(ReadV(in));c.truth.xDirection=Direction(ReadV(in));
     in>>type>>c.truth.radius>>c.truth.majorRadius>>c.truth.halfAngle;c.truth.type=sggk::SurfaceType(type);
+    if(c.rationalDomain){for(double &x:c.chartDomain){in>>x;Require(std::isfinite(x),"Nonfinite rational chart domain");}in>>c.storedTangentDeg;}
     for(auto &p:c.corners){double u=0,v=0;in>>u>>v;Require(std::isfinite(u)&&std::isfinite(v),"Nonfinite chart corner");p={u,v};}
     in>>c.bend>>c.storedUpper>>c.exclusionRadius>>c.storedRankMargin>>c.pairTolerance;
     unsigned p=0,q=0,nu=0,nv=0;bool weights=false;in>>p>>q>>nu>>nv>>weights;

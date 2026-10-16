@@ -1,27 +1,25 @@
 # 测试代码与固定输入
 
-`GeneralRationalBoundaryTests.cpp` 和 `RunGeneralRationalBoundarySelected.py` 仅运行新 NURBS 域直线验证器。默认选取 17 个历史案例和 5 个双五次、200 控制点压力样本；每例重复 5 次，共 110 行结果，CSV 的 `mode` 只允许 `rational`。已有数据仍可使用，旧验证器不再参与对照。
+当前一般兜底数据为 [`data/general-rational-v2/`](data/general-rational-v2/)，共 985 例（600 主集、60 专项、320 极端、5 压力）。正例从母面 **NURBS 参数域直线边界**构造；20 个非线性边界探针继续作为单独的合同探针。旧 `dataset500/general-*.b2a`、`general-extra-*.b2a` 和 `general-extreme320/` 已废弃，仅保留历史证据。专用路径 `case-*.b2a` 不受影响。
 
-本目录保存测试实现、案例生成器和数据；测试说明与报告统一放在 [docs/testing/](../docs/testing/TEST_REPORT.md)。
+985 例两方向次数均为 **3–5**，控制顶点总数 **≤200**，算法几何容差保持 **1e-5**；有意超差的负例/探针不改变验收阈值。生成器、清单发布和运行器均检查表示约束。
 
-2026-10-15 起，`ValidateGeneralHybrid` 已废弃：保留实现及历史测试代码，移除旧 CMake 测试目标和 CTest 注册，`RunGeneralHybrid.py`、`CompareGeneralHybridSelected.py` 的入口直接退出。不得按历史报告命令重跑。新验证器测试中的旧版调用也已移除。
+2026-10-16 本轮仅生成并独立认证数据、编译迁移后的入口，**没有运行兜底单测、转换、分类或性能测试**。来源认证通过不代表兜底识别通过，也不产生新的 10 ms 性能结论。构造方法、次数变化、来源证书和命令见 [V2 数据说明](../docs/testing/GENERAL_RATIONAL_DATASET_V2.md)。
 
-新验证器的历史输入使用真实分类候选；压力样本使用已知母面和固定参数图。来源证书和输出审计在计时外执行。新测试命令使用独立参数形式，使误用旧可执行文件时先报参数错误，不进入旧/新对比循环。修改后需重新配置并构建（仓库根目录）：
+只生成和认证数据：
 
 ```powershell
-cmake -S . -B build-general-hybrid -A x64
-cmake --build build-general-hybrid --config Release --target BSpline2AnalyticGeneralRationalBoundaryTests --parallel 2
-ctest --test-dir build-general-hybrid -C Release -R '^BSpline2Analytic.GeneralRationalBoundaryUnit$' --output-on-failure
-python tests/RunGeneralRationalBoundarySelected.py --exe build-general-hybrid/Release/BSpline2AnalyticGeneralRationalBoundaryTests.exe --sdk ../../../SGGK --data tests/data/dataset500 --output build-general-hybrid/rational-only.csv --runs 5
+cmake -S . -B build-rational-v2 -A x64
+cmake --build build-rational-v2 --config Release --target BSpline2AnalyticGeneralRationalDatasetTests
+python tests/GenerateGeneralRationalDataset.py --exe build-rational-v2/Release/BSpline2AnalyticGeneralRationalDatasetTests.exe --sdk ../../../SGGK --legacy-main tests/data/dataset500 --legacy-extreme tests/data/general-extreme320 --output tests/data/general-rational-v2 --resume --audit
+python tests/AuditGeneralRationalMigration.py --data tests/data/general-rational-v2 --legacy-main tests/data/dataset500 --legacy-extreme tests/data/general-extreme320
 ```
 
-每例进程看门狗包含数据认证和输出审计；异常、超时和未完成案例记录为失败。运行器退出 0 表示完成测量且接受输出通过审计，不等同于全部正例通过或性能达标。首次实现时的 220 行新旧对照已归档于[历史报告](../docs/testing/GENERAL_RATIONAL_BOUNDARY_2026-10-15.md)，不再复跑旧验证器。
+后续获准测试时，`RunGeneralRationalBoundaryFull.py`、`RunGeneralRationalBoundarySelected.py`、`CompareGeneralRationalBoundarySelected.py`、`BenchmarkGeneralBoundaryEnvelope.py` 的 `--data` 均传入新版根目录。运行器检查 V2 合同、完整清单和文件 SHA256；不再接收 `--extreme-data`。测试程序检查每个文件的 V2 标记，并重新认证实际输入。批量入口使用新的 `--rational-v2-only` 标记，必须重新构建，不能将旧可执行文件或旧 240 例失败清单混入新版批次。
 
-`CompareGeneralRationalBoundarySelected.py` 用于当前 NURBS 验证器修改前后的定向比较：7 个历史案例（含慢例、退化边、未认证/负例）及 5 个双五次压力案例，各版本默认 5 次，交替先后顺序。仅接受 rational-only 程序，不运行退休验证器。新增 CSV 字段记录联合构造、位置未通过时跳过切向、快速切向及完整后备次数，并记录源次数和控制点数。命令、计时口径及结果见[连续边界误差曲线优化报告](../docs/testing/GENERAL_BOUNDARY_ERROR_2026-10-15.md)。
+全量运行器默认采用“分类＋当前验证器”，不向分类器提供来源母面或参数图；`--fixed-chart` 是单列的已知母面/参数图诊断，压力及指定专项也会明确标记入口。来源认证、输出审计和诊断均在算法计时外。`total_ms` 包括分类及验证；汇总从新版清单读取预期，不继承旧案例 254 的未认证结果。新恢复诊断要求新版基线及相同输入哈希，不再固定要求 240 例。
 
-`RunGeneralRationalBoundaryFull.py` 覆盖 600 主案例、60 专项、320 极端及 5 个构造压力样本，默认每例 3 次。`SummarizeGeneralRationalBoundaryFull.py` 检查计时关系、逐例汇总，并导出失败、超 10 ms 和已知母面诊断清单。当前使用“分类＋新验证器”入口，未包含正式转换的参数优化；来源证书、输出审计、诊断均在算法计时外。`--cases main:100 extreme:0` 可做运行器预检，`--resume` 必须匹配批次哈希。完整结果、合同差异和复现说明见[985 例全面测试报告](../docs/testing/GENERAL_RATIONAL_FULL_2026-10-15.md)。
-
-`GeneralRationalRecoveryDiagnostics.cpp` 与 `RunGeneralRationalRecoveryDiagnostics.py` 对其中主集 240 个未认证案例记录具体恢复拒绝分支，并在计时外做固定参数图的点到曲线区间排除及球面参数架交换。诊断记录不改变恢复谓词；每个参数图核对有/无诊断结果，逐候选核对无诊断基线。`SummarizeGeneralRationalRecoveryDiagnostics.py` 导出逐例归因及尚不确定的排除项，不能把参数图排除扩大为所有表示无解。方法和证据见[240 例诊断报告](../docs/testing/GENERAL_RATIONAL_MAIN240_DIAGNOSIS_2026-10-16.md)。
+旧 `ValidateGeneralHybrid`、`ValidateConversion` 的禁测约束继续有效。`Build.ps1 -GeneralOnly` / `-GeneralPositiveOnly`、旧一般数据/极端数据/分类计时入口直接报废弃，旧 CTest 已禁用。历史 [985 例报告](../docs/testing/GENERAL_RATIONAL_FULL_2026-10-15.md) 和 [240 例诊断](../docs/testing/GENERAL_RATIONAL_MAIN240_DIAGNOSIS_2026-10-16.md) 仅供查阅，同编号不表示新旧输入相同。
 
 | 文件/目录 | 职责 |
 | --- | --- |
@@ -34,24 +32,10 @@ python tests/RunGeneralRationalBoundarySelected.py --exe build-general-hybrid/Re
 | `PairedPreparationBenchmark.cpp`、`BenchmarkPairedPreparation.py` | 同一程序对比指定提交的独立验证器、当前首次验证与源面缓存命中；记录准备子项和首次缓存建立成本。 |
 | `data/dataset500/` | `case-*.b2a` 当前为 `dataset500-degree5-v2`：两方向最高五次、控制点严格小于 200；一般路径数据另有独立清单。 |
 | `AuditDataset500Migration.py` | 对比迁移前后的 500 个文件，检查身份、来源、解析参数和变更范围，并记录全部 SHA-256。 |
-| `GeneralDataset.*`、`GeneralDatasetCertificate.cpp`、`GeneralDatasetTests.cpp` | 新增 600 个带独立证书的主案例、60 个专项及仅调用一般兜底的测试入口。 |
-| `SummarizeGeneralDataset.py` | 校验新 CSV 完整性并按来源类型、测试组汇总结果。 |
+| `GeneralDataset.*`、`GeneralDatasetCertificate.cpp`、`GeneralDatasetTests.cpp` | 保留的旧一般数据实现；旧测试入口已废弃。 |
+| `SummarizeGeneralDataset.py` | 仅用于查阅历史一般兜底 CSV。 |
 
-新文件 `general-*.b2a`、`general-extra-*.b2a` 与旧 `case-*.b2a` 共存于 `data/dataset500/`，各自使用独立清单；旧测试按 `case-` 前缀统计。构造、证书和运行方式见 [GENERAL600.md](../docs/testing/GENERAL600.md)。
-
-仅复测一般兜底的 500 个正例：`./Build.ps1 -GeneralPositiveOnly`。结果为 `build/general-positive500-Release.csv`，使用 `python tests/SummarizeGeneralDataset.py --positives <csv>` 汇总。测试仍校验来源证书和独立输出证书，并检查边界提取后的端点、导数及细分方向；不执行负例转换。
-
-一般兜底 CSV 中，`raw_candidates` 为五类母面生成的候选总数（去重及分批选择前），`duplicate_candidates` 为评分前剔除的重复候选数，`score_evaluations` 为开始评分的非重复候选数（包括评分失败的调用，不将同一候选粗评和补评重复计数）。三者满足 `raw_candidates = duplicate_candidates + score_evaluations`；汇总脚本同时支持不含这些列的历史 CSV。
-
-新入口 `BSpline2AnalyticGeneralDatasetTests --compare-positive <data-dir> <csv> 0 500` 对每个正例依次运行 `64-full`、`8-full`、`8-staged` 三种配置，逐例轮换六种执行顺序，并分别执行独立输出核验。只共享只读输入；转换内部采样上下文每次新建。输出共 1500 行，使用 `python tests/SummarizeGeneralDataset.py --positives --configuration 8-staged <csv>` 提取、核验和汇总某一配置，也可加 `--merge <csv>` 保存该配置的 500 行。
-
-新增计数：`seed_attempts` 是五类实际尝试组数，`coarse_points` 是配置的粗评点数（0 表示完整评分），`coarse_scores`/`full_scores` 是进入粗评/完整补评的候选数（含失败），`completed_scores` 是完成评分数，`deferred_candidates` 是首批选择后尚未补评的候选数，`backup_candidates` 是后续批次选出数。`interior_point_evaluations`/`boundary_point_evaluations` 统计评分中的点投影求距次数，不含验证和优化。正例入口还用已有正例穷尽候选池，检查粗评点独立性、缓存复用、分批排序、后备候选与尝试预算。
-
-圆环初值现在使用四法线公共交线的直接代数求解，每组最多两条轴线；子午圆拟合额外使用初值生成分区中最多 12 个分散点，不使用独立评分点。CSV 的 `torus_groups` 记录构造组数，`torus_rank_deficient`、`torus_axis_degenerate`、`torus_no_real_axis` 记录整组拒绝原因；`torus_axes`/`torus_rejected_axes` 记录合法/被拒轴线，`torus_circle_failures`/`torus_invalid_radii` 记录圆拟合/半径失败，`torus_candidates`/`torus_dual_groups` 记录去重前的圆环候选数/双候选组数。汇总脚本检查每组最多两轴，以及每条合法轴线对应一次圆构造结果。正例入口额外检查 144 组已知圆环点的排列、法向反向、尺度与小角度构造，并用原失败圆环代表例检查完整评分和分阶段评分的一致性。
-
-对照配置均使用当前实现，不等同于检出历史提交。保留的历史分类比较脚本仍严格要求与旧版候选完全一致；当前去重时机、奇异法向处理和圆环构造器均有变化，不承诺继续满足该历史等价性检查；应使用逐例转换和独立几何验收比较结果。
-
-历史评分前去重的分类阶段配对计时（显式保持 64 次、完整评分配置）：先构建当前 Release 库，再运行 `python tests/BenchmarkGeneralClassification.py --baseline bd3c179`。脚本从指定 Git 提交提取旧的双参数 `ClassifyGeneral`，仅重命名函数，并与当前库链接到同一个测试程序；对 500 个正例交替执行新旧分类，各重复三轮，每次使用独立采样上下文。逐一比较保留候选的顺序、几何参数和评分是否完全一致。结果保存为 `build/general-classification-paired.csv`，临时基线源码和编译产物均在忽略的 `build/` 下；该计时不包含优化或验证。
+原一般兜底数据、生成器和转换计时说明现已归档，不再按 [GENERAL600.md](../docs/testing/GENERAL600.md) 或历史分类报告中的命令重跑。原数据只允许迁移生成器读取规格。新版独立参考和数据工具见上文。
 
 构建和复现命令从仓库根目录执行，见 [Build.ps1 用法](../README.md#构建与运行)及[数据集说明](../docs/testing/DATASET500.md)。测试通过 CMake 私有引用 `src/` 内部头文件，调用方只依赖 `include/`。
 `ExtremeDataset.*` 和 `ExtremeTests.cpp` 提供独立的 200 例极端输入与 7 个模块诊断。`RunExtremeDataset.py` 隔离逐例执行并记录超时，`SummarizeExtremeDataset.py` 校验完整性、汇总分组耗时。`./Build.ps1 -ExtremeBoundaryOnly` 当前运行新的 `data/business-extreme200/` 业务尺寸矩阵，见 [BUSINESS_EXTREME200.md](../docs/testing/BUSINESS_EXTREME200.md)；历史 `data/extreme200/` 与[旧说明](../docs/testing/EXTREME200.md)保留。新数据生成用 `--generate-business`，旧数据生成用 `--generate`，新旧同编号不可混用。完整结果与每组最大分类加优化耗时见[业务尺寸极端测试报告](../docs/testing/BUSINESS_EXTREME200_REPORT_2026-10-14.md)。

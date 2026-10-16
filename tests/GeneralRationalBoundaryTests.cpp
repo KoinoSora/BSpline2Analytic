@@ -1,6 +1,7 @@
 #include "GeneralRationalBoundaryInternal.h"
 #include "GeneralDataset.h"
 #include "GeneralExtremeDataset.h"
+#include "GeneralRationalDataset.h"
 #include <Foundation/init.h>
 #include <chrono>
 #include <fstream>
@@ -284,14 +285,11 @@ void Unit(const std::filesystem::path &data)
     for(unsigned i=1;i<3;++i)for(unsigned j=1;j<3;++j)
         outside->SetControlPoint(Point(Get(outside->ControlPoints()[i][j])+Get(plane.xDirection)*10),i,j);
     Require(!ValidateGeneralRationalBoundaries(*outside,plane).Passed(),"Interior finite-region excursion accepted");
-    auto oldOnly=ReadGeneralFixture(data/GeneralFixtureFilename(254));GeneralRationalBoundaryOptions fixed;
-    std::array<double,4> box{INFINITY,-INFINITY,INFINITY,-INFINITY};
-    for(const auto &p:oldOnly.corners){box[0]=std::min(box[0],p.X());box[1]=std::max(box[1],p.X());box[2]=std::min(box[2],p.Y());box[3]=std::max(box[3],p.Y());}
-    fixed.chartDomain=box;
-    Require(!ValidateGeneralRationalBoundaries(*oldOnly.input,oldOnly.truth,fixed).Passed(),"Old analytic-UV contract substituted for rational-domain contract");
     for(unsigned id:{0u,218u,318u})
     {
-        auto f=ReadGeneralFixture(data/GeneralFixtureFilename(id));auto r=ValidateGeneralRationalBoundaries(*f.input,f.truth);
+        auto f=ReadGeneralFixture(data/"main"/RationalFixtureName("main",id));
+        Require(f.rationalDomain&&CertifyRationalDomain(f).passed,"Unit fixture requires a certified V2 source");
+        GeneralRationalBoundaryOptions fixed;fixed.chartDomain=f.chartDomain;auto r=ValidateGeneralRationalBoundaries(*f.input,f.truth,fixed);
         Require(r.Passed(),"Known rectangular/collapsed fixture failed "+std::to_string(id)+": "+r.message);Audit(*f.input,r);
         if(id)Require(r.patch->tangentNotApplicable[0]||r.patch->tangentNotApplicable[1]||
             r.patch->tangentNotApplicable[2]||r.patch->tangentNotApplicable[3],"Collapsed source tangent not marked");
@@ -327,31 +325,20 @@ void Unit(const std::filesystem::path &data)
     std::cout<<"Rational boundary unit assertions="<<assertions<<'\n';
 }
 void FullCase(const std::filesystem::path &data,const std::filesystem::path &csv,
-              const std::string &suite,unsigned id,unsigned repeats)
+              const std::string &suite,unsigned id,unsigned repeats,bool forceFixed=false)
 {
     bool synthetic=suite=="synthetic",extra=suite=="extra",extreme=suite=="extreme";
     Require(synthetic||extra||extreme||suite=="main","Unknown rational suite");
     Require(repeats>0&&id<(synthetic?5u:extra?60u:extreme?320u:600u),"Invalid full-suite range");
-    GeneralFixture c;std::string group;FixtureCertificate cert;double certificateMs=0;
-    const std::array<double,4> domain{.2,.9,.6,1.2};
-    if(synthetic)
-    {c.truth=Mother(id);c.type=id;c.input=Fixture(c.truth,domain,true,true);c.id=id;group="nurbs_chart_pressure";cert.upper=std::numeric_limits<double>::quiet_NaN();}
-    else
-    {
-        c=ReadGeneralFixture(data/(extreme?GeneralExtremeFilename(id):GeneralFixtureFilename(id,extra)));
-        Require(c.id==id,"Fixture identity mismatch");group=FixtureGroupName(c.group);
-        std::cout<<"BEGIN_INPUT_CERT"<<std::endl;auto t=std::chrono::steady_clock::now();
-        if(extreme)
-        {
-            auto spec=GeneralExtremeSpecs()[id];group=spec.group;
-            cert=CertifyGeneralExtremePair(c,spec.sag>0?std::min(1e-6,spec.sag*.1):1e-6);
-        }
-        else cert=c.group==GeneralFixtureGroup::Infeasible?CertifyNoQuartic(*c.input,c.exclusionRadius):CertifyAnalyticPair(c,c.pairTolerance);
-        certificateMs=Ms(t);Require(cert.passed,"Input certificate failed: "+cert.message);
-    }
+    GeneralFixture c=ReadGeneralFixture(data/suite/RationalFixtureName(suite,id));
+    Require(c.rationalDomain&&c.id==id,"Current tests require rational-domain V2 inputs");
+    std::string group=FixtureGroupName(c.group);double certificateMs=0;
+    std::cout<<"BEGIN_INPUT_CERT"<<std::endl;auto certificateStart=std::chrono::steady_clock::now();
+    auto cert=CertifyRationalDomain(c);certificateMs=Ms(certificateStart);
+    Require(cert.passed,"V2 input certificate failed: "+cert.message);
     GeneralRationalBoundaryOptions options;
-    bool supplied=synthetic||(extra&&(id<20||id>=40));
-    if(synthetic)options.chartDomain=domain;
+    bool supplied=forceFixed||synthetic||(extra&&(id<20||id>=40));
+    if(forceFixed||synthetic||(extra&&id<20))options.chartDomain=c.chartDomain;
     if(extra&&c.group==GeneralFixtureGroup::InvalidOptions)
     {if(id%2)options.general.fitting.validation.distanceTolerance=-1;else options.general.fitting.sampling.maxSamples=0;}
     if(extra&&c.group==GeneralFixtureGroup::ValidationBudget)options.maxBoundaryNodes=1;
@@ -404,8 +391,8 @@ void FullCase(const std::filesystem::path &data,const std::filesystem::path &csv
         auto line=[&]
         {
             std::ostringstream out;out<<std::setprecision(17)<<suite<<','<<id<<','<<run<<",rational,"<<group<<','<<(c.type<5?TypeName(c.truth.type):"Freeform")<<','<<c.input->IsRational()<<','
-                <<c.input->DegreeU()<<','<<c.input->DegreeV()<<','<<c.input->ControlPoints().size()*c.input->ControlPoints().front().size()<<','<<(synthetic?-1:int(cert.passed))<<','<<cert.upper<<','<<certificateMs<<','
-                <<(synthetic?"fixed_chart":supplied?"supplied_mother":"classified")<<','<<HybridValidationStatusName(r.status)<<','<<passed<<','<<auditStatus<<','<<audit<<','
+                <<c.input->DegreeU()<<','<<c.input->DegreeV()<<','<<c.input->ControlPoints().size()*c.input->ControlPoints().front().size()<<','<<int(cert.passed)<<','<<cert.upper<<','<<certificateMs<<','
+                <<(options.chartDomain?"fixed_chart":supplied?"supplied_mother":"classified")<<','<<HybridValidationStatusName(r.status)<<','<<passed<<','<<auditStatus<<','<<audit<<','
                 <<classify<<','<<validate<<','<<sampling<<','<<recovery<<','<<prepare<<','<<boundary<<','<<total<<','<<attempts.size()<<','<<charts<<','<<nodes<<','<<refinements<<','
                 <<fast<<','<<fastAccepted<<','<<fallback<<','<<position<<','<<fused<<','<<r.boundaryDistanceUpperBound<<','<<r.boundaryTangentUpperBoundDeg<<','<<r.outputMotherDistanceUpperBound<<','
                 <<(passed?TypeName(r.patch->mother.type):"Unknown")<<','<<classification.rawCandidateCount<<','<<classification.fullScoreCount<<','<<Quote(r.message)<<','<<Quote(auditMessage)<<','<<envelopeChecks<<','<<envelopeAccepted<<','<<envelopeFallbacks<<','<<envelopeWitnesses<<','<<envelopeTangentWitnesses<<'\n';
@@ -433,7 +420,8 @@ void FullCase(const std::filesystem::path &data,const std::filesystem::path &csv
     if(anyFailure&&((suite=="main"&&id<500)||extreme))
     {
         std::cout<<"BEGIN_KNOWN_MOTHER_DIAGNOSTIC"<<std::endl;
-        auto known=ValidateGeneralRationalBoundaries(*c.input,c.truth);
+        GeneralRationalBoundaryOptions knownOptions;knownOptions.chartDomain=c.chartDomain;
+        auto known=ValidateGeneralRationalBoundaries(*c.input,c.truth,knownOptions);
         std::ofstream out(csv.parent_path()/(csv.stem().string()+"-known.csv"));
         out<<"suite,id,status,accepted,total_ms,charts,nodes,message\n"<<std::setprecision(17)<<suite<<','<<id<<','<<HybridValidationStatusName(known.status)<<','<<known.Passed()<<','
             <<known.totalMs<<','<<known.chartAttempts<<','<<known.boundaryNodes<<','<<Quote(known.message)<<'\n';
@@ -441,7 +429,8 @@ void FullCase(const std::filesystem::path &data,const std::filesystem::path &csv
     }
     if(extra&&id==49)
     {
-        // This historical probe demonstrates the sampled-interior contract gap.
+        // Re-measure the reconstructed low-degree interior probe. New Greville
+        // points need not preserve the historical sampled-interior blind spot.
         SurfaceSampleContext samples(*c.input);double sampled=0,peak=0;
         for(const auto &p:samples.Greville(false))sampled=std::max(sampled,MotherDistance(c.truth,p.point));
         for(unsigned i=0;i<=10000;++i)peak=std::max(peak,MotherDistance(c.truth,Get(c.input->CalcPoint(double(i)/10000,.5))));
@@ -450,11 +439,11 @@ void FullCase(const std::filesystem::path &data,const std::filesystem::path &csv
 }
 void Case(const std::filesystem::path &data,const std::filesystem::path &csv,unsigned id,unsigned repeats,bool synthetic)
 {
-    auto fixture=synthetic?GeneralFixture{}:ReadGeneralFixture(data/GeneralFixtureFilename(id));
-    std::array<double,4> domain{.2,.9,.6,1.2};
-    if(synthetic){fixture.truth=Mother(id);fixture.input=Fixture(fixture.truth,domain,true,true);fixture.id=id;}
-    else
-    {auto cert=fixture.group==GeneralFixtureGroup::Infeasible?CertifyNoQuartic(*fixture.input,fixture.exclusionRadius):CertifyAnalyticPair(fixture,fixture.pairTolerance);Require(cert.passed,"Legacy fixture certificate failed");}
+    const std::string suite=synthetic?"synthetic":"main";
+    auto fixture=ReadGeneralFixture(data/suite/RationalFixtureName(suite,id));
+    Require(fixture.rationalDomain,"Retired dataset: V2 required");
+    auto cert=CertifyRationalDomain(fixture);Require(cert.passed,"V2 source certificate failed: "+cert.message);
+    auto domain=fixture.chartDomain;
     std::ofstream out(csv);out<<std::setprecision(17);
     out<<"id,synthetic,mode,run,status,accepted,attempts,chart_attempts,nodes,refinements,max_degree,sampling_ms,recovery_ms,prepare_ms,boundary_ms,validate_ms,classify_ms,pipeline_ms,boundary_bound,tangent_deg,mother_bound,audit_sample_max,message,fused_errors,position_only,fast_checks,fast_accepted,tangent_fallbacks,source_degree_u,source_degree_v,source_controls\n";
     for(unsigned run=0;run<repeats;++run)
@@ -500,19 +489,19 @@ int main(int argc,char **argv)
 {
     sggk::init();try
     {
-        Require(argc>=3,"Usage: --rational-unit data | --rational-case data csv id repeats synthetic --rational-only");
+        Require(argc>=3,"Usage: --rational-unit data | --rational-case data csv id repeats synthetic --rational-v2-only");
         if(std::string(argv[1])=="--envelope-export"){Require(argc==3,"Invalid export arguments");EnvelopeExport(argv[2]);}
         else if(std::string(argv[1])=="--rational-unit"){Require(argc==3,"Invalid unit arguments");Unit(argv[2]);}
-        else if(std::string(argv[1])=="--rational-full-case")
+        else if(std::string(argv[1])=="--rational-full-case"||std::string(argv[1])=="--rational-fixed-case")
         {
-            Require(argc==8&&std::string(argv[7])=="--rational-only","Invalid full-suite arguments");
-            FullCase(argv[2],argv[3],argv[4],unsigned(std::stoul(argv[5])),unsigned(std::stoul(argv[6])));
+            Require(argc==8&&std::string(argv[7])=="--rational-v2-only","Invalid full-suite arguments");
+            FullCase(argv[2],argv[3],argv[4],unsigned(std::stoul(argv[5])),unsigned(std::stoul(argv[6])),std::string(argv[1])=="--rational-fixed-case");
         }
         else
         {
             // The distinct command and arity make pre-retirement binaries fail
             // before entering their old/new comparison loop.
-            Require(std::string(argv[1])=="--rational-case"&&argc==8&&std::string(argv[7])=="--rational-only",
+            Require(std::string(argv[1])=="--rational-case"&&argc==8&&std::string(argv[7])=="--rational-v2-only",
                 "Invalid rational-only benchmark arguments");
             Case(argv[2],argv[3],unsigned(std::stoul(argv[4])),unsigned(std::stoul(argv[5])),std::stoi(argv[6])!=0);
         }

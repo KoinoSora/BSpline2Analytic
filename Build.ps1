@@ -14,6 +14,9 @@ param(
     [ValidateRange(1,64)][int]$BuildJobs = 1
 )
 $ErrorActionPreference = 'Stop'
+if ($GeneralOnly -or $GeneralPositiveOnly) {
+    throw 'The analytic-UV fallback datasets are retired. Use RunGeneralRationalBoundaryFull.py with general-rational-v2.'
+}
 if ($ApproximateBenchmark -or $PlateauOnly -or $JacobianOnly -or $ConeOnly -or $ExtremeBoundaryOnly) {
     throw 'This test path invokes retired ValidateConversion. Its code is retained, but testing is disabled pending migration.'
 }

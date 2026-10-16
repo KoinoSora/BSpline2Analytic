@@ -27,30 +27,14 @@ def quantile(values, q):
     return sorted(values)[max(0, math.ceil(q * len(values)) - 1)] if values else None
 
 
-def expected(suite, case):
-    if suite == 'main':
-        return 'accept' if case < 500 else 'reject_infeasible'
-    if suite != 'extra':
-        return 'accept'
-    if case < 20:
-        return 'boundary_probe'
-    if case < 45:
-        return 'accept'
-    if case < 49:
-        return 'reject_known_mother'
-    if case == 49:
-        return 'sampled_interior_probe'
-    if case < 55:
-        return 'invalid_options'
-    return 'reject_budget'
-
-
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('directory', type=Path)
     args = p.parse_args()
     directory = args.directory
     config = json.loads((directory / 'run.json').read_text())
+    if config.get('dataset_contract') != 'rational-domain-v2':
+        raise ValueError('V2 summary requires a V2 run; historical reports remain archived')
     provenance_path = directory / 'frozen-source.json'
     provenance = json.loads(provenance_path.read_text()) if provenance_path.exists() else {}
     if provenance and provenance.get('exe_sha256') != config['exe_sha256']:
@@ -65,7 +49,7 @@ def main():
                 raise ValueError('Classification/validation timing overlap')
             if sum(float(row[k]) for k in ('sampling_ms', 'recovery_ms', 'prepare_ms', 'boundary_ms')) > float(row['validate_ms']) + 1e-6:
                 raise ValueError('Validation phase timing overlap')
-            if row['suite'] != 'synthetic' and row.get('source_certified') != '1':
+            if row.get('source_certified') != '1':
                 raise ValueError('Measured an uncertified fixture')
             if row.get('accepted') == '1':
                 for key, limit in (('boundary_bound', 1e-5), ('tangent_deg', .1), ('mother_bound', 1e-6)):
@@ -86,7 +70,7 @@ def main():
         accepted = sum(r['accepted'] == '1' for r in current)
         audited = sum(r['accepted'] == '1' and r['audit_status'] == 'passed' for r in current)
         measured = numbers(current, 'total_ms')
-        expectation = expected(suite, case)
+        expectation = config["expectations"][f"{suite}:{case}"]
         if len(measured) != config['runs'] or any(r['execution_status'] != 'completed' for r in current):
             outcome = 'execution_incomplete'
         elif accepted and accepted != config['runs']:
@@ -164,7 +148,7 @@ def main():
             groups[suite + '/positive/' + name] = aggregate([c for c in subset if c['source_type'] == name and c['expectation'] == 'accept'])
         for name in ('accepted', 'not_certified_positive'):
             groups[suite + '/' + name] = aggregate([c for c in subset if c['outcome'] == name])
-    summary = dict(algorithm_commit=provenance.get('algorithm_commit', 'unspecified'), cases=len(cases), rows=len(rows),
+    summary = dict(dataset_contract='rational-domain-v2', fixed_chart=config['fixed_chart'], algorithm_commit=provenance.get('algorithm_commit', 'unspecified'), cases=len(cases), rows=len(rows),
                    runs=config['runs'], quantiles='nearest rank over per-case medians; not production latency percentiles',
                    outcomes=dict(Counter(c['outcome'] for c in cases)), groups=groups,
                    failure_diagnoses=dict(Counter(c['diagnosis'] for c in failures)),

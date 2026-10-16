@@ -37,8 +37,9 @@ def write(path, rows):
 
 def main():
     p = argparse.ArgumentParser(description=__doc__)
-    for name in ('exe', 'sdk', 'data', 'extreme-data', 'output'):
+    for name in ('exe', 'sdk', 'data', 'output'):
         p.add_argument('--' + name, type=Path, required=True)
+    p.add_argument('--fixed-chart', action='store_true', help='Separate supplied-mother/chart diagnostics; never classified timing')
     p.add_argument('--runs', type=int, default=3)
     p.add_argument('--timeout', type=float, default=60)
     p.add_argument('--cases', nargs='*', help='Optional smoke-test keys, e.g. main:100 extreme:0')
@@ -46,7 +47,9 @@ def main():
     args = p.parse_args()
     if args.runs < 1 or not 0 < args.timeout <= 300:
         p.error('Invalid runs/timeout')
-    exe, sdk, data, extreme, output = (getattr(args, name).resolve() for name in ('exe', 'sdk', 'data', 'extreme_data', 'output'))
+    exe, sdk, data, output = (getattr(args, name).resolve() for name in ('exe', 'sdk', 'data', 'output'))
+    from RationalDatasetSupport import require_v2_data
+    require_v2_data(data)
     cases = [(s, i) for s, size in SIZES.items() for i in range(size)]
     if args.cases:
         selected = [tuple(key.split(':')) for key in args.cases]
@@ -54,7 +57,8 @@ def main():
         if len(set(cases)) != len(cases) or any(s not in SIZES or not 0 <= i < SIZES[s] for s, i in cases):
             p.error('Invalid/duplicate case key')
     metadata = {}
-    for suite, directory, manifest in (('main', data, 'manifest-general600.csv'), ('extra', data, 'manifest-general-extra60.csv'), ('extreme', extreme, 'manifest.csv')):
+    for suite in SIZES:
+        directory, manifest = data / suite, 'manifest.csv'
         entries = read(directory / manifest)
         if [int(r['id']) for r in entries] != list(range(SIZES[suite])):
             raise ValueError(f'Incomplete/out-of-order manifest: {suite}')
@@ -62,10 +66,9 @@ def main():
             metadata[(suite, int(row['id']))] = row
     inputs = {}
     for suite, i in cases:
-        if suite != 'synthetic':
-            directory = extreme if suite == 'extreme' else data
-            inputs[f'{suite}:{i}'] = sha(directory / metadata[(suite, i)]['file'])
-    config = dict(validator='rational_boundary', exe_sha256=sha(exe), inputs_sha256=inputs,
+        inputs[f'{suite}:{i}'] = sha(data / suite / metadata[(suite, i)]['file'])
+    config = dict(validator='rational_boundary', dataset_contract='rational-domain-v2', fixed_chart=args.fixed_chart, exe_sha256=sha(exe), inputs_sha256=inputs,
+                  expectations={f"{s}:{i}": metadata[(s, i)]["expectation"] for s, i in cases},
                   runs=args.runs, timeout_seconds=args.timeout, cases=cases,
                   cpu_affinity_fixed=False, exclusive_machine=False, parallel_processes=1)
     output.mkdir(parents=True, exist_ok=True)
@@ -92,8 +95,8 @@ def main():
             start = time.perf_counter()
             with log.open('wb') as capture:
                 try:
-                    result = subprocess.run([str(exe), '--rational-full-case', str(extreme if suite == 'extreme' else data),
-                                             str(target), suite, str(case), str(args.runs), '--rational-only'],
+                    result = subprocess.run([str(exe), '--rational-fixed-case' if args.fixed_chart else '--rational-full-case', str(data),
+                                             str(target), suite, str(case), str(args.runs), '--rational-v2-only'],
                                             cwd=sdk, env=env, stdout=capture, stderr=subprocess.STDOUT,
                                             timeout=args.timeout, creationflags=getattr(subprocess, 'CREATE_NO_WINDOW', 0))
                     code, timeout = result.returncode, False

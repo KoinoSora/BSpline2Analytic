@@ -1,0 +1,1070 @@
+Failed to open log output file.
+Failed to open log output file.
+GENERATED main:0 source=7.43428e-14 tangent=1.58787e-10 pieces=32
+GENERATED main:1 source=4.47281e-14 tangent=7.41305e-11 pieces=32
+GENERATED main:2 source=8.14634e-14 tangent=1.70404e-10 pieces=38
+GENERATED main:3 source=4.93343e-14 tangent=7.31781e-11 pieces=38
+GENERATED main:4 source=7.55294e-14 tangent=2.24897e-10 pieces=44
+GENERATED main:5 source=4.90755e-14 tangent=9.77193e-11 pieces=44
+GENERATED main:6 source=5.88335e-14 tangent=2.78642e-10 pieces=44
+GENERATED main:7 source=3.68689e-14 tangent=1.2887e-10 pieces=44
+GENERATED main:8 source=8.66337e-14 tangent=1.50456e-10 pieces=38
+GENERATED main:9 source=5.65952e-14 tangent=6.92239e-11 pieces=38
+GENERATED main:10 source=1.0231e-13 tangent=2.39157e-10 pieces=44
+GENERATED main:11 source=6.27775e-14 tangent=1.07207e-10 pieces=44
+GENERATED main:12 source=6.13498e-14 tangent=1.89469e-10 pieces=44
+GENERATED main:13 source=3.92991e-14 tangent=8.11766e-11 pieces=44
+GENERATED main:14 source=9.371e-14 tangent=1.7121e-10 pieces=38
+GENERATED main:15 source=5.70983e-14 tangent=7.05154e-11 pieces=38
+GENERATED main:16 source=9.06118e-14 tangent=2.66096e-10 pieces=44
+GENERATED main:17 source=5.54016e-14 tangent=1.07818e-10 pieces=44
+GENERATED main:18 source=5.15445e-14 tangent=1.74326e-10 pieces=44
+GENERATED main:19 source=3.17745e-14 tangent=7.28365e-11 pieces=44
+GENERATED main:20 source=5.3505e-14 tangent=2.81659e-10 pieces=76
+GENERATED main:21 source=3.32476e-14 tangent=1.32908e-10 pieces=76
+GENERATED main:22 source=8.40223e-14 tangent=3.84341e-10 pieces=68
+GENERATED main:23 source=4.96915e-14 tangent=1.72421e-10 pieces=68
+GENERATED main:24 source=7.16352e-14 tangent=2.87311e-10 pieces=76
+GENERATED main:25 source=4.51221e-14 tangent=1.32112e-10 pieces=76
+GENERATED main:26 source=1.09359e-13 tangent=3.89088e-10 pieces=76
+GENERATED main:27 source=6.69154e-14 tangent=1.81236e-10 pieces=76
+GENERATED main:28 source=1.00626e-13 tangent=2.41783e-10 pieces=68
+GENERATED main:29 source=6.51195e-14 tangent=1.1532e-10 pieces=68
+GENERATED main:30 source=8.8612e-14 tangent=1.89518e-10 pieces=76
+GENERATED main:31 source=5.70153e-14 tangent=8.16927e-11 pieces=76
+GENERATED main:32 source=6.74794e-14 tangent=1.95486e-10 pieces=76
+GENERATED main:33 source=4.32315e-14 tangent=9.22063e-11 pieces=76
+GENERATED main:34 source=8.63643e-14 tangent=3.54427e-10 pieces=68
+GENERATED main:35 source=5.33532e-14 tangent=1.52607e-10 pieces=68
+GENERATED main:36 source=7.23974e-14 tangent=4.16558e-10 pieces=76
+GENERATED main:37 source=4.57289e-14 tangent=1.85612e-10 pieces=76
+GENERATED main:38 source=7.06812e-14 tangent=2.68102e-10 pieces=76
+GENERATED main:39 source=4.35345e-14 tangent=1.21776e-10 pieces=76
+GENERATED main:40 source=5.75694e-14 tangent=3.48328e-10 pieces=104
+GENERATED main:41 source=3.57771e-14 tangent=1.60368e-10 pieces=104
+GENERATED main:42 source=1.04385e-13 tangent=4.49742e-10 pieces=95
+GENERATED main:43 source=6.61991e-14 tangent=2.08453e-10 pieces=95
+GENERATED main:44 source=8.48381e-14 tangent=4.49674e-10 pieces=104
+GENERATED main:45 source=5.53907e-14 tangent=2.1457e-10 pieces=104
+GENERATED main:46 source=7.4115e-14 tangent=3.10513e-10 pieces=104
+GENERATED main:47 source=4.70876e-14 tangent=1.45746e-10 pieces=104
+GENERATED main:48 source=5.20444e-14 tangent=2.69437e-10 pieces=95
+GENERATED main:49 source=3.46776e-14 tangent=1.22701e-10 pieces=95
+GENERATED main:50 source=7.28098e-14 tangent=5.13023e-10 pieces=104
+GENERATED main:51 source=4.58843e-14 tangent=2.3681e-10 pieces=104
+GENERATED main:52 source=6.42149e-14 tangent=4.96918e-10 pieces=104
+GENERATED main:53 source=4.06441e-14 tangent=2.3096e-10 pieces=104
+GENERATED main:54 source=8.18659e-14 tangent=3.16727e-10 pieces=95
+GENERATED main:55 source=5.18858e-14 tangent=1.46478e-10 pieces=95
+GENERATED main:56 source=6.34698e-14 tangent=5.1396e-10 pieces=104
+GENERATED main:57 source=4.07917e-14 tangent=2.40166e-10 pieces=104
+GENERATED main:58 source=6.39686e-14 tangent=3.86506e-10 pieces=104
+GENERATED main:59 source=4.04598e-14 tangent=1.79787e-10 pieces=104
+GENERATED main:60 source=8.52638e-14 tangent=4.18572e-10 pieces=126
+GENERATED main:61 source=5.39073e-14 tangent=1.94485e-10 pieces=126
+GENERATED main:62 source=4.22576e-14 tangent=4.17701e-10 pieces=116
+GENERATED main:63 source=2.65325e-14 tangent=1.90217e-10 pieces=116
+GENERATED main:64 source=8.41619e-14 tangent=2.71151e-10 pieces=126
+GENERATED main:65 source=5.49256e-14 tangent=1.25544e-10 pieces=126
+GENERATED main:66 source=8.49389e-14 tangent=3.08774e-10 pieces=126
+GENERATED main:67 source=5.19387e-14 tangent=1.38165e-10 pieces=126
+GENERATED main:68 source=9.40974e-14 tangent=4.52473e-10 pieces=116
+GENERATED main:69 source=6.03969e-14 tangent=2.11634e-10 pieces=116
+GENERATED main:70 source=6.10432e-14 tangent=4.17725e-10 pieces=126
+GENERATED main:71 source=4.04072e-14 tangent=1.88522e-10 pieces=126
+GENERATED main:72 source=8.75906e-14 tangent=3.70971e-10 pieces=126
+GENERATED main:73 source=5.87607e-14 tangent=1.78784e-10 pieces=126
+GENERATED main:74 source=5.2559e-14 tangent=3.07984e-10 pieces=116
+GENERATED main:75 source=3.33182e-14 tangent=1.43162e-10 pieces=116
+GENERATED main:76 source=8.30574e-14 tangent=3.49455e-10 pieces=126
+GENERATED main:77 source=5.34331e-14 tangent=1.65218e-10 pieces=126
+GENERATED main:78 source=8.43633e-14 tangent=3.56606e-10 pieces=126
+GENERATED main:79 source=5.33115e-14 tangent=1.66308e-10 pieces=126
+GENERATED main:80 source=6.36272e-14 tangent=7.84364e-10 pieces=167
+GENERATED main:81 source=3.93229e-14 tangent=3.62826e-10 pieces=167
+GENERATED main:82 source=8.34568e-14 tangent=4.18071e-10 pieces=167
+GENERATED main:83 source=5.12849e-14 tangent=1.92901e-10 pieces=167
+GENERATED main:84 source=9.78947e-14 tangent=6.12599e-10 pieces=167
+GENERATED main:85 source=6.38501e-14 tangent=2.93543e-10 pieces=167
+GENERATED main:86 source=5.49066e-14 tangent=3.54207e-10 pieces=167
+GENERATED main:87 source=3.61776e-14 tangent=1.77699e-10 pieces=167
+GENERATED main:88 source=5.59452e-14 tangent=5.51362e-10 pieces=167
+GENERATED main:89 source=3.64421e-14 tangent=2.72708e-10 pieces=167
+GENERATED main:90 source=9.30169e-14 tangent=7.06844e-10 pieces=167
+GENERATED main:91 source=5.90083e-14 tangent=3.14273e-10 pieces=167
+GENERATED main:92 source=9.90674e-14 tangent=1.36655e-09 pieces=167
+GENERATED main:93 source=6.61665e-14 tangent=6.72596e-10 pieces=167
+GENERATED main:94 source=4.02869e-14 tangent=4.34391e-10 pieces=167
+GENERATED main:95 source=2.59558e-14 tangent=2.09179e-10 pieces=167
+GENERATED main:96 source=6.72072e-14 tangent=9.76433e-10 pieces=167
+GENERATED main:97 source=4.135e-14 tangent=4.5092e-10 pieces=167
+GENERATED main:98 source=1.06014e-13 tangent=4.36246e-10 pieces=167
+GENERATED main:99 source=6.39569e-14 tangent=2.02377e-10 pieces=167
+GENERATED main:100 source=1.19475e-13 tangent=7.62704e-10 pieces=44
+GENERATED main:101 source=6.84156e-08 tangent=8.68192e-05 pieces=28
+GENERATED main:102 source=1.02226e-13 tangent=1.16582e-09 pieces=38
+GENERATED main:103 source=2.086e-08 tangent=6.14387e-05 pieces=24
+GENERATED main:104 source=1.65179e-13 tangent=1.46882e-09 pieces=44
+GENERATED main:105 source=1.47198e-08 tangent=2.24067e-05 pieces=20
+GENERATED main:106 source=1.46314e-13 tangent=1.18608e-09 pieces=44
+GENERATED main:107 source=2.49697e-08 tangent=4.77798e-05 pieces=20
+GENERATED main:108 source=2.92871e-13 tangent=2.24106e-09 pieces=38
+GENERATED main:109 source=1.67128e-08 tangent=3.38242e-05 pieces=16
+GENERATED main:110 source=1.72299e-13 tangent=2.96417e-09 pieces=44
+GENERATED main:111 source=2.06295e-09 tangent=9.97607e-06 pieces=20
+GENERATED main:112 source=9.94307e-14 tangent=2.3015e-09 pieces=44
+GENERATED main:113 source=2.08222e-09 tangent=1.83597e-05 pieces=20
+GENERATED main:114 source=1.40935e-13 tangent=1.98021e-09 pieces=38
+GENERATED main:115 source=3.91151e-09 tangent=1.76521e-05 pieces=16
+GENERATED main:116 source=7.64397e-14 tangent=1.28085e-09 pieces=44
+GENERATED main:117 source=7.33066e-09 tangent=2.31843e-05 pieces=28
+GENERATED main:118 source=1.48894e-13 tangent=1.22784e-09 pieces=44
+GENERATED main:119 source=7.90268e-09 tangent=1.53872e-05 pieces=28
+GENERATED main:120 source=1.09391e-13 tangent=1.37347e-09 pieces=76
+GENERATED main:121 source=1.63118e-08 tangent=7.98301e-05 pieces=56
+GENERATED main:122 source=1.41865e-13 tangent=2.21097e-09 pieces=68
+GENERATED main:123 source=4.29968e-09 tangent=2.09526e-05 pieces=50
+GENERATED main:124 source=1.94584e-13 tangent=2.31261e-09 pieces=76
+GENERATED main:125 source=4.09306e-09 tangent=1.80377e-05 pieces=44
+GENERATED main:126 source=1.23321e-13 tangent=2.30283e-09 pieces=76
+GENERATED main:127 source=1.22694e-08 tangent=8.05867e-05 pieces=44
+GENERATED main:128 source=1.73495e-13 tangent=2.57756e-09 pieces=68
+GENERATED main:129 source=9.86677e-09 tangent=4.03417e-05 pieces=38
+GENERATED main:130 source=2.17303e-13 tangent=2.71358e-09 pieces=76
+GENERATED main:131 source=3.45482e-09 tangent=1.42109e-05 pieces=44
+GENERATED main:132 source=1.24822e-13 tangent=1.59135e-09 pieces=76
+GENERATED main:133 source=1.1311e-08 tangent=4.59038e-05 pieces=44
+GENERATED main:134 source=1.8386e-13 tangent=4.8935e-09 pieces=68
+GENERATED main:135 source=2.38631e-09 tangent=1.86038e-05 pieces=38
+GENERATED main:136 source=1.19395e-13 tangent=1.17404e-09 pieces=76
+GENERATED main:137 source=8.49469e-09 tangent=3.14519e-05 pieces=56
+GENERATED main:138 source=1.41878e-13 tangent=1.87911e-09 pieces=76
+GENERATED main:139 source=2.88142e-09 tangent=1.19066e-05 pieces=56
+GENERATED main:140 source=1.94513e-13 tangent=8.22208e-09 pieces=104
+GENERATED main:141 source=1.96671e-09 tangent=1.85165e-05 pieces=86
+GENERATED main:142 source=7.93174e-14 tangent=2.37126e-09 pieces=95
+GENERATED main:143 source=8.05993e-09 tangent=6.77077e-05 pieces=77
+GENERATED main:144 source=1.63283e-13 tangent=2.46253e-09 pieces=104
+GENERATED main:145 source=1.4645e-08 tangent=4.65543e-05 pieces=66
+GENERATED main:146 source=2.00339e-13 tangent=6.38137e-09 pieces=104
+GENERATED main:147 source=3.56734e-09 tangent=2.33131e-05 pieces=66
+GENERATED main:148 source=1.31336e-13 tangent=2.29443e-09 pieces=95
+GENERATED main:149 source=3.17046e-09 tangent=1.57942e-05 pieces=59
+GENERATED main:150 source=1.658e-13 tangent=3.11646e-09 pieces=104
+GENERATED main:151 source=1.02017e-08 tangent=5.51115e-05 pieces=66
+GENERATED main:152 source=1.89327e-13 tangent=3.4603e-09 pieces=104
+GENERATED main:153 source=2.33745e-09 tangent=1.05028e-05 pieces=66
+GENERATED main:154 source=1.96036e-13 tangent=3.70019e-09 pieces=95
+GENERATED main:155 source=2.40683e-09 tangent=1.33486e-05 pieces=59
+GENERATED main:156 source=1.22455e-13 tangent=1.92333e-09 pieces=104
+GENERATED main:157 source=1.27479e-08 tangent=4.46263e-05 pieces=86
+GENERATED main:158 source=9.03792e-14 tangent=2.81733e-09 pieces=104
+GENERATED main:159 source=6.94635e-09 tangent=5.24086e-05 pieces=86
+GENERATED main:160 source=1.28244e-13 tangent=3.1651e-09 pieces=126
+GENERATED main:161 source=4.24781e-09 tangent=2.63663e-05 pieces=106
+GENERATED main:162 source=1.16517e-13 tangent=2.09463e-09 pieces=116
+GENERATED main:163 source=1.8371e-08 tangent=8.1136e-05 pieces=96
+GENERATED main:164 source=1.33546e-13 tangent=2.46159e-09 pieces=126
+GENERATED main:165 source=1.03321e-08 tangent=3.90035e-05 pieces=84
+GENERATED main:166 source=1.69653e-13 tangent=4.59552e-09 pieces=126
+GENERATED main:167 source=1.99119e-09 tangent=1.54673e-05 pieces=84
+GENERATED main:168 source=1.63483e-13 tangent=2.14881e-09 pieces=116
+GENERATED main:169 source=3.68706e-09 tangent=1.73783e-05 pieces=76
+GENERATED main:170 source=2.05722e-13 tangent=1.82751e-09 pieces=126
+GENERATED main:171 source=2.10248e-08 tangent=6.7338e-05 pieces=84
+GENERATED main:172 source=1.91716e-13 tangent=4.57982e-09 pieces=126
+GENERATED main:173 source=8.89322e-09 tangent=4.7887e-05 pieces=84
+GENERATED main:174 source=1.50866e-13 tangent=2.95773e-09 pieces=116
+GENERATED main:175 source=3.75321e-09 tangent=1.68984e-05 pieces=76
+GENERATED main:176 source=1.39713e-13 tangent=2.74179e-09 pieces=126
+GENERATED main:177 source=5.75923e-09 tangent=2.84422e-05 pieces=106
+GENERATED main:178 source=9.63717e-14 tangent=1.75606e-09 pieces=126
+GENERATED main:179 source=4.15488e-09 tangent=1.87422e-05 pieces=106
+GENERATED main:180 source=2.36333e-13 tangent=2.53012e-09 pieces=167
+GENERATED main:181 source=9.66158e-09 tangent=2.95227e-05 pieces=129
+GENERATED main:182 source=8.95895e-14 tangent=2.20765e-09 pieces=167
+GENERATED main:183 source=2.40973e-09 tangent=1.85629e-05 pieces=129
+GENERATED main:184 source=1.5625e-13 tangent=3.94179e-09 pieces=167
+GENERATED main:185 source=1.43214e-08 tangent=4.14576e-05 pieces=115
+GENERATED main:186 source=2.03619e-13 tangent=2.99164e-09 pieces=167
+GENERATED main:187 source=7.53006e-09 tangent=2.99997e-05 pieces=115
+GENERATED main:188 source=1.3273e-13 tangent=7.88056e-09 pieces=167
+GENERATED main:189 source=7.74761e-09 tangent=7.47488e-05 pieces=115
+GENERATED main:190 source=2.41104e-13 tangent=9.24454e-09 pieces=167
+GENERATED main:191 source=4.26709e-09 tangent=2.26646e-05 pieces=115
+GENERATED main:192 source=1.50533e-13 tangent=5.77989e-09 pieces=167
+GENERATED main:193 source=2.66955e-09 tangent=1.61612e-05 pieces=115
+GENERATED main:194 source=1.82355e-13 tangent=4.80093e-09 pieces=167
+GENERATED main:195 source=8.18768e-09 tangent=3.32235e-05 pieces=115
+GENERATED main:196 source=1.26166e-13 tangent=2.77467e-09 pieces=167
+GENERATED main:197 source=4.56997e-09 tangent=3.14173e-05 pieces=129
+GENERATED main:198 source=1.29318e-13 tangent=1.5191e-09 pieces=167
+GENERATED main:199 source=5.49558e-09 tangent=1.99035e-05 pieces=129
+GENERATED main:200 source=8.05092e-14 tangent=2.37725e-09 pieces=44
+GENERATED main:201 source=1.53264e-08 tangent=4.55845e-05 pieces=20
+GENERATED main:202 source=1.17698e-13 tangent=1.23417e-09 pieces=38
+GENERATED main:203 source=4.6674e-08 tangent=6.93688e-05 pieces=16
+GENERATED main:204 source=1.86742e-13 tangent=2.6606e-09 pieces=31
+GENERATED main:205 source=6.24468e-08 tangent=0.000116704 pieces=20
+GENERATED main:206 source=2.5662e-13 tangent=1.87591e-09 pieces=31
+GENERATED main:207 source=8.39861e-08 tangent=0.000106068 pieces=20
+GENERATED main:208 source=2.13293e-13 tangent=2.89918e-09 pieces=26
+GENERATED main:209 source=6.00444e-08 tangent=9.4692e-05 pieces=16
+GENERATED main:210 source=1.81609e-13 tangent=3.04038e-09 pieces=31
+GENERATED main:211 source=4.16773e-08 tangent=6.84435e-05 pieces=20
+GENERATED main:212 source=2.49325e-13 tangent=3.20924e-09 pieces=31
+GENERATED main:213 source=4.7591e-08 tangent=8.26964e-05 pieces=20
+GENERATED main:214 source=9.57481e-14 tangent=1.99616e-09 pieces=26
+GENERATED main:215 source=4.92284e-08 tangent=0.000130681 pieces=16
+GENERATED main:216 source=7.18359e-14 tangent=3.56853e-09 pieces=40
+GENERATED main:217 source=1.12229e-08 tangent=6.02789e-05 pieces=18
+GENERATED main:218 source=2.38745e-13 tangent=4.25642e-09 pieces=40
+GENERATED main:219 source=1.56199e-08 tangent=8.32677e-05 pieces=18
+GENERATED main:220 source=8.35148e-14 tangent=1.57916e-09 pieces=76
+GENERATED main:221 source=1.02855e-08 tangent=3.73247e-05 pieces=44
+GENERATED main:222 source=2.90086e-13 tangent=3.15571e-09 pieces=68
+GENERATED main:223 source=2.26171e-08 tangent=6.23635e-05 pieces=38
+GENERATED main:224 source=2.19503e-13 tangent=4.91697e-09 pieces=59
+GENERATED main:225 source=5.98739e-09 tangent=2.69193e-05 pieces=44
+GENERATED main:226 source=2.19076e-13 tangent=3.32576e-09 pieces=59
+GENERATED main:227 source=3.06076e-08 tangent=7.69799e-05 pieces=44
+GENERATED main:228 source=1.29315e-13 tangent=4.12535e-09 pieces=52
+GENERATED main:229 source=6.70595e-09 tangent=3.49707e-05 pieces=38
+GENERATED main:230 source=1.05344e-13 tangent=3.72601e-09 pieces=59
+GENERATED main:231 source=6.00869e-09 tangent=4.71759e-05 pieces=44
+GENERATED main:232 source=2.70505e-13 tangent=4.95564e-09 pieces=59
+GENERATED main:233 source=8.44591e-09 tangent=3.2612e-05 pieces=44
+GENERATED main:234 source=1.42467e-13 tangent=2.76937e-09 pieces=52
+GENERATED main:235 source=1.86989e-08 tangent=6.70607e-05 pieces=38
+GENERATED main:236 source=1.34396e-13 tangent=5.62881e-09 pieces=68
+GENERATED main:237 source=1.06122e-08 tangent=8.87253e-05 pieces=38
+GENERATED main:238 source=1.96239e-13 tangent=1.03577e-08 pieces=68
+GENERATED main:239 source=8.13344e-09 tangent=3.7439e-05 pieces=38
+GENERATED main:240 source=1.93104e-13 tangent=5.41678e-09 pieces=104
+GENERATED main:241 source=2.13376e-08 tangent=7.00717e-05 pieces=66
+GENERATED main:242 source=1.93329e-13 tangent=3.10582e-09 pieces=95
+GENERATED main:243 source=2.81997e-08 tangent=6.572e-05 pieces=59
+GENERATED main:244 source=1.47551e-13 tangent=9.23357e-09 pieces=84
+GENERATED main:245 source=3.03922e-09 tangent=2.20625e-05 pieces=66
+GENERATED main:246 source=2.38301e-13 tangent=7.40289e-09 pieces=84
+GENERATED main:247 source=2.17237e-08 tangent=9.5592e-05 pieces=66
+GENERATED main:248 source=1.15823e-13 tangent=3.57984e-09 pieces=76
+GENERATED main:249 source=1.05511e-08 tangent=7.43432e-05 pieces=59
+GENERATED main:250 source=2.48845e-13 tangent=8.69482e-09 pieces=84
+GENERATED main:251 source=9.68227e-09 tangent=3.74145e-05 pieces=66
+GENERATED main:252 source=2.89601e-13 tangent=7.33181e-09 pieces=84
+GENERATED main:253 source=1.36346e-08 tangent=3.97458e-05 pieces=66
+GENERATED main:254 source=1.82901e-13 tangent=5.59622e-09 pieces=76
+GENERATED main:255 source=8.47825e-09 tangent=3.2692e-05 pieces=59
+GENERATED main:256 source=8.15573e-14 tangent=9.644e-09 pieces=94
+GENERATED main:257 source=1.34486e-08 tangent=6.57458e-05 pieces=58
+GENERATED main:258 source=9.88763e-14 tangent=1.6735e-08 pieces=94
+GENERATED main:259 source=2.54142e-09 tangent=2.23792e-05 pieces=58
+GENERATED main:260 source=2.90988e-13 tangent=5.19042e-09 pieces=126
+GENERATED main:261 source=2.18977e-08 tangent=6.9454e-05 pieces=84
+GENERATED main:262 source=1.41006e-13 tangent=3.19648e-09 pieces=116
+GENERATED main:263 source=7.62255e-09 tangent=2.83125e-05 pieces=76
+GENERATED main:264 source=2.58629e-13 tangent=4.35627e-09 pieces=104
+GENERATED main:265 source=4.26454e-08 tangent=9.04512e-05 pieces=84
+GENERATED main:266 source=1.72671e-13 tangent=5.80947e-09 pieces=104
+GENERATED main:267 source=1.20341e-08 tangent=5.28949e-05 pieces=84
+GENERATED main:268 source=1.13199e-13 tangent=6.42986e-09 pieces=95
+GENERATED main:269 source=3.17074e-09 tangent=2.20636e-05 pieces=76
+GENERATED main:270 source=2.08245e-13 tangent=9.59838e-09 pieces=104
+GENERATED main:271 source=1.13366e-08 tangent=4.94991e-05 pieces=84
+GENERATED main:272 source=1.12325e-13 tangent=6.39682e-09 pieces=104
+GENERATED main:273 source=7.26327e-09 tangent=6.21183e-05 pieces=84
+GENERATED main:274 source=2.35716e-13 tangent=5.59728e-09 pieces=95
+GENERATED main:275 source=1.09778e-08 tangent=2.75254e-05 pieces=76
+GENERATED main:276 source=1.11821e-13 tangent=7.40377e-09 pieces=118
+GENERATED main:277 source=8.50904e-09 tangent=4.90151e-05 pieces=78
+GENERATED main:278 source=2.6141e-13 tangent=8.90594e-09 pieces=118
+GENERATED main:279 source=3.86593e-09 tangent=5.09332e-05 pieces=78
+GENERATED main:280 source=1.49947e-13 tangent=5.63296e-09 pieces=167
+GENERATED main:281 source=2.02431e-08 tangent=6.32856e-05 pieces=115
+GENERATED main:282 source=1.14613e-13 tangent=3.97998e-09 pieces=167
+GENERATED main:283 source=1.30396e-08 tangent=4.119e-05 pieces=115
+GENERATED main:284 source=2.66406e-13 tangent=1.74686e-08 pieces=140
+GENERATED main:285 source=1.79406e-08 tangent=6.24695e-05 pieces=115
+GENERATED main:286 source=1.31244e-13 tangent=7.94338e-09 pieces=140
+GENERATED main:287 source=1.55924e-08 tangent=8.00897e-05 pieces=115
+GENERATED main:288 source=1.11919e-13 tangent=9.80647e-09 pieces=140
+GENERATED main:289 source=3.45559e-09 tangent=2.03493e-05 pieces=115
+GENERATED main:290 source=1.50566e-13 tangent=9.86787e-09 pieces=140
+GENERATED main:291 source=1.35988e-08 tangent=9.88358e-05 pieces=115
+GENERATED main:292 source=2.44616e-13 tangent=8.81093e-09 pieces=140
+GENERATED main:293 source=2.16047e-08 tangent=7.32063e-05 pieces=115
+GENERATED main:294 source=2.42522e-13 tangent=9.99828e-09 pieces=140
+GENERATED main:295 source=3.67243e-08 tangent=9.53767e-05 pieces=115
+GENERATED main:296 source=1.06061e-13 tangent=8.26191e-09 pieces=160
+GENERATED main:297 source=2.95478e-09 tangent=1.69689e-05 pieces=110
+GENERATED main:298 source=1.79454e-13 tangent=6.80972e-09 pieces=160
+GENERATED main:299 source=1.58194e-08 tangent=7.50687e-05 pieces=110
+GENERATED main:300 source=1.8245e-13 tangent=1.954e-09 pieces=44
+GENERATED main:301 source=2.43887e-08 tangent=9.56869e-05 pieces=32
+GENERATED main:302 source=1.13297e-13 tangent=2.02959e-09 pieces=38
+GENERATED main:303 source=4.77603e-09 tangent=2.77912e-05 pieces=26
+GENERATED main:304 source=1.34638e-13 tangent=3.58041e-09 pieces=44
+GENERATED main:305 source=2.49404e-09 tangent=1.43639e-05 pieces=20
+GENERATED main:306 source=2.23902e-13 tangent=3.89388e-09 pieces=44
+GENERATED main:307 source=2.50963e-08 tangent=9.13696e-05 pieces=20
+GENERATED main:308 source=1.19535e-13 tangent=2.07253e-09 pieces=38
+GENERATED main:309 source=1.38569e-08 tangent=6.36279e-05 pieces=16
+GENERATED main:310 source=1.4593e-13 tangent=1.66131e-09 pieces=44
+GENERATED main:311 source=1.17266e-08 tangent=3.81213e-05 pieces=20
+GENERATED main:312 source=1.78269e-13 tangent=1.74852e-09 pieces=44
+GENERATED main:313 source=3.84225e-08 tangent=7.89954e-05 pieces=20
+GENERATED main:314 source=2.24371e-13 tangent=1.66933e-09 pieces=38
+GENERATED main:315 source=5.45515e-08 tangent=9.27676e-05 pieces=16
+GENERATED main:316 source=1.78159e-13 tangent=4.18686e-09 pieces=38
+GENERATED main:317 source=2.46867e-09 tangent=1.9228e-05 pieces=28
+GENERATED main:318 source=1.08951e-13 tangent=3.09881e-09 pieces=38
+GENERATED main:319 source=1.8064e-09 tangent=1.64575e-05 pieces=28
+GENERATED main:320 source=1.15195e-13 tangent=4.19556e-09 pieces=76
+GENERATED main:321 source=1.31231e-08 tangent=9.48672e-05 pieces=60
+GENERATED main:322 source=1.1809e-13 tangent=5.24638e-09 pieces=68
+GENERATED main:323 source=4.77559e-09 tangent=4.00153e-05 pieces=52
+GENERATED main:324 source=1.01189e-13 tangent=3.0074e-09 pieces=76
+GENERATED main:325 source=7.10699e-09 tangent=8.33598e-05 pieces=44
+GENERATED main:326 source=1.1716e-13 tangent=4.04249e-09 pieces=76
+GENERATED main:327 source=1.1397e-09 tangent=1.35667e-05 pieces=44
+GENERATED main:328 source=1.7959e-13 tangent=2.72017e-09 pieces=68
+GENERATED main:329 source=7.28757e-09 tangent=3.74128e-05 pieces=38
+GENERATED main:330 source=1.22557e-13 tangent=3.93301e-09 pieces=76
+GENERATED main:331 source=5.48878e-09 tangent=4.50498e-05 pieces=44
+GENERATED main:332 source=2.20877e-13 tangent=2.93777e-09 pieces=76
+GENERATED main:333 source=6.5384e-09 tangent=3.55775e-05 pieces=44
+GENERATED main:334 source=2.01829e-13 tangent=3.78278e-09 pieces=68
+GENERATED main:335 source=9.43217e-09 tangent=7.34758e-05 pieces=38
+GENERATED main:336 source=4.54878e-14 tangent=2.60832e-09 pieces=68
+GENERATED main:337 source=2.7897e-09 tangent=8.49657e-05 pieces=54
+GENERATED main:338 source=5.33796e-14 tangent=3.51469e-09 pieces=68
+GENERATED main:339 source=2.79746e-10 tangent=1.11039e-05 pieces=54
+GENERATED main:340 source=8.72818e-14 tangent=3.13996e-09 pieces=104
+GENERATED main:341 source=6.1207e-09 tangent=6.72071e-05 pieces=80
+GENERATED main:342 source=8.96111e-14 tangent=3.68456e-09 pieces=95
+GENERATED main:343 source=2.65247e-09 tangent=3.4732e-05 pieces=73
+GENERATED main:344 source=2.07443e-13 tangent=5.3106e-09 pieces=104
+GENERATED main:345 source=1.05873e-08 tangent=5.36278e-05 pieces=66
+GENERATED main:346 source=1.38988e-13 tangent=3.74414e-09 pieces=104
+GENERATED main:347 source=2.04046e-09 tangent=1.26592e-05 pieces=66
+GENERATED main:348 source=1.9455e-13 tangent=4.86276e-09 pieces=95
+GENERATED main:349 source=4.26892e-09 tangent=2.33112e-05 pieces=59
+GENERATED main:350 source=1.38764e-13 tangent=5.16815e-09 pieces=104
+GENERATED main:351 source=1.09258e-09 tangent=1.3793e-05 pieces=66
+GENERATED main:352 source=2.22069e-13 tangent=4.65951e-09 pieces=104
+GENERATED main:353 source=8.54386e-09 tangent=4.51253e-05 pieces=66
+GENERATED main:354 source=1.4811e-13 tangent=4.58229e-09 pieces=95
+GENERATED main:355 source=1.25149e-08 tangent=8.71639e-05 pieces=59
+GENERATED main:356 source=7.22485e-14 tangent=3.56277e-09 pieces=97
+GENERATED main:357 source=2.01948e-09 tangent=3.15409e-05 pieces=75
+GENERATED main:358 source=7.29848e-14 tangent=4.29755e-09 pieces=97
+GENERATED main:359 source=4.20759e-09 tangent=7.98348e-05 pieces=75
+GENERATED main:360 source=8.92517e-14 tangent=3.17004e-09 pieces=126
+GENERATED main:361 source=2.65437e-09 tangent=2.35557e-05 pieces=100
+GENERATED main:362 source=8.8878e-14 tangent=4.29739e-09 pieces=116
+GENERATED main:363 source=2.92973e-09 tangent=2.93882e-05 pieces=92
+GENERATED main:364 source=2.12882e-13 tangent=3.85734e-09 pieces=126
+GENERATED main:365 source=1.43603e-08 tangent=9.53693e-05 pieces=84
+GENERATED main:366 source=1.38598e-13 tangent=3.76584e-09 pieces=126
+GENERATED main:367 source=7.18599e-09 tangent=5.34411e-05 pieces=84
+GENERATED main:368 source=1.52349e-13 tangent=4.10667e-09 pieces=116
+GENERATED main:369 source=1.40362e-08 tangent=8.66489e-05 pieces=76
+GENERATED main:370 source=1.66616e-13 tangent=7.03954e-09 pieces=126
+GENERATED main:371 source=1.83794e-09 tangent=1.34751e-05 pieces=84
+GENERATED main:372 source=1.67776e-13 tangent=2.87204e-09 pieces=126
+GENERATED main:373 source=3.90018e-09 tangent=2.97266e-05 pieces=84
+GENERATED main:374 source=1.46777e-13 tangent=2.9828e-09 pieces=116
+GENERATED main:375 source=3.37632e-09 tangent=2.42846e-05 pieces=76
+GENERATED main:376 source=8.15049e-14 tangent=2.09097e-09 pieces=118
+GENERATED main:377 source=5.16887e-09 tangent=7.86703e-05 pieces=94
+GENERATED main:378 source=8.25448e-14 tangent=2.98743e-09 pieces=118
+GENERATED main:379 source=3.14636e-09 tangent=3.80323e-05 pieces=94
+GENERATED main:380 source=1.75447e-13 tangent=7.80994e-09 pieces=167
+GENERATED main:381 source=3.68231e-09 tangent=2.54624e-05 pieces=149
+GENERATED main:382 source=1.45282e-13 tangent=4.45207e-09 pieces=167
+GENERATED main:383 source=1.62981e-08 tangent=7.95342e-05 pieces=149
+GENERATED main:384 source=1.14851e-13 tangent=8.93146e-09 pieces=167
+GENERATED main:385 source=3.15086e-09 tangent=3.6242e-05 pieces=115
+GENERATED main:386 source=1.69029e-13 tangent=1.34443e-08 pieces=167
+GENERATED main:387 source=1.12859e-08 tangent=7.24575e-05 pieces=115
+GENERATED main:388 source=1.69926e-13 tangent=2.8812e-09 pieces=167
+GENERATED main:389 source=1.23102e-08 tangent=8.52846e-05 pieces=115
+GENERATED main:390 source=1.62833e-13 tangent=2.59057e-09 pieces=167
+GENERATED main:391 source=1.04613e-08 tangent=5.09576e-05 pieces=115
+GENERATED main:392 source=2.03369e-13 tangent=3.27085e-09 pieces=167
+GENERATED main:393 source=1.15722e-08 tangent=3.94163e-05 pieces=115
+GENERATED main:394 source=1.08925e-13 tangent=2.85238e-09 pieces=167
+GENERATED main:395 source=2.81138e-09 tangent=2.70946e-05 pieces=115
+GENERATED main:396 source=8.05681e-14 tangent=1.13658e-08 pieces=150
+GENERATED main:397 source=3.36106e-09 tangent=7.85837e-05 pieces=134
+GENERATED main:398 source=7.29745e-14 tangent=9.33155e-09 pieces=150
+GENERATED main:399 source=8.73936e-10 tangent=1.76328e-05 pieces=134
+GENERATED main:400 source=5.90499e-13 tangent=2.95193e-09 pieces=44
+GENERATED main:401 source=1.27753e-07 tangent=6.7794e-05 pieces=20
+GENERATED main:402 source=2.62747e-13 tangent=2.84142e-09 pieces=38
+GENERATED main:403 source=4.65174e-08 tangent=4.77906e-05 pieces=16
+GENERATED main:404 source=2.16551e-13 tangent=5.99235e-09 pieces=31
+GENERATED main:405 source=1.00333e-08 tangent=1.55878e-05 pieces=20
+GENERATED main:406 source=2.7276e-13 tangent=4.92647e-09 pieces=31
+GENERATED main:407 source=6.75622e-08 tangent=7.70241e-05 pieces=20
+GENERATED main:408 source=5.50375e-13 tangent=4.86614e-09 pieces=26
+GENERATED main:409 source=3.89789e-08 tangent=8.70795e-05 pieces=16
+GENERATED main:410 source=1.02041e-12 tangent=7.52605e-09 pieces=31
+GENERATED main:411 source=1.60715e-07 tangent=8.82108e-05 pieces=20
+GENERATED main:412 source=3.92829e-13 tangent=3.34068e-09 pieces=31
+GENERATED main:413 source=1.34417e-08 tangent=1.77324e-05 pieces=20
+GENERATED main:414 source=4.70195e-13 tangent=2.53936e-09 pieces=26
+GENERATED main:415 source=1.38197e-07 tangent=0.00013325 pieces=16
+GENERATED main:416 source=1.80627e-13 tangent=2.21378e-09 pieces=44
+GENERATED main:417 source=4.8206e-08 tangent=8.53682e-05 pieces=20
+GENERATED main:418 source=1.89766e-13 tangent=2.68566e-09 pieces=44
+GENERATED main:419 source=2.32769e-08 tangent=4.18505e-05 pieces=20
+GENERATED main:420 source=5.14752e-13 tangent=5.07671e-09 pieces=76
+GENERATED main:421 source=1.33323e-08 tangent=2.41221e-05 pieces=44
+GENERATED main:422 source=4.44195e-13 tangent=6.82963e-09 pieces=68
+GENERATED main:423 source=1.90825e-08 tangent=2.01872e-05 pieces=38
+GENERATED main:424 source=8.07769e-13 tangent=1.10554e-08 pieces=59
+GENERATED main:425 source=8.32207e-08 tangent=7.56016e-05 pieces=44
+GENERATED main:426 source=3.5185e-13 tangent=9.92208e-09 pieces=59
+GENERATED main:427 source=4.54553e-08 tangent=7.74406e-05 pieces=44
+GENERATED main:428 source=1.92218e-13 tangent=3.6792e-09 pieces=52
+GENERATED main:429 source=9.98879e-09 tangent=4.37288e-05 pieces=38
+GENERATED main:430 source=6.95854e-13 tangent=5.90362e-09 pieces=59
+GENERATED main:431 source=5.21748e-08 tangent=6.85861e-05 pieces=44
+GENERATED main:432 source=2.66987e-13 tangent=7.00041e-09 pieces=59
+GENERATED main:433 source=3.29765e-09 tangent=1.17782e-05 pieces=44
+GENERATED main:434 source=2.03249e-13 tangent=4.70388e-09 pieces=52
+GENERATED main:435 source=5.88198e-09 tangent=1.8674e-05 pieces=38
+GENERATED main:436 source=3.58509e-13 tangent=2.76923e-09 pieces=76
+GENERATED main:437 source=3.53352e-08 tangent=8.18751e-05 pieces=44
+GENERATED main:438 source=2.59584e-13 tangent=5.09921e-09 pieces=76
+GENERATED main:439 source=1.47832e-08 tangent=2.52298e-05 pieces=44
+GENERATED main:440 source=3.13121e-13 tangent=5.31855e-09 pieces=104
+GENERATED main:441 source=2.36779e-08 tangent=8.40829e-05 pieces=66
+GENERATED main:442 source=5.26436e-13 tangent=8.26133e-09 pieces=95
+GENERATED main:443 source=6.22897e-08 tangent=6.61185e-05 pieces=59
+GENERATED main:444 source=7.48824e-13 tangent=8.14285e-09 pieces=84
+GENERATED main:445 source=3.24821e-08 tangent=4.61882e-05 pieces=66
+GENERATED main:446 source=4.16481e-13 tangent=8.27029e-09 pieces=84
+GENERATED main:447 source=1.68579e-08 tangent=6.92396e-05 pieces=66
+GENERATED main:448 source=6.9645e-13 tangent=7.83314e-09 pieces=76
+GENERATED main:449 source=3.96904e-08 tangent=8.62017e-05 pieces=59
+GENERATED main:450 source=5.00723e-13 tangent=5.93251e-09 pieces=84
+GENERATED main:451 source=3.01039e-08 tangent=7.16508e-05 pieces=66
+GENERATED main:452 source=5.84652e-13 tangent=1.36752e-08 pieces=84
+GENERATED main:453 source=4.87358e-08 tangent=6.52051e-05 pieces=66
+GENERATED main:454 source=5.61935e-13 tangent=7.78533e-09 pieces=76
+GENERATED main:455 source=5.26752e-08 tangent=5.81575e-05 pieces=59
+GENERATED main:456 source=6.32142e-13 tangent=1.09398e-08 pieces=104
+GENERATED main:457 source=1.43328e-07 tangent=9.21271e-05 pieces=66
+GENERATED main:458 source=5.95534e-13 tangent=8.88674e-09 pieces=104
+GENERATED main:459 source=1.04591e-07 tangent=6.77073e-05 pieces=66
+GENERATED main:460 source=3.30648e-13 tangent=4.86772e-09 pieces=126
+GENERATED main:461 source=8.53134e-09 tangent=2.38976e-05 pieces=84
+GENERATED main:462 source=3.98168e-13 tangent=4.9149e-09 pieces=116
+GENERATED main:463 source=1.21893e-08 tangent=3.47395e-05 pieces=76
+GENERATED main:464 source=3.62894e-13 tangent=8.31886e-09 pieces=104
+GENERATED main:465 source=2.42546e-08 tangent=9.16163e-05 pieces=84
+GENERATED main:466 source=4.61446e-13 tangent=8.83959e-09 pieces=104
+GENERATED main:467 source=1.43484e-08 tangent=4.40172e-05 pieces=84
+GENERATED main:468 source=4.77278e-13 tangent=1.44604e-08 pieces=95
+GENERATED main:469 source=1.29747e-08 tangent=5.1486e-05 pieces=76
+GENERATED main:470 source=3.9275e-13 tangent=1.23753e-08 pieces=104
+GENERATED main:471 source=1.31426e-08 tangent=6.16083e-05 pieces=84
+GENERATED main:472 source=7.66066e-13 tangent=1.54669e-08 pieces=104
+GENERATED main:473 source=4.7146e-08 tangent=9.02946e-05 pieces=84
+GENERATED main:474 source=3.18749e-13 tangent=1.3685e-08 pieces=95
+GENERATED main:475 source=1.59202e-08 tangent=3.32924e-05 pieces=76
+GENERATED main:476 source=4.16288e-13 tangent=3.29476e-09 pieces=126
+GENERATED main:477 source=4.30566e-08 tangent=9.02837e-05 pieces=84
+GENERATED main:478 source=3.80008e-13 tangent=3.63041e-09 pieces=126
+GENERATED main:479 source=2.11286e-08 tangent=5.10998e-05 pieces=84
+GENERATED main:480 source=1.43214e-13 tangent=6.01661e-09 pieces=167
+GENERATED main:481 source=3.39252e-09 tangent=1.66969e-05 pieces=115
+GENERATED main:482 source=2.63015e-13 tangent=5.10625e-09 pieces=167
+GENERATED main:483 source=1.19025e-08 tangent=2.93637e-05 pieces=115
+GENERATED main:484 source=7.67832e-13 tangent=3.04589e-08 pieces=140
+GENERATED main:485 source=4.74168e-08 tangent=4.7795e-05 pieces=115
+GENERATED main:486 source=6.30556e-13 tangent=2.77217e-08 pieces=140
+GENERATED main:487 source=5.81043e-08 tangent=6.83207e-05 pieces=115
+GENERATED main:488 source=1.96464e-13 tangent=2.48619e-08 pieces=140
+GENERATED main:489 source=4.04031e-09 tangent=2.05608e-05 pieces=115
+GENERATED main:490 source=4.86342e-13 tangent=1.8279e-08 pieces=140
+GENERATED main:491 source=1.45688e-08 tangent=2.42161e-05 pieces=115
+GENERATED main:492 source=2.33535e-13 tangent=9.91674e-09 pieces=140
+GENERATED main:493 source=5.59577e-09 tangent=2.20522e-05 pieces=115
+GENERATED main:494 source=4.38521e-13 tangent=1.03351e-08 pieces=140
+GENERATED main:495 source=1.02337e-08 tangent=3.10206e-05 pieces=115
+GENERATED main:496 source=3.68381e-13 tangent=4.4612e-09 pieces=167
+GENERATED main:497 source=1.24194e-08 tangent=2.49154e-05 pieces=115
+GENERATED main:498 source=5.32588e-13 tangent=5.5908e-09 pieces=167
+GENERATED main:499 source=3.80165e-08 tangent=3.18637e-05 pieces=115
+GENERATED main:500 source=inf tangent=2.26666e-10 pieces=56
+GENERATED main:501 source=inf tangent=1.10563e-10 pieces=56
+GENERATED main:502 source=inf tangent=2.36432e-10 pieces=56
+GENERATED main:503 source=inf tangent=1.08789e-10 pieces=56
+GENERATED main:504 source=inf tangent=2.31494e-10 pieces=56
+GENERATED main:505 source=inf tangent=1.16792e-10 pieces=56
+GENERATED main:506 source=inf tangent=2.34683e-10 pieces=56
+GENERATED main:507 source=inf tangent=1.09022e-10 pieces=56
+GENERATED main:508 source=inf tangent=2.25396e-10 pieces=56
+GENERATED main:509 source=inf tangent=1.17904e-10 pieces=56
+GENERATED main:510 source=inf tangent=2.39827e-10 pieces=56
+GENERATED main:511 source=inf tangent=1.03529e-10 pieces=56
+GENERATED main:512 source=inf tangent=4.7599e-10 pieces=48
+REFIT_NEGATIVE_BASE 513 p=5 q=3 reason=Source distance unresolved: 1.0002e-06 tolerance=1e-06
+KNOT 513 axis=0 t=0.25 score=0.000102454 spans=2,1
+REFIT_NEGATIVE_BASE 513 p=5 q=3 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 513 axis=0 t=0.75 score=7.98697e-05 spans=3,1
+REFIT_NEGATIVE_BASE 513 p=5 q=3 reason=Source distance unresolved: 1.00001e-06 tolerance=1e-06
+KNOT 513 axis=0 t=0.375 score=1.52574e-05 spans=4,1
+REFIT_NEGATIVE_BASE 513 p=5 q=3 reason=Source distance unresolved: 1.00001e-06 tolerance=1e-06
+KNOT 513 axis=0 t=0.625 score=8.56923e-06 spans=5,1
+REFIT_NEGATIVE_BASE 513 p=5 q=3 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 513 axis=0 t=0.125 score=6.7485e-06 spans=6,1
+REFIT_NEGATIVE_BASE 513 p=5 q=3 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 513 axis=0 t=0.875 score=6.53015e-06 spans=7,1
+REFIT_NEGATIVE_BASE 513 p=5 q=3 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 513 axis=0 t=0.6875 score=1.59753e-06 spans=8,1
+REFIT_NEGATIVE_BASE 513 p=5 q=3 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 513 axis=0 t=0.3125 score=1.52443e-06 spans=9,1
+REFIT_NEGATIVE_BASE 513 p=5 q=3 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 513 axis=0 t=0.8125 score=1.47015e-06 spans=10,1
+REFIT_NEGATIVE_BASE 513 p=5 q=3 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 513 axis=0 t=0.1875 score=1.46888e-06 spans=11,1
+GENERATED main:513 source=inf tangent=0.000149027 pieces=76
+GENERATED main:514 source=inf tangent=3.86146e-10 pieces=48
+REFIT_NEGATIVE_BASE 515 p=5 q=3 reason=Source distance unresolved: 1.00005e-06 tolerance=1e-06
+KNOT 515 axis=0 t=0.25 score=9.52342e-05 spans=2,1
+REFIT_NEGATIVE_BASE 515 p=5 q=3 reason=Source distance unresolved: 1.00001e-06 tolerance=1e-06
+KNOT 515 axis=0 t=0.75 score=7.42416e-05 spans=3,1
+REFIT_NEGATIVE_BASE 515 p=5 q=3 reason=Source distance unresolved: 1.00001e-06 tolerance=1e-06
+KNOT 515 axis=0 t=0.375 score=1.41823e-05 spans=4,1
+REFIT_NEGATIVE_BASE 515 p=5 q=3 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 515 axis=0 t=0.625 score=7.96539e-06 spans=5,1
+REFIT_NEGATIVE_BASE 515 p=5 q=3 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 515 axis=0 t=0.125 score=6.27296e-06 spans=6,1
+REFIT_NEGATIVE_BASE 515 p=5 q=3 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 515 axis=0 t=0.875 score=6.06999e-06 spans=7,1
+REFIT_NEGATIVE_BASE 515 p=5 q=3 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 515 axis=0 t=0.6875 score=1.48496e-06 spans=8,1
+GENERATED main:515 source=inf tangent=0.000277351 pieces=116
+GENERATED main:516 source=inf tangent=4.91124e-10 pieces=48
+REFIT_NEGATIVE_BASE 517 p=5 q=3 reason=Source distance unresolved: 1.00016e-06 tolerance=1e-06
+KNOT 517 axis=0 t=0.25 score=7.59848e-05 spans=2,1
+REFIT_NEGATIVE_BASE 517 p=5 q=3 reason=Source distance unresolved: 1.00001e-06 tolerance=1e-06
+KNOT 517 axis=0 t=0.75 score=5.92354e-05 spans=3,1
+REFIT_NEGATIVE_BASE 517 p=5 q=3 reason=Source distance unresolved: 1.00001e-06 tolerance=1e-06
+KNOT 517 axis=0 t=0.625 score=1.13156e-05 spans=4,1
+REFIT_NEGATIVE_BASE 517 p=5 q=3 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 517 axis=0 t=0.375 score=6.33113e-06 spans=5,1
+REFIT_NEGATIVE_BASE 517 p=5 q=3 reason=Source distance unresolved: 1.00001e-06 tolerance=1e-06
+KNOT 517 axis=0 t=0.125 score=5.00503e-06 spans=6,1
+REFIT_NEGATIVE_BASE 517 p=5 q=3 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 517 axis=0 t=0.875 score=4.84309e-06 spans=7,1
+GENERATED main:517 source=inf tangent=0.000237111 pieces=92
+GENERATED main:518 source=inf tangent=4.7942e-10 pieces=48
+REFIT_NEGATIVE_BASE 519 p=5 q=3 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 519 axis=0 t=0.25 score=9.6955e-05 spans=2,1
+REFIT_NEGATIVE_BASE 519 p=5 q=3 reason=Source distance unresolved: 1.00001e-06 tolerance=1e-06
+KNOT 519 axis=0 t=0.75 score=7.55831e-05 spans=3,1
+REFIT_NEGATIVE_BASE 519 p=5 q=3 reason=Source distance unresolved: 1.00001e-06 tolerance=1e-06
+KNOT 519 axis=0 t=0.625 score=1.44385e-05 spans=4,1
+REFIT_NEGATIVE_BASE 519 p=5 q=3 reason=Source distance unresolved: 1.00001e-06 tolerance=1e-06
+KNOT 519 axis=0 t=0.375 score=8.07838e-06 spans=5,1
+REFIT_NEGATIVE_BASE 519 p=5 q=3 reason=Source distance unresolved: 1.00001e-06 tolerance=1e-06
+KNOT 519 axis=0 t=0.125 score=6.3863e-06 spans=6,1
+REFIT_NEGATIVE_BASE 519 p=5 q=3 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 519 axis=0 t=0.875 score=6.17967e-06 spans=7,1
+REFIT_NEGATIVE_BASE 519 p=5 q=3 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 519 axis=0 t=0.3125 score=1.51179e-06 spans=8,1
+GENERATED main:519 source=inf tangent=0.000284369 pieces=268
+GENERATED main:520 source=inf tangent=3.89123e-10 pieces=48
+REFIT_NEGATIVE_BASE 521 p=5 q=3 reason=Source distance unresolved: 1.00008e-06 tolerance=1e-06
+KNOT 521 axis=0 t=0.25 score=8.45205e-05 spans=2,1
+REFIT_NEGATIVE_BASE 521 p=5 q=3 reason=Source distance unresolved: 1.00001e-06 tolerance=1e-06
+KNOT 521 axis=0 t=0.75 score=6.58896e-05 spans=3,1
+REFIT_NEGATIVE_BASE 521 p=5 q=3 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 521 axis=0 t=0.625 score=1.25868e-05 spans=4,1
+REFIT_NEGATIVE_BASE 521 p=5 q=3 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 521 axis=0 t=0.375 score=7.04233e-06 spans=5,1
+REFIT_NEGATIVE_BASE 521 p=5 q=3 reason=Source distance unresolved: 1.00001e-06 tolerance=1e-06
+KNOT 521 axis=0 t=0.125 score=5.56726e-06 spans=6,1
+REFIT_NEGATIVE_BASE 521 p=5 q=3 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 521 axis=0 t=0.875 score=5.38713e-06 spans=7,1
+GENERATED main:521 source=inf tangent=0.000238691 pieces=96
+GENERATED main:522 source=inf tangent=4.36132e-10 pieces=48
+REFIT_NEGATIVE_BASE 523 p=5 q=3 reason=Source distance unresolved: 1.00009e-06 tolerance=1e-06
+KNOT 523 axis=0 t=0.25 score=7.27057e-05 spans=2,1
+REFIT_NEGATIVE_BASE 523 p=5 q=3 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 523 axis=0 t=0.75 score=5.66791e-05 spans=3,1
+REFIT_NEGATIVE_BASE 523 p=5 q=3 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 523 axis=0 t=0.625 score=1.08273e-05 spans=4,1
+REFIT_NEGATIVE_BASE 523 p=5 q=3 reason=Source distance unresolved: 1.00001e-06 tolerance=1e-06
+KNOT 523 axis=0 t=0.375 score=6.05791e-06 spans=5,1
+REFIT_NEGATIVE_BASE 523 p=5 q=3 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 523 axis=0 t=0.125 score=4.78903e-06 spans=6,1
+REFIT_NEGATIVE_BASE 523 p=5 q=3 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 523 axis=0 t=0.875 score=4.63408e-06 spans=7,1
+GENERATED main:523 source=inf tangent=0.000235678 pieces=92
+GENERATED main:524 source=inf tangent=6.10563e-10 pieces=48
+REFIT_NEGATIVE_BASE 525 p=5 q=5 reason=Source distance unresolved: 1.00041e-06 tolerance=1e-06
+KNOT 525 axis=1 t=0.5 score=0.00116473 spans=2,1
+REFIT_NEGATIVE_BASE 525 p=5 q=5 reason=Source distance unresolved: 1.0002e-06 tolerance=1e-06
+KNOT 525 axis=1 t=0.75 score=0.000203807 spans=2,2
+REFIT_NEGATIVE_BASE 525 p=5 q=5 reason=Source distance unresolved: 1.0001e-06 tolerance=1e-06
+KNOT 525 axis=1 t=0.25 score=0.00019089 spans=2,3
+REFIT_NEGATIVE_BASE 525 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 525 axis=0 t=0.25 score=8.43978e-05 spans=2,4
+REFIT_NEGATIVE_BASE 525 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 525 axis=0 t=0.75 score=6.60165e-05 spans=3,4
+REFIT_NEGATIVE_BASE 525 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 525 axis=1 t=0.625 score=4.76916e-05 spans=4,4
+REFIT_NEGATIVE_BASE 525 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 525 axis=1 t=0.375 score=4.16557e-05 spans=4,5
+REFIT_NEGATIVE_BASE 525 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 525 axis=0 t=0.375 score=1.24248e-05 spans=4,6
+REFIT_NEGATIVE_BASE 525 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 525 axis=0 t=0.625 score=6.97862e-06 spans=5,6
+REFIT_NEGATIVE_BASE 525 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 525 axis=0 t=0.125 score=5.49406e-06 spans=6,6
+REFIT_NEGATIVE_BASE 525 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 525 axis=0 t=0.875 score=5.31626e-06 spans=7,6
+REFIT_NEGATIVE_BASE 525 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 525 axis=1 t=0.125 score=2.3698e-06 spans=8,6
+REFIT_NEGATIVE_BASE 525 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+GENERATED main:525 source=inf tangent=0.00307493 pieces=64
+GENERATED main:526 source=inf tangent=6.09944e-10 pieces=48
+REFIT_NEGATIVE_BASE 527 p=5 q=5 reason=Source distance unresolved: 1.00049e-06 tolerance=1e-06
+KNOT 527 axis=1 t=0.5 score=0.00116375 spans=2,1
+REFIT_NEGATIVE_BASE 527 p=5 q=5 reason=Source distance unresolved: 1.0002e-06 tolerance=1e-06
+KNOT 527 axis=1 t=0.75 score=0.000203634 spans=2,2
+REFIT_NEGATIVE_BASE 527 p=5 q=5 reason=Source distance unresolved: 1.00005e-06 tolerance=1e-06
+KNOT 527 axis=1 t=0.25 score=0.000190728 spans=2,3
+REFIT_NEGATIVE_BASE 527 p=5 q=5 reason=Source distance unresolved: 1.00002e-06 tolerance=1e-06
+KNOT 527 axis=0 t=0.75 score=8.43263e-05 spans=2,4
+REFIT_NEGATIVE_BASE 527 p=5 q=5 reason=Source distance unresolved: 1.00002e-06 tolerance=1e-06
+KNOT 527 axis=0 t=0.25 score=6.59606e-05 spans=3,4
+REFIT_NEGATIVE_BASE 527 p=5 q=5 reason=Source distance unresolved: 1.00002e-06 tolerance=1e-06
+KNOT 527 axis=1 t=0.625 score=4.76512e-05 spans=4,4
+REFIT_NEGATIVE_BASE 527 p=5 q=5 reason=Source distance unresolved: 1.00001e-06 tolerance=1e-06
+KNOT 527 axis=1 t=0.375 score=4.16204e-05 spans=4,5
+REFIT_NEGATIVE_BASE 527 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 527 axis=0 t=0.375 score=1.24143e-05 spans=4,6
+REFIT_NEGATIVE_BASE 527 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 527 axis=0 t=0.625 score=6.97271e-06 spans=5,6
+REFIT_NEGATIVE_BASE 527 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 527 axis=0 t=0.125 score=5.4894e-06 spans=6,6
+REFIT_NEGATIVE_BASE 527 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 527 axis=0 t=0.875 score=5.31175e-06 spans=7,6
+REFIT_NEGATIVE_BASE 527 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 527 axis=1 t=0.125 score=2.36779e-06 spans=8,6
+REFIT_NEGATIVE_BASE 527 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+GENERATED main:527 source=inf tangent=0.00306875 pieces=64
+GENERATED main:528 source=inf tangent=5.97743e-10 pieces=48
+REFIT_NEGATIVE_BASE 529 p=5 q=5 reason=Source distance unresolved: 1.00069e-06 tolerance=1e-06
+KNOT 529 axis=1 t=0.5 score=0.000986567 spans=2,1
+REFIT_NEGATIVE_BASE 529 p=5 q=5 reason=Source distance unresolved: 1.00009e-06 tolerance=1e-06
+KNOT 529 axis=1 t=0.75 score=0.000172631 spans=2,2
+REFIT_NEGATIVE_BASE 529 p=5 q=5 reason=Source distance unresolved: 1.00005e-06 tolerance=1e-06
+KNOT 529 axis=1 t=0.25 score=0.00016169 spans=2,3
+REFIT_NEGATIVE_BASE 529 p=5 q=5 reason=Source distance unresolved: 1.00001e-06 tolerance=1e-06
+KNOT 529 axis=0 t=0.25 score=7.14878e-05 spans=2,4
+REFIT_NEGATIVE_BASE 529 p=5 q=5 reason=Source distance unresolved: 1.00001e-06 tolerance=1e-06
+KNOT 529 axis=0 t=0.75 score=5.59182e-05 spans=3,4
+REFIT_NEGATIVE_BASE 529 p=5 q=5 reason=Source distance unresolved: 1.00001e-06 tolerance=1e-06
+KNOT 529 axis=1 t=0.625 score=4.03964e-05 spans=4,4
+REFIT_NEGATIVE_BASE 529 p=5 q=5 reason=Source distance unresolved: 1.00001e-06 tolerance=1e-06
+KNOT 529 axis=1 t=0.375 score=3.52837e-05 spans=4,5
+REFIT_NEGATIVE_BASE 529 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 529 axis=0 t=0.625 score=1.05242e-05 spans=4,6
+REFIT_NEGATIVE_BASE 529 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 529 axis=0 t=0.375 score=5.88858e-06 spans=5,6
+REFIT_NEGATIVE_BASE 529 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 529 axis=0 t=0.125 score=4.65365e-06 spans=6,6
+REFIT_NEGATIVE_BASE 529 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 529 axis=0 t=0.875 score=4.50305e-06 spans=7,6
+REFIT_NEGATIVE_BASE 529 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 529 axis=1 t=0.125 score=2.0073e-06 spans=8,6
+REFIT_NEGATIVE_BASE 529 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+GENERATED main:529 source=inf tangent=0.00306662 pieces=64
+GENERATED main:530 source=inf tangent=5.77241e-10 pieces=48
+REFIT_NEGATIVE_BASE 531 p=5 q=5 reason=Source distance unresolved: 1.0008e-06 tolerance=1e-06
+KNOT 531 axis=1 t=0.5 score=0.00131341 spans=2,1
+REFIT_NEGATIVE_BASE 531 p=5 q=5 reason=Source distance unresolved: 1.00012e-06 tolerance=1e-06
+KNOT 531 axis=1 t=0.75 score=0.000229823 spans=2,2
+REFIT_NEGATIVE_BASE 531 p=5 q=5 reason=Source distance unresolved: 1.00005e-06 tolerance=1e-06
+KNOT 531 axis=1 t=0.25 score=0.000215258 spans=2,3
+REFIT_NEGATIVE_BASE 531 p=5 q=5 reason=Source distance unresolved: 1.00001e-06 tolerance=1e-06
+KNOT 531 axis=0 t=0.75 score=9.51714e-05 spans=2,4
+REFIT_NEGATIVE_BASE 531 p=5 q=5 reason=Source distance unresolved: 1.00001e-06 tolerance=1e-06
+KNOT 531 axis=0 t=0.25 score=7.44437e-05 spans=3,4
+REFIT_NEGATIVE_BASE 531 p=5 q=5 reason=Source distance unresolved: 1.00001e-06 tolerance=1e-06
+KNOT 531 axis=1 t=0.625 score=5.37796e-05 spans=4,4
+REFIT_NEGATIVE_BASE 531 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 531 axis=1 t=0.375 score=4.69731e-05 spans=4,5
+REFIT_NEGATIVE_BASE 531 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 531 axis=0 t=0.375 score=1.40109e-05 spans=4,6
+REFIT_NEGATIVE_BASE 531 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 531 axis=0 t=0.625 score=7.86946e-06 spans=5,6
+REFIT_NEGATIVE_BASE 531 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 531 axis=0 t=0.125 score=6.19538e-06 spans=6,6
+REFIT_NEGATIVE_BASE 531 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 531 axis=0 t=0.875 score=5.99489e-06 spans=7,6
+REFIT_NEGATIVE_BASE 531 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 531 axis=1 t=0.125 score=2.67231e-06 spans=8,6
+REFIT_NEGATIVE_BASE 531 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+GENERATED main:531 source=inf tangent=0.00307536 pieces=64
+GENERATED main:532 source=inf tangent=5.97928e-10 pieces=48
+REFIT_NEGATIVE_BASE 533 p=5 q=5 reason=Source distance unresolved: 1.00042e-06 tolerance=1e-06
+KNOT 533 axis=1 t=0.5 score=0.00138731 spans=2,1
+REFIT_NEGATIVE_BASE 533 p=5 q=5 reason=Source distance unresolved: 1.00001e-06 tolerance=1e-06
+KNOT 533 axis=1 t=0.75 score=0.000242753 spans=2,2
+REFIT_NEGATIVE_BASE 533 p=5 q=5 reason=Source distance unresolved: 1.00012e-06 tolerance=1e-06
+KNOT 533 axis=1 t=0.25 score=0.000227368 spans=2,3
+REFIT_NEGATIVE_BASE 533 p=5 q=5 reason=Source distance unresolved: 1.00002e-06 tolerance=1e-06
+KNOT 533 axis=0 t=0.25 score=0.000100526 spans=2,4
+REFIT_NEGATIVE_BASE 533 p=5 q=5 reason=Source distance unresolved: 1.00002e-06 tolerance=1e-06
+KNOT 533 axis=0 t=0.75 score=7.86319e-05 spans=3,4
+REFIT_NEGATIVE_BASE 533 p=5 q=5 reason=Source distance unresolved: 1.00002e-06 tolerance=1e-06
+KNOT 533 axis=1 t=0.625 score=5.68053e-05 spans=4,4
+REFIT_NEGATIVE_BASE 533 p=5 q=5 reason=Source distance unresolved: 1.00002e-06 tolerance=1e-06
+KNOT 533 axis=1 t=0.375 score=4.96159e-05 spans=4,5
+REFIT_NEGATIVE_BASE 533 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 533 axis=0 t=0.625 score=1.47991e-05 spans=4,6
+REFIT_NEGATIVE_BASE 533 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 533 axis=0 t=0.375 score=8.28051e-06 spans=5,6
+REFIT_NEGATIVE_BASE 533 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 533 axis=0 t=0.125 score=6.54394e-06 spans=6,6
+REFIT_NEGATIVE_BASE 533 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 533 axis=0 t=0.875 score=6.33217e-06 spans=7,6
+REFIT_NEGATIVE_BASE 533 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 533 axis=1 t=0.125 score=2.82266e-06 spans=8,6
+REFIT_NEGATIVE_BASE 533 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+GENERATED main:533 source=inf tangent=0.0029522 pieces=64
+GENERATED main:534 source=inf tangent=6.12736e-10 pieces=48
+REFIT_NEGATIVE_BASE 535 p=5 q=5 reason=Source distance unresolved: 1.00047e-06 tolerance=1e-06
+KNOT 535 axis=1 t=0.5 score=0.00133544 spans=2,1
+REFIT_NEGATIVE_BASE 535 p=5 q=5 reason=Source distance unresolved: 1.0001e-06 tolerance=1e-06
+KNOT 535 axis=1 t=0.75 score=0.000233678 spans=2,2
+REFIT_NEGATIVE_BASE 535 p=5 q=5 reason=Source distance unresolved: 1.00008e-06 tolerance=1e-06
+KNOT 535 axis=1 t=0.25 score=0.000218868 spans=2,3
+REFIT_NEGATIVE_BASE 535 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 535 axis=0 t=0.25 score=9.67677e-05 spans=2,4
+REFIT_NEGATIVE_BASE 535 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 535 axis=0 t=0.75 score=7.56923e-05 spans=3,4
+REFIT_NEGATIVE_BASE 535 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 535 axis=1 t=0.625 score=5.46816e-05 spans=4,4
+REFIT_NEGATIVE_BASE 535 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 535 axis=1 t=0.375 score=4.7761e-05 spans=4,5
+REFIT_NEGATIVE_BASE 535 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 535 axis=0 t=0.375 score=1.42459e-05 spans=4,6
+REFIT_NEGATIVE_BASE 535 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 535 axis=0 t=0.625 score=8.00145e-06 spans=5,6
+REFIT_NEGATIVE_BASE 535 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 535 axis=0 t=0.125 score=6.2993e-06 spans=6,6
+REFIT_NEGATIVE_BASE 535 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 535 axis=0 t=0.875 score=6.09544e-06 spans=7,6
+REFIT_NEGATIVE_BASE 535 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 535 axis=1 t=0.125 score=2.71713e-06 spans=8,6
+REFIT_NEGATIVE_BASE 535 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+GENERATED main:535 source=inf tangent=0.00307123 pieces=64
+GENERATED main:536 source=inf tangent=4.54435e-10 pieces=48
+REFIT_NEGATIVE_BASE 537 p=5 q=3 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 537 axis=0 t=0.25 score=5.97492e-05 spans=2,1
+REFIT_NEGATIVE_BASE 537 p=5 q=3 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 537 axis=0 t=0.75 score=4.65786e-05 spans=3,1
+REFIT_NEGATIVE_BASE 537 p=5 q=3 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 537 axis=0 t=0.375 score=8.89784e-06 spans=4,1
+REFIT_NEGATIVE_BASE 537 p=5 q=3 reason=Source distance unresolved: 1.00001e-06 tolerance=1e-06
+KNOT 537 axis=0 t=0.625 score=4.99743e-06 spans=5,1
+REFIT_NEGATIVE_BASE 537 p=5 q=3 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 537 axis=0 t=0.125 score=3.93561e-06 spans=6,1
+REFIT_NEGATIVE_BASE 537 p=5 q=3 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 537 axis=0 t=0.875 score=3.80827e-06 spans=7,1
+GENERATED main:537 source=inf tangent=0.000239124 pieces=68
+GENERATED main:538 source=inf tangent=4.84384e-10 pieces=48
+REFIT_NEGATIVE_BASE 539 p=5 q=3 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 539 axis=0 t=0.25 score=6.92914e-05 spans=2,1
+REFIT_NEGATIVE_BASE 539 p=5 q=3 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 539 axis=0 t=0.75 score=5.40174e-05 spans=3,1
+REFIT_NEGATIVE_BASE 539 p=5 q=3 reason=Source distance unresolved: 1.00001e-06 tolerance=1e-06
+KNOT 539 axis=0 t=0.375 score=1.03189e-05 spans=4,1
+REFIT_NEGATIVE_BASE 539 p=5 q=3 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 539 axis=0 t=0.625 score=5.79554e-06 spans=5,1
+REFIT_NEGATIVE_BASE 539 p=5 q=3 reason=Source distance unresolved: 1.00001e-06 tolerance=1e-06
+KNOT 539 axis=0 t=0.125 score=4.56414e-06 spans=6,1
+REFIT_NEGATIVE_BASE 539 p=5 q=3 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 539 axis=0 t=0.875 score=4.41647e-06 spans=7,1
+GENERATED main:539 source=inf tangent=0.000239286 pieces=68
+GENERATED main:540 source=inf tangent=3.96261e-10 pieces=48
+REFIT_NEGATIVE_BASE 541 p=5 q=3 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 541 axis=0 t=0.75 score=5.21791e-05 spans=2,1
+REFIT_NEGATIVE_BASE 541 p=5 q=3 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 541 axis=0 t=0.25 score=4.06772e-05 spans=3,1
+REFIT_NEGATIVE_BASE 541 p=5 q=3 reason=Source distance unresolved: 1.00001e-06 tolerance=1e-06
+KNOT 541 axis=0 t=0.625 score=7.7705e-06 spans=4,1
+REFIT_NEGATIVE_BASE 541 p=5 q=3 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 541 axis=0 t=0.375 score=4.34762e-06 spans=5,1
+REFIT_NEGATIVE_BASE 541 p=5 q=3 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 541 axis=0 t=0.125 score=3.43697e-06 spans=6,1
+REFIT_NEGATIVE_BASE 541 p=5 q=3 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 541 axis=0 t=0.875 score=3.32577e-06 spans=7,1
+GENERATED main:541 source=inf tangent=0.000235433 pieces=64
+GENERATED main:542 source=inf tangent=4.31155e-10 pieces=48
+REFIT_NEGATIVE_BASE 543 p=5 q=3 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 543 axis=0 t=0.75 score=4.42882e-05 spans=2,1
+REFIT_NEGATIVE_BASE 543 p=5 q=3 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 543 axis=0 t=0.25 score=3.45257e-05 spans=3,1
+REFIT_NEGATIVE_BASE 543 p=5 q=3 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 543 axis=0 t=0.625 score=6.5954e-06 spans=4,1
+REFIT_NEGATIVE_BASE 543 p=5 q=3 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 543 axis=0 t=0.375 score=3.69014e-06 spans=5,1
+REFIT_NEGATIVE_BASE 543 p=5 q=3 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 543 axis=0 t=0.125 score=2.91721e-06 spans=6,1
+REFIT_NEGATIVE_BASE 543 p=5 q=3 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 543 axis=0 t=0.875 score=2.82282e-06 spans=7,1
+GENERATED main:543 source=inf tangent=0.000241375 pieces=60
+GENERATED main:544 source=inf tangent=4.80629e-10 pieces=48
+REFIT_NEGATIVE_BASE 545 p=5 q=3 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 545 axis=0 t=0.75 score=5.78079e-05 spans=2,1
+REFIT_NEGATIVE_BASE 545 p=5 q=3 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 545 axis=0 t=0.25 score=4.50652e-05 spans=3,1
+REFIT_NEGATIVE_BASE 545 p=5 q=3 reason=Source distance unresolved: 1.00001e-06 tolerance=1e-06
+KNOT 545 axis=0 t=0.625 score=8.60874e-06 spans=4,1
+REFIT_NEGATIVE_BASE 545 p=5 q=3 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 545 axis=0 t=0.375 score=4.81661e-06 spans=5,1
+REFIT_NEGATIVE_BASE 545 p=5 q=3 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 545 axis=0 t=0.125 score=3.80773e-06 spans=6,1
+REFIT_NEGATIVE_BASE 545 p=5 q=3 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 545 axis=0 t=0.875 score=3.68453e-06 spans=7,1
+GENERATED main:545 source=inf tangent=0.000237162 pieces=68
+GENERATED main:546 source=inf tangent=4.59079e-10 pieces=48
+REFIT_NEGATIVE_BASE 547 p=5 q=3 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 547 axis=0 t=0.75 score=7.54707e-05 spans=2,1
+REFIT_NEGATIVE_BASE 547 p=5 q=3 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 547 axis=0 t=0.25 score=5.88346e-05 spans=3,1
+REFIT_NEGATIVE_BASE 547 p=5 q=3 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 547 axis=0 t=0.375 score=1.12391e-05 spans=4,1
+REFIT_NEGATIVE_BASE 547 p=5 q=3 reason=Source distance unresolved: 1.00001e-06 tolerance=1e-06
+KNOT 547 axis=0 t=0.625 score=6.31237e-06 spans=5,1
+REFIT_NEGATIVE_BASE 547 p=5 q=3 reason=Source distance unresolved: 1.00001e-06 tolerance=1e-06
+KNOT 547 axis=0 t=0.125 score=4.97116e-06 spans=6,1
+REFIT_NEGATIVE_BASE 547 p=5 q=3 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 547 axis=0 t=0.875 score=4.81032e-06 spans=7,1
+GENERATED main:547 source=inf tangent=0.000236641 pieces=76
+GENERATED main:548 source=inf tangent=1.80584e-09 pieces=48
+REFIT_NEGATIVE_BASE 549 p=5 q=5 reason=Source distance unresolved: 1.00044e-06 tolerance=1e-06
+KNOT 549 axis=1 t=0.5 score=0.00118467 spans=2,1
+REFIT_NEGATIVE_BASE 549 p=5 q=5 reason=Source distance unresolved: 1.00006e-06 tolerance=1e-06
+KNOT 549 axis=0 t=0.25 score=0.000283508 spans=2,2
+REFIT_NEGATIVE_BASE 549 p=5 q=5 reason=Source distance unresolved: 1.00006e-06 tolerance=1e-06
+KNOT 549 axis=0 t=0.75 score=0.000221014 spans=3,2
+REFIT_NEGATIVE_BASE 549 p=5 q=5 reason=Source distance unresolved: 1.00006e-06 tolerance=1e-06
+KNOT 549 axis=1 t=0.25 score=0.000205628 spans=4,2
+REFIT_NEGATIVE_BASE 549 p=5 q=5 reason=Source distance unresolved: 1.00006e-06 tolerance=1e-06
+KNOT 549 axis=1 t=0.75 score=0.000185389 spans=4,3
+REFIT_NEGATIVE_BASE 549 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 549 axis=1 t=0.375 score=4.84806e-05 spans=4,4
+REFIT_NEGATIVE_BASE 549 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 549 axis=1 t=0.625 score=4.25179e-05 spans=4,5
+REFIT_NEGATIVE_BASE 549 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 549 axis=0 t=0.375 score=4.222e-05 spans=4,6
+REFIT_NEGATIVE_BASE 549 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 549 axis=0 t=0.625 score=2.37126e-05 spans=5,6
+REFIT_NEGATIVE_BASE 549 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 549 axis=0 t=0.125 score=1.86743e-05 spans=6,6
+REFIT_NEGATIVE_BASE 549 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 549 axis=0 t=0.875 score=1.80701e-05 spans=7,6
+REFIT_NEGATIVE_BASE 549 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 549 axis=0 t=0.3125 score=4.42065e-06 spans=8,6
+REFIT_NEGATIVE_BASE 549 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 549 axis=0 t=0.6875 score=4.21838e-06 spans=9,6
+REFIT_NEGATIVE_BASE 549 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+GENERATED main:549 source=inf tangent=0.0030962 pieces=72
+GENERATED main:550 source=inf tangent=1.84271e-09 pieces=48
+REFIT_NEGATIVE_BASE 551 p=5 q=5 reason=Source distance unresolved: 1.00032e-06 tolerance=1e-06
+KNOT 551 axis=1 t=0.5 score=0.00116572 spans=2,1
+REFIT_NEGATIVE_BASE 551 p=5 q=5 reason=Source distance unresolved: 1.00021e-06 tolerance=1e-06
+KNOT 551 axis=0 t=0.75 score=0.000278975 spans=2,2
+REFIT_NEGATIVE_BASE 551 p=5 q=5 reason=Source distance unresolved: 1.00021e-06 tolerance=1e-06
+KNOT 551 axis=0 t=0.25 score=0.00021748 spans=3,2
+REFIT_NEGATIVE_BASE 551 p=5 q=5 reason=Source distance unresolved: 1.00021e-06 tolerance=1e-06
+KNOT 551 axis=1 t=0.25 score=0.00020234 spans=4,2
+REFIT_NEGATIVE_BASE 551 p=5 q=5 reason=Source distance unresolved: 1.00005e-06 tolerance=1e-06
+KNOT 551 axis=1 t=0.75 score=0.000182424 spans=4,3
+REFIT_NEGATIVE_BASE 551 p=5 q=5 reason=Source distance unresolved: 1.00001e-06 tolerance=1e-06
+KNOT 551 axis=1 t=0.375 score=4.77055e-05 spans=4,4
+REFIT_NEGATIVE_BASE 551 p=5 q=5 reason=Source distance unresolved: 1.00001e-06 tolerance=1e-06
+KNOT 551 axis=1 t=0.625 score=4.18381e-05 spans=4,5
+REFIT_NEGATIVE_BASE 551 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 551 axis=0 t=0.625 score=4.15449e-05 spans=4,6
+REFIT_NEGATIVE_BASE 551 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 551 axis=0 t=0.375 score=2.32445e-05 spans=5,6
+REFIT_NEGATIVE_BASE 551 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 551 axis=0 t=0.125 score=1.83757e-05 spans=6,6
+REFIT_NEGATIVE_BASE 551 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 551 axis=0 t=0.875 score=1.77812e-05 spans=7,6
+REFIT_NEGATIVE_BASE 551 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 551 axis=0 t=0.3125 score=4.34997e-06 spans=8,6
+REFIT_NEGATIVE_BASE 551 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 551 axis=0 t=0.6875 score=4.15093e-06 spans=9,6
+REFIT_NEGATIVE_BASE 551 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+GENERATED main:551 source=inf tangent=0.00311545 pieces=72
+GENERATED main:552 source=inf tangent=1.81632e-09 pieces=48
+REFIT_NEGATIVE_BASE 553 p=5 q=5 reason=Source distance unresolved: 1.00051e-06 tolerance=1e-06
+KNOT 553 axis=1 t=0.5 score=0.00133266 spans=2,1
+REFIT_NEGATIVE_BASE 553 p=5 q=5 reason=Source distance unresolved: 1.0002e-06 tolerance=1e-06
+KNOT 553 axis=0 t=0.25 score=0.000318924 spans=2,2
+REFIT_NEGATIVE_BASE 553 p=5 q=5 reason=Source distance unresolved: 1.0002e-06 tolerance=1e-06
+KNOT 553 axis=0 t=0.75 score=0.000248623 spans=3,2
+REFIT_NEGATIVE_BASE 553 p=5 q=5 reason=Source distance unresolved: 1.0002e-06 tolerance=1e-06
+KNOT 553 axis=1 t=0.25 score=0.000231315 spans=4,2
+REFIT_NEGATIVE_BASE 553 p=5 q=5 reason=Source distance unresolved: 1.00004e-06 tolerance=1e-06
+KNOT 553 axis=1 t=0.75 score=0.000208548 spans=4,3
+REFIT_NEGATIVE_BASE 553 p=5 q=5 reason=Source distance unresolved: 1.00002e-06 tolerance=1e-06
+KNOT 553 axis=1 t=0.375 score=5.45369e-05 spans=4,4
+REFIT_NEGATIVE_BASE 553 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 553 axis=1 t=0.625 score=4.78293e-05 spans=4,5
+REFIT_NEGATIVE_BASE 553 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 553 axis=0 t=0.625 score=4.74941e-05 spans=4,6
+REFIT_NEGATIVE_BASE 553 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 553 axis=0 t=0.375 score=2.65731e-05 spans=5,6
+REFIT_NEGATIVE_BASE 553 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 553 axis=0 t=0.125 score=2.10071e-05 spans=6,6
+REFIT_NEGATIVE_BASE 553 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 553 axis=0 t=0.875 score=2.03275e-05 spans=7,6
+REFIT_NEGATIVE_BASE 553 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 553 axis=0 t=0.3125 score=4.97288e-06 spans=8,6
+REFIT_NEGATIVE_BASE 553 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 553 axis=0 t=0.6875 score=4.74534e-06 spans=9,6
+REFIT_NEGATIVE_BASE 553 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+GENERATED main:553 source=inf tangent=0.0031154 pieces=72
+GENERATED main:554 source=inf tangent=1.8464e-09 pieces=48
+REFIT_NEGATIVE_BASE 555 p=5 q=5 reason=Source distance unresolved: 1.00021e-06 tolerance=1e-06
+KNOT 555 axis=1 t=0.5 score=0.00131679 spans=2,1
+REFIT_NEGATIVE_BASE 555 p=5 q=5 reason=Source distance unresolved: 1.00005e-06 tolerance=1e-06
+KNOT 555 axis=0 t=0.25 score=0.000315128 spans=2,2
+REFIT_NEGATIVE_BASE 555 p=5 q=5 reason=Source distance unresolved: 1.00005e-06 tolerance=1e-06
+KNOT 555 axis=0 t=0.75 score=0.000245664 spans=3,2
+REFIT_NEGATIVE_BASE 555 p=5 q=5 reason=Source distance unresolved: 1.00005e-06 tolerance=1e-06
+KNOT 555 axis=1 t=0.25 score=0.000228561 spans=4,2
+REFIT_NEGATIVE_BASE 555 p=5 q=5 reason=Source distance unresolved: 1.00003e-06 tolerance=1e-06
+KNOT 555 axis=1 t=0.75 score=0.000206065 spans=4,3
+REFIT_NEGATIVE_BASE 555 p=5 q=5 reason=Source distance unresolved: 1.00002e-06 tolerance=1e-06
+KNOT 555 axis=1 t=0.375 score=5.38877e-05 spans=4,4
+REFIT_NEGATIVE_BASE 555 p=5 q=5 reason=Source distance unresolved: 1.00001e-06 tolerance=1e-06
+KNOT 555 axis=1 t=0.625 score=4.72599e-05 spans=4,5
+REFIT_NEGATIVE_BASE 555 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 555 axis=0 t=0.625 score=4.69288e-05 spans=4,6
+REFIT_NEGATIVE_BASE 555 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 555 axis=0 t=0.375 score=2.62568e-05 spans=5,6
+REFIT_NEGATIVE_BASE 555 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 555 axis=0 t=0.125 score=2.07571e-05 spans=6,6
+REFIT_NEGATIVE_BASE 555 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 555 axis=0 t=0.875 score=2.00855e-05 spans=7,6
+REFIT_NEGATIVE_BASE 555 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 555 axis=0 t=0.6875 score=4.91368e-06 spans=8,6
+REFIT_NEGATIVE_BASE 555 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 555 axis=0 t=0.3125 score=4.68885e-06 spans=9,6
+REFIT_NEGATIVE_BASE 555 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+GENERATED main:555 source=inf tangent=0.00306553 pieces=72
+GENERATED main:556 source=inf tangent=1.81862e-09 pieces=48
+REFIT_NEGATIVE_BASE 557 p=5 q=5 reason=Source distance unresolved: 1.00046e-06 tolerance=1e-06
+KNOT 557 axis=1 t=0.5 score=0.00135573 spans=2,1
+REFIT_NEGATIVE_BASE 557 p=5 q=5 reason=Source distance unresolved: 1.00023e-06 tolerance=1e-06
+KNOT 557 axis=0 t=0.25 score=0.000324446 spans=2,2
+REFIT_NEGATIVE_BASE 557 p=5 q=5 reason=Source distance unresolved: 1.00023e-06 tolerance=1e-06
+KNOT 557 axis=0 t=0.75 score=0.000252928 spans=3,2
+REFIT_NEGATIVE_BASE 557 p=5 q=5 reason=Source distance unresolved: 1.00023e-06 tolerance=1e-06
+KNOT 557 axis=1 t=0.25 score=0.00023532 spans=4,2
+REFIT_NEGATIVE_BASE 557 p=5 q=5 reason=Source distance unresolved: 1.00002e-06 tolerance=1e-06
+KNOT 557 axis=1 t=0.75 score=0.000212158 spans=4,3
+REFIT_NEGATIVE_BASE 557 p=5 q=5 reason=Source distance unresolved: 1.00003e-06 tolerance=1e-06
+KNOT 557 axis=1 t=0.375 score=5.54811e-05 spans=4,4
+REFIT_NEGATIVE_BASE 557 p=5 q=5 reason=Source distance unresolved: 1.00001e-06 tolerance=1e-06
+KNOT 557 axis=1 t=0.625 score=4.86573e-05 spans=4,5
+REFIT_NEGATIVE_BASE 557 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 557 axis=0 t=0.375 score=4.83164e-05 spans=4,6
+REFIT_NEGATIVE_BASE 557 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 557 axis=0 t=0.625 score=2.71366e-05 spans=5,6
+REFIT_NEGATIVE_BASE 557 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 557 axis=0 t=0.125 score=2.13708e-05 spans=6,6
+REFIT_NEGATIVE_BASE 557 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 557 axis=0 t=0.875 score=2.06794e-05 spans=7,6
+REFIT_NEGATIVE_BASE 557 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 557 axis=0 t=0.6875 score=5.05898e-06 spans=8,6
+REFIT_NEGATIVE_BASE 557 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 557 axis=0 t=0.3125 score=4.8275e-06 spans=9,6
+REFIT_NEGATIVE_BASE 557 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+GENERATED main:557 source=inf tangent=0.0030482 pieces=72
+GENERATED main:558 source=inf tangent=1.84813e-09 pieces=48
+REFIT_NEGATIVE_BASE 559 p=5 q=5 reason=Source distance unresolved: 1.00031e-06 tolerance=1e-06
+KNOT 559 axis=1 t=0.5 score=0.00144662 spans=2,1
+REFIT_NEGATIVE_BASE 559 p=5 q=5 reason=Source distance unresolved: 1.00007e-06 tolerance=1e-06
+KNOT 559 axis=0 t=0.25 score=0.000346197 spans=2,2
+REFIT_NEGATIVE_BASE 559 p=5 q=5 reason=Source distance unresolved: 1.00007e-06 tolerance=1e-06
+KNOT 559 axis=0 t=0.75 score=0.000269884 spans=3,2
+REFIT_NEGATIVE_BASE 559 p=5 q=5 reason=Source distance unresolved: 1.00007e-06 tolerance=1e-06
+KNOT 559 axis=1 t=0.25 score=0.000251096 spans=4,2
+REFIT_NEGATIVE_BASE 559 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 559 axis=1 t=0.75 score=0.000226382 spans=4,3
+REFIT_NEGATIVE_BASE 559 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 559 axis=1 t=0.375 score=5.92006e-05 spans=4,4
+REFIT_NEGATIVE_BASE 559 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 559 axis=1 t=0.625 score=5.19194e-05 spans=4,5
+REFIT_NEGATIVE_BASE 559 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 559 axis=0 t=0.375 score=5.15556e-05 spans=4,6
+REFIT_NEGATIVE_BASE 559 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 559 axis=0 t=0.625 score=2.89559e-05 spans=5,6
+REFIT_NEGATIVE_BASE 559 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 559 axis=0 t=0.125 score=2.28036e-05 spans=6,6
+REFIT_NEGATIVE_BASE 559 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 559 axis=0 t=0.875 score=2.20657e-05 spans=7,6
+REFIT_NEGATIVE_BASE 559 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 559 axis=0 t=0.6875 score=5.39814e-06 spans=8,6
+REFIT_NEGATIVE_BASE 559 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 559 axis=0 t=0.3125 score=5.15114e-06 spans=9,6
+REFIT_NEGATIVE_BASE 559 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+GENERATED main:559 source=inf tangent=0.00312708 pieces=72
+GENERATED main:560 source=inf tangent=2.36634e-10 pieces=56
+GENERATED main:561 source=inf tangent=1.19441e-10 pieces=56
+GENERATED main:562 source=inf tangent=2.41117e-10 pieces=56
+GENERATED main:563 source=inf tangent=1.16071e-10 pieces=56
+GENERATED main:564 source=inf tangent=2.33472e-10 pieces=56
+GENERATED main:565 source=inf tangent=1.16315e-10 pieces=56
+GENERATED main:566 source=inf tangent=2.22336e-10 pieces=56
+GENERATED main:567 source=inf tangent=1.14031e-10 pieces=56
+GENERATED main:568 source=inf tangent=2.39725e-10 pieces=56
+GENERATED main:569 source=inf tangent=1.06855e-10 pieces=56
+GENERATED main:570 source=inf tangent=2.38858e-10 pieces=56
+GENERATED main:571 source=inf tangent=1.04732e-10 pieces=56
+GENERATED main:572 source=inf tangent=2.39007e-10 pieces=56
+GENERATED main:573 source=inf tangent=1.05611e-10 pieces=56
+GENERATED main:574 source=inf tangent=2.23354e-10 pieces=56
+GENERATED main:575 source=inf tangent=1.1352e-10 pieces=56
+GENERATED main:576 source=inf tangent=2.22098e-10 pieces=56
+GENERATED main:577 source=inf tangent=1.15404e-10 pieces=56
+GENERATED main:578 source=inf tangent=2.21132e-10 pieces=56
+GENERATED main:579 source=inf tangent=1.06918e-10 pieces=56
+GENERATED main:580 source=inf tangent=2.35627e-10 pieces=56
+GENERATED main:581 source=inf tangent=1.05084e-10 pieces=56
+GENERATED main:582 source=inf tangent=2.38213e-10 pieces=56
+GENERATED main:583 source=inf tangent=1.09539e-10 pieces=56
+GENERATED main:584 source=inf tangent=2.25981e-10 pieces=56
+GENERATED main:585 source=inf tangent=1.09524e-10 pieces=56
+GENERATED main:586 source=inf tangent=2.37312e-10 pieces=56
+GENERATED main:587 source=inf tangent=1.02441e-10 pieces=56
+GENERATED main:588 source=inf tangent=2.28063e-10 pieces=56
+GENERATED main:589 source=inf tangent=1.1802e-10 pieces=56
+GENERATED main:590 source=inf tangent=2.33716e-10 pieces=56
+GENERATED main:591 source=inf tangent=1.11885e-10 pieces=56
+GENERATED main:592 source=inf tangent=2.34896e-10 pieces=56
+GENERATED main:593 source=inf tangent=1.19349e-10 pieces=56
+GENERATED main:594 source=inf tangent=2.21611e-10 pieces=56
+GENERATED main:595 source=inf tangent=1.13097e-10 pieces=56
+GENERATED main:596 source=inf tangent=2.3197e-10 pieces=56
+GENERATED main:597 source=inf tangent=1.06328e-10 pieces=56
+GENERATED main:598 source=inf tangent=2.3502e-10 pieces=56
+GENERATED main:599 source=inf tangent=1.04083e-10 pieces=56

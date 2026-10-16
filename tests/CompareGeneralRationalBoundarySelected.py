@@ -29,6 +29,8 @@ def main():
         parser.add_argument('--' + name, type=Path, required=True)
     parser.add_argument('--runs', type=int, default=5)
     args = parser.parse_args()
+    from RationalDatasetSupport import require_v2_data
+    require_v2_data(args.data)
     if args.runs < 1:
         parser.error('--runs must be positive')
     exe = {name: getattr(args, name).resolve() for name in ('baseline', 'optimized')}
@@ -48,7 +50,7 @@ def main():
                     target.unlink()
                 try:
                     result = subprocess.run([str(exe[variant]), '--rational-case', str(data), str(target),
-                                             str(case), '1', str(synthetic), '--rational-only'],
+                                             str(case), '1', str(synthetic), '--rational-v2-only'],
                                             cwd=sdk, env=env, capture_output=True, text=True,
                                             encoding='utf-8', errors='replace', timeout=60)
                     target.with_suffix('.log').write_text(result.stdout + result.stderr, encoding='utf-8')
@@ -70,9 +72,9 @@ def main():
         writer = csv.DictWriter(stream, fieldnames=fields)
         writer.writeheader()
         writer.writerows(rows)
-    summary = dict(validator='rational_boundary', runs=args.runs, rows=len(rows), failures=failures,
+    summary = dict(validator='rational_boundary', dataset_contract='rational-domain-v2', runs=args.runs, rows=len(rows), failures=failures,
                    executables_sha256={name: sha(path) for name, path in exe.items()},
-                   inputs_sha256={f'general-{i:03}.b2a': sha(data / f'general-{i:03}.b2a') for s, i in CASES if not s},
+                   inputs_sha256={f'{suite}:{i}': sha(data / suite / f'{suite}-{i:03}.b2a') for s, i in CASES for suite in ['synthetic' if s else 'main']},
                    cpu_affinity_fixed=False, exclusive_machine=False, cases=[])
     for synthetic, case in CASES:
         entry = dict(synthetic=synthetic, id=case)
@@ -85,7 +87,7 @@ def main():
                                   max_pipeline_ms=max((float(r['pipeline_ms']) for r in selected), default=None))
         if entry['baseline']['outcomes'] != entry['optimized']['outcomes'] or entry['baseline']['accepted_runs'] != entry['optimized']['accepted_runs']:
             failures.append(dict(case=case, synthetic=synthetic, changed_outcome=True))
-        expected = 0 if not synthetic and case in (254, 500) else args.runs
+        expected = 0 if not synthetic and case == 500 else args.runs
         if entry['optimized']['accepted_runs'] != expected:
             failures.append(dict(case=case, synthetic=synthetic, unexpected_acceptance=True))
         summary['cases'].append(entry)

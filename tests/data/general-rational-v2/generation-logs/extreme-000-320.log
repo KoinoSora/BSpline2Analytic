@@ -1,0 +1,2171 @@
+Failed to open log output file.
+Failed to open log output file.
+GENERATED extreme:0 source=2.80224e-12 tangent=9.10776e-07 pieces=45
+GENERATED extreme:1 source=2.80627e-12 tangent=8.96736e-07 pieces=31
+GENERATED extreme:2 source=2.70585e-12 tangent=3.50345e-07 pieces=38
+GENERATED extreme:3 source=2.74302e-12 tangent=2.4807e-07 pieces=26
+GENERATED extreme:4 source=3.03244e-12 tangent=1.93757e-07 pieces=44
+GENERATED extreme:5 source=2.91476e-12 tangent=1.21567e-07 pieces=32
+GENERATED extreme:6 source=2.80695e-12 tangent=3.6674e-08 pieces=45
+GENERATED extreme:7 source=2.81332e-12 tangent=2.61304e-08 pieces=31
+GENERATED extreme:8 source=2.86734e-11 tangent=9.34022e-06 pieces=38
+GENERATED extreme:9 source=2.85308e-11 tangent=9.19215e-06 pieces=26
+GENERATED extreme:10 source=2.75753e-11 tangent=1.13228e-06 pieces=44
+GENERATED extreme:11 source=2.76531e-11 tangent=6.1114e-07 pieces=28
+GENERATED extreme:12 source=2.75092e-11 tangent=3.57884e-07 pieces=45
+GENERATED extreme:13 source=2.75595e-11 tangent=2.54674e-07 pieces=31
+GENERATED extreme:14 source=2.80319e-11 tangent=8.22832e-08 pieces=38
+GENERATED extreme:15 source=2.50416e-11 tangent=5.38898e-08 pieces=24
+GENERATED extreme:16 source=5.68715e-12 tangent=1.67298e-06 pieces=44
+GENERATED extreme:17 source=5.32763e-12 tangent=9.14984e-07 pieces=20
+GENERATED extreme:18 source=5.49529e-12 tangent=6.39483e-07 pieces=45
+GENERATED extreme:19 source=5.42813e-12 tangent=4.98138e-07 pieces=21
+GENERATED extreme:20 source=5.46848e-12 tangent=1.89605e-07 pieces=38
+GENERATED extreme:21 source=5.43945e-12 tangent=1.73994e-07 pieces=16
+GENERATED extreme:22 source=5.40598e-12 tangent=9.29962e-08 pieces=44
+GENERATED extreme:23 source=5.14244e-12 tangent=9.48299e-08 pieces=20
+GENERATED extreme:24 source=5.49324e-11 tangent=1.82447e-05 pieces=45
+GENERATED extreme:25 source=5.47396e-11 tangent=1.65772e-05 pieces=21
+GENERATED extreme:26 source=5.63337e-11 tangent=2.05727e-06 pieces=38
+GENERATED extreme:27 source=5.55597e-11 tangent=1.10774e-06 pieces=16
+GENERATED extreme:28 source=5.68019e-11 tangent=6.90117e-07 pieces=44
+GENERATED extreme:29 source=5.53234e-11 tangent=3.73469e-07 pieces=20
+GENERATED extreme:30 source=5.53462e-11 tangent=1.95654e-07 pieces=45
+GENERATED extreme:31 source=5.59907e-11 tangent=1.77035e-07 pieces=21
+GENERATED extreme:32 source=5.90872e-12 tangent=1.70244e-06 pieces=38
+GENERATED extreme:33 source=5.48625e-12 tangent=9.31439e-07 pieces=24
+GENERATED extreme:34 source=5.69669e-12 tangent=9.62167e-07 pieces=44
+GENERATED extreme:35 source=5.72654e-12 tangent=1.03099e-06 pieces=32
+GENERATED extreme:36 source=5.75747e-12 tangent=2.15115e-07 pieces=45
+GENERATED extreme:37 source=5.77722e-12 tangent=2.0055e-07 pieces=31
+GENERATED extreme:38 source=5.5338e-12 tangent=7.3824e-08 pieces=38
+GENERATED extreme:39 source=5.50505e-12 tangent=5.51988e-08 pieces=26
+GENERATED extreme:40 source=5.65989e-11 tangent=3.41518e-05 pieces=44
+GENERATED extreme:41 source=5.60475e-11 tangent=2.27254e-05 pieces=32
+GENERATED extreme:42 source=5.39876e-11 tangent=2.19522e-06 pieces=45
+GENERATED extreme:43 source=5.38502e-11 tangent=1.65853e-06 pieces=31
+GENERATED extreme:44 source=5.28662e-11 tangent=6.98563e-07 pieces=38
+GENERATED extreme:45 source=5.28135e-11 tangent=3.7687e-07 pieces=24
+GENERATED extreme:46 source=5.31401e-11 tangent=2.16149e-07 pieces=44
+GENERATED extreme:47 source=4.97626e-11 tangent=1.61799e-07 pieces=28
+GENERATED extreme:48 source=5.30076e-12 tangent=1.69961e-06 pieces=45
+GENERATED extreme:49 source=5.20134e-10 tangent=1.54621e-06 pieces=21
+GENERATED extreme:50 source=5.1658e-12 tangent=5.77577e-07 pieces=38
+GENERATED extreme:51 source=8.38501e-10 tangent=5.65741e-07 pieces=16
+GENERATED extreme:52 source=5.3289e-12 tangent=2.96463e-07 pieces=44
+GENERATED extreme:53 source=8.38549e-10 tangent=5.65259e-07 pieces=20
+GENERATED extreme:54 source=5.1747e-12 tangent=6.20107e-08 pieces=45
+GENERATED extreme:55 source=5.20045e-10 tangent=5.59274e-07 pieces=21
+GENERATED extreme:56 source=5.22022e-11 tangent=1.66671e-05 pieces=38
+GENERATED extreme:57 source=4.9574e-11 tangent=1.52201e-05 pieces=16
+GENERATED extreme:58 source=5.08658e-11 tangent=1.79626e-06 pieces=44
+GENERATED extreme:59 source=5.04387e-11 tangent=9.6614e-07 pieces=20
+GENERATED extreme:60 source=5.09083e-11 tangent=6.11605e-07 pieces=45
+GENERATED extreme:61 source=5.07912e-11 tangent=4.68943e-07 pieces=21
+GENERATED extreme:62 source=5.02562e-11 tangent=1.7684e-07 pieces=38
+GENERATED extreme:63 source=4.76431e-11 tangent=1.34449e-07 pieces=16
+GENERATED extreme:64 source=6.05177e-15 tangent=2.05219e-09 pieces=44
+GENERATED extreme:65 source=6.11651e-09 tangent=0.00014284 pieces=28
+GENERATED extreme:66 source=1.09917e-14 tangent=1.87615e-09 pieces=45
+REFIT 67 p=5 q=3 reason=Source distance unresolved: 1.00048e-06 tolerance=1e-06
+KNOT 67 axis=0 t=0.5 score=4.79346e-06 spans=1,1
+REFIT 67 p=5 q=3 reason=Source boundary tangent unresolved
+KNOT 67 axis=0 t=0.75 score=7.49309e-07 spans=2,1
+REFIT 67 p=5 q=3 reason=Source boundary tangent unresolved
+KNOT 67 axis=0 t=0.25 score=7.34634e-07 spans=3,1
+GENERATED extreme:67 source=2.33514e-07 tangent=0.00324885 pieces=38
+GENERATED extreme:68 source=1.93035e-14 tangent=1.10422e-09 pieces=32
+REFIT 69 p=5 q=3 reason=Source distance unresolved: 1.10537e-06 tolerance=1e-06
+KNOT 69 axis=0 t=0.25 score=3.48067e-05 spans=2,1
+REFIT 69 p=5 q=3 reason=Source distance unresolved: 1.01278e-06 tolerance=1e-06
+KNOT 69 axis=0 t=0.75 score=3.02481e-05 spans=3,1
+REFIT 69 p=5 q=3 reason=Source distance unresolved: 1.00011e-06 tolerance=1e-06
+KNOT 69 axis=0 t=0.625 score=7.6562e-06 spans=4,1
+REFIT 69 p=5 q=3 reason=Source distance unresolved: 1.02565e-06 tolerance=1e-06
+KNOT 69 axis=0 t=0.375 score=4.12193e-06 spans=5,1
+REFIT 69 p=5 q=3 reason=Source distance unresolved: 1.01645e-06 tolerance=1e-06
+KNOT 69 axis=0 t=0.125 score=3.13654e-06 spans=6,1
+REFIT 69 p=5 q=3 reason=Source distance unresolved: 1.00039e-06 tolerance=1e-06
+KNOT 69 axis=0 t=0.875 score=2.99735e-06 spans=7,1
+REFIT 69 p=5 q=3 reason=Source boundary tangent unresolved
+KNOT 69 axis=0 t=0.3125 score=9.45423e-07 spans=8,1
+REFIT 69 p=5 q=3 reason=Source boundary tangent unresolved
+KNOT 69 axis=0 t=0.6875 score=8.73495e-07 spans=9,1
+GENERATED extreme:69 source=8.9446e-07 tangent=0.00949936 pieces=32
+GENERATED extreme:70 source=3.84159e-14 tangent=3.68794e-09 pieces=65
+REFIT 71 p=5 q=3 reason=Source distance unresolved: 1.27035e-06 tolerance=1e-06
+KNOT 71 axis=0 t=0.625 score=4.50931e-05 spans=4,1
+REFIT 71 p=5 q=3 reason=Source distance unresolved: 1.32975e-06 tolerance=1e-06
+KNOT 71 axis=0 t=0.375 score=4.7407e-05 spans=5,1
+REFIT 71 p=5 q=3 reason=Source distance unresolved: 1.30932e-06 tolerance=1e-06
+KNOT 71 axis=0 t=0.875 score=3.04904e-05 spans=6,1
+REFIT 71 p=5 q=3 reason=Source distance unresolved: 1.30949e-06 tolerance=1e-06
+KNOT 71 axis=0 t=0.125 score=3.05302e-05 spans=7,1
+REFIT 71 p=5 q=3 reason=Source distance unresolved: 1.05764e-06 tolerance=1e-06
+KNOT 71 axis=0 t=0.6875 score=7.73822e-06 spans=8,1
+REFIT 71 p=5 q=3 reason=Source distance unresolved: 1.06202e-06 tolerance=1e-06
+KNOT 71 axis=0 t=0.3125 score=7.9344e-06 spans=9,1
+REFIT 71 p=5 q=3 reason=Source distance unresolved: 1.05195e-06 tolerance=1e-06
+KNOT 71 axis=0 t=0.4375 score=6.17412e-06 spans=10,1
+REFIT 71 p=5 q=3 reason=Source distance unresolved: 1.03205e-06 tolerance=1e-06
+KNOT 71 axis=0 t=0.8125 score=4.1623e-06 spans=11,1
+REFIT 71 p=5 q=3 reason=Source distance unresolved: 1.01492e-06 tolerance=1e-06
+KNOT 71 axis=0 t=0.1875 score=3.83125e-06 spans=12,1
+REFIT 71 p=5 q=3 reason=Source distance unresolved: 1.02712e-06 tolerance=1e-06
+KNOT 71 axis=0 t=0.5625 score=3.24612e-06 spans=13,1
+REFIT 71 p=5 q=3 reason=Source distance unresolved: 1.02407e-06 tolerance=1e-06
+KNOT 71 axis=0 t=0.0625 score=3.15275e-06 spans=14,1
+REFIT 71 p=5 q=3 reason=Source distance unresolved: 1.00155e-06 tolerance=1e-06
+KNOT 71 axis=0 t=0.9375 score=2.99663e-06 spans=15,1
+GENERATED extreme:71 source=8.54909e-07 tangent=0.00999134 pieces=1054
+GENERATED extreme:72 source=3.95204e-14 tangent=8.58024e-09 pieces=45
+GENERATED extreme:73 source=3.77398e-08 tangent=0.000134421 pieces=31
+GENERATED extreme:74 source=9.5987e-14 tangent=6.36342e-09 pieces=38
+REFIT 75 p=3 q=5 reason=Source distance unresolved: 1.10878e-06 tolerance=1e-06
+KNOT 75 axis=1 t=0.5 score=4.79346e-05 spans=1,1
+REFIT 75 p=3 q=5 reason=Source distance unresolved: 1.02952e-06 tolerance=1e-06
+KNOT 75 axis=1 t=0.25 score=7.49309e-06 spans=1,2
+REFIT 75 p=3 q=5 reason=Source distance unresolved: 1.00142e-06 tolerance=1e-06
+KNOT 75 axis=1 t=0.75 score=7.04675e-06 spans=1,3
+REFIT 75 p=3 q=5 reason=Source distance unresolved: 1.00023e-06 tolerance=1e-06
+KNOT 75 axis=1 t=0.375 score=1.7309e-06 spans=1,4
+REFIT 75 p=3 q=5 reason=Source distance unresolved: 1.00015e-06 tolerance=1e-06
+KNOT 75 axis=1 t=0.625 score=1.60815e-06 spans=1,5
+GENERATED extreme:75 source=6.36243e-07 tangent=0.00113842 pieces=44
+GENERATED extreme:76 source=3.0233e-13 tangent=2.55752e-09 pieces=44
+REFIT 77 p=3 q=5 reason=Source distance unresolved: 1.11591e-06 tolerance=1e-06
+KNOT 77 axis=1 t=0.25 score=0.000348067 spans=1,2
+REFIT 77 p=3 q=5 reason=Source distance unresolved: 1.75438e-06 tolerance=1e-06
+KNOT 77 axis=1 t=0.75 score=0.000302481 spans=1,3
+REFIT 77 p=3 q=5 reason=Source distance unresolved: 1.25134e-06 tolerance=1e-06
+KNOT 77 axis=1 t=0.625 score=7.6562e-05 spans=1,4
+REFIT 77 p=3 q=5 reason=Source distance unresolved: 1.21763e-06 tolerance=1e-06
+KNOT 77 axis=1 t=0.375 score=4.12193e-05 spans=1,5
+REFIT 77 p=3 q=5 reason=Source distance unresolved: 1.35275e-06 tolerance=1e-06
+KNOT 77 axis=1 t=0.125 score=3.13654e-05 spans=1,6
+REFIT 77 p=3 q=5 reason=Source distance unresolved: 1.01194e-06 tolerance=1e-06
+KNOT 77 axis=1 t=0.875 score=2.99735e-05 spans=1,7
+REFIT 77 p=3 q=5 reason=Source distance unresolved: 1.00327e-06 tolerance=1e-06
+KNOT 77 axis=1 t=0.3125 score=9.45423e-06 spans=1,8
+REFIT 77 p=3 q=5 reason=Source distance unresolved: 1.00278e-06 tolerance=1e-06
+KNOT 77 axis=1 t=0.6875 score=8.73495e-06 spans=1,9
+REFIT 77 p=3 q=5 reason=Source distance unresolved: 1.00075e-06 tolerance=1e-06
+KNOT 77 axis=1 t=0.8125 score=6.81887e-06 spans=1,10
+REFIT 77 p=3 q=5 reason=Source distance unresolved: 1.01039e-06 tolerance=1e-06
+KNOT 77 axis=1 t=0.1875 score=6.86625e-06 spans=1,11
+GENERATED extreme:77 source=6.27244e-07 tangent=0.00334351 pieces=516
+GENERATED extreme:78 source=4.9321e-13 tangent=3.91197e-09 pieces=65
+REFIT 79 p=3 q=5 reason=Source distance unresolved: 4.27042e-06 tolerance=1e-06
+KNOT 79 axis=1 t=0.625 score=0.000450931 spans=1,4
+REFIT 79 p=3 q=5 reason=Source distance unresolved: 4.46985e-06 tolerance=1e-06
+KNOT 79 axis=1 t=0.375 score=0.00047407 spans=1,5
+REFIT 79 p=3 q=5 reason=Source distance unresolved: 4.40214e-06 tolerance=1e-06
+KNOT 79 axis=1 t=0.875 score=0.000304904 spans=1,6
+REFIT 79 p=3 q=5 reason=Source distance unresolved: 4.40269e-06 tolerance=1e-06
+KNOT 79 axis=1 t=0.125 score=0.000305302 spans=1,7
+REFIT 79 p=3 q=5 reason=Source distance unresolved: 1.87734e-06 tolerance=1e-06
+KNOT 79 axis=1 t=0.6875 score=7.73822e-05 spans=1,8
+REFIT 79 p=3 q=5 reason=Source distance unresolved: 1.88501e-06 tolerance=1e-06
+KNOT 79 axis=1 t=0.3125 score=7.9344e-05 spans=1,9
+REFIT 79 p=3 q=5 reason=Source distance unresolved: 1.86762e-06 tolerance=1e-06
+KNOT 79 axis=1 t=0.5625 score=6.17412e-05 spans=1,10
+REFIT 79 p=3 q=5 reason=Source distance unresolved: 1.85543e-06 tolerance=1e-06
+KNOT 79 axis=1 t=0.1875 score=4.1623e-05 spans=1,11
+REFIT 79 p=3 q=5 reason=Source distance unresolved: 1.7924e-06 tolerance=1e-06
+KNOT 79 axis=1 t=0.8125 score=3.83126e-05 spans=1,12
+REFIT 79 p=3 q=5 reason=Source distance unresolved: 1.79219e-06 tolerance=1e-06
+KNOT 79 axis=1 t=0.4375 score=3.24554e-05 spans=1,13
+REFIT 79 p=3 q=5 reason=Source distance unresolved: 1.80849e-06 tolerance=1e-06
+KNOT 79 axis=1 t=0.0625 score=3.15275e-05 spans=1,14
+REFIT 79 p=3 q=5 reason=Source distance unresolved: 1.03127e-06 tolerance=1e-06
+KNOT 79 axis=1 t=0.9375 score=2.99663e-05 spans=1,15
+REFIT 79 p=3 q=5 reason=Source distance unresolved: 1.03116e-06 tolerance=1e-06
+KNOT 79 axis=1 t=0.65625 score=9.46671e-06 spans=1,16
+REFIT 79 p=3 q=5 reason=Source distance unresolved: 1.03197e-06 tolerance=1e-06
+KNOT 79 axis=1 t=0.34375 score=9.50897e-06 spans=1,17
+REFIT 79 p=3 q=5 reason=Source distance unresolved: 1.0518e-06 tolerance=1e-06
+KNOT 79 axis=1 t=0.84375 score=8.74396e-06 spans=1,18
+REFIT 79 p=3 q=5 reason=Source distance unresolved: 1.05178e-06 tolerance=1e-06
+KNOT 79 axis=1 t=0.15625 score=8.74437e-06 spans=1,19
+REFIT 79 p=3 q=5 reason=Source distance unresolved: 1.03981e-06 tolerance=1e-06
+KNOT 79 axis=1 t=0.59375 score=7.68325e-06 spans=1,20
+REFIT 79 p=3 q=5 reason=Source distance unresolved: 1.0002e-06 tolerance=1e-06
+KNOT 79 axis=1 t=0.40625 score=7.17282e-06 spans=1,21
+REFIT 79 p=3 q=5 reason=Source distance unresolved: 1.01033e-06 tolerance=1e-06
+KNOT 79 axis=1 t=0.09375 score=6.86599e-06 spans=1,22
+REFIT 79 p=3 q=5 reason=Source distance unresolved: 1.00503e-06 tolerance=1e-06
+KNOT 79 axis=1 t=0.90625 score=6.86597e-06 spans=1,23
+GENERATED extreme:79 source=6.29239e-07 tangent=0.00292606 pieces=2618
+GENERATED extreme:80 source=3.6402e-13 tangent=1.293e-08 pieces=38
+GENERATED extreme:81 source=6.1165e-07 tangent=0.000143414 pieces=24
+GENERATED extreme:82 source=9.45658e-13 tangent=6.19492e-09 pieces=44
+REFIT 83 p=5 q=3 reason=Source distance unresolved: 1.591e-06 tolerance=1e-06
+KNOT 83 axis=0 t=0.5 score=0.000479346 spans=1,1
+REFIT 83 p=5 q=3 reason=Source distance unresolved: 1.29335e-06 tolerance=1e-06
+KNOT 83 axis=0 t=0.25 score=7.49309e-05 spans=2,1
+REFIT 83 p=5 q=3 reason=Source distance unresolved: 1.05724e-06 tolerance=1e-06
+KNOT 83 axis=0 t=0.75 score=7.04675e-05 spans=3,1
+REFIT 83 p=5 q=3 reason=Source distance unresolved: 1.0096e-06 tolerance=1e-06
+KNOT 83 axis=0 t=0.375 score=1.7309e-05 spans=4,1
+REFIT 83 p=5 q=3 reason=Source distance unresolved: 1.00999e-06 tolerance=1e-06
+KNOT 83 axis=0 t=0.625 score=1.60815e-05 spans=5,1
+REFIT 83 p=5 q=3 reason=Source distance unresolved: 1.00062e-06 tolerance=1e-06
+KNOT 83 axis=0 t=0.125 score=9.62811e-07 spans=6,1
+REFIT 83 p=5 q=3 reason=Source distance unresolved: 1.00046e-06 tolerance=1e-06
+KNOT 83 axis=0 t=0.875 score=9.17022e-07 spans=7,1
+GENERATED extreme:83 source=2.91247e-07 tangent=4.61129e-05 pieces=56
+GENERATED extreme:84 source=1.87871e-12 tangent=1.68579e-09 pieces=44
+REFIT 85 p=5 q=3 reason=Source distance unresolved: 1.11591e-05 tolerance=1e-06
+KNOT 85 axis=0 t=0.25 score=0.00348067 spans=2,1
+REFIT 85 p=5 q=3 reason=Source distance unresolved: 8.80559e-06 tolerance=1e-06
+KNOT 85 axis=0 t=0.75 score=0.00302481 spans=3,1
+REFIT 85 p=5 q=3 reason=Source distance unresolved: 6.28214e-06 tolerance=1e-06
+KNOT 85 axis=0 t=0.625 score=0.00076562 spans=4,1
+REFIT 85 p=5 q=3 reason=Source distance unresolved: 6.11311e-06 tolerance=1e-06
+KNOT 85 axis=0 t=0.375 score=0.000412193 spans=5,1
+REFIT 85 p=5 q=3 reason=Source distance unresolved: 4.55095e-06 tolerance=1e-06
+KNOT 85 axis=0 t=0.125 score=0.000313654 spans=6,1
+REFIT 85 p=5 q=3 reason=Source distance unresolved: 1.06454e-06 tolerance=1e-06
+KNOT 85 axis=0 t=0.875 score=0.000299735 spans=7,1
+REFIT 85 p=5 q=3 reason=Source distance unresolved: 1.12174e-06 tolerance=1e-06
+KNOT 85 axis=0 t=0.6875 score=9.45423e-05 spans=8,1
+REFIT 85 p=5 q=3 reason=Source distance unresolved: 1.13883e-06 tolerance=1e-06
+KNOT 85 axis=0 t=0.3125 score=8.73495e-05 spans=9,1
+REFIT 85 p=5 q=3 reason=Source distance unresolved: 1.08033e-06 tolerance=1e-06
+KNOT 85 axis=0 t=0.8125 score=6.81887e-05 spans=10,1
+REFIT 85 p=5 q=3 reason=Source distance unresolved: 1.09054e-06 tolerance=1e-06
+KNOT 85 axis=0 t=0.1875 score=6.86625e-05 spans=11,1
+REFIT 85 p=5 q=3 reason=Source distance unresolved: 1.00116e-06 tolerance=1e-06
+KNOT 85 axis=0 t=0.4375 score=4.08092e-06 spans=12,1
+REFIT 85 p=5 q=3 reason=Source distance unresolved: 1.02427e-06 tolerance=1e-06
+KNOT 85 axis=0 t=0.5625 score=4.89777e-06 spans=13,1
+REFIT 85 p=5 q=3 reason=Source distance unresolved: 1.02368e-06 tolerance=1e-06
+KNOT 85 axis=0 t=0.0625 score=3.8306e-06 spans=14,1
+REFIT 85 p=5 q=3 reason=Source distance unresolved: 1.00018e-06 tolerance=1e-06
+KNOT 85 axis=0 t=0.9375 score=3.57787e-06 spans=15,1
+GENERATED extreme:85 source=9.84609e-07 tangent=0.000155293 pieces=1080
+GENERATED extreme:86 source=3.44939e-12 tangent=1.11453e-09 pieces=62
+REFIT 87 p=5 q=3 reason=Source distance unresolved: 4.27042e-05 tolerance=1e-06
+KNOT 87 axis=0 t=0.375 score=0.00450931 spans=4,1
+REFIT 87 p=5 q=3 reason=Source distance unresolved: 4.50284e-05 tolerance=1e-06
+KNOT 87 axis=0 t=0.625 score=0.0047407 spans=5,1
+REFIT 87 p=5 q=3 reason=Source distance unresolved: 4.40214e-05 tolerance=1e-06
+KNOT 87 axis=0 t=0.875 score=0.00304904 spans=6,1
+REFIT 87 p=5 q=3 reason=Source distance unresolved: 4.40269e-05 tolerance=1e-06
+KNOT 87 axis=0 t=0.125 score=0.00305302 spans=7,1
+REFIT 87 p=5 q=3 reason=Source distance unresolved: 9.44531e-06 tolerance=1e-06
+KNOT 87 axis=0 t=0.6875 score=0.000773822 spans=8,1
+REFIT 87 p=5 q=3 reason=Source distance unresolved: 9.48385e-06 tolerance=1e-06
+KNOT 87 axis=0 t=0.3125 score=0.00079344 spans=9,1
+REFIT 87 p=5 q=3 reason=Source distance unresolved: 9.39658e-06 tolerance=1e-06
+KNOT 87 axis=0 t=0.5625 score=0.000617412 spans=10,1
+REFIT 87 p=5 q=3 reason=Source distance unresolved: 6.48303e-06 tolerance=1e-06
+KNOT 87 axis=0 t=0.1875 score=0.00041623 spans=11,1
+REFIT 87 p=5 q=3 reason=Source distance unresolved: 4.54352e-06 tolerance=1e-06
+KNOT 87 axis=0 t=0.8125 score=0.000383126 spans=12,1
+REFIT 87 p=5 q=3 reason=Source distance unresolved: 4.54299e-06 tolerance=1e-06
+KNOT 87 axis=0 t=0.4375 score=0.000324554 spans=13,1
+REFIT 87 p=5 q=3 reason=Source distance unresolved: 4.58418e-06 tolerance=1e-06
+KNOT 87 axis=0 t=0.0625 score=0.000315275 spans=14,1
+REFIT 87 p=5 q=3 reason=Source distance unresolved: 1.48629e-06 tolerance=1e-06
+KNOT 87 axis=0 t=0.9375 score=0.000299663 spans=15,1
+REFIT 87 p=5 q=3 reason=Source distance unresolved: 1.48612e-06 tolerance=1e-06
+KNOT 87 axis=0 t=0.34375 score=9.46671e-05 spans=16,1
+REFIT 87 p=5 q=3 reason=Source distance unresolved: 1.51719e-06 tolerance=1e-06
+KNOT 87 axis=0 t=0.65625 score=9.50897e-05 spans=17,1
+REFIT 87 p=5 q=3 reason=Source distance unresolved: 1.51648e-06 tolerance=1e-06
+KNOT 87 axis=0 t=0.84375 score=8.74396e-05 spans=18,1
+REFIT 87 p=5 q=3 reason=Source distance unresolved: 1.51644e-06 tolerance=1e-06
+KNOT 87 axis=0 t=0.15625 score=8.74437e-05 spans=19,1
+REFIT 87 p=5 q=3 reason=Source distance unresolved: 1.07877e-06 tolerance=1e-06
+KNOT 87 axis=0 t=0.59375 score=7.68325e-05 spans=20,1
+REFIT 87 p=5 q=3 reason=Source distance unresolved: 1.07974e-06 tolerance=1e-06
+KNOT 87 axis=0 t=0.40625 score=7.17282e-05 spans=21,1
+REFIT 87 p=5 q=3 reason=Source distance unresolved: 1.09048e-06 tolerance=1e-06
+KNOT 87 axis=0 t=0.09375 score=6.86599e-05 spans=22,1
+REFIT 87 p=5 q=3 reason=Source distance unresolved: 1.00108e-06 tolerance=1e-06
+KNOT 87 axis=0 t=0.90625 score=6.86597e-05 spans=23,1
+REFIT 87 p=5 q=3 reason=Source distance unresolved: 1.00107e-06 tolerance=1e-06
+KNOT 87 axis=0 t=0.28125 score=4.09848e-06 spans=24,1
+REFIT 87 p=5 q=3 reason=Source distance unresolved: 1.11267e-06 tolerance=1e-06
+KNOT 87 axis=0 t=0.21875 score=4.93201e-06 spans=25,1
+REFIT 87 p=5 q=3 reason=Source distance unresolved: 1.07876e-06 tolerance=1e-06
+KNOT 87 axis=0 t=0.71875 score=4.09462e-06 spans=26,1
+REFIT 87 p=5 q=3 reason=Source distance unresolved: 1.07876e-06 tolerance=1e-06
+KNOT 87 axis=0 t=0.78125 score=4.92514e-06 spans=27,1
+REFIT 87 p=5 q=3 reason=Source distance unresolved: 1.07876e-06 tolerance=1e-06
+KNOT 87 axis=0 t=0.03125 score=3.83068e-06 spans=28,1
+REFIT 87 p=5 q=3 reason=Source distance unresolved: 1.00033e-06 tolerance=1e-06
+KNOT 87 axis=0 t=0.53125 score=3.80216e-06 spans=29,1
+REFIT 87 p=5 q=3 reason=Source distance unresolved: 1.00127e-06 tolerance=1e-06
+KNOT 87 axis=0 t=0.46875 score=4.79342e-06 spans=30,1
+REFIT 87 p=5 q=3 reason=Source distance unresolved: 1.0002e-06 tolerance=1e-06
+KNOT 87 axis=0 t=0.96875 score=3.57787e-06 spans=31,1
+GENERATED extreme:87 source=9.92802e-07 tangent=0.000135977 pieces=2996
+GENERATED extreme:88 source=3.63594e-12 tangent=1.21249e-08 pieces=44
+REFIT 89 p=5 q=3 reason=Source distance unresolved: 1.00195e-06 tolerance=1e-06
+KNOT 89 axis=0 t=0.5 score=1.15773e-06 spans=1,1
+GENERATED extreme:89 source=4.73684e-07 tangent=1.67278e-05 pieces=32
+GENERATED extreme:90 source=9.19381e-12 tangent=6.03974e-09 pieces=44
+REFIT 91 p=3 q=5 reason=Source distance unresolved: 1.591e-05 tolerance=1e-06
+KNOT 91 axis=1 t=0.5 score=0.00479346 spans=1,1
+REFIT 91 p=3 q=5 reason=Source distance unresolved: 3.24361e-06 tolerance=1e-06
+KNOT 91 axis=1 t=0.25 score=0.000749309 spans=1,2
+REFIT 91 p=3 q=5 reason=Source distance unresolved: 1.65134e-06 tolerance=1e-06
+KNOT 91 axis=1 t=0.75 score=0.000704675 spans=1,3
+REFIT 91 p=3 q=5 reason=Source distance unresolved: 1.01722e-06 tolerance=1e-06
+KNOT 91 axis=1 t=0.375 score=0.00017309 spans=1,4
+REFIT 91 p=3 q=5 reason=Source distance unresolved: 1.15396e-06 tolerance=1e-06
+KNOT 91 axis=1 t=0.625 score=0.000160815 spans=1,5
+REFIT 91 p=3 q=5 reason=Source distance unresolved: 1.02837e-06 tolerance=1e-06
+KNOT 91 axis=1 t=0.125 score=9.62811e-06 spans=1,6
+REFIT 91 p=3 q=5 reason=Source distance unresolved: 1.0006e-06 tolerance=1e-06
+KNOT 91 axis=1 t=0.875 score=9.17022e-06 spans=1,7
+REFIT 91 p=3 q=5 reason=Source distance unresolved: 1.00009e-06 tolerance=1e-06
+KNOT 91 axis=1 t=0.3125 score=2.31883e-06 spans=1,8
+REFIT 91 p=3 q=5 reason=Source distance unresolved: 1.00071e-06 tolerance=1e-06
+KNOT 91 axis=1 t=0.4375 score=2.7294e-06 spans=1,9
+REFIT 91 p=3 q=5 reason=Source distance unresolved: 1.00045e-06 tolerance=1e-06
+KNOT 91 axis=1 t=0.5625 score=2.90943e-06 spans=1,10
+REFIT 91 p=3 q=5 reason=Source distance unresolved: 1.00124e-06 tolerance=1e-06
+KNOT 91 axis=1 t=0.6875 score=2.88144e-06 spans=1,11
+REFIT 91 p=3 q=5 reason=Source distance unresolved: 1.00106e-06 tolerance=1e-06
+KNOT 91 axis=1 t=0.1875 score=2.24889e-06 spans=1,12
+REFIT 91 p=3 q=5 reason=Source distance unresolved: 1.00084e-06 tolerance=1e-06
+KNOT 91 axis=1 t=0.8125 score=2.2346e-06 spans=1,13
+GENERATED extreme:91 source=8.88248e-07 tangent=2.86082e-05 pieces=92
+GENERATED extreme:92 source=2.70467e-11 tangent=1.06141e-09 pieces=44
+REFIT 93 p=3 q=5 reason=Source distance unresolved: 0.000222948 tolerance=1e-06
+KNOT 93 axis=1 t=0.75 score=0.0348067 spans=1,2
+REFIT 93 p=3 q=5 reason=Source distance unresolved: 0.00021919 tolerance=1e-06
+KNOT 93 axis=1 t=0.25 score=0.0302481 spans=1,3
+REFIT 93 p=3 q=5 reason=Source distance unresolved: 4.80373e-05 tolerance=1e-06
+KNOT 93 axis=1 t=0.625 score=0.0076562 spans=1,4
+REFIT 93 p=3 q=5 reason=Source distance unresolved: 4.67451e-05 tolerance=1e-06
+KNOT 93 axis=1 t=0.375 score=0.00412193 spans=1,5
+REFIT 93 p=3 q=5 reason=Source distance unresolved: 3.28708e-05 tolerance=1e-06
+KNOT 93 axis=1 t=0.125 score=0.00313654 spans=1,6
+REFIT 93 p=3 q=5 reason=Source distance unresolved: 7.11772e-06 tolerance=1e-06
+KNOT 93 axis=1 t=0.875 score=0.00299735 spans=1,7
+REFIT 93 p=3 q=5 reason=Source distance unresolved: 7.50026e-06 tolerance=1e-06
+KNOT 93 axis=1 t=0.3125 score=0.000945423 spans=1,8
+REFIT 93 p=3 q=5 reason=Source distance unresolved: 5.6809e-06 tolerance=1e-06
+KNOT 93 axis=1 t=0.6875 score=0.000873495 spans=1,9
+REFIT 93 p=3 q=5 reason=Source distance unresolved: 5.4365e-06 tolerance=1e-06
+KNOT 93 axis=1 t=0.8125 score=0.000681887 spans=1,10
+REFIT 93 p=3 q=5 reason=Source distance unresolved: 5.48787e-06 tolerance=1e-06
+KNOT 93 axis=1 t=0.1875 score=0.000686625 spans=1,11
+REFIT 93 p=3 q=5 reason=Source distance unresolved: 1.33487e-06 tolerance=1e-06
+KNOT 93 axis=1 t=0.4375 score=4.08092e-05 spans=1,12
+REFIT 93 p=3 q=5 reason=Source distance unresolved: 1.29217e-06 tolerance=1e-06
+KNOT 93 axis=1 t=0.5625 score=4.89777e-05 spans=1,13
+REFIT 93 p=3 q=5 reason=Source distance unresolved: 1.29144e-06 tolerance=1e-06
+KNOT 93 axis=1 t=0.0625 score=3.8306e-05 spans=1,14
+REFIT 93 p=3 q=5 reason=Source distance unresolved: 1.01559e-06 tolerance=1e-06
+KNOT 93 axis=1 t=0.9375 score=3.57787e-05 spans=1,15
+REFIT 93 p=3 q=5 reason=Source distance unresolved: 1.01221e-06 tolerance=1e-06
+KNOT 93 axis=1 t=0.71875 score=1.07575e-05 spans=1,16
+REFIT 93 p=3 q=5 reason=Source distance unresolved: 1.01082e-06 tolerance=1e-06
+KNOT 93 axis=1 t=0.78125 score=1.21274e-05 spans=1,17
+REFIT 93 p=3 q=5 reason=Source distance unresolved: 1.00953e-06 tolerance=1e-06
+KNOT 93 axis=1 t=0.65625 score=1.25458e-05 spans=1,18
+REFIT 93 p=3 q=5 reason=Source distance unresolved: 1.01839e-06 tolerance=1e-06
+KNOT 93 axis=1 t=0.84375 score=1.26218e-05 spans=1,19
+REFIT 93 p=3 q=5 reason=Source distance unresolved: 1.01871e-06 tolerance=1e-06
+KNOT 93 axis=1 t=0.28125 score=1.08278e-05 spans=1,20
+REFIT 93 p=3 q=5 reason=Source distance unresolved: 1.00253e-06 tolerance=1e-06
+KNOT 93 axis=1 t=0.21875 score=1.21563e-05 spans=1,21
+REFIT 93 p=3 q=5 reason=Source distance unresolved: 1.01488e-06 tolerance=1e-06
+KNOT 93 axis=1 t=0.15625 score=1.254e-05 spans=1,22
+REFIT 93 p=3 q=5 reason=Source distance unresolved: 1.03341e-06 tolerance=1e-06
+KNOT 93 axis=1 t=0.34375 score=1.25506e-05 spans=1,23
+REFIT 93 p=3 q=5 reason=Source distance unresolved: 1.01184e-06 tolerance=1e-06
+KNOT 93 axis=1 t=0.59375 score=9.40277e-06 spans=1,24
+REFIT 93 p=3 q=5 reason=Source distance unresolved: 1.01199e-06 tolerance=1e-06
+KNOT 93 axis=1 t=0.40625 score=9.45142e-06 spans=1,25
+REFIT 93 p=3 q=5 reason=Source distance unresolved: 1.04212e-06 tolerance=1e-06
+KNOT 93 axis=1 t=0.09375 score=8.83783e-06 spans=1,26
+REFIT 93 p=3 q=5 reason=Source distance unresolved: 1.00077e-06 tolerance=1e-06
+KNOT 93 axis=1 t=0.90625 score=8.83782e-06 spans=1,27
+GENERATED extreme:93 source=8.3625e-07 tangent=7.86418e-05 pieces=1358
+GENERATED extreme:94 source=4.84799e-11 tangent=4.36227e-09 pieces=86
+REFIT 95 p=3 q=5 reason=Source distance unresolved: 0.000163541 tolerance=1e-06
+KNOT 95 axis=1 t=0.625 score=0.0450931 spans=1,4
+REFIT 95 p=3 q=5 reason=Source distance unresolved: 0.000171176 tolerance=1e-06
+KNOT 95 axis=1 t=0.375 score=0.047407 spans=1,5
+REFIT 95 p=3 q=5 reason=Source distance unresolved: 0.000168594 tolerance=1e-06
+KNOT 95 axis=1 t=0.875 score=0.0304904 spans=1,6
+REFIT 95 p=3 q=5 reason=Source distance unresolved: 0.000168615 tolerance=1e-06
+KNOT 95 axis=1 t=0.125 score=0.0305302 spans=1,7
+REFIT 95 p=3 q=5 reason=Source distance unresolved: 3.62167e-05 tolerance=1e-06
+KNOT 95 axis=1 t=0.3125 score=0.00773822 spans=1,8
+REFIT 95 p=3 q=5 reason=Source distance unresolved: 3.61169e-05 tolerance=1e-06
+KNOT 95 axis=1 t=0.6875 score=0.0079344 spans=1,9
+REFIT 95 p=3 q=5 reason=Source distance unresolved: 3.60302e-05 tolerance=1e-06
+KNOT 95 axis=1 t=0.4375 score=0.00617412 spans=1,10
+REFIT 95 p=3 q=5 reason=Source distance unresolved: 9.22121e-05 tolerance=1e-06
+KNOT 95 axis=1 t=0.8125 score=0.0041623 spans=1,11
+REFIT 95 p=3 q=5 reason=Source distance unresolved: 9.22207e-05 tolerance=1e-06
+KNOT 95 axis=1 t=0.1875 score=0.00383125 spans=1,12
+REFIT 95 p=3 q=5 reason=Source distance unresolved: 6.61941e-05 tolerance=1e-06
+KNOT 95 axis=1 t=0.5625 score=0.00324612 spans=1,13
+REFIT 95 p=3 q=5 reason=Source distance unresolved: 6.60023e-05 tolerance=1e-06
+KNOT 95 axis=1 t=0.0625 score=0.00315275 spans=1,14
+REFIT 95 p=3 q=5 reason=Source distance unresolved: 7.47531e-06 tolerance=1e-06
+KNOT 95 axis=1 t=0.9375 score=0.00299663 spans=1,15
+REFIT 95 p=3 q=5 reason=Source distance unresolved: 7.47449e-06 tolerance=1e-06
+KNOT 95 axis=1 t=0.65625 score=0.000946671 spans=1,16
+REFIT 95 p=3 q=5 reason=Source distance unresolved: 7.48027e-06 tolerance=1e-06
+KNOT 95 axis=1 t=0.34375 score=0.000950897 spans=1,17
+REFIT 95 p=3 q=5 reason=Source distance unresolved: 7.62737e-06 tolerance=1e-06
+KNOT 95 axis=1 t=0.84375 score=0.000874396 spans=1,18
+REFIT 95 p=3 q=5 reason=Source distance unresolved: 7.62718e-06 tolerance=1e-06
+KNOT 95 axis=1 t=0.15625 score=0.000874437 spans=1,19
+REFIT 95 p=3 q=5 reason=Source distance unresolved: 5.42866e-06 tolerance=1e-06
+KNOT 95 axis=1 t=0.40625 score=0.000768325 spans=1,20
+REFIT 95 p=3 q=5 reason=Source distance unresolved: 5.49007e-06 tolerance=1e-06
+KNOT 95 axis=1 t=0.59375 score=0.000717282 spans=1,21
+REFIT 95 p=3 q=5 reason=Source distance unresolved: 5.48758e-06 tolerance=1e-06
+KNOT 95 axis=1 t=0.90625 score=0.000686599 spans=1,22
+REFIT 95 p=3 q=5 reason=Source distance unresolved: 5.48757e-06 tolerance=1e-06
+KNOT 95 axis=1 t=0.09375 score=0.000686597 spans=1,23
+REFIT 95 p=3 q=5 reason=Source distance unresolved: 1.33476e-06 tolerance=1e-06
+KNOT 95 axis=1 t=0.28125 score=4.09848e-05 spans=1,24
+REFIT 95 p=3 q=5 reason=Source distance unresolved: 1.33115e-06 tolerance=1e-06
+KNOT 95 axis=1 t=0.21875 score=4.93201e-05 spans=1,25
+REFIT 95 p=3 q=5 reason=Source distance unresolved: 1.2914e-06 tolerance=1e-06
+KNOT 95 axis=1 t=0.71875 score=4.09462e-05 spans=1,26
+REFIT 95 p=3 q=5 reason=Source distance unresolved: 1.29141e-06 tolerance=1e-06
+KNOT 95 axis=1 t=0.78125 score=4.92514e-05 spans=1,27
+REFIT 95 p=3 q=5 reason=Source distance unresolved: 1.29141e-06 tolerance=1e-06
+KNOT 95 axis=1 t=0.03125 score=3.83068e-05 spans=1,28
+REFIT 95 p=3 q=5 reason=Source distance unresolved: 1.01523e-06 tolerance=1e-06
+KNOT 95 axis=1 t=0.53125 score=3.80216e-05 spans=1,29
+REFIT 95 p=3 q=5 reason=Source distance unresolved: 1.01669e-06 tolerance=1e-06
+KNOT 95 axis=1 t=0.46875 score=4.79342e-05 spans=1,30
+REFIT 95 p=3 q=5 reason=Source distance unresolved: 1.01221e-06 tolerance=1e-06
+KNOT 95 axis=1 t=0.96875 score=3.57787e-05 spans=1,31
+REFIT 95 p=3 q=5 reason=Source distance unresolved: 1.01221e-06 tolerance=1e-06
+KNOT 95 axis=1 t=0.859375 score=1.07575e-05 spans=1,32
+REFIT 95 p=3 q=5 reason=Source distance unresolved: 1.01221e-06 tolerance=1e-06
+KNOT 95 axis=1 t=0.890625 score=1.21275e-05 spans=1,33
+REFIT 95 p=3 q=5 reason=Source distance unresolved: 1.01221e-06 tolerance=1e-06
+KNOT 95 axis=1 t=0.828125 score=1.25459e-05 spans=1,34
+REFIT 95 p=3 q=5 reason=Source distance unresolved: 1.01221e-06 tolerance=1e-06
+KNOT 95 axis=1 t=0.921875 score=1.26218e-05 spans=1,35
+REFIT 95 p=3 q=5 reason=Source distance unresolved: 1.01221e-06 tolerance=1e-06
+GENERATED extreme:95 source=9.77405e-06 tangent=0.000160611 pieces=5190
+GENERATED extreme:96 source=6.67792e-13 tangent=6.8884e-09 pieces=44
+REFIT 97 p=3 q=5 reason=Source distance unresolved: 1.01436e-06 tolerance=1e-06
+KNOT 97 axis=1 t=0.5 score=6.18809e-06 spans=1,1
+GENERATED extreme:97 source=9.19328e-07 tangent=0.000484815 pieces=161
+GENERATED extreme:98 source=8.09699e-13 tangent=8.29442e-08 pieces=38
+REFIT 99 p=5 q=3 reason=Source distance unresolved: 1.32486e-06 tolerance=1e-06
+KNOT 99 axis=0 t=0.5 score=0.000199728 spans=1,1
+REFIT 99 p=5 q=3 reason=Source distance unresolved: 1.13602e-06 tolerance=1e-06
+KNOT 99 axis=0 t=0.25 score=3.12212e-05 spans=2,1
+REFIT 99 p=5 q=3 reason=Source distance unresolved: 1.02454e-06 tolerance=1e-06
+KNOT 99 axis=0 t=0.75 score=2.93615e-05 spans=3,1
+REFIT 99 p=5 q=3 reason=Source distance unresolved: 1.0099e-06 tolerance=1e-06
+KNOT 99 axis=0 t=0.375 score=7.2121e-06 spans=4,1
+REFIT 99 p=5 q=3 reason=Source distance unresolved: 1.00204e-06 tolerance=1e-06
+KNOT 99 axis=0 t=0.625 score=6.70063e-06 spans=5,1
+GENERATED extreme:99 source=6.78676e-07 tangent=0.000570227 pieces=128
+GENERATED extreme:100 source=5.02352e-13 tangent=7.29012e-09 pieces=56
+REFIT 101 p=5 q=3 reason=Source distance unresolved: 1.42116e-06 tolerance=1e-06
+KNOT 101 axis=0 t=0.25 score=0.000580111 spans=2,1
+REFIT 101 p=5 q=3 reason=Source distance unresolved: 1.12216e-06 tolerance=1e-06
+KNOT 101 axis=0 t=0.75 score=0.000504135 spans=3,1
+REFIT 101 p=5 q=3 reason=Source distance unresolved: 1.59629e-06 tolerance=1e-06
+KNOT 101 axis=0 t=0.625 score=0.000127603 spans=4,1
+REFIT 101 p=5 q=3 reason=Source distance unresolved: 1.55331e-06 tolerance=1e-06
+KNOT 101 axis=0 t=0.375 score=6.86988e-05 spans=5,1
+REFIT 101 p=5 q=3 reason=Source distance unresolved: 1.09206e-06 tolerance=1e-06
+KNOT 101 axis=0 t=0.125 score=5.22756e-05 spans=6,1
+REFIT 101 p=5 q=3 reason=Source distance unresolved: 1.05869e-06 tolerance=1e-06
+KNOT 101 axis=0 t=0.875 score=4.99559e-05 spans=7,1
+REFIT 101 p=5 q=3 reason=Source distance unresolved: 1.03403e-06 tolerance=1e-06
+KNOT 101 axis=0 t=0.3125 score=1.57571e-05 spans=8,1
+REFIT 101 p=5 q=3 reason=Source distance unresolved: 1.02037e-06 tolerance=1e-06
+KNOT 101 axis=0 t=0.6875 score=1.45582e-05 spans=9,1
+REFIT 101 p=5 q=3 reason=Source distance unresolved: 1.03252e-06 tolerance=1e-06
+KNOT 101 axis=0 t=0.8125 score=1.13648e-05 spans=10,1
+REFIT 101 p=5 q=3 reason=Source distance unresolved: 1.02179e-06 tolerance=1e-06
+KNOT 101 axis=0 t=0.1875 score=1.14438e-05 spans=11,1
+GENERATED extreme:101 source=9.98987e-07 tangent=0.00193352 pieces=727
+GENERATED extreme:102 source=7.55249e-13 tangent=8.95115e-09 pieces=62
+REFIT 103 p=5 q=3 reason=Source distance unresolved: 3.04669e-06 tolerance=1e-06
+KNOT 103 axis=0 t=0.625 score=0.000325229 spans=4,1
+REFIT 103 p=5 q=3 reason=Source distance unresolved: 3.18775e-06 tolerance=1e-06
+KNOT 103 axis=0 t=0.375 score=0.000336316 spans=5,1
+REFIT 103 p=5 q=3 reason=Source distance unresolved: 3.10238e-06 tolerance=1e-06
+KNOT 103 axis=0 t=0.875 score=0.000213869 spans=6,1
+REFIT 103 p=5 q=3 reason=Source distance unresolved: 3.10361e-06 tolerance=1e-06
+KNOT 103 axis=0 t=0.125 score=0.00021424 spans=7,1
+REFIT 103 p=5 q=3 reason=Source distance unresolved: 1.27984e-06 tolerance=1e-06
+KNOT 103 axis=0 t=0.6875 score=5.28964e-05 spans=8,1
+REFIT 103 p=5 q=3 reason=Source distance unresolved: 1.28453e-06 tolerance=1e-06
+KNOT 103 axis=0 t=0.3125 score=5.42953e-05 spans=9,1
+REFIT 103 p=5 q=3 reason=Source distance unresolved: 1.28287e-06 tolerance=1e-06
+KNOT 103 axis=0 t=0.4375 score=4.31117e-05 spans=10,1
+REFIT 103 p=5 q=3 reason=Source distance unresolved: 1.30634e-06 tolerance=1e-06
+KNOT 103 axis=0 t=0.8125 score=2.88674e-05 spans=11,1
+REFIT 103 p=5 q=3 reason=Source distance unresolved: 1.30652e-06 tolerance=1e-06
+KNOT 103 axis=0 t=0.1875 score=2.63747e-05 spans=12,1
+REFIT 103 p=5 q=3 reason=Source distance unresolved: 1.25596e-06 tolerance=1e-06
+KNOT 103 axis=0 t=0.5625 score=2.24124e-05 spans=13,1
+REFIT 103 p=5 q=3 reason=Source distance unresolved: 1.25241e-06 tolerance=1e-06
+KNOT 103 axis=0 t=0.0625 score=2.17405e-05 spans=14,1
+REFIT 103 p=5 q=3 reason=Source distance unresolved: 1.03386e-06 tolerance=1e-06
+KNOT 103 axis=0 t=0.9375 score=2.06883e-05 spans=15,1
+REFIT 103 p=5 q=3 reason=Source distance unresolved: 1.03373e-06 tolerance=1e-06
+KNOT 103 axis=0 t=0.65625 score=6.40859e-06 spans=16,1
+REFIT 103 p=5 q=3 reason=Source distance unresolved: 1.03441e-06 tolerance=1e-06
+KNOT 103 axis=0 t=0.34375 score=6.4381e-06 spans=17,1
+REFIT 103 p=5 q=3 reason=Source distance unresolved: 1.01974e-06 tolerance=1e-06
+KNOT 103 axis=0 t=0.84375 score=5.94017e-06 spans=18,1
+REFIT 103 p=5 q=3 reason=Source distance unresolved: 1.01971e-06 tolerance=1e-06
+KNOT 103 axis=0 t=0.15625 score=5.94039e-06 spans=19,1
+REFIT 103 p=5 q=3 reason=Source distance unresolved: 1.00973e-06 tolerance=1e-06
+KNOT 103 axis=0 t=0.59375 score=5.29248e-06 spans=20,1
+REFIT 103 p=5 q=3 reason=Source distance unresolved: 1.01062e-06 tolerance=1e-06
+KNOT 103 axis=0 t=0.40625 score=4.94152e-06 spans=21,1
+REFIT 103 p=5 q=3 reason=Source distance unresolved: 1.02031e-06 tolerance=1e-06
+KNOT 103 axis=0 t=0.09375 score=4.73476e-06 spans=22,1
+REFIT 103 p=5 q=3 reason=Source distance unresolved: 1.00274e-06 tolerance=1e-06
+KNOT 103 axis=0 t=0.90625 score=4.73475e-06 spans=23,1
+GENERATED extreme:103 source=7.47315e-07 tangent=0.00167108 pieces=570
+GENERATED extreme:104 source=6.42138e-12 tangent=6.49712e-09 pieces=38
+REFIT 105 p=5 q=3 reason=Source distance unresolved: 1.04927e-06 tolerance=1e-06
+KNOT 105 axis=0 t=0.5 score=6.18809e-05 spans=1,1
+REFIT 105 p=5 q=3 reason=Source distance unresolved: 1.01941e-06 tolerance=1e-06
+KNOT 105 axis=0 t=0.25 score=7.19878e-06 spans=2,1
+REFIT 105 p=5 q=3 reason=Source distance unresolved: 1.00016e-06 tolerance=1e-06
+KNOT 105 axis=0 t=0.75 score=7.92849e-06 spans=3,1
+REFIT 105 p=5 q=3 reason=Source distance unresolved: 1.00006e-06 tolerance=1e-06
+KNOT 105 axis=0 t=0.625 score=1.66508e-06 spans=4,1
+REFIT 105 p=5 q=3 reason=Source distance unresolved: 1.00055e-06 tolerance=1e-06
+KNOT 105 axis=0 t=0.375 score=1.77822e-06 spans=5,1
+GENERATED extreme:105 source=7.66979e-07 tangent=1.50959e-05 pieces=44
+GENERATED extreme:106 source=7.78861e-12 tangent=8.04554e-08 pieces=45
+REFIT 107 p=3 q=5 reason=Source distance unresolved: 6.62918e-06 tolerance=1e-06
+KNOT 107 axis=1 t=0.5 score=0.00199728 spans=1,1
+REFIT 107 p=3 q=5 reason=Source distance unresolved: 1.43118e-06 tolerance=1e-06
+KNOT 107 axis=1 t=0.25 score=0.000312212 spans=1,2
+REFIT 107 p=3 q=5 reason=Source distance unresolved: 1.03067e-06 tolerance=1e-06
+KNOT 107 axis=1 t=0.75 score=0.000293615 spans=1,3
+REFIT 107 p=3 q=5 reason=Source distance unresolved: 1.1222e-06 tolerance=1e-06
+KNOT 107 axis=1 t=0.625 score=7.2121e-05 spans=1,4
+REFIT 107 p=3 q=5 reason=Source distance unresolved: 1.09597e-06 tolerance=1e-06
+KNOT 107 axis=1 t=0.375 score=6.6717e-05 spans=1,5
+REFIT 107 p=3 q=5 reason=Source distance unresolved: 1.0275e-06 tolerance=1e-06
+KNOT 107 axis=1 t=0.125 score=4.01171e-06 spans=1,6
+REFIT 107 p=3 q=5 reason=Source distance unresolved: 1.00019e-06 tolerance=1e-06
+KNOT 107 axis=1 t=0.875 score=3.82092e-06 spans=1,7
+GENERATED extreme:107 source=7.27736e-07 tangent=2.50276e-05 pieces=246
+GENERATED extreme:108 source=6.89684e-12 tangent=9.45695e-08 pieces=56
+REFIT 109 p=3 q=5 reason=Source distance unresolved: 1.42116e-05 tolerance=1e-06
+KNOT 109 axis=1 t=0.75 score=0.00580111 spans=1,2
+REFIT 109 p=3 q=5 reason=Source distance unresolved: 3.65316e-05 tolerance=1e-06
+KNOT 109 axis=1 t=0.25 score=0.00504135 spans=1,3
+REFIT 109 p=3 q=5 reason=Source distance unresolved: 8.00621e-06 tolerance=1e-06
+KNOT 109 axis=1 t=0.625 score=0.00127603 spans=1,4
+REFIT 109 p=3 q=5 reason=Source distance unresolved: 7.79084e-06 tolerance=1e-06
+KNOT 109 axis=1 t=0.375 score=0.000686988 spans=1,5
+REFIT 109 p=3 q=5 reason=Source distance unresolved: 5.47847e-06 tolerance=1e-06
+KNOT 109 axis=1 t=0.125 score=0.000522756 spans=1,6
+REFIT 109 p=3 q=5 reason=Source distance unresolved: 1.70704e-06 tolerance=1e-06
+KNOT 109 axis=1 t=0.875 score=0.000499559 spans=1,7
+REFIT 109 p=3 q=5 reason=Source distance unresolved: 1.79877e-06 tolerance=1e-06
+KNOT 109 axis=1 t=0.6875 score=0.000157571 spans=1,8
+REFIT 109 p=3 q=5 reason=Source distance unresolved: 1.82618e-06 tolerance=1e-06
+KNOT 109 axis=1 t=0.3125 score=0.000145582 spans=1,9
+REFIT 109 p=3 q=5 reason=Source distance unresolved: 1.30351e-06 tolerance=1e-06
+KNOT 109 axis=1 t=0.8125 score=0.000113648 spans=1,10
+REFIT 109 p=3 q=5 reason=Source distance unresolved: 1.81757e-06 tolerance=1e-06
+KNOT 109 axis=1 t=0.1875 score=0.000114438 spans=1,11
+REFIT 109 p=3 q=5 reason=Source distance unresolved: 1.0723e-06 tolerance=1e-06
+KNOT 109 axis=1 t=0.4375 score=6.80153e-06 spans=1,12
+REFIT 109 p=3 q=5 reason=Source distance unresolved: 1.03766e-06 tolerance=1e-06
+KNOT 109 axis=1 t=0.5625 score=8.16296e-06 spans=1,13
+REFIT 109 p=3 q=5 reason=Source distance unresolved: 1.03707e-06 tolerance=1e-06
+KNOT 109 axis=1 t=0.0625 score=6.38434e-06 spans=1,14
+REFIT 109 p=3 q=5 reason=Source distance unresolved: 1.00173e-06 tolerance=1e-06
+KNOT 109 axis=1 t=0.9375 score=5.96312e-06 spans=1,15
+REFIT 109 p=3 q=5 reason=Source distance unresolved: 1.00168e-06 tolerance=1e-06
+KNOT 109 axis=1 t=0.71875 score=1.79291e-06 spans=1,16
+REFIT 109 p=3 q=5 reason=Source distance unresolved: 1.00169e-06 tolerance=1e-06
+KNOT 109 axis=1 t=0.78125 score=2.02123e-06 spans=1,17
+REFIT 109 p=3 q=5 reason=Source distance unresolved: 1.00171e-06 tolerance=1e-06
+KNOT 109 axis=1 t=0.65625 score=2.09097e-06 spans=1,18
+REFIT 109 p=3 q=5 reason=Source distance unresolved: 1.00172e-06 tolerance=1e-06
+KNOT 109 axis=1 t=0.84375 score=2.10363e-06 spans=1,19
+REFIT 109 p=3 q=5 reason=Source distance unresolved: 1.0017e-06 tolerance=1e-06
+KNOT 109 axis=1 t=0.28125 score=1.80464e-06 spans=1,20
+REFIT 109 p=3 q=5 reason=Source distance unresolved: 1.00197e-06 tolerance=1e-06
+KNOT 109 axis=1 t=0.21875 score=2.02605e-06 spans=1,21
+REFIT 109 p=3 q=5 reason=Source distance unresolved: 1.00167e-06 tolerance=1e-06
+KNOT 109 axis=1 t=0.15625 score=2.08999e-06 spans=1,22
+REFIT 109 p=3 q=5 reason=Source distance unresolved: 1.00101e-06 tolerance=1e-06
+KNOT 109 axis=1 t=0.34375 score=2.09177e-06 spans=1,23
+REFIT 109 p=3 q=5 reason=Source distance unresolved: 1.00089e-06 tolerance=1e-06
+KNOT 109 axis=1 t=0.59375 score=1.56713e-06 spans=1,24
+REFIT 109 p=3 q=5 reason=Source distance unresolved: 1.00085e-06 tolerance=1e-06
+KNOT 109 axis=1 t=0.40625 score=1.57524e-06 spans=1,25
+REFIT 109 p=3 q=5 reason=Source distance unresolved: 1.00026e-06 tolerance=1e-06
+KNOT 109 axis=1 t=0.09375 score=1.47297e-06 spans=1,26
+REFIT 109 p=3 q=5 reason=Source distance unresolved: 1.00031e-06 tolerance=1e-06
+KNOT 109 axis=1 t=0.90625 score=1.47297e-06 spans=1,27
+GENERATED extreme:109 source=5.59045e-07 tangent=4.71002e-05 pieces=86
+GENERATED extreme:110 source=5.81711e-12 tangent=7.66927e-08 pieces=62
+REFIT 111 p=3 q=5 reason=Source distance unresolved: 3.04669e-05 tolerance=1e-06
+KNOT 111 axis=1 t=0.625 score=0.00325229 spans=1,4
+REFIT 111 p=3 q=5 reason=Source distance unresolved: 3.18775e-05 tolerance=1e-06
+KNOT 111 axis=1 t=0.375 score=0.00336316 spans=1,5
+REFIT 111 p=3 q=5 reason=Source distance unresolved: 3.10238e-05 tolerance=1e-06
+KNOT 111 axis=1 t=0.875 score=0.00213869 spans=1,6
+REFIT 111 p=3 q=5 reason=Source distance unresolved: 3.10361e-05 tolerance=1e-06
+KNOT 111 axis=1 t=0.125 score=0.0021424 spans=1,7
+REFIT 111 p=3 q=5 reason=Source distance unresolved: 6.43933e-06 tolerance=1e-06
+KNOT 111 axis=1 t=0.6875 score=0.000528964 spans=1,8
+REFIT 111 p=3 q=5 reason=Source distance unresolved: 6.46284e-06 tolerance=1e-06
+KNOT 111 axis=1 t=0.3125 score=0.000542953 spans=1,9
+REFIT 111 p=3 q=5 reason=Source distance unresolved: 6.45463e-06 tolerance=1e-06
+KNOT 111 axis=1 t=0.4375 score=0.000431117 spans=1,10
+REFIT 111 p=3 q=5 reason=Source distance unresolved: 8.747e-06 tolerance=1e-06
+KNOT 111 axis=1 t=0.8125 score=0.000288674 spans=1,11
+REFIT 111 p=3 q=5 reason=Source distance unresolved: 8.7482e-06 tolerance=1e-06
+KNOT 111 axis=1 t=0.1875 score=0.000263747 spans=1,12
+REFIT 111 p=3 q=5 reason=Source distance unresolved: 6.3381e-06 tolerance=1e-06
+KNOT 111 axis=1 t=0.5625 score=0.000224124 spans=1,13
+REFIT 111 p=3 q=5 reason=Source distance unresolved: 6.32024e-06 tolerance=1e-06
+KNOT 111 axis=1 t=0.0625 score=0.000217405 spans=1,14
+REFIT 111 p=3 q=5 reason=Source distance unresolved: 1.46672e-06 tolerance=1e-06
+KNOT 111 axis=1 t=0.9375 score=0.000206883 spans=1,15
+REFIT 111 p=3 q=5 reason=Source distance unresolved: 1.46653e-06 tolerance=1e-06
+KNOT 111 axis=1 t=0.34375 score=6.40859e-05 spans=1,16
+REFIT 111 p=3 q=5 reason=Source distance unresolved: 1.00711e-06 tolerance=1e-06
+KNOT 111 axis=1 t=0.65625 score=6.4381e-05 spans=1,17
+REFIT 111 p=3 q=5 reason=Source distance unresolved: 1.00673e-06 tolerance=1e-06
+KNOT 111 axis=1 t=0.15625 score=5.94017e-05 spans=1,18
+REFIT 111 p=3 q=5 reason=Source distance unresolved: 1.09616e-06 tolerance=1e-06
+KNOT 111 axis=1 t=0.84375 score=5.94039e-05 spans=1,19
+REFIT 111 p=3 q=5 reason=Source distance unresolved: 1.0962e-06 tolerance=1e-06
+KNOT 111 axis=1 t=0.40625 score=5.29248e-05 spans=1,20
+REFIT 111 p=3 q=5 reason=Source distance unresolved: 1.10781e-06 tolerance=1e-06
+KNOT 111 axis=1 t=0.59375 score=4.94152e-05 spans=1,21
+REFIT 111 p=3 q=5 reason=Source distance unresolved: 1.10733e-06 tolerance=1e-06
+KNOT 111 axis=1 t=0.90625 score=4.73476e-05 spans=1,22
+REFIT 111 p=3 q=5 reason=Source distance unresolved: 1.10732e-06 tolerance=1e-06
+KNOT 111 axis=1 t=0.09375 score=4.73475e-05 spans=1,23
+REFIT 111 p=3 q=5 reason=Source distance unresolved: 1.02049e-06 tolerance=1e-06
+KNOT 111 axis=1 t=0.28125 score=3.13073e-06 spans=1,24
+REFIT 111 p=3 q=5 reason=Source distance unresolved: 1.01806e-06 tolerance=1e-06
+KNOT 111 axis=1 t=0.21875 score=3.47583e-06 spans=1,25
+REFIT 111 p=3 q=5 reason=Source distance unresolved: 1.05473e-06 tolerance=1e-06
+KNOT 111 axis=1 t=0.71875 score=3.12861e-06 spans=1,26
+REFIT 111 p=3 q=5 reason=Source distance unresolved: 1.05473e-06 tolerance=1e-06
+KNOT 111 axis=1 t=0.78125 score=3.47056e-06 spans=1,27
+REFIT 111 p=3 q=5 reason=Source distance unresolved: 1.05473e-06 tolerance=1e-06
+KNOT 111 axis=1 t=0.46875 score=2.9267e-06 spans=1,28
+REFIT 111 p=3 q=5 reason=Source distance unresolved: 1.05472e-06 tolerance=1e-06
+KNOT 111 axis=1 t=0.53125 score=3.36418e-06 spans=1,29
+REFIT 111 p=3 q=5 reason=Source distance unresolved: 1.05465e-06 tolerance=1e-06
+KNOT 111 axis=1 t=0.03125 score=2.68419e-06 spans=1,30
+REFIT 111 p=3 q=5 reason=Rational source certificate budget exhausted
+KNOT 111 axis=1 t=0.96875 score=2.50617e-06 spans=1,31
+GENERATED extreme:111 source=9.25156e-07 tangent=7.64042e-05 pieces=98
+GENERATED extreme:112 source=3.07694e-11 tangent=6.2191e-09 pieces=45
+REFIT 113 p=3 q=5 reason=Source distance unresolved: 1.05242e-06 tolerance=1e-06
+KNOT 113 axis=1 t=0.5 score=0.000309404 spans=1,1
+REFIT 113 p=3 q=5 reason=Source distance unresolved: 1.11521e-06 tolerance=1e-06
+KNOT 113 axis=1 t=0.25 score=3.59939e-05 spans=1,2
+REFIT 113 p=3 q=5 reason=Source distance unresolved: 1.01928e-06 tolerance=1e-06
+KNOT 113 axis=1 t=0.75 score=3.96424e-05 spans=1,3
+REFIT 113 p=3 q=5 reason=Source distance unresolved: 1.00395e-06 tolerance=1e-06
+KNOT 113 axis=1 t=0.375 score=8.32541e-06 spans=1,4
+REFIT 113 p=3 q=5 reason=Source distance unresolved: 1.0019e-06 tolerance=1e-06
+KNOT 113 axis=1 t=0.625 score=8.92445e-06 spans=1,5
+GENERATED extreme:113 source=9.99224e-07 tangent=1.49852e-05 pieces=132
+GENERATED extreme:114 source=4.02514e-11 tangent=4.93673e-08 pieces=41
+REFIT 115 p=5 q=3 reason=Source distance unresolved: 3.31459e-05 tolerance=1e-06
+KNOT 115 axis=0 t=0.5 score=0.00998638 spans=1,1
+REFIT 115 p=5 q=3 reason=Source distance unresolved: 6.75752e-06 tolerance=1e-06
+KNOT 115 axis=0 t=0.25 score=0.00156106 spans=2,1
+REFIT 115 p=5 q=3 reason=Source distance unresolved: 1.62664e-06 tolerance=1e-06
+KNOT 115 axis=0 t=0.75 score=0.00146807 spans=3,1
+REFIT 115 p=5 q=3 reason=Source distance unresolved: 1.41483e-06 tolerance=1e-06
+KNOT 115 axis=0 t=0.625 score=0.000360605 spans=4,1
+REFIT 115 p=5 q=3 reason=Source distance unresolved: 1.23111e-06 tolerance=1e-06
+KNOT 115 axis=0 t=0.375 score=0.000333585 spans=5,1
+REFIT 115 p=5 q=3 reason=Source distance unresolved: 1.08606e-06 tolerance=1e-06
+KNOT 115 axis=0 t=0.125 score=2.00586e-05 spans=6,1
+REFIT 115 p=5 q=3 reason=Source distance unresolved: 1.00017e-06 tolerance=1e-06
+KNOT 115 axis=0 t=0.875 score=1.91046e-05 spans=7,1
+REFIT 115 p=5 q=3 reason=Source distance unresolved: 1.00018e-06 tolerance=1e-06
+KNOT 115 axis=0 t=0.6875 score=4.8309e-06 spans=8,1
+REFIT 115 p=5 q=3 reason=Source distance unresolved: 1.00108e-06 tolerance=1e-06
+KNOT 115 axis=0 t=0.5625 score=5.68625e-06 spans=9,1
+REFIT 115 p=5 q=3 reason=Source distance unresolved: 1.00094e-06 tolerance=1e-06
+KNOT 115 axis=0 t=0.4375 score=6.06131e-06 spans=10,1
+REFIT 115 p=5 q=3 reason=Source distance unresolved: 1.00046e-06 tolerance=1e-06
+KNOT 115 axis=0 t=0.3125 score=6.00301e-06 spans=11,1
+REFIT 115 p=5 q=3 reason=Source distance unresolved: 1.00001e-06 tolerance=1e-06
+KNOT 115 axis=0 t=0.8125 score=4.68519e-06 spans=12,1
+REFIT 115 p=5 q=3 reason=Source distance unresolved: 1.00034e-06 tolerance=1e-06
+KNOT 115 axis=0 t=0.1875 score=4.65538e-06 spans=13,1
+GENERATED extreme:115 source=7.86514e-07 tangent=1.49929e-05 pieces=144
+GENERATED extreme:116 source=2.5495e-11 tangent=7.34075e-08 pieces=53
+REFIT 117 p=5 q=3 reason=Source distance unresolved: 0.00018579 tolerance=1e-06
+KNOT 117 axis=0 t=0.75 score=0.0290056 spans=2,1
+REFIT 117 p=5 q=3 reason=Source distance unresolved: 0.000182658 tolerance=1e-06
+KNOT 117 axis=0 t=0.25 score=0.0252068 spans=3,1
+REFIT 117 p=5 q=3 reason=Source distance unresolved: 4.00311e-05 tolerance=1e-06
+KNOT 117 axis=0 t=0.625 score=0.00638017 spans=4,1
+REFIT 117 p=5 q=3 reason=Source distance unresolved: 3.89542e-05 tolerance=1e-06
+KNOT 117 axis=0 t=0.375 score=0.00343494 spans=5,1
+REFIT 117 p=5 q=3 reason=Source distance unresolved: 2.73924e-05 tolerance=1e-06
+KNOT 117 axis=0 t=0.125 score=0.00261378 spans=6,1
+REFIT 117 p=5 q=3 reason=Source distance unresolved: 4.28569e-06 tolerance=1e-06
+KNOT 117 axis=0 t=0.875 score=0.00249779 spans=7,1
+REFIT 117 p=5 q=3 reason=Source distance unresolved: 4.51606e-06 tolerance=1e-06
+KNOT 117 axis=0 t=0.3125 score=0.000787853 spans=8,1
+REFIT 117 p=5 q=3 reason=Source distance unresolved: 3.4211e-06 tolerance=1e-06
+KNOT 117 axis=0 t=0.6875 score=0.000727912 spans=9,1
+REFIT 117 p=5 q=3 reason=Source distance unresolved: 2.27251e-06 tolerance=1e-06
+KNOT 117 axis=0 t=0.8125 score=0.000568239 spans=10,1
+REFIT 117 p=5 q=3 reason=Source distance unresolved: 2.29397e-06 tolerance=1e-06
+KNOT 117 axis=0 t=0.1875 score=0.000572188 spans=11,1
+REFIT 117 p=5 q=3 reason=Source distance unresolved: 1.11241e-06 tolerance=1e-06
+KNOT 117 axis=0 t=0.4375 score=3.40076e-05 spans=12,1
+REFIT 117 p=5 q=3 reason=Source distance unresolved: 1.07682e-06 tolerance=1e-06
+KNOT 117 axis=0 t=0.5625 score=4.08148e-05 spans=13,1
+REFIT 117 p=5 q=3 reason=Source distance unresolved: 1.07622e-06 tolerance=1e-06
+KNOT 117 axis=0 t=0.0625 score=3.19217e-05 spans=14,1
+REFIT 117 p=5 q=3 reason=Source distance unresolved: 1.01595e-06 tolerance=1e-06
+KNOT 117 axis=0 t=0.9375 score=2.98156e-05 spans=15,1
+REFIT 117 p=5 q=3 reason=Source distance unresolved: 1.01256e-06 tolerance=1e-06
+KNOT 117 axis=0 t=0.71875 score=8.96456e-06 spans=16,1
+REFIT 117 p=5 q=3 reason=Source distance unresolved: 1.01117e-06 tolerance=1e-06
+KNOT 117 axis=0 t=0.78125 score=1.01061e-05 spans=17,1
+REFIT 117 p=5 q=3 reason=Source distance unresolved: 1.00989e-06 tolerance=1e-06
+KNOT 117 axis=0 t=0.65625 score=1.04549e-05 spans=18,1
+REFIT 117 p=5 q=3 reason=Source distance unresolved: 1.00092e-06 tolerance=1e-06
+KNOT 117 axis=0 t=0.84375 score=1.05182e-05 spans=19,1
+REFIT 117 p=5 q=3 reason=Source distance unresolved: 1.00122e-06 tolerance=1e-06
+KNOT 117 axis=0 t=0.28125 score=9.02319e-06 spans=20,1
+REFIT 117 p=5 q=3 reason=Source distance unresolved: 1.01501e-06 tolerance=1e-06
+KNOT 117 axis=0 t=0.21875 score=1.01303e-05 spans=21,1
+REFIT 117 p=5 q=3 reason=Source distance unresolved: 1.02449e-06 tolerance=1e-06
+KNOT 117 axis=0 t=0.15625 score=1.045e-05 spans=22,1
+REFIT 117 p=5 q=3 reason=Source distance unresolved: 1.01738e-06 tolerance=1e-06
+KNOT 117 axis=0 t=0.34375 score=1.04588e-05 spans=23,1
+REFIT 117 p=5 q=3 reason=Source distance unresolved: 1.03294e-06 tolerance=1e-06
+KNOT 117 axis=0 t=0.59375 score=7.83565e-06 spans=24,1
+REFIT 117 p=5 q=3 reason=Source distance unresolved: 1.03308e-06 tolerance=1e-06
+KNOT 117 axis=0 t=0.40625 score=7.87618e-06 spans=25,1
+REFIT 117 p=5 q=3 reason=Source distance unresolved: 1.01684e-06 tolerance=1e-06
+KNOT 117 axis=0 t=0.09375 score=7.36486e-06 spans=26,1
+REFIT 117 p=5 q=3 reason=Source distance unresolved: 1.00001e-06 tolerance=1e-06
+KNOT 117 axis=0 t=0.90625 score=7.36485e-06 spans=27,1
+GENERATED extreme:117 source=6.96874e-07 tangent=4.71726e-05 pieces=718
+GENERATED extreme:118 source=3.69436e-11 tangent=4.66781e-07 pieces=89
+REFIT 119 p=5 q=3 reason=Source distance unresolved: 5.83386e-05 tolerance=1e-06
+KNOT 119 axis=0 t=0.625 score=0.0162614 spans=4,1
+REFIT 119 p=5 q=3 reason=Source distance unresolved: 6.10386e-05 tolerance=1e-06
+KNOT 119 axis=0 t=0.375 score=0.0168158 spans=5,1
+REFIT 119 p=5 q=3 reason=Source distance unresolved: 5.9408e-05 tolerance=1e-06
+KNOT 119 axis=0 t=0.875 score=0.0106934 spans=6,1
+REFIT 119 p=5 q=3 reason=Source distance unresolved: 5.94315e-05 tolerance=1e-06
+KNOT 119 axis=0 t=0.125 score=0.010712 spans=7,1
+REFIT 119 p=5 q=3 reason=Source distance unresolved: 1.23455e-05 tolerance=1e-06
+KNOT 119 axis=0 t=0.6875 score=0.00264482 spans=8,1
+REFIT 119 p=5 q=3 reason=Source distance unresolved: 1.23906e-05 tolerance=1e-06
+KNOT 119 axis=0 t=0.3125 score=0.00271476 spans=9,1
+REFIT 119 p=5 q=3 reason=Source distance unresolved: 1.2375e-05 tolerance=1e-06
+KNOT 119 axis=0 t=0.4375 score=0.00215558 spans=10,1
+REFIT 119 p=5 q=3 reason=Source distance unresolved: 1.21267e-05 tolerance=1e-06
+KNOT 119 axis=0 t=0.8125 score=0.00144337 spans=11,1
+REFIT 119 p=5 q=3 reason=Source distance unresolved: 3.16296e-05 tolerance=1e-06
+KNOT 119 axis=0 t=0.1875 score=0.00131873 spans=12,1
+REFIT 119 p=5 q=3 reason=Source distance unresolved: 2.29191e-05 tolerance=1e-06
+KNOT 119 axis=0 t=0.5625 score=0.00112062 spans=13,1
+REFIT 119 p=5 q=3 reason=Source distance unresolved: 2.28545e-05 tolerance=1e-06
+KNOT 119 axis=0 t=0.0625 score=0.00108702 spans=14,1
+REFIT 119 p=5 q=3 reason=Source distance unresolved: 2.47334e-06 tolerance=1e-06
+KNOT 119 axis=0 t=0.9375 score=0.00103442 spans=15,1
+REFIT 119 p=5 q=3 reason=Source distance unresolved: 2.47303e-06 tolerance=1e-06
+KNOT 119 axis=0 t=0.65625 score=0.000320429 spans=16,1
+REFIT 119 p=5 q=3 reason=Source distance unresolved: 2.47461e-06 tolerance=1e-06
+KNOT 119 axis=0 t=0.34375 score=0.000321905 spans=17,1
+REFIT 119 p=5 q=3 reason=Source distance unresolved: 2.53168e-06 tolerance=1e-06
+KNOT 119 axis=0 t=0.84375 score=0.000297009 spans=18,1
+REFIT 119 p=5 q=3 reason=Source distance unresolved: 2.5316e-06 tolerance=1e-06
+KNOT 119 axis=0 t=0.15625 score=0.00029702 spans=19,1
+REFIT 119 p=5 q=3 reason=Source distance unresolved: 1.8506e-06 tolerance=1e-06
+KNOT 119 axis=0 t=0.59375 score=0.000264624 spans=20,1
+REFIT 119 p=5 q=3 reason=Source distance unresolved: 1.8522e-06 tolerance=1e-06
+KNOT 119 axis=0 t=0.40625 score=0.000247076 spans=21,1
+REFIT 119 p=5 q=3 reason=Source distance unresolved: 1.86934e-06 tolerance=1e-06
+KNOT 119 axis=0 t=0.09375 score=0.000236738 spans=22,1
+REFIT 119 p=5 q=3 reason=Source distance unresolved: 1.38701e-06 tolerance=1e-06
+KNOT 119 axis=0 t=0.90625 score=0.000236737 spans=23,1
+REFIT 119 p=5 q=3 reason=Source distance unresolved: 1.387e-06 tolerance=1e-06
+KNOT 119 axis=0 t=0.28125 score=1.56537e-05 spans=24,1
+REFIT 119 p=5 q=3 reason=Source distance unresolved: 1.38376e-06 tolerance=1e-06
+KNOT 119 axis=0 t=0.21875 score=1.73791e-05 spans=25,1
+REFIT 119 p=5 q=3 reason=Source distance unresolved: 1.33711e-06 tolerance=1e-06
+KNOT 119 axis=0 t=0.71875 score=1.56431e-05 spans=26,1
+REFIT 119 p=5 q=3 reason=Source distance unresolved: 1.33712e-06 tolerance=1e-06
+KNOT 119 axis=0 t=0.78125 score=1.73528e-05 spans=27,1
+REFIT 119 p=5 q=3 reason=Source distance unresolved: 1.33712e-06 tolerance=1e-06
+KNOT 119 axis=0 t=0.46875 score=1.46335e-05 spans=28,1
+REFIT 119 p=5 q=3 reason=Source distance unresolved: 1.33711e-06 tolerance=1e-06
+KNOT 119 axis=0 t=0.53125 score=1.68209e-05 spans=29,1
+REFIT 119 p=5 q=3 reason=Source distance unresolved: 1.33702e-06 tolerance=1e-06
+KNOT 119 axis=0 t=0.03125 score=1.34209e-05 spans=30,1
+REFIT 119 p=5 q=3 reason=Source distance unresolved: 1.00108e-06 tolerance=1e-06
+KNOT 119 axis=0 t=0.96875 score=1.25308e-05 spans=31,1
+REFIT 119 p=5 q=3 reason=Source distance unresolved: 1.00108e-06 tolerance=1e-06
+KNOT 119 axis=0 t=0.859375 score=3.65005e-06 spans=32,1
+REFIT 119 p=5 q=3 reason=Source distance unresolved: 1.00108e-06 tolerance=1e-06
+KNOT 119 axis=0 t=0.890625 score=4.10775e-06 spans=33,1
+REFIT 119 p=5 q=3 reason=Source distance unresolved: 1.00108e-06 tolerance=1e-06
+KNOT 119 axis=0 t=0.921875 score=4.28142e-06 spans=34,1
+REFIT 119 p=5 q=3 reason=Source distance unresolved: 1.00108e-06 tolerance=1e-06
+KNOT 119 axis=0 t=0.828125 score=4.33146e-06 spans=35,1
+REFIT 119 p=5 q=3 reason=Source distance unresolved: 1.00108e-06 tolerance=1e-06
+GENERATED extreme:119 source=4.6217e-06 tangent=9.07134e-05 pieces=110
+GENERATED extreme:120 source=6.55741e-11 tangent=6.63089e-09 pieces=45
+REFIT 121 p=5 q=3 reason=Source distance unresolved: 2.10485e-06 tolerance=1e-06
+KNOT 121 axis=0 t=0.5 score=0.000618809 spans=1,1
+REFIT 121 p=5 q=3 reason=Source distance unresolved: 1.27907e-06 tolerance=1e-06
+KNOT 121 axis=0 t=0.75 score=7.19878e-05 spans=2,1
+REFIT 121 p=5 q=3 reason=Source distance unresolved: 1.26195e-06 tolerance=1e-06
+KNOT 121 axis=0 t=0.25 score=8.18568e-05 spans=3,1
+REFIT 121 p=5 q=3 reason=Source distance unresolved: 1.01494e-06 tolerance=1e-06
+KNOT 121 axis=0 t=0.625 score=1.66508e-05 spans=4,1
+REFIT 121 p=5 q=3 reason=Source distance unresolved: 1.01648e-06 tolerance=1e-06
+KNOT 121 axis=0 t=0.375 score=1.77822e-05 spans=5,1
+REFIT 121 p=5 q=3 reason=Source distance unresolved: 1.003e-06 tolerance=1e-06
+KNOT 121 axis=0 t=0.125 score=1.24472e-06 spans=6,1
+REFIT 121 p=5 q=3 reason=Source distance unresolved: 1.00032e-06 tolerance=1e-06
+KNOT 121 axis=0 t=0.875 score=1.16008e-06 spans=7,1
+GENERATED extreme:121 source=2.86475e-07 tangent=5.9904e-07 pieces=66
+GENERATED extreme:122 source=7.84425e-11 tangent=3.08014e-08 pieces=32
+REFIT 123 p=3 q=5 reason=Source distance unresolved: 0.000132486 tolerance=1e-06
+KNOT 123 axis=1 t=0.5 score=0.0199728 spans=1,1
+REFIT 123 p=3 q=5 reason=Source distance unresolved: 2.70016e-05 tolerance=1e-06
+KNOT 123 axis=1 t=0.75 score=0.00312212 spans=1,2
+REFIT 123 p=3 q=5 reason=Source distance unresolved: 2.14795e-05 tolerance=1e-06
+KNOT 123 axis=1 t=0.25 score=0.00306098 spans=1,3
+REFIT 123 p=3 q=5 reason=Source distance unresolved: 2.82966e-06 tolerance=1e-06
+KNOT 123 axis=1 t=0.625 score=0.00072121 spans=1,4
+REFIT 123 p=3 q=5 reason=Source distance unresolved: 2.46222e-06 tolerance=1e-06
+KNOT 123 axis=1 t=0.375 score=0.00066717 spans=1,5
+REFIT 123 p=3 q=5 reason=Source distance unresolved: 1.45472e-06 tolerance=1e-06
+KNOT 123 axis=1 t=0.125 score=4.01171e-05 spans=1,6
+REFIT 123 p=3 q=5 reason=Source distance unresolved: 1.00097e-06 tolerance=1e-06
+KNOT 123 axis=1 t=0.875 score=3.82092e-05 spans=1,7
+REFIT 123 p=3 q=5 reason=Source distance unresolved: 1.00412e-06 tolerance=1e-06
+KNOT 123 axis=1 t=0.3125 score=9.66181e-06 spans=1,8
+REFIT 123 p=3 q=5 reason=Source distance unresolved: 1.00583e-06 tolerance=1e-06
+KNOT 123 axis=1 t=0.4375 score=1.13725e-05 spans=1,9
+REFIT 123 p=3 q=5 reason=Source distance unresolved: 1.00387e-06 tolerance=1e-06
+KNOT 123 axis=1 t=0.5625 score=1.21226e-05 spans=1,10
+REFIT 123 p=3 q=5 reason=Source distance unresolved: 1.0098e-06 tolerance=1e-06
+KNOT 123 axis=1 t=0.6875 score=1.2006e-05 spans=1,11
+REFIT 123 p=3 q=5 reason=Source distance unresolved: 1.01498e-06 tolerance=1e-06
+KNOT 123 axis=1 t=0.8125 score=9.37037e-06 spans=1,12
+REFIT 123 p=3 q=5 reason=Source distance unresolved: 1.00295e-06 tolerance=1e-06
+KNOT 123 axis=1 t=0.1875 score=9.31076e-06 spans=1,13
+GENERATED extreme:123 source=9.43137e-07 tangent=1.50143e-05 pieces=292
+GENERATED extreme:124 source=7.17781e-11 tangent=9.71993e-08 pieces=53
+REFIT 125 p=3 q=5 reason=Source distance unresolved: 0.00037158 tolerance=1e-06
+KNOT 125 axis=1 t=0.25 score=0.0580111 spans=1,2
+REFIT 125 p=3 q=5 reason=Source distance unresolved: 0.000112216 tolerance=1e-06
+KNOT 125 axis=1 t=0.75 score=0.0504135 spans=1,3
+REFIT 125 p=3 q=5 reason=Source distance unresolved: 8.00621e-05 tolerance=1e-06
+KNOT 125 axis=1 t=0.375 score=0.0127603 spans=1,4
+REFIT 125 p=3 q=5 reason=Source distance unresolved: 5.66864e-05 tolerance=1e-06
+KNOT 125 axis=1 t=0.625 score=0.0068891 spans=1,5
+REFIT 125 p=3 q=5 reason=Source distance unresolved: 5.47847e-05 tolerance=1e-06
+KNOT 125 axis=1 t=0.125 score=0.00522756 spans=1,6
+REFIT 125 p=3 q=5 reason=Source distance unresolved: 8.57136e-06 tolerance=1e-06
+KNOT 125 axis=1 t=0.875 score=0.00499559 spans=1,7
+REFIT 125 p=3 q=5 reason=Source distance unresolved: 9.03208e-06 tolerance=1e-06
+KNOT 125 axis=1 t=0.6875 score=0.00157571 spans=1,8
+REFIT 125 p=3 q=5 reason=Source distance unresolved: 9.1699e-06 tolerance=1e-06
+KNOT 125 axis=1 t=0.3125 score=0.00145582 spans=1,9
+REFIT 125 p=3 q=5 reason=Source distance unresolved: 9.06084e-06 tolerance=1e-06
+KNOT 125 axis=1 t=0.8125 score=0.00113648 spans=1,10
+REFIT 125 p=3 q=5 reason=Source distance unresolved: 9.14645e-06 tolerance=1e-06
+KNOT 125 axis=1 t=0.1875 score=0.00114438 spans=1,11
+REFIT 125 p=3 q=5 reason=Source distance unresolved: 2.22478e-06 tolerance=1e-06
+KNOT 125 axis=1 t=0.4375 score=6.80153e-05 spans=1,12
+REFIT 125 p=3 q=5 reason=Source distance unresolved: 2.15361e-06 tolerance=1e-06
+KNOT 125 axis=1 t=0.5625 score=8.16296e-05 spans=1,13
+REFIT 125 p=3 q=5 reason=Source distance unresolved: 2.1524e-06 tolerance=1e-06
+KNOT 125 axis=1 t=0.0625 score=6.38434e-05 spans=1,14
+REFIT 125 p=3 q=5 reason=Source distance unresolved: 1.02845e-06 tolerance=1e-06
+KNOT 125 axis=1 t=0.9375 score=5.96312e-05 spans=1,15
+REFIT 125 p=3 q=5 reason=Source distance unresolved: 1.02504e-06 tolerance=1e-06
+KNOT 125 axis=1 t=0.71875 score=1.79291e-05 spans=1,16
+REFIT 125 p=3 q=5 reason=Source distance unresolved: 1.02363e-06 tolerance=1e-06
+KNOT 125 axis=1 t=0.78125 score=2.02123e-05 spans=1,17
+REFIT 125 p=3 q=5 reason=Source distance unresolved: 1.02231e-06 tolerance=1e-06
+KNOT 125 axis=1 t=0.65625 score=2.09097e-05 spans=1,18
+REFIT 125 p=3 q=5 reason=Source distance unresolved: 1.0313e-06 tolerance=1e-06
+KNOT 125 axis=1 t=0.84375 score=2.10363e-05 spans=1,19
+REFIT 125 p=3 q=5 reason=Source distance unresolved: 1.03163e-06 tolerance=1e-06
+KNOT 125 axis=1 t=0.28125 score=1.80464e-05 spans=1,20
+REFIT 125 p=3 q=5 reason=Source distance unresolved: 1.03901e-06 tolerance=1e-06
+KNOT 125 axis=1 t=0.21875 score=2.02605e-05 spans=1,21
+REFIT 125 p=3 q=5 reason=Source distance unresolved: 1.00242e-06 tolerance=1e-06
+KNOT 125 axis=1 t=0.15625 score=2.08999e-05 spans=1,22
+REFIT 125 p=3 q=5 reason=Source distance unresolved: 1.04616e-06 tolerance=1e-06
+KNOT 125 axis=1 t=0.34375 score=2.09177e-05 spans=1,23
+REFIT 125 p=3 q=5 reason=Source distance unresolved: 1.02459e-06 tolerance=1e-06
+KNOT 125 axis=1 t=0.59375 score=1.56713e-05 spans=1,24
+REFIT 125 p=3 q=5 reason=Source distance unresolved: 1.02474e-06 tolerance=1e-06
+KNOT 125 axis=1 t=0.40625 score=1.57524e-05 spans=1,25
+REFIT 125 p=3 q=5 reason=Source distance unresolved: 1.00861e-06 tolerance=1e-06
+KNOT 125 axis=1 t=0.09375 score=1.47297e-05 spans=1,26
+REFIT 125 p=3 q=5 reason=Source distance unresolved: 1.00175e-06 tolerance=1e-06
+KNOT 125 axis=1 t=0.90625 score=1.47297e-05 spans=1,27
+REFIT 125 p=3 q=5 reason=Source distance unresolved: 1.00175e-06 tolerance=1e-06
+KNOT 125 axis=1 t=0.03125 score=8.65866e-07 spans=1,28
+REFIT 125 p=3 q=5 reason=Source distance unresolved: 1.00131e-06 tolerance=1e-06
+KNOT 125 axis=1 t=0.46875 score=8.06968e-07 spans=1,29
+REFIT 125 p=3 q=5 reason=Source distance unresolved: 1.00275e-06 tolerance=1e-06
+KNOT 125 axis=1 t=0.53125 score=1.12527e-06 spans=1,30
+REFIT 125 p=3 q=5 reason=Source distance unresolved: 1.00137e-06 tolerance=1e-06
+KNOT 125 axis=1 t=0.96875 score=8.06858e-07 spans=1,31
+GENERATED extreme:125 source=2.9198e-07 tangent=2.42084e-06 pieces=98
+GENERATED extreme:126 source=5.90077e-11 tangent=7.75028e-07 pieces=89
+REFIT 127 p=3 q=5 reason=Source distance unresolved: 0.000116677 tolerance=1e-06
+KNOT 127 axis=1 t=0.375 score=0.0325229 spans=1,4
+REFIT 127 p=3 q=5 reason=Source distance unresolved: 0.000121624 tolerance=1e-06
+KNOT 127 axis=1 t=0.625 score=0.0336316 spans=1,5
+REFIT 127 p=3 q=5 reason=Source distance unresolved: 0.000118816 tolerance=1e-06
+KNOT 127 axis=1 t=0.125 score=0.0213869 spans=1,6
+REFIT 127 p=3 q=5 reason=Source distance unresolved: 2.4582e-05 tolerance=1e-06
+KNOT 127 axis=1 t=0.875 score=0.021424 spans=1,7
+REFIT 127 p=3 q=5 reason=Source distance unresolved: 2.4691e-05 tolerance=1e-06
+KNOT 127 axis=1 t=0.6875 score=0.00528964 spans=1,8
+REFIT 127 p=3 q=5 reason=Source distance unresolved: 2.47811e-05 tolerance=1e-06
+KNOT 127 axis=1 t=0.3125 score=0.00542953 spans=1,9
+REFIT 127 p=3 q=5 reason=Source distance unresolved: 2.47499e-05 tolerance=1e-06
+KNOT 127 axis=1 t=0.4375 score=0.00431117 spans=1,10
+REFIT 127 p=3 q=5 reason=Source distance unresolved: 2.42534e-05 tolerance=1e-06
+KNOT 127 axis=1 t=0.8125 score=0.00288674 spans=1,11
+REFIT 127 p=3 q=5 reason=Source distance unresolved: 6.32593e-05 tolerance=1e-06
+KNOT 127 axis=1 t=0.1875 score=0.00263747 spans=1,12
+REFIT 127 p=3 q=5 reason=Source distance unresolved: 4.58382e-05 tolerance=1e-06
+KNOT 127 axis=1 t=0.5625 score=0.00224124 spans=1,13
+REFIT 127 p=3 q=5 reason=Source distance unresolved: 4.57091e-05 tolerance=1e-06
+KNOT 127 axis=1 t=0.0625 score=0.00217405 spans=1,14
+REFIT 127 p=3 q=5 reason=Source distance unresolved: 4.94671e-06 tolerance=1e-06
+KNOT 127 axis=1 t=0.9375 score=0.00206883 spans=1,15
+REFIT 127 p=3 q=5 reason=Source distance unresolved: 4.94609e-06 tolerance=1e-06
+KNOT 127 axis=1 t=0.65625 score=0.000640859 spans=1,16
+REFIT 127 p=3 q=5 reason=Source distance unresolved: 4.94923e-06 tolerance=1e-06
+KNOT 127 axis=1 t=0.34375 score=0.00064381 spans=1,17
+REFIT 127 p=3 q=5 reason=Source distance unresolved: 5.06338e-06 tolerance=1e-06
+KNOT 127 axis=1 t=0.84375 score=0.000594017 spans=1,18
+REFIT 127 p=3 q=5 reason=Source distance unresolved: 5.06322e-06 tolerance=1e-06
+KNOT 127 axis=1 t=0.15625 score=0.000594039 spans=1,19
+REFIT 127 p=3 q=5 reason=Source distance unresolved: 3.70123e-06 tolerance=1e-06
+KNOT 127 axis=1 t=0.40625 score=0.000529248 spans=1,20
+REFIT 127 p=3 q=5 reason=Source distance unresolved: 3.74034e-06 tolerance=1e-06
+KNOT 127 axis=1 t=0.59375 score=0.000494152 spans=1,21
+REFIT 127 p=3 q=5 reason=Source distance unresolved: 3.73871e-06 tolerance=1e-06
+KNOT 127 axis=1 t=0.90625 score=0.000473476 spans=1,22
+REFIT 127 p=3 q=5 reason=Source distance unresolved: 3.7387e-06 tolerance=1e-06
+KNOT 127 axis=1 t=0.09375 score=0.000473475 spans=1,23
+REFIT 127 p=3 q=5 reason=Source distance unresolved: 1.86638e-06 tolerance=1e-06
+KNOT 127 axis=1 t=0.28125 score=3.13073e-05 spans=1,24
+REFIT 127 p=3 q=5 reason=Source distance unresolved: 1.86202e-06 tolerance=1e-06
+KNOT 127 axis=1 t=0.21875 score=3.47583e-05 spans=1,25
+REFIT 127 p=3 q=5 reason=Source distance unresolved: 1.79941e-06 tolerance=1e-06
+KNOT 127 axis=1 t=0.71875 score=3.12861e-05 spans=1,26
+REFIT 127 p=3 q=5 reason=Source distance unresolved: 1.79942e-06 tolerance=1e-06
+KNOT 127 axis=1 t=0.78125 score=3.47056e-05 spans=1,27
+REFIT 127 p=3 q=5 reason=Source distance unresolved: 1.79942e-06 tolerance=1e-06
+KNOT 127 axis=1 t=0.46875 score=2.9267e-05 spans=1,28
+REFIT 127 p=3 q=5 reason=Source distance unresolved: 1.7994e-06 tolerance=1e-06
+KNOT 127 axis=1 t=0.53125 score=3.36418e-05 spans=1,29
+REFIT 127 p=3 q=5 reason=Source distance unresolved: 1.79929e-06 tolerance=1e-06
+KNOT 127 axis=1 t=0.03125 score=2.68419e-05 spans=1,30
+REFIT 127 p=3 q=5 reason=Source distance unresolved: 1.02143e-06 tolerance=1e-06
+KNOT 127 axis=1 t=0.96875 score=2.50617e-05 spans=1,31
+REFIT 127 p=3 q=5 reason=Source distance unresolved: 1.02143e-06 tolerance=1e-06
+KNOT 127 axis=1 t=0.859375 score=7.3001e-06 spans=1,32
+REFIT 127 p=3 q=5 reason=Source distance unresolved: 1.02143e-06 tolerance=1e-06
+KNOT 127 axis=1 t=0.890625 score=8.2155e-06 spans=1,33
+REFIT 127 p=3 q=5 reason=Source distance unresolved: 1.02143e-06 tolerance=1e-06
+KNOT 127 axis=1 t=0.921875 score=8.56283e-06 spans=1,34
+REFIT 127 p=3 q=5 reason=Source distance unresolved: 1.02143e-06 tolerance=1e-06
+KNOT 127 axis=1 t=0.828125 score=8.66292e-06 spans=1,35
+REFIT 127 p=3 q=5 reason=Source distance unresolved: 1.02143e-06 tolerance=1e-06
+GENERATED extreme:127 source=9.24943e-06 tangent=9.00255e-05 pieces=110
+GENERATED extreme:128 source=1.04427e-14 tangent=9.0451e-10 pieces=28
+GENERATED extreme:129 source=4.81146e-07 tangent=0.00963321 pieces=16
+GENERATED extreme:130 source=1.00777e-14 tangent=6.03137e-10 pieces=30
+GENERATED extreme:131 source=7.41646e-07 tangent=0.00968303 pieces=20
+GENERATED extreme:132 source=1.08398e-13 tangent=9.64647e-10 pieces=33
+REFIT 133 p=5 q=5 reason=Source distance unresolved: 1.00007e-06 tolerance=1e-06
+KNOT 133 axis=1 t=0.5 score=1.75478e-06 spans=1,1
+GENERATED extreme:133 source=9.8222e-07 tangent=0.00184627 pieces=18
+GENERATED extreme:134 source=1.04579e-13 tangent=7.76578e-10 pieces=26
+REFIT 135 p=5 q=5 reason=Source distance unresolved: 1.00088e-06 tolerance=1e-06
+KNOT 135 axis=1 t=0.5 score=1.75478e-06 spans=1,1
+GENERATED extreme:135 source=8.81192e-07 tangent=0.00187967 pieces=15
+GENERATED extreme:136 source=1.08542e-11 tangent=1.3212e-09 pieces=38
+REFIT 137 p=5 q=5 reason=Source distance unresolved: 1.19184e-06 tolerance=1e-06
+KNOT 137 axis=1 t=0.5 score=0.000175478 spans=1,1
+REFIT 137 p=5 q=5 reason=Source distance unresolved: 1.08835e-06 tolerance=1e-06
+KNOT 137 axis=1 t=0.75 score=2.06341e-05 spans=1,2
+REFIT 137 p=5 q=5 reason=Source distance unresolved: 1.06572e-06 tolerance=1e-06
+KNOT 137 axis=1 t=0.25 score=2.32744e-05 spans=1,3
+REFIT 137 p=5 q=5 reason=Source distance unresolved: 1.00051e-06 tolerance=1e-06
+KNOT 137 axis=0 t=0.5 score=1.78237e-05 spans=1,4
+REFIT 137 p=5 q=5 reason=Source distance unresolved: 1.00051e-06 tolerance=1e-06
+KNOT 137 axis=1 t=0.625 score=4.75937e-06 spans=2,4
+REFIT 137 p=5 q=5 reason=Source distance unresolved: 1.00316e-06 tolerance=1e-06
+KNOT 137 axis=1 t=0.375 score=5.05382e-06 spans=2,5
+REFIT 137 p=5 q=5 reason=Source distance unresolved: 1.00002e-06 tolerance=1e-06
+KNOT 137 axis=0 t=0.75 score=1.99096e-06 spans=2,6
+REFIT 137 p=5 q=5 reason=Source distance unresolved: 1.0001e-06 tolerance=1e-06
+KNOT 137 axis=0 t=0.25 score=2.32086e-06 spans=3,6
+GENERATED extreme:137 source=9.77199e-07 tangent=4.94353e-05 pieces=60
+GENERATED extreme:138 source=9.77866e-12 tangent=8.42197e-10 pieces=38
+REFIT 139 p=5 q=5 reason=Source distance unresolved: 1.1176e-06 tolerance=1e-06
+KNOT 139 axis=0 t=0.5 score=0.000175478 spans=1,1
+REFIT 139 p=5 q=5 reason=Source distance unresolved: 1.00168e-06 tolerance=1e-06
+KNOT 139 axis=0 t=0.25 score=2.06341e-05 spans=2,1
+REFIT 139 p=5 q=5 reason=Source distance unresolved: 1.0059e-06 tolerance=1e-06
+KNOT 139 axis=0 t=0.75 score=2.25384e-05 spans=3,1
+REFIT 139 p=5 q=5 reason=Source distance unresolved: 1.02152e-06 tolerance=1e-06
+KNOT 139 axis=1 t=0.5 score=1.78237e-05 spans=4,1
+REFIT 139 p=5 q=5 reason=Source distance unresolved: 1.00108e-06 tolerance=1e-06
+KNOT 139 axis=0 t=0.375 score=4.75937e-06 spans=4,2
+REFIT 139 p=5 q=5 reason=Source distance unresolved: 1.00069e-06 tolerance=1e-06
+KNOT 139 axis=0 t=0.625 score=5.07284e-06 spans=5,2
+REFIT 139 p=5 q=5 reason=Source distance unresolved: 1.00122e-06 tolerance=1e-06
+KNOT 139 axis=1 t=0.75 score=1.99096e-06 spans=6,2
+REFIT 139 p=5 q=5 reason=Source distance unresolved: 1.0012e-06 tolerance=1e-06
+KNOT 139 axis=1 t=0.25 score=2.32086e-06 spans=6,3
+GENERATED extreme:139 source=9.56508e-07 tangent=4.95965e-05 pieces=48
+GENERATED extreme:140 source=1.00114e-10 tangent=1.11404e-09 pieces=33
+REFIT 141 p=5 q=5 reason=Source distance unresolved: 1.00358e-06 tolerance=1e-06
+KNOT 141 axis=0 t=0.5 score=0.000391806 spans=1,1
+REFIT 141 p=5 q=5 reason=Source distance unresolved: 1.00412e-06 tolerance=1e-06
+KNOT 141 axis=1 t=0.5 score=0.000178237 spans=2,1
+REFIT 141 p=5 q=5 reason=Source distance unresolved: 1.00412e-06 tolerance=1e-06
+KNOT 141 axis=0 t=0.25 score=4.32855e-05 spans=2,2
+REFIT 141 p=5 q=5 reason=Source distance unresolved: 1.00319e-06 tolerance=1e-06
+KNOT 141 axis=0 t=0.75 score=4.92792e-05 spans=3,2
+REFIT 141 p=5 q=5 reason=Source distance unresolved: 1.00014e-06 tolerance=1e-06
+KNOT 141 axis=1 t=0.75 score=1.99096e-05 spans=4,2
+REFIT 141 p=5 q=5 reason=Source distance unresolved: 1.00012e-06 tolerance=1e-06
+KNOT 141 axis=1 t=0.25 score=2.32086e-05 spans=4,3
+REFIT 141 p=5 q=5 reason=Source distance unresolved: 1.00015e-06 tolerance=1e-06
+KNOT 141 axis=0 t=0.375 score=1.00919e-05 spans=4,4
+REFIT 141 p=5 q=5 reason=Source distance unresolved: 1.00015e-06 tolerance=1e-06
+KNOT 141 axis=0 t=0.625 score=1.1057e-05 spans=5,4
+REFIT 141 p=5 q=5 reason=Source distance unresolved: 1.00006e-06 tolerance=1e-06
+KNOT 141 axis=1 t=0.625 score=4.63714e-06 spans=6,4
+REFIT 141 p=5 q=5 reason=Source distance unresolved: 1.00014e-06 tolerance=1e-06
+KNOT 141 axis=1 t=0.375 score=5.03866e-06 spans=6,5
+REFIT 141 p=5 q=5 reason=Source distance unresolved: 1.00006e-06 tolerance=1e-06
+KNOT 141 axis=0 t=0.125 score=7.96106e-07 spans=6,6
+REFIT 141 p=5 q=5 reason=Source distance unresolved: 1.00011e-06 tolerance=1e-06
+KNOT 141 axis=0 t=0.875 score=7.34882e-07 spans=7,6
+GENERATED extreme:141 source=9.51537e-07 tangent=1.24823e-05 pieces=78
+GENERATED extreme:142 source=1.00363e-10 tangent=1.28231e-09 pieces=40
+REFIT 143 p=5 q=5 reason=Source distance unresolved: 1.85089e-06 tolerance=1e-06
+KNOT 143 axis=0 t=0.5 score=0.000391806 spans=1,1
+REFIT 143 p=5 q=5 reason=Source distance unresolved: 1.2936e-06 tolerance=1e-06
+KNOT 143 axis=1 t=0.5 score=0.000178237 spans=2,1
+REFIT 143 p=5 q=5 reason=Source distance unresolved: 1.01619e-06 tolerance=1e-06
+KNOT 143 axis=0 t=0.75 score=4.32855e-05 spans=2,2
+REFIT 143 p=5 q=5 reason=Source distance unresolved: 1.11098e-06 tolerance=1e-06
+KNOT 143 axis=0 t=0.25 score=5.08022e-05 spans=3,2
+REFIT 143 p=5 q=5 reason=Source distance unresolved: 1.04091e-06 tolerance=1e-06
+KNOT 143 axis=1 t=0.75 score=1.99096e-05 spans=4,2
+REFIT 143 p=5 q=5 reason=Source distance unresolved: 1.06774e-06 tolerance=1e-06
+KNOT 143 axis=1 t=0.25 score=2.32086e-05 spans=4,3
+REFIT 143 p=5 q=5 reason=Source distance unresolved: 1.00096e-06 tolerance=1e-06
+KNOT 143 axis=0 t=0.625 score=1.00919e-05 spans=4,4
+REFIT 143 p=5 q=5 reason=Source distance unresolved: 1.00257e-06 tolerance=1e-06
+KNOT 143 axis=0 t=0.375 score=1.10171e-05 spans=5,4
+REFIT 143 p=5 q=5 reason=Source distance unresolved: 1.00076e-06 tolerance=1e-06
+KNOT 143 axis=1 t=0.375 score=4.63714e-06 spans=6,4
+REFIT 143 p=5 q=5 reason=Source distance unresolved: 1.00041e-06 tolerance=1e-06
+KNOT 143 axis=1 t=0.625 score=5.05708e-06 spans=6,5
+REFIT 143 p=5 q=5 reason=Source distance unresolved: 1.00023e-06 tolerance=1e-06
+KNOT 143 axis=0 t=0.125 score=7.93748e-07 spans=6,6
+GENERATED extreme:143 source=9.77829e-07 tangent=1.34219e-05 pieces=88
+GENERATED extreme:144 source=7.66312e-15 tangent=6.6877e-10 pieces=40
+GENERATED extreme:145 source=4.6027e-07 tangent=0.00983139 pieces=22
+GENERATED extreme:146 source=1.13134e-14 tangent=9.06965e-10 pieces=33
+GENERATED extreme:147 source=5.06603e-07 tangent=0.00978483 pieces=17
+GENERATED extreme:148 source=9.94149e-14 tangent=1.31655e-09 pieces=38
+REFIT 149 p=5 q=5 reason=Source distance unresolved: 1.00029e-06 tolerance=1e-06
+KNOT 149 axis=0 t=0.5 score=1.05839e-06 spans=1,1
+REFIT 149 p=5 q=5 reason=Source distance unresolved: 1.00015e-06 tolerance=1e-06
+KNOT 149 axis=1 t=0.5 score=7.42913e-07 spans=2,1
+GENERATED extreme:149 source=8.13362e-07 tangent=0.00159905 pieces=18
+GENERATED extreme:150 source=1.25183e-13 tangent=7.46541e-10 pieces=40
+REFIT 151 p=5 q=5 reason=Source distance unresolved: 1.00064e-06 tolerance=1e-06
+KNOT 151 axis=0 t=0.5 score=1.05839e-06 spans=1,1
+REFIT 151 p=5 q=5 reason=Source distance unresolved: 1.00006e-06 tolerance=1e-06
+KNOT 151 axis=1 t=0.5 score=7.42913e-07 spans=2,1
+GENERATED extreme:151 source=9.62624e-07 tangent=0.00218183 pieces=20
+GENERATED extreme:152 source=7.45701e-12 tangent=6.40327e-10 pieces=40
+REFIT 153 p=5 q=5 reason=Source distance unresolved: 1.04403e-06 tolerance=1e-06
+KNOT 153 axis=0 t=0.5 score=0.000105839 spans=1,1
+REFIT 153 p=5 q=5 reason=Source distance unresolved: 1.04283e-06 tolerance=1e-06
+KNOT 153 axis=1 t=0.5 score=7.42913e-05 spans=2,1
+REFIT 153 p=5 q=5 reason=Source distance unresolved: 1.00092e-06 tolerance=1e-06
+KNOT 153 axis=0 t=0.75 score=1.28732e-05 spans=2,2
+REFIT 153 p=5 q=5 reason=Source distance unresolved: 1.02699e-06 tolerance=1e-06
+KNOT 153 axis=0 t=0.25 score=1.42611e-05 spans=3,2
+REFIT 153 p=5 q=5 reason=Source distance unresolved: 1.04444e-06 tolerance=1e-06
+KNOT 153 axis=1 t=0.75 score=8.63907e-06 spans=4,2
+REFIT 153 p=5 q=5 reason=Source distance unresolved: 1.03055e-06 tolerance=1e-06
+KNOT 153 axis=1 t=0.25 score=9.82282e-06 spans=4,3
+REFIT 153 p=5 q=5 reason=Source distance unresolved: 1.001e-06 tolerance=1e-06
+KNOT 153 axis=0 t=0.625 score=2.96048e-06 spans=4,4
+REFIT 153 p=5 q=5 reason=Source distance unresolved: 1.00126e-06 tolerance=1e-06
+KNOT 153 axis=0 t=0.375 score=3.09998e-06 spans=5,4
+REFIT 153 p=5 q=5 reason=Source distance unresolved: 1.00042e-06 tolerance=1e-06
+KNOT 153 axis=1 t=0.625 score=1.9981e-06 spans=6,4
+REFIT 153 p=5 q=5 reason=Source distance unresolved: 1.00002e-06 tolerance=1e-06
+KNOT 153 axis=1 t=0.375 score=2.13387e-06 spans=6,5
+GENERATED extreme:153 source=9.75366e-07 tangent=7.10502e-05 pieces=76
+GENERATED extreme:154 source=1.07271e-11 tangent=9.53191e-10 pieces=47
+REFIT 155 p=5 q=5 reason=Source distance unresolved: 1.00808e-06 tolerance=1e-06
+KNOT 155 axis=1 t=0.5 score=0.000105839 spans=1,1
+REFIT 155 p=5 q=5 reason=Source distance unresolved: 1.00806e-06 tolerance=1e-06
+KNOT 155 axis=0 t=0.5 score=7.42913e-05 spans=1,2
+REFIT 155 p=5 q=5 reason=Source distance unresolved: 1.05603e-06 tolerance=1e-06
+KNOT 155 axis=1 t=0.75 score=1.28732e-05 spans=2,2
+REFIT 155 p=5 q=5 reason=Source distance unresolved: 1.05602e-06 tolerance=1e-06
+KNOT 155 axis=1 t=0.25 score=1.42611e-05 spans=2,3
+REFIT 155 p=5 q=5 reason=Source distance unresolved: 1.02197e-06 tolerance=1e-06
+KNOT 155 axis=0 t=0.25 score=8.63907e-06 spans=2,4
+REFIT 155 p=5 q=5 reason=Source distance unresolved: 1.00329e-06 tolerance=1e-06
+KNOT 155 axis=0 t=0.75 score=9.51419e-06 spans=3,4
+REFIT 155 p=5 q=5 reason=Source distance unresolved: 1.0004e-06 tolerance=1e-06
+KNOT 155 axis=1 t=0.625 score=2.96048e-06 spans=4,4
+REFIT 155 p=5 q=5 reason=Source distance unresolved: 1.00013e-06 tolerance=1e-06
+KNOT 155 axis=1 t=0.375 score=3.09998e-06 spans=4,5
+REFIT 155 p=5 q=5 reason=Source distance unresolved: 1.00039e-06 tolerance=1e-06
+KNOT 155 axis=0 t=0.375 score=1.9981e-06 spans=4,6
+REFIT 155 p=5 q=5 reason=Source distance unresolved: 1.00038e-06 tolerance=1e-06
+KNOT 155 axis=0 t=0.625 score=2.14187e-06 spans=5,6
+GENERATED extreme:155 source=9.96664e-07 tangent=7.21879e-05 pieces=72
+GENERATED extreme:156 source=6.656e-11 tangent=1.0096e-09 pieces=46
+REFIT 157 p=5 q=5 reason=Source distance unresolved: 2.58211e-06 tolerance=1e-06
+KNOT 157 axis=1 t=0.5 score=0.000729944 spans=1,1
+REFIT 157 p=5 q=5 reason=Source distance unresolved: 1.21908e-06 tolerance=1e-06
+KNOT 157 axis=1 t=0.25 score=8.87829e-05 spans=1,2
+REFIT 157 p=5 q=5 reason=Source distance unresolved: 1.14052e-06 tolerance=1e-06
+KNOT 157 axis=1 t=0.75 score=9.51412e-05 spans=1,3
+REFIT 157 p=5 q=5 reason=Source distance unresolved: 1.11194e-06 tolerance=1e-06
+KNOT 157 axis=0 t=0.5 score=6.51008e-05 spans=1,4
+REFIT 157 p=5 q=5 reason=Source distance unresolved: 1.02248e-06 tolerance=1e-06
+KNOT 157 axis=1 t=0.375 score=2.04176e-05 spans=2,4
+REFIT 157 p=5 q=5 reason=Source distance unresolved: 1.00492e-06 tolerance=1e-06
+KNOT 157 axis=1 t=0.625 score=2.14621e-05 spans=2,5
+REFIT 157 p=5 q=5 reason=Source distance unresolved: 1.00744e-06 tolerance=1e-06
+KNOT 157 axis=0 t=0.75 score=7.01627e-06 spans=2,6
+REFIT 157 p=5 q=5 reason=Source distance unresolved: 1.02029e-06 tolerance=1e-06
+KNOT 157 axis=0 t=0.25 score=8.36534e-06 spans=3,6
+REFIT 157 p=5 q=5 reason=Source distance unresolved: 1.00314e-06 tolerance=1e-06
+KNOT 157 axis=0 t=0.625 score=1.64624e-06 spans=4,6
+REFIT 157 p=5 q=5 reason=Source distance unresolved: 1.00323e-06 tolerance=1e-06
+KNOT 157 axis=0 t=0.375 score=1.81513e-06 spans=5,6
+REFIT 157 p=5 q=5 reason=Source distance unresolved: 1.00364e-06 tolerance=1e-06
+KNOT 157 axis=1 t=0.125 score=1.46393e-06 spans=6,6
+REFIT 157 p=5 q=5 reason=Source distance unresolved: 1.00048e-06 tolerance=1e-06
+KNOT 157 axis=1 t=0.875 score=1.37141e-06 spans=6,7
+GENERATED extreme:157 source=9.75221e-07 tangent=3.95548e-06 pieces=80
+GENERATED extreme:158 source=1.13901e-10 tangent=1.05006e-09 pieces=40
+REFIT 159 p=5 q=5 reason=Source distance unresolved: 1.10905e-06 tolerance=1e-06
+KNOT 159 axis=1 t=0.5 score=0.000729944 spans=1,1
+REFIT 159 p=5 q=5 reason=Source distance unresolved: 1.32949e-06 tolerance=1e-06
+KNOT 159 axis=1 t=0.75 score=8.87829e-05 spans=1,2
+REFIT 159 p=5 q=5 reason=Source distance unresolved: 1.32949e-06 tolerance=1e-06
+KNOT 159 axis=1 t=0.25 score=9.83551e-05 spans=1,3
+REFIT 159 p=5 q=5 reason=Source distance unresolved: 1.10871e-06 tolerance=1e-06
+KNOT 159 axis=0 t=0.5 score=6.51008e-05 spans=1,4
+REFIT 159 p=5 q=5 reason=Source distance unresolved: 1.00168e-06 tolerance=1e-06
+KNOT 159 axis=1 t=0.625 score=2.04176e-05 spans=2,4
+REFIT 159 p=5 q=5 reason=Source distance unresolved: 1.00169e-06 tolerance=1e-06
+KNOT 159 axis=1 t=0.375 score=2.13797e-05 spans=2,5
+REFIT 159 p=5 q=5 reason=Source distance unresolved: 1.00162e-06 tolerance=1e-06
+KNOT 159 axis=0 t=0.25 score=7.01627e-06 spans=2,6
+REFIT 159 p=5 q=5 reason=Source distance unresolved: 1.00197e-06 tolerance=1e-06
+KNOT 159 axis=0 t=0.75 score=8.11931e-06 spans=3,6
+REFIT 159 p=5 q=5 reason=Source distance unresolved: 1.00005e-06 tolerance=1e-06
+KNOT 159 axis=0 t=0.375 score=1.64624e-06 spans=4,6
+REFIT 159 p=5 q=5 reason=Source distance unresolved: 1.00016e-06 tolerance=1e-06
+KNOT 159 axis=0 t=0.625 score=1.82162e-06 spans=5,6
+REFIT 159 p=5 q=5 reason=Source distance unresolved: 1.00005e-06 tolerance=1e-06
+KNOT 159 axis=1 t=0.125 score=1.46393e-06 spans=6,6
+REFIT 159 p=5 q=5 reason=Source distance unresolved: 1.00004e-06 tolerance=1e-06
+KNOT 159 axis=1 t=0.875 score=1.37141e-06 spans=6,7
+GENERATED extreme:159 source=9.75298e-07 tangent=3.9338e-06 pieces=68
+GENERATED extreme:160 source=9.7497e-14 tangent=1.07617e-08 pieces=34
+REFIT 161 p=5 q=5 reason=Source distance unresolved: 1.00046e-06 tolerance=1e-06
+KNOT 161 axis=0 t=0.5 score=7.44595e-07 spans=1,1
+GENERATED extreme:161 source=2.79924e-07 tangent=0.000671526 pieces=18
+GENERATED extreme:162 source=9.58067e-14 tangent=7.99988e-09 pieces=33
+REFIT 163 p=5 q=5 reason=Source distance unresolved: 1.00039e-06 tolerance=1e-06
+KNOT 163 axis=1 t=0.5 score=7.44595e-07 spans=1,1
+GENERATED extreme:163 source=3.62426e-07 tangent=0.000689706 pieces=18
+GENERATED extreme:164 source=9.75342e-14 tangent=7.66312e-09 pieces=26
+REFIT 165 p=5 q=5 reason=Source distance unresolved: 1.00024e-06 tolerance=1e-06
+KNOT 165 axis=1 t=0.5 score=7.44595e-07 spans=1,1
+GENERATED extreme:165 source=3.6312e-07 tangent=0.000688938 pieces=13
+GENERATED extreme:166 source=9.34517e-14 tangent=1.67703e-08 pieces=30
+REFIT 167 p=5 q=5 reason=Source distance unresolved: 1.00029e-06 tolerance=1e-06
+KNOT 167 axis=1 t=0.5 score=7.44595e-07 spans=1,1
+GENERATED extreme:167 source=3.62847e-07 tangent=0.00070281 pieces=16
+GENERATED extreme:168 source=9.44077e-12 tangent=1.17586e-06 pieces=40
+REFIT 169 p=5 q=5 reason=Source distance unresolved: 1.00806e-06 tolerance=1e-06
+KNOT 169 axis=1 t=0.5 score=7.42571e-05 spans=1,1
+REFIT 169 p=5 q=5 reason=Source distance unresolved: 1.02195e-06 tolerance=1e-06
+KNOT 169 axis=1 t=0.25 score=8.63854e-06 spans=1,2
+REFIT 169 p=5 q=5 reason=Source distance unresolved: 1.00328e-06 tolerance=1e-06
+KNOT 169 axis=1 t=0.75 score=9.51419e-06 spans=1,3
+REFIT 169 p=5 q=5 reason=Source distance unresolved: 1.00026e-06 tolerance=1e-06
+KNOT 169 axis=1 t=0.375 score=1.9981e-06 spans=1,4
+REFIT 169 p=5 q=5 reason=Source distance unresolved: 1.00055e-06 tolerance=1e-06
+KNOT 169 axis=1 t=0.625 score=2.14187e-06 spans=1,5
+GENERATED extreme:169 source=6.22569e-07 tangent=2.32154e-05 pieces=33
+GENERATED extreme:170 source=9.77957e-12 tangent=7.81795e-07 pieces=33
+REFIT 171 p=5 q=5 reason=Source distance unresolved: 1.00805e-06 tolerance=1e-06
+KNOT 171 axis=0 t=0.5 score=7.42571e-05 spans=1,1
+REFIT 171 p=5 q=5 reason=Source distance unresolved: 1.00809e-06 tolerance=1e-06
+KNOT 171 axis=0 t=0.75 score=8.63854e-06 spans=2,1
+REFIT 171 p=5 q=5 reason=Source distance unresolved: 1.02998e-06 tolerance=1e-06
+KNOT 171 axis=0 t=0.25 score=9.82282e-06 spans=3,1
+REFIT 171 p=5 q=5 reason=Source distance unresolved: 1.00026e-06 tolerance=1e-06
+KNOT 171 axis=0 t=0.375 score=1.9981e-06 spans=4,1
+REFIT 171 p=5 q=5 reason=Source distance unresolved: 1.00055e-06 tolerance=1e-06
+KNOT 171 axis=0 t=0.625 score=2.14187e-06 spans=5,1
+GENERATED extreme:171 source=6.22505e-07 tangent=2.30904e-05 pieces=33
+GENERATED extreme:172 source=8.06292e-11 tangent=1.06502e-05 pieces=40
+REFIT 173 p=5 q=5 reason=Source distance unresolved: 1.10867e-06 tolerance=1e-06
+KNOT 173 axis=0 t=0.5 score=6.5086e-05 spans=1,1
+REFIT 173 p=5 q=5 reason=Source distance unresolved: 1.00139e-06 tolerance=1e-06
+KNOT 173 axis=0 t=0.25 score=7.01623e-06 spans=2,1
+REFIT 173 p=5 q=5 reason=Source distance unresolved: 1.00183e-06 tolerance=1e-06
+KNOT 173 axis=0 t=0.75 score=8.11931e-06 spans=3,1
+REFIT 173 p=5 q=5 reason=Source distance unresolved: 1.00009e-06 tolerance=1e-06
+KNOT 173 axis=0 t=0.375 score=1.64623e-06 spans=4,1
+REFIT 173 p=5 q=5 reason=Source distance unresolved: 1.00088e-06 tolerance=1e-06
+KNOT 173 axis=0 t=0.625 score=1.82162e-06 spans=5,1
+GENERATED extreme:173 source=5.30932e-07 tangent=8.07251e-06 pieces=33
+GENERATED extreme:174 source=8.9048e-11 tangent=1.27225e-05 pieces=38
+REFIT 175 p=5 q=5 reason=Source distance unresolved: 1.10866e-06 tolerance=1e-06
+KNOT 175 axis=0 t=0.5 score=6.5086e-05 spans=1,1
+REFIT 175 p=5 q=5 reason=Source distance unresolved: 1.00156e-06 tolerance=1e-06
+KNOT 175 axis=0 t=0.25 score=7.01623e-06 spans=2,1
+REFIT 175 p=5 q=5 reason=Source distance unresolved: 1.00183e-06 tolerance=1e-06
+KNOT 175 axis=0 t=0.75 score=8.11931e-06 spans=3,1
+REFIT 175 p=5 q=5 reason=Source distance unresolved: 1.0001e-06 tolerance=1e-06
+KNOT 175 axis=0 t=0.375 score=1.64623e-06 spans=4,1
+REFIT 175 p=5 q=5 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 175 axis=0 t=0.625 score=1.82162e-06 spans=5,1
+GENERATED extreme:175 source=5.30926e-07 tangent=8.08342e-06 pieces=40
+GENERATED extreme:176 source=1.17498e-13 tangent=7.25146e-10 pieces=38
+GENERATED extreme:177 source=8.54562e-09 tangent=9.44726e-06 pieces=24
+GENERATED extreme:178 source=7.48415e-14 tangent=1.67146e-09 pieces=44
+REFIT 179 p=5 q=3 reason=Source distance unresolved: 1.00448e-06 tolerance=1e-06
+KNOT 179 axis=0 t=0.5 score=2.32312e-05 spans=1,1
+REFIT 179 p=5 q=3 reason=Source distance unresolved: 1.01224e-06 tolerance=1e-06
+KNOT 179 axis=0 t=0.75 score=4.23906e-06 spans=2,1
+REFIT 179 p=5 q=3 reason=Source distance unresolved: 1.00784e-06 tolerance=1e-06
+KNOT 179 axis=0 t=0.25 score=3.94398e-06 spans=3,1
+GENERATED extreme:179 source=9.19154e-07 tangent=0.00454668 pieces=80
+GENERATED extreme:180 source=9.66612e-14 tangent=2.64864e-09 pieces=44
+REFIT 181 p=5 q=3 reason=Source distance unresolved: 1.25756e-06 tolerance=1e-06
+KNOT 181 axis=0 t=0.25 score=0.000129202 spans=2,1
+REFIT 181 p=5 q=3 reason=Source distance unresolved: 1.26625e-06 tolerance=1e-06
+KNOT 181 axis=0 t=0.75 score=9.75575e-05 spans=3,1
+REFIT 181 p=5 q=3 reason=Source distance unresolved: 1.18759e-06 tolerance=1e-06
+KNOT 181 axis=0 t=0.375 score=2.83588e-05 spans=4,1
+REFIT 181 p=5 q=3 reason=Source distance unresolved: 1.15128e-06 tolerance=1e-06
+KNOT 181 axis=0 t=0.625 score=1.29429e-05 spans=5,1
+REFIT 181 p=5 q=3 reason=Source distance unresolved: 1.0237e-06 tolerance=1e-06
+KNOT 181 axis=0 t=0.125 score=1.22639e-05 spans=6,1
+REFIT 181 p=5 q=3 reason=Source distance unresolved: 1.00458e-06 tolerance=1e-06
+KNOT 181 axis=0 t=0.875 score=9.49737e-06 spans=7,1
+REFIT 181 p=5 q=3 reason=Source distance unresolved: 1.00029e-06 tolerance=1e-06
+KNOT 181 axis=0 t=0.3125 score=3.64655e-06 spans=8,1
+REFIT 181 p=5 q=3 reason=Source distance unresolved: 1.00036e-06 tolerance=1e-06
+KNOT 181 axis=0 t=0.6875 score=2.76517e-06 spans=9,1
+REFIT 181 p=5 q=3 reason=Source distance unresolved: 1.00052e-06 tolerance=1e-06
+KNOT 181 axis=0 t=0.1875 score=2.66733e-06 spans=10,1
+REFIT 181 p=5 q=3 reason=Source distance unresolved: 1.00092e-06 tolerance=1e-06
+KNOT 181 axis=0 t=0.8125 score=2.17342e-06 spans=11,1
+GENERATED extreme:181 source=9.82036e-07 tangent=0.00397516 pieces=96
+GENERATED extreme:182 source=2.09493e-13 tangent=1.54869e-09 pieces=62
+REFIT 183 p=5 q=3 reason=Source distance unresolved: 2.82215e-06 tolerance=1e-06
+KNOT 183 axis=0 t=0.625 score=0.000378196 spans=4,1
+REFIT 183 p=5 q=3 reason=Source distance unresolved: 2.98954e-06 tolerance=1e-06
+KNOT 183 axis=0 t=0.375 score=0.000349323 spans=5,1
+REFIT 183 p=5 q=3 reason=Source distance unresolved: 2.9093e-06 tolerance=1e-06
+KNOT 183 axis=0 t=0.875 score=0.000273481 spans=6,1
+REFIT 183 p=5 q=3 reason=Source distance unresolved: 2.91056e-06 tolerance=1e-06
+KNOT 183 axis=0 t=0.125 score=0.000202053 spans=7,1
+REFIT 183 p=5 q=3 reason=Source distance unresolved: 1.19374e-06 tolerance=1e-06
+KNOT 183 axis=0 t=0.8125 score=6.49777e-05 spans=8,1
+REFIT 183 p=5 q=3 reason=Source distance unresolved: 1.19392e-06 tolerance=1e-06
+KNOT 183 axis=0 t=0.5625 score=6.17119e-05 spans=9,1
+REFIT 183 p=5 q=3 reason=Source distance unresolved: 1.21519e-06 tolerance=1e-06
+KNOT 183 axis=0 t=0.3125 score=5.57404e-05 spans=10,1
+REFIT 183 p=5 q=3 reason=Source distance unresolved: 1.23595e-06 tolerance=1e-06
+KNOT 183 axis=0 t=0.9375 score=2.68137e-05 spans=11,1
+REFIT 183 p=5 q=3 reason=Source distance unresolved: 1.23603e-06 tolerance=1e-06
+KNOT 183 axis=0 t=0.1875 score=2.66379e-05 spans=12,1
+REFIT 183 p=5 q=3 reason=Source distance unresolved: 1.15697e-06 tolerance=1e-06
+KNOT 183 axis=0 t=0.6875 score=2.65111e-05 spans=13,1
+REFIT 183 p=5 q=3 reason=Source distance unresolved: 1.1562e-06 tolerance=1e-06
+KNOT 183 axis=0 t=0.4375 score=2.35173e-05 spans=14,1
+REFIT 183 p=5 q=3 reason=Source distance unresolved: 1.16927e-06 tolerance=1e-06
+KNOT 183 axis=0 t=0.0625 score=2.02954e-05 spans=15,1
+REFIT 183 p=5 q=3 reason=Source distance unresolved: 1.0326e-06 tolerance=1e-06
+KNOT 183 axis=0 t=0.84375 score=8.18207e-06 spans=16,1
+REFIT 183 p=5 q=3 reason=Source distance unresolved: 1.03253e-06 tolerance=1e-06
+KNOT 183 axis=0 t=0.59375 score=7.4751e-06 spans=17,1
+REFIT 183 p=5 q=3 reason=Source distance unresolved: 1.00182e-06 tolerance=1e-06
+KNOT 183 axis=0 t=0.34375 score=6.72549e-06 spans=18,1
+REFIT 183 p=5 q=3 reason=Source distance unresolved: 1.02321e-06 tolerance=1e-06
+KNOT 183 axis=0 t=0.90625 score=6.1107e-06 spans=19,1
+REFIT 183 p=5 q=3 reason=Source distance unresolved: 1.02322e-06 tolerance=1e-06
+KNOT 183 axis=0 t=0.65625 score=5.8258e-06 spans=20,1
+REFIT 183 p=5 q=3 reason=Source distance unresolved: 1.02315e-06 tolerance=1e-06
+KNOT 183 axis=0 t=0.15625 score=5.54463e-06 spans=21,1
+REFIT 183 p=5 q=3 reason=Source distance unresolved: 1.00321e-06 tolerance=1e-06
+KNOT 183 axis=0 t=0.40625 score=5.19336e-06 spans=22,1
+REFIT 183 p=5 q=3 reason=Source distance unresolved: 1.01429e-06 tolerance=1e-06
+KNOT 183 axis=0 t=0.09375 score=4.41809e-06 spans=23,1
+GENERATED extreme:183 source=9.62153e-07 tangent=0.0039727 pieces=570
+GENERATED extreme:184 source=6.03809e-13 tangent=1.27917e-09 pieces=44
+GENERATED extreme:185 source=1.62569e-08 tangent=9.1605e-06 pieces=32
+GENERATED extreme:186 source=3.85315e-13 tangent=1.74765e-09 pieces=44
+REFIT 187 p=3 q=5 reason=Source distance unresolved: 1.08494e-06 tolerance=1e-06
+KNOT 187 axis=1 t=0.5 score=0.000116156 spans=1,1
+REFIT 187 p=3 q=5 reason=Source distance unresolved: 1.03222e-06 tolerance=1e-06
+KNOT 187 axis=1 t=0.25 score=2.11953e-05 spans=1,2
+REFIT 187 p=3 q=5 reason=Source distance unresolved: 1.00385e-06 tolerance=1e-06
+KNOT 187 axis=1 t=0.75 score=1.88041e-05 spans=1,3
+REFIT 187 p=3 q=5 reason=Source distance unresolved: 1.00755e-06 tolerance=1e-06
+KNOT 187 axis=1 t=0.375 score=5.06516e-06 spans=1,4
+REFIT 187 p=3 q=5 reason=Source distance unresolved: 1.00055e-06 tolerance=1e-06
+KNOT 187 axis=1 t=0.625 score=4.32378e-06 spans=1,5
+GENERATED extreme:187 source=6.65332e-07 tangent=0.00113889 pieces=68
+GENERATED extreme:188 source=5.56782e-13 tangent=1.47266e-09 pieces=32
+REFIT 189 p=3 q=5 reason=Source distance unresolved: 3.53249e-06 tolerance=1e-06
+KNOT 189 axis=1 t=0.75 score=0.000646011 spans=1,2
+REFIT 189 p=3 q=5 reason=Source distance unresolved: 4.57272e-06 tolerance=1e-06
+KNOT 189 axis=1 t=0.25 score=0.000487787 spans=1,3
+REFIT 189 p=3 q=5 reason=Source distance unresolved: 1.0034e-06 tolerance=1e-06
+KNOT 189 axis=1 t=0.625 score=0.000141794 spans=1,4
+REFIT 189 p=3 q=5 reason=Source distance unresolved: 1.92863e-06 tolerance=1e-06
+KNOT 189 axis=1 t=0.375 score=6.45199e-05 spans=1,5
+REFIT 189 p=3 q=5 reason=Source distance unresolved: 1.43436e-06 tolerance=1e-06
+KNOT 189 axis=1 t=0.875 score=5.8346e-05 spans=1,6
+REFIT 189 p=3 q=5 reason=Source distance unresolved: 1.4474e-06 tolerance=1e-06
+KNOT 189 axis=1 t=0.125 score=4.99715e-05 spans=1,7
+REFIT 189 p=3 q=5 reason=Source distance unresolved: 1.02282e-06 tolerance=1e-06
+KNOT 189 axis=1 t=0.6875 score=1.82327e-05 spans=1,8
+REFIT 189 p=3 q=5 reason=Source distance unresolved: 1.03859e-06 tolerance=1e-06
+KNOT 189 axis=1 t=0.3125 score=1.38258e-05 spans=1,9
+REFIT 189 p=3 q=5 reason=Source distance unresolved: 1.03092e-06 tolerance=1e-06
+KNOT 189 axis=1 t=0.8125 score=1.33366e-05 spans=1,10
+REFIT 189 p=3 q=5 reason=Source distance unresolved: 1.04366e-06 tolerance=1e-06
+KNOT 189 axis=1 t=0.1875 score=1.08671e-05 spans=1,11
+GENERATED extreme:189 source=9.99831e-07 tangent=0.00381081 pieces=1498
+GENERATED extreme:190 source=1.15616e-12 tangent=1.23648e-09 pieces=62
+REFIT 191 p=3 q=5 reason=Source distance unresolved: 1.85945e-05 tolerance=1e-06
+KNOT 191 axis=1 t=0.375 score=0.00189098 spans=1,4
+REFIT 191 p=3 q=5 reason=Source distance unresolved: 1.92221e-05 tolerance=1e-06
+KNOT 191 axis=1 t=0.625 score=0.00174661 spans=1,5
+REFIT 191 p=3 q=5 reason=Source distance unresolved: 1.88669e-05 tolerance=1e-06
+KNOT 191 axis=1 t=0.125 score=0.0013674 spans=1,6
+REFIT 191 p=3 q=5 reason=Source distance unresolved: 3.93092e-06 tolerance=1e-06
+KNOT 191 axis=1 t=0.875 score=0.00101027 spans=1,7
+REFIT 191 p=3 q=5 reason=Source distance unresolved: 3.94359e-06 tolerance=1e-06
+KNOT 191 axis=1 t=0.1875 score=0.000324888 spans=1,8
+REFIT 191 p=3 q=5 reason=Source distance unresolved: 2.90702e-06 tolerance=1e-06
+KNOT 191 axis=1 t=0.4375 score=0.00030867 spans=1,9
+REFIT 191 p=3 q=5 reason=Source distance unresolved: 2.81362e-06 tolerance=1e-06
+KNOT 191 axis=1 t=0.6875 score=0.000278702 spans=1,10
+REFIT 191 p=3 q=5 reason=Source distance unresolved: 3.89405e-06 tolerance=1e-06
+KNOT 191 axis=1 t=0.0625 score=0.000141363 spans=1,11
+REFIT 191 p=3 q=5 reason=Source distance unresolved: 1.00596e-06 tolerance=1e-06
+KNOT 191 axis=1 t=0.8125 score=0.00013319 spans=1,12
+REFIT 191 p=3 q=5 reason=Source distance unresolved: 1.00761e-06 tolerance=1e-06
+KNOT 191 axis=1 t=0.3125 score=0.000132555 spans=1,13
+REFIT 191 p=3 q=5 reason=Source distance unresolved: 1.20366e-06 tolerance=1e-06
+KNOT 191 axis=1 t=0.5625 score=0.000117602 spans=1,14
+REFIT 191 p=3 q=5 reason=Source distance unresolved: 1.18779e-06 tolerance=1e-06
+KNOT 191 axis=1 t=0.9375 score=9.65674e-05 spans=1,15
+REFIT 191 p=3 q=5 reason=Source distance unresolved: 1.18768e-06 tolerance=1e-06
+KNOT 191 axis=1 t=0.15625 score=4.09104e-05 spans=1,16
+REFIT 191 p=3 q=5 reason=Source distance unresolved: 1.15144e-06 tolerance=1e-06
+KNOT 191 axis=1 t=0.40625 score=3.73755e-05 spans=1,17
+REFIT 191 p=3 q=5 reason=Source distance unresolved: 1.12399e-06 tolerance=1e-06
+KNOT 191 axis=1 t=0.65625 score=3.36274e-05 spans=1,18
+REFIT 191 p=3 q=5 reason=Source distance unresolved: 1.12383e-06 tolerance=1e-06
+KNOT 191 axis=1 t=0.09375 score=3.05535e-05 spans=1,19
+REFIT 191 p=3 q=5 reason=Source distance unresolved: 1.00416e-06 tolerance=1e-06
+KNOT 191 axis=1 t=0.34375 score=2.91285e-05 spans=1,20
+REFIT 191 p=3 q=5 reason=Source distance unresolved: 1.00059e-06 tolerance=1e-06
+KNOT 191 axis=1 t=0.84375 score=2.77231e-05 spans=1,21
+REFIT 191 p=3 q=5 reason=Source distance unresolved: 1.0006e-06 tolerance=1e-06
+KNOT 191 axis=1 t=0.59375 score=2.59668e-05 spans=1,22
+REFIT 191 p=3 q=5 reason=Source distance unresolved: 1.0001e-06 tolerance=1e-06
+KNOT 191 axis=1 t=0.90625 score=2.20905e-05 spans=1,23
+REFIT 191 p=3 q=5 reason=Source distance unresolved: 1.0001e-06 tolerance=1e-06
+KNOT 191 axis=1 t=0.21875 score=2.03151e-06 spans=1,24
+REFIT 191 p=3 q=5 reason=Source distance unresolved: 1.03415e-06 tolerance=1e-06
+KNOT 191 axis=1 t=0.28125 score=2.03851e-06 spans=1,25
+REFIT 191 p=3 q=5 reason=Source distance unresolved: 1.03307e-06 tolerance=1e-06
+KNOT 191 axis=1 t=0.46875 score=1.7711e-06 spans=1,26
+REFIT 191 p=3 q=5 reason=Source distance unresolved: 1.03304e-06 tolerance=1e-06
+KNOT 191 axis=1 t=0.53125 score=1.8284e-06 spans=1,27
+REFIT 191 p=3 q=5 reason=Source distance unresolved: 1.03298e-06 tolerance=1e-06
+KNOT 191 axis=1 t=0.03125 score=1.72726e-06 spans=1,28
+REFIT 191 p=3 q=5 reason=Source distance unresolved: 1.00029e-06 tolerance=1e-06
+KNOT 191 axis=1 t=0.71875 score=1.60663e-06 spans=1,29
+REFIT 191 p=3 q=5 reason=Source distance unresolved: 1.00622e-06 tolerance=1e-06
+KNOT 191 axis=1 t=0.78125 score=1.60957e-06 spans=1,30
+REFIT 191 p=3 q=5 reason=Source distance unresolved: 1.00448e-06 tolerance=1e-06
+KNOT 191 axis=1 t=0.96875 score=1.16984e-06 spans=1,31
+GENERATED extreme:191 source=5.8548e-07 tangent=0.000154891 pieces=98
+GENERATED extreme:192 source=2.36819e-12 tangent=7.93932e-10 pieces=45
+GENERATED extreme:193 source=1.05157e-07 tangent=9.18659e-06 pieces=31
+GENERATED extreme:194 source=1.53507e-12 tangent=1.71733e-09 pieces=38
+REFIT 195 p=5 q=3 reason=Source distance unresolved: 1.44871e-06 tolerance=1e-06
+KNOT 195 axis=0 t=0.5 score=0.000464623 spans=1,1
+REFIT 195 p=5 q=3 reason=Source distance unresolved: 1.10318e-06 tolerance=1e-06
+KNOT 195 axis=0 t=0.75 score=8.47811e-05 spans=2,1
+REFIT 195 p=5 q=3 reason=Source distance unresolved: 1.08934e-06 tolerance=1e-06
+KNOT 195 axis=0 t=0.25 score=7.88795e-05 spans=3,1
+REFIT 195 p=5 q=3 reason=Source distance unresolved: 1.03528e-06 tolerance=1e-06
+KNOT 195 axis=0 t=0.625 score=2.02607e-05 spans=4,1
+REFIT 195 p=5 q=3 reason=Source distance unresolved: 1.00424e-06 tolerance=1e-06
+KNOT 195 axis=0 t=0.375 score=1.72179e-05 spans=5,1
+REFIT 195 p=5 q=3 reason=Source distance unresolved: 1.00021e-06 tolerance=1e-06
+KNOT 195 axis=0 t=0.125 score=9.53237e-07 spans=6,1
+REFIT 195 p=5 q=3 reason=Source distance unresolved: 1e-06 tolerance=1e-06
+KNOT 195 axis=0 t=0.875 score=9.03706e-07 spans=7,1
+GENERATED extreme:195 source=3.3782e-07 tangent=5.606e-05 pieces=56
+GENERATED extreme:196 source=1.79929e-12 tangent=1.57371e-09 pieces=35
+REFIT 197 p=5 q=3 reason=Source distance unresolved: 1.67852e-05 tolerance=1e-06
+KNOT 197 axis=0 t=0.25 score=0.00258405 spans=2,1
+REFIT 197 p=5 q=3 reason=Source distance unresolved: 4.89758e-06 tolerance=1e-06
+KNOT 197 axis=0 t=0.75 score=0.00195115 spans=3,1
+REFIT 197 p=5 q=3 reason=Source distance unresolved: 4.82825e-06 tolerance=1e-06
+KNOT 197 axis=0 t=0.375 score=0.000567177 spans=4,1
+REFIT 197 p=5 q=3 reason=Source distance unresolved: 3.37605e-06 tolerance=1e-06
+KNOT 197 axis=0 t=0.625 score=0.000258859 spans=5,1
+REFIT 197 p=5 q=3 reason=Source distance unresolved: 3.29834e-06 tolerance=1e-06
+KNOT 197 axis=0 t=0.125 score=0.000245279 spans=6,1
+REFIT 197 p=5 q=3 reason=Source distance unresolved: 1.09951e-06 tolerance=1e-06
+KNOT 197 axis=0 t=0.875 score=0.000189947 spans=7,1
+REFIT 197 p=5 q=3 reason=Source distance unresolved: 1.14434e-06 tolerance=1e-06
+KNOT 197 axis=0 t=0.3125 score=7.29309e-05 spans=8,1
+REFIT 197 p=5 q=3 reason=Source distance unresolved: 1.06983e-06 tolerance=1e-06
+KNOT 197 axis=0 t=0.6875 score=5.53034e-05 spans=9,1
+REFIT 197 p=5 q=3 reason=Source distance unresolved: 1.03333e-06 tolerance=1e-06
+KNOT 197 axis=0 t=0.1875 score=5.33465e-05 spans=10,1
+REFIT 197 p=5 q=3 reason=Source distance unresolved: 1.01304e-06 tolerance=1e-06
+KNOT 197 axis=0 t=0.8125 score=4.34684e-05 spans=11,1
+REFIT 197 p=5 q=3 reason=Source distance unresolved: 1.02577e-06 tolerance=1e-06
+KNOT 197 axis=0 t=0.4375 score=3.46556e-06 spans=12,1
+REFIT 197 p=5 q=3 reason=Source distance unresolved: 1.0307e-06 tolerance=1e-06
+KNOT 197 axis=0 t=0.5625 score=3.11543e-06 spans=13,1
+REFIT 197 p=5 q=3 reason=Source distance unresolved: 1.03071e-06 tolerance=1e-06
+KNOT 197 axis=0 t=0.0625 score=2.99091e-06 spans=14,1
+REFIT 197 p=5 q=3 reason=Source distance unresolved: 1.00336e-06 tolerance=1e-06
+KNOT 197 axis=0 t=0.9375 score=2.26688e-06 spans=15,1
+GENERATED extreme:197 source=9.99227e-07 tangent=0.000173553 pieces=278
+GENERATED extreme:198 source=3.93293e-12 tangent=1.5335e-09 pieces=62
+REFIT 199 p=5 q=3 reason=Source distance unresolved: 5.6443e-05 tolerance=1e-06
+KNOT 199 axis=0 t=0.625 score=0.00756393 spans=4,1
+REFIT 199 p=5 q=3 reason=Source distance unresolved: 5.97909e-05 tolerance=1e-06
+KNOT 199 axis=0 t=0.375 score=0.00698645 spans=5,1
+REFIT 199 p=5 q=3 reason=Source distance unresolved: 5.8186e-05 tolerance=1e-06
+KNOT 199 axis=0 t=0.875 score=0.00546961 spans=6,1
+REFIT 199 p=5 q=3 reason=Source distance unresolved: 5.82112e-05 tolerance=1e-06
+KNOT 199 axis=0 t=0.125 score=0.00404107 spans=7,1
+REFIT 199 p=5 q=3 reason=Source distance unresolved: 1.20122e-05 tolerance=1e-06
+KNOT 199 axis=0 t=0.8125 score=0.00129955 spans=8,1
+REFIT 199 p=5 q=3 reason=Source distance unresolved: 1.2014e-05 tolerance=1e-06
+KNOT 199 axis=0 t=0.5625 score=0.00123424 spans=9,1
+REFIT 199 p=5 q=3 reason=Source distance unresolved: 1.22278e-05 tolerance=1e-06
+KNOT 199 axis=0 t=0.3125 score=0.00111481 spans=10,1
+REFIT 199 p=5 q=3 reason=Source distance unresolved: 8.31155e-06 tolerance=1e-06
+KNOT 199 axis=0 t=0.9375 score=0.000536273 spans=11,1
+REFIT 199 p=5 q=3 reason=Source distance unresolved: 8.31212e-06 tolerance=1e-06
+KNOT 199 axis=0 t=0.1875 score=0.000532759 spans=12,1
+REFIT 199 p=5 q=3 reason=Source distance unresolved: 5.8658e-06 tolerance=1e-06
+KNOT 199 axis=0 t=0.6875 score=0.000530222 spans=13,1
+REFIT 199 p=5 q=3 reason=Source distance unresolved: 5.86188e-06 tolerance=1e-06
+KNOT 199 axis=0 t=0.4375 score=0.000470346 spans=14,1
+REFIT 199 p=5 q=3 reason=Source distance unresolved: 5.92797e-06 tolerance=1e-06
+KNOT 199 axis=0 t=0.0625 score=0.000405908 spans=15,1
+REFIT 199 p=5 q=3 reason=Source distance unresolved: 1.83607e-06 tolerance=1e-06
+KNOT 199 axis=0 t=0.84375 score=0.000163641 spans=16,1
+REFIT 199 p=5 q=3 reason=Source distance unresolved: 1.83594e-06 tolerance=1e-06
+KNOT 199 axis=0 t=0.59375 score=0.000149502 spans=17,1
+REFIT 199 p=5 q=3 reason=Source distance unresolved: 1.84107e-06 tolerance=1e-06
+KNOT 199 axis=0 t=0.34375 score=0.00013451 spans=18,1
+REFIT 199 p=5 q=3 reason=Source distance unresolved: 1.88197e-06 tolerance=1e-06
+KNOT 199 axis=0 t=0.90625 score=0.000122214 spans=19,1
+REFIT 199 p=5 q=3 reason=Source distance unresolved: 1.882e-06 tolerance=1e-06
+KNOT 199 axis=0 t=0.65625 score=0.000116516 spans=20,1
+REFIT 199 p=5 q=3 reason=Source distance unresolved: 1.88185e-06 tolerance=1e-06
+KNOT 199 axis=0 t=0.15625 score=0.000110893 spans=21,1
+REFIT 199 p=5 q=3 reason=Source distance unresolved: 1.37153e-06 tolerance=1e-06
+KNOT 199 axis=0 t=0.40625 score=0.000103867 spans=22,1
+REFIT 199 p=5 q=3 reason=Source distance unresolved: 1.38613e-06 tolerance=1e-06
+KNOT 199 axis=0 t=0.09375 score=8.83618e-05 spans=23,1
+REFIT 199 p=5 q=3 reason=Source distance unresolved: 1.0077e-06 tolerance=1e-06
+KNOT 199 axis=0 t=0.78125 score=8.10745e-06 spans=24,1
+REFIT 199 p=5 q=3 reason=Source distance unresolved: 1.0077e-06 tolerance=1e-06
+KNOT 199 axis=0 t=0.71875 score=8.15331e-06 spans=25,1
+REFIT 199 p=5 q=3 reason=Source distance unresolved: 1.00772e-06 tolerance=1e-06
+KNOT 199 axis=0 t=0.53125 score=7.08425e-06 spans=26,1
+REFIT 199 p=5 q=3 reason=Source distance unresolved: 1.00797e-06 tolerance=1e-06
+KNOT 199 axis=0 t=0.46875 score=7.31365e-06 spans=27,1
+REFIT 199 p=5 q=3 reason=Source distance unresolved: 1.00754e-06 tolerance=1e-06
+KNOT 199 axis=0 t=0.96875 score=6.45078e-06 spans=28,1
+REFIT 199 p=5 q=3 reason=Source distance unresolved: 1.00754e-06 tolerance=1e-06
+KNOT 199 axis=0 t=0.28125 score=6.43221e-06 spans=29,1
+REFIT 199 p=5 q=3 reason=Source distance unresolved: 1.00536e-06 tolerance=1e-06
+KNOT 199 axis=0 t=0.21875 score=6.44605e-06 spans=30,1
+REFIT 199 p=5 q=3 reason=Source distance unresolved: 1.12233e-06 tolerance=1e-06
+KNOT 199 axis=0 t=0.03125 score=5.01172e-06 spans=31,1
+REFIT 199 p=5 q=3 reason=Source distance unresolved: 1.00088e-06 tolerance=1e-06
+KNOT 199 axis=0 t=0.859375 score=1.8785e-06 spans=32,1
+REFIT 199 p=5 q=3 reason=Source distance unresolved: 1.00088e-06 tolerance=1e-06
+KNOT 199 axis=0 t=0.890625 score=2.11399e-06 spans=33,1
+REFIT 199 p=5 q=3 reason=Source distance unresolved: 1.00087e-06 tolerance=1e-06
+KNOT 199 axis=0 t=0.921875 score=2.20375e-06 spans=34,1
+REFIT 199 p=5 q=3 reason=Source distance unresolved: 1.00087e-06 tolerance=1e-06
+KNOT 199 axis=0 t=0.828125 score=2.22987e-06 spans=35,1
+REFIT 199 p=5 q=3 reason=Source distance unresolved: 1.00001e-06 tolerance=1e-06
+GENERATED extreme:199 source=2.16311e-06 tangent=0.000196174 pieces=110
+GENERATED extreme:200 source=5.95362e-12 tangent=7.93605e-10 pieces=38
+GENERATED extreme:201 source=2.6314e-07 tangent=9.1905e-06 pieces=26
+GENERATED extreme:202 source=3.83232e-12 tangent=1.7349e-09 pieces=45
+REFIT 203 p=3 q=5 reason=Source distance unresolved: 3.62178e-06 tolerance=1e-06
+KNOT 203 axis=1 t=0.5 score=0.00116156 spans=1,1
+REFIT 203 p=3 q=5 reason=Source distance unresolved: 1.84064e-06 tolerance=1e-06
+KNOT 203 axis=1 t=0.25 score=0.000211953 spans=1,2
+REFIT 203 p=3 q=5 reason=Source distance unresolved: 1.0094e-06 tolerance=1e-06
+KNOT 203 axis=1 t=0.75 score=0.000188041 spans=1,3
+REFIT 203 p=3 q=5 reason=Source distance unresolved: 1.10122e-06 tolerance=1e-06
+KNOT 203 axis=1 t=0.625 score=5.06516e-05 spans=1,4
+REFIT 203 p=3 q=5 reason=Source distance unresolved: 1.0519e-06 tolerance=1e-06
+KNOT 203 axis=1 t=0.375 score=4.30447e-05 spans=1,5
+REFIT 203 p=3 q=5 reason=Source distance unresolved: 1.00566e-06 tolerance=1e-06
+KNOT 203 axis=1 t=0.125 score=2.38309e-06 spans=1,6
+REFIT 203 p=3 q=5 reason=Source distance unresolved: 1.00036e-06 tolerance=1e-06
+KNOT 203 axis=1 t=0.875 score=2.25927e-06 spans=1,7
+GENERATED extreme:203 source=8.4294e-07 tangent=5.65418e-05 pieces=66
+GENERATED extreme:204 source=5.57264e-12 tangent=1.42486e-09 pieces=47
+REFIT 205 p=3 q=5 reason=Source distance unresolved: 3.53249e-05 tolerance=1e-06
+KNOT 205 axis=1 t=0.75 score=0.00646011 spans=1,2
+REFIT 205 p=3 q=5 reason=Source distance unresolved: 3.49556e-05 tolerance=1e-06
+KNOT 205 axis=1 t=0.25 score=0.00487787 spans=1,3
+REFIT 205 p=3 q=5 reason=Source distance unresolved: 7.67266e-06 tolerance=1e-06
+KNOT 205 axis=1 t=0.625 score=0.00141794 spans=1,4
+REFIT 205 p=3 q=5 reason=Source distance unresolved: 7.40402e-06 tolerance=1e-06
+KNOT 205 axis=1 t=0.375 score=0.000645199 spans=1,5
+REFIT 205 p=3 q=5 reason=Source distance unresolved: 5.20401e-06 tolerance=1e-06
+KNOT 205 axis=1 t=0.875 score=0.00058346 spans=1,6
+REFIT 205 p=3 q=5 reason=Source distance unresolved: 5.25125e-06 tolerance=1e-06
+KNOT 205 axis=1 t=0.125 score=0.000499715 spans=1,7
+REFIT 205 p=3 q=5 reason=Source distance unresolved: 1.19166e-06 tolerance=1e-06
+KNOT 205 axis=1 t=0.6875 score=0.000182327 spans=1,8
+REFIT 205 p=3 q=5 reason=Source distance unresolved: 1.21039e-06 tolerance=1e-06
+KNOT 205 axis=1 t=0.3125 score=0.000138258 spans=1,9
+REFIT 205 p=3 q=5 reason=Source distance unresolved: 1.70418e-06 tolerance=1e-06
+KNOT 205 axis=1 t=0.8125 score=0.000133366 spans=1,10
+REFIT 205 p=3 q=5 reason=Source distance unresolved: 1.72503e-06 tolerance=1e-06
+KNOT 205 axis=1 t=0.1875 score=0.000108671 spans=1,11
+REFIT 205 p=3 q=5 reason=Source distance unresolved: 1.02e-06 tolerance=1e-06
+KNOT 205 axis=1 t=0.5625 score=8.6515e-06 spans=1,12
+REFIT 205 p=3 q=5 reason=Source distance unresolved: 1.0161e-06 tolerance=1e-06
+KNOT 205 axis=1 t=0.4375 score=7.79688e-06 spans=1,13
+REFIT 205 p=3 q=5 reason=Source distance unresolved: 1.1718e-06 tolerance=1e-06
+KNOT 205 axis=1 t=0.9375 score=6.98289e-06 spans=1,14
+REFIT 205 p=3 q=5 reason=Source distance unresolved: 1.17157e-06 tolerance=1e-06
+KNOT 205 axis=1 t=0.0625 score=6.068e-06 spans=1,15
+REFIT 205 p=3 q=5 reason=Source distance unresolved: 1.00124e-06 tolerance=1e-06
+KNOT 205 axis=1 t=0.71875 score=2.09905e-06 spans=1,16
+REFIT 205 p=3 q=5 reason=Source distance unresolved: 1.00128e-06 tolerance=1e-06
+KNOT 205 axis=1 t=0.78125 score=2.36585e-06 spans=1,17
+REFIT 205 p=3 q=5 reason=Source distance unresolved: 1.00137e-06 tolerance=1e-06
+KNOT 205 axis=1 t=0.65625 score=2.44826e-06 spans=1,18
+REFIT 205 p=3 q=5 reason=Source distance unresolved: 1.0013e-06 tolerance=1e-06
+KNOT 205 axis=1 t=0.84375 score=2.46423e-06 spans=1,19
+REFIT 205 p=3 q=5 reason=Source distance unresolved: 1.00125e-06 tolerance=1e-06
+KNOT 205 axis=1 t=0.59375 score=1.81012e-06 spans=1,20
+REFIT 205 p=3 q=5 reason=Source distance unresolved: 1.00057e-06 tolerance=1e-06
+KNOT 205 axis=1 t=0.90625 score=1.72536e-06 spans=1,21
+REFIT 205 p=3 q=5 reason=Source distance unresolved: 1.00057e-06 tolerance=1e-06
+KNOT 205 axis=1 t=0.21875 score=1.70672e-06 spans=1,22
+REFIT 205 p=3 q=5 reason=Source distance unresolved: 1.00129e-06 tolerance=1e-06
+KNOT 205 axis=1 t=0.28125 score=1.91917e-06 spans=1,23
+REFIT 205 p=3 q=5 reason=Source distance unresolved: 1.00019e-06 tolerance=1e-06
+KNOT 205 axis=1 t=0.34375 score=1.98689e-06 spans=1,24
+REFIT 205 p=3 q=5 reason=Source distance unresolved: 1.00339e-06 tolerance=1e-06
+KNOT 205 axis=1 t=0.15625 score=2.00163e-06 spans=1,25
+REFIT 205 p=3 q=5 reason=Source distance unresolved: 1.00052e-06 tolerance=1e-06
+KNOT 205 axis=1 t=0.40625 score=1.49978e-06 spans=1,26
+GENERATED extreme:205 source=9.99927e-07 tangent=0.000216583 pieces=443
+GENERATED extreme:206 source=1.1695e-11 tangent=3.76604e-09 pieces=86
+REFIT 207 p=3 q=5 reason=Source distance unresolved: 7.12105e-05 tolerance=1e-06
+KNOT 207 axis=1 t=0.375 score=0.0189098 spans=1,4
+REFIT 207 p=3 q=5 reason=Source distance unresolved: 7.36169e-05 tolerance=1e-06
+KNOT 207 axis=1 t=0.625 score=0.0174661 spans=1,5
+REFIT 207 p=3 q=5 reason=Source distance unresolved: 7.22572e-05 tolerance=1e-06
+KNOT 207 axis=1 t=0.125 score=0.013674 spans=1,6
+REFIT 207 p=3 q=5 reason=Source distance unresolved: 1.50728e-05 tolerance=1e-06
+KNOT 207 axis=1 t=0.875 score=0.0101027 spans=1,7
+REFIT 207 p=3 q=5 reason=Source distance unresolved: 1.51213e-05 tolerance=1e-06
+KNOT 207 axis=1 t=0.1875 score=0.00324888 spans=1,8
+REFIT 207 p=3 q=5 reason=Source distance unresolved: 1.1149e-05 tolerance=1e-06
+KNOT 207 axis=1 t=0.4375 score=0.0030867 spans=1,9
+REFIT 207 p=3 q=5 reason=Source distance unresolved: 1.07912e-05 tolerance=1e-06
+KNOT 207 axis=1 t=0.6875 score=0.00278702 spans=1,10
+REFIT 207 p=3 q=5 reason=Source distance unresolved: 2.81622e-05 tolerance=1e-06
+KNOT 207 axis=1 t=0.0625 score=0.00141363 spans=1,11
+REFIT 207 p=3 q=5 reason=Source distance unresolved: 3.39394e-06 tolerance=1e-06
+KNOT 207 axis=1 t=0.8125 score=0.0013319 spans=1,12
+REFIT 207 p=3 q=5 reason=Source distance unresolved: 3.39951e-06 tolerance=1e-06
+KNOT 207 axis=1 t=0.3125 score=0.00132555 spans=1,13
+REFIT 207 p=3 q=5 reason=Source distance unresolved: 3.06256e-06 tolerance=1e-06
+KNOT 207 axis=1 t=0.5625 score=0.00117602 spans=1,14
+REFIT 207 p=3 q=5 reason=Source distance unresolved: 3.02222e-06 tolerance=1e-06
+KNOT 207 axis=1 t=0.9375 score=0.000965674 spans=1,15
+REFIT 207 p=3 q=5 reason=Source distance unresolved: 3.02196e-06 tolerance=1e-06
+KNOT 207 axis=1 t=0.15625 score=0.000409104 spans=1,16
+REFIT 207 p=3 q=5 reason=Source distance unresolved: 2.36281e-06 tolerance=1e-06
+KNOT 207 axis=1 t=0.40625 score=0.000373755 spans=1,17
+REFIT 207 p=3 q=5 reason=Source distance unresolved: 2.30661e-06 tolerance=1e-06
+KNOT 207 axis=1 t=0.65625 score=0.000336274 spans=1,18
+REFIT 207 p=3 q=5 reason=Source distance unresolved: 2.30627e-06 tolerance=1e-06
+KNOT 207 axis=1 t=0.09375 score=0.000305535 spans=1,19
+REFIT 207 p=3 q=5 reason=Source distance unresolved: 1.06886e-06 tolerance=1e-06
+KNOT 207 axis=1 t=0.34375 score=0.000291285 spans=1,20
+REFIT 207 p=3 q=5 reason=Source distance unresolved: 1.1398e-06 tolerance=1e-06
+KNOT 207 axis=1 t=0.84375 score=0.000277231 spans=1,21
+REFIT 207 p=3 q=5 reason=Source distance unresolved: 1.13981e-06 tolerance=1e-06
+KNOT 207 axis=1 t=0.59375 score=0.000259668 spans=1,22
+REFIT 207 p=3 q=5 reason=Source distance unresolved: 1.13927e-06 tolerance=1e-06
+KNOT 207 axis=1 t=0.90625 score=0.000220905 spans=1,23
+REFIT 207 p=3 q=5 reason=Source distance unresolved: 1.13927e-06 tolerance=1e-06
+KNOT 207 axis=1 t=0.21875 score=2.03151e-05 spans=1,24
+REFIT 207 p=3 q=5 reason=Source distance unresolved: 1.09906e-06 tolerance=1e-06
+KNOT 207 axis=1 t=0.28125 score=2.03851e-05 spans=1,25
+REFIT 207 p=3 q=5 reason=Source distance unresolved: 1.09799e-06 tolerance=1e-06
+KNOT 207 axis=1 t=0.46875 score=1.7711e-05 spans=1,26
+REFIT 207 p=3 q=5 reason=Source distance unresolved: 1.09796e-06 tolerance=1e-06
+KNOT 207 axis=1 t=0.53125 score=1.8284e-05 spans=1,27
+REFIT 207 p=3 q=5 reason=Source distance unresolved: 1.0979e-06 tolerance=1e-06
+KNOT 207 axis=1 t=0.03125 score=1.72726e-05 spans=1,28
+REFIT 207 p=3 q=5 reason=Source distance unresolved: 1.0074e-06 tolerance=1e-06
+KNOT 207 axis=1 t=0.71875 score=1.60663e-05 spans=1,29
+REFIT 207 p=3 q=5 reason=Source distance unresolved: 1.00742e-06 tolerance=1e-06
+KNOT 207 axis=1 t=0.78125 score=1.60957e-05 spans=1,30
+REFIT 207 p=3 q=5 reason=Source distance unresolved: 1.00742e-06 tolerance=1e-06
+KNOT 207 axis=1 t=0.96875 score=1.16984e-05 spans=1,31
+REFIT 207 p=3 q=5 reason=Source distance unresolved: 1.00742e-06 tolerance=1e-06
+KNOT 207 axis=1 t=0.140625 score=4.69624e-06 spans=1,32
+REFIT 207 p=3 q=5 reason=Source distance unresolved: 1.00545e-06 tolerance=1e-06
+KNOT 207 axis=1 t=0.109375 score=5.28497e-06 spans=1,33
+REFIT 207 p=3 q=5 reason=Source distance unresolved: 1.00369e-06 tolerance=1e-06
+KNOT 207 axis=1 t=0.078125 score=5.50938e-06 spans=1,34
+REFIT 207 p=3 q=5 reason=Source distance unresolved: 1.01417e-06 tolerance=1e-06
+KNOT 207 axis=1 t=0.171875 score=5.57468e-06 spans=1,35
+REFIT 207 p=3 q=5 reason=Source distance unresolved: 1.01789e-06 tolerance=1e-06
+GENERATED extreme:207 source=5.38841e-06 tangent=0.000196252 pieces=110
+GENERATED extreme:208 source=6.37909e-13 tangent=3.45781e-07 pieces=44
+GENERATED extreme:209 source=1.17115e-07 tangent=0.00190842 pieces=32
+GENERATED extreme:210 source=6.70122e-13 tangent=2.07104e-08 pieces=45
+GENERATED extreme:211 source=1.92246e-09 tangent=1.84601e-05 pieces=31
+GENERATED extreme:212 source=7.03596e-13 tangent=1.90357e-07 pieces=38
+GENERATED extreme:213 source=3.91632e-07 tangent=4.05209e-05 pieces=16
+GENERATED extreme:214 source=9.27251e-13 tangent=2.39313e-08 pieces=44
+GENERATED extreme:215 source=6.66833e-07 tangent=0.000105436 pieces=20
+GENERATED extreme:216 source=3.07769e-12 tangent=9.76481e-07 pieces=45
+GENERATED extreme:217 source=6.0695e-11 tangent=1.04533e-06 pieces=31
+GENERATED extreme:218 source=3.32642e-12 tangent=1.01136e-07 pieces=38
+GENERATED extreme:219 source=3.17062e-12 tangent=7.21493e-08 pieces=26
+GENERATED extreme:220 source=4.06476e-12 tangent=1.63875e-07 pieces=44
+GENERATED extreme:221 source=9.09558e-07 tangent=4.11907e-05 pieces=104
+GENERATED extreme:222 source=3.51715e-12 tangent=9.28084e-07 pieces=52
+REFIT 223 p=5 q=5 reason=Source distance unresolved: 1.00104e-06 tolerance=1e-06
+KNOT 223 axis=1 t=0.5 score=1.63585e-06 spans=1,1
+GENERATED extreme:223 source=6.67951e-07 tangent=1.99298e-05 pieces=27
+GENERATED extreme:224 source=1.88798e-11 tangent=5.98069e-06 pieces=38
+GENERATED extreme:225 source=1.69052e-11 tangent=5.04933e-06 pieces=26
+GENERATED extreme:226 source=2.02183e-11 tangent=6.21104e-07 pieces=44
+GENERATED extreme:227 source=1.82725e-11 tangent=3.08629e-07 pieces=28
+GENERATED extreme:228 source=1.97396e-11 tangent=7.90421e-06 pieces=52
+REFIT 229 p=5 q=5 reason=Source distance unresolved: 1.00997e-06 tolerance=1e-06
+KNOT 229 axis=0 t=0.5 score=3.50779e-06 spans=1,1
+GENERATED extreme:229 source=9.36299e-07 tangent=7.56882e-06 pieces=33
+GENERATED extreme:230 source=2.75548e-11 tangent=7.07715e-07 pieces=45
+REFIT 231 p=5 q=5 reason=Source distance unresolved: 1.01765e-06 tolerance=1e-06
+KNOT 231 axis=0 t=0.5 score=9.81161e-06 spans=1,1
+REFIT 231 p=5 q=5 reason=Source distance unresolved: 1.00126e-06 tolerance=1e-06
+KNOT 231 axis=0 t=0.75 score=1.02718e-06 spans=2,1
+REFIT 231 p=5 q=5 reason=Source distance unresolved: 1.00103e-06 tolerance=1e-06
+KNOT 231 axis=0 t=0.25 score=1.24827e-06 spans=3,1
+GENERATED extreme:231 source=2.93741e-07 tangent=9.26498e-07 pieces=26
+GENERATED extreme:232 source=4.94888e-11 tangent=1.39364e-05 pieces=44
+GENERATED extreme:233 source=4.22271e-11 tangent=6.7507e-06 pieces=28
+GENERATED extreme:234 source=5.4315e-11 tangent=2.01833e-06 pieces=45
+GENERATED extreme:235 source=4.91733e-11 tangent=1.43501e-06 pieces=31
+GENERATED extreme:236 source=6.59835e-11 tangent=2.04782e-06 pieces=45
+REFIT 237 p=5 q=5 reason=Source distance unresolved: 1.00095e-06 tolerance=1e-06
+KNOT 237 axis=1 t=0.5 score=9.35601e-06 spans=1,1
+REFIT 237 p=5 q=5 reason=Source distance unresolved: 1.00094e-06 tolerance=1e-06
+KNOT 237 axis=1 t=0.75 score=9.79475e-07 spans=1,2
+REFIT 237 p=5 q=5 reason=Source distance unresolved: 1.00047e-06 tolerance=1e-06
+KNOT 237 axis=1 t=0.25 score=1.19031e-06 spans=1,3
+GENERATED extreme:237 source=2.8003e-07 tangent=1.78295e-06 pieces=26
+GENERATED extreme:238 source=5.60342e-11 tangent=2.31339e-05 pieces=52
+REFIT 239 p=5 q=5 reason=Source distance unresolved: 1.06599e-06 tolerance=1e-06
+KNOT 239 axis=1 t=0.5 score=2.6172e-05 spans=1,1
+REFIT 239 p=5 q=5 reason=Source distance unresolved: 1.00237e-06 tolerance=1e-06
+KNOT 239 axis=1 t=0.25 score=2.73984e-06 spans=1,2
+REFIT 239 p=5 q=5 reason=Source distance unresolved: 1.00007e-06 tolerance=1e-06
+KNOT 239 axis=1 t=0.75 score=3.23418e-06 spans=1,3
+GENERATED extreme:239 source=7.83395e-07 tangent=2.04047e-05 pieces=32
+GENERATED extreme:240 source=6.19543e-14 tangent=1.00104e-08 pieces=45
+GENERATED extreme:241 source=9.62437e-10 tangent=1.8023e-05 pieces=21
+GENERATED extreme:242 source=5.8874e-13 tangent=2.17459e-07 pieces=38
+REFIT 243 p=5 q=5 reason=Source boundary tangent unresolved
+KNOT 243 axis=1 t=0.5 score=1.59976e-07 spans=1,1
+REFIT 243 p=5 q=5 reason=Source boundary tangent unresolved
+KNOT 243 axis=1 t=0.25 score=2.25524e-08 spans=1,2
+GENERATED extreme:243 source=1.40294e-07 tangent=0.00964623 pieces=25
+GENERATED extreme:244 source=5.66775e-12 tangent=2.15526e-06 pieces=44
+REFIT 245 p=5 q=5 reason=Source boundary tangent unresolved
+KNOT 245 axis=1 t=0.5 score=1.59976e-07 spans=1,1
+REFIT 245 p=5 q=5 reason=Source boundary tangent unresolved
+KNOT 245 axis=1 t=0.25 score=2.25525e-08 spans=1,2
+GENERATED extreme:245 source=1.55125e-07 tangent=0.00973071 pieces=30
+GENERATED extreme:246 source=5.80429e-11 tangent=1.89968e-05 pieces=45
+REFIT 247 p=5 q=5 reason=Source boundary tangent unresolved
+KNOT 247 axis=0 t=0.5 score=1.81047e-07 spans=1,1
+REFIT 247 p=5 q=5 reason=Source boundary tangent unresolved
+KNOT 247 axis=1 t=0.5 score=1.59976e-07 spans=2,1
+REFIT 247 p=5 q=5 reason=Source boundary tangent unresolved
+KNOT 247 axis=1 t=0.25 score=2.25525e-08 spans=2,2
+GENERATED extreme:247 source=2.68362e-07 tangent=0.00967623 pieces=29
+GENERATED extreme:248 source=1.02253e-14 tangent=2.36361e-09 pieces=38
+REFIT 249 p=5 q=5 reason=Source boundary tangent unresolved
+KNOT 249 axis=0 t=0.5 score=6.93439e-07 spans=1,1
+REFIT 249 p=5 q=5 reason=Source boundary tangent unresolved
+KNOT 249 axis=0 t=0.25 score=1.08398e-07 spans=2,1
+REFIT 249 p=5 q=5 reason=Source boundary tangent unresolved
+KNOT 249 axis=0 t=0.75 score=1.01941e-07 spans=3,1
+GENERATED extreme:249 source=4.62825e-07 tangent=0.00573349 pieces=20
+GENERATED extreme:250 source=1.18459e-13 tangent=7.91855e-09 pieces=44
+REFIT 251 p=5 q=5 reason=Source distance unresolved: 1.00476e-06 tolerance=1e-06
+KNOT 251 axis=0 t=0.5 score=2.7652e-06 spans=1,1
+REFIT 251 p=5 q=5 reason=Source distance unresolved: 1.00483e-06 tolerance=1e-06
+KNOT 251 axis=1 t=0.5 score=2.62028e-06 spans=2,1
+REFIT 251 p=5 q=5 reason=Source boundary tangent unresolved
+KNOT 251 axis=1 t=0.25 score=4.09598e-07 spans=2,2
+REFIT 251 p=5 q=5 reason=Source boundary tangent unresolved
+KNOT 251 axis=1 t=0.75 score=3.852e-07 spans=2,3
+GENERATED extreme:251 source=4.5403e-07 tangent=0.00363604 pieces=32
+GENERATED extreme:252 source=1.0127e-12 tangent=9.60974e-09 pieces=52
+REFIT 253 p=5 q=5 reason=Source distance unresolved: 1.00739e-06 tolerance=1e-06
+KNOT 253 axis=0 t=0.5 score=2.7652e-05 spans=1,1
+REFIT 253 p=5 q=5 reason=Source distance unresolved: 1.00739e-06 tolerance=1e-06
+KNOT 253 axis=1 t=0.5 score=2.18886e-05 spans=2,1
+REFIT 253 p=5 q=5 reason=Source distance unresolved: 1.01415e-06 tolerance=1e-06
+KNOT 253 axis=1 t=0.25 score=3.42161e-06 spans=2,2
+REFIT 253 p=5 q=5 reason=Source distance unresolved: 1.00038e-06 tolerance=1e-06
+KNOT 253 axis=1 t=0.75 score=3.21779e-06 spans=2,3
+REFIT 253 p=5 q=5 reason=Source distance unresolved: 1.00036e-06 tolerance=1e-06
+KNOT 253 axis=0 t=0.75 score=8.63854e-07 spans=2,4
+REFIT 253 p=5 q=5 reason=Source distance unresolved: 1.00036e-06 tolerance=1e-06
+KNOT 253 axis=0 t=0.25 score=9.82282e-07 spans=3,4
+GENERATED extreme:253 source=7.18171e-07 tangent=0.00364701 pieces=64
+GENERATED extreme:254 source=1.12462e-11 tangent=9.09237e-09 pieces=45
+REFIT 255 p=5 q=5 reason=Source distance unresolved: 1.42334e-06 tolerance=1e-06
+KNOT 255 axis=0 t=0.5 score=0.00027652 spans=1,1
+REFIT 255 p=5 q=5 reason=Source distance unresolved: 1.42716e-06 tolerance=1e-06
+KNOT 255 axis=1 t=0.5 score=0.000214572 spans=2,1
+REFIT 255 p=5 q=5 reason=Source distance unresolved: 1.2286e-06 tolerance=1e-06
+KNOT 255 axis=1 t=0.75 score=3.35417e-05 spans=2,2
+REFIT 255 p=5 q=5 reason=Source distance unresolved: 1.21908e-06 tolerance=1e-06
+KNOT 255 axis=1 t=0.25 score=3.28848e-05 spans=2,3
+REFIT 255 p=5 q=5 reason=Source distance unresolved: 1.01402e-06 tolerance=1e-06
+KNOT 255 axis=0 t=0.75 score=8.63854e-06 spans=2,4
+REFIT 255 p=5 q=5 reason=Source distance unresolved: 1.0176e-06 tolerance=1e-06
+KNOT 255 axis=0 t=0.25 score=9.82282e-06 spans=3,4
+REFIT 255 p=5 q=5 reason=Source distance unresolved: 1.00052e-06 tolerance=1e-06
+KNOT 255 axis=1 t=0.375 score=7.74814e-06 spans=4,4
+REFIT 255 p=5 q=5 reason=Source distance unresolved: 1.00395e-06 tolerance=1e-06
+KNOT 255 axis=1 t=0.625 score=7.19865e-06 spans=4,5
+REFIT 255 p=5 q=5 reason=Source distance unresolved: 1.0004e-06 tolerance=1e-06
+KNOT 255 axis=0 t=0.625 score=1.9981e-06 spans=4,6
+REFIT 255 p=5 q=5 reason=Source distance unresolved: 1.00022e-06 tolerance=1e-06
+KNOT 255 axis=0 t=0.375 score=2.13387e-06 spans=5,6
+GENERATED extreme:255 source=9.97673e-07 tangent=0.00128039 pieces=114
+GENERATED extreme:256 source=7.41071e-15 tangent=3.24804e-09 pieces=44
+GENERATED extreme:257 source=7.19077e-08 tangent=0.00466445 pieces=20
+GENERATED extreme:258 source=8.29495e-14 tangent=2.40365e-09 pieces=45
+GENERATED extreme:259 source=7.4868e-07 tangent=0.00487837 pieces=21
+GENERATED extreme:260 source=7.11546e-13 tangent=2.1378e-09 pieces=38
+REFIT 261 p=5 q=5 reason=Source distance unresolved: 1.0022e-06 tolerance=1e-06
+KNOT 261 axis=1 t=0.5 score=1.48946e-06 spans=1,1
+REFIT 261 p=5 q=5 reason=Source distance unresolved: 1.00031e-06 tolerance=1e-06
+KNOT 261 axis=0 t=0.5 score=7.82058e-07 spans=1,2
+GENERATED extreme:261 source=7.60741e-07 tangent=0.00103634 pieces=36
+GENERATED extreme:262 source=7.7273e-12 tangent=1.98366e-09 pieces=52
+REFIT 263 p=5 q=5 reason=Source distance unresolved: 1.00772e-06 tolerance=1e-06
+KNOT 263 axis=1 t=0.5 score=1.48946e-05 spans=1,1
+REFIT 263 p=5 q=5 reason=Source distance unresolved: 1.00499e-06 tolerance=1e-06
+KNOT 263 axis=0 t=0.5 score=7.82058e-06 spans=1,2
+REFIT 263 p=5 q=5 reason=Source distance unresolved: 1.00103e-06 tolerance=1e-06
+KNOT 263 axis=1 t=0.75 score=1.72771e-06 spans=2,2
+REFIT 263 p=5 q=5 reason=Source distance unresolved: 1.00471e-06 tolerance=1e-06
+KNOT 263 axis=1 t=0.25 score=1.96456e-06 spans=2,3
+REFIT 263 p=5 q=5 reason=Source distance unresolved: 1.00002e-06 tolerance=1e-06
+KNOT 263 axis=0 t=0.75 score=8.4144e-07 spans=2,4
+REFIT 263 p=5 q=5 reason=Source distance unresolved: 1.00001e-06 tolerance=1e-06
+KNOT 263 axis=0 t=0.25 score=1.00332e-06 spans=3,4
+GENERATED extreme:263 source=7.19958e-07 tangent=4.52352e-05 pieces=32
+GENERATED extreme:264 source=6.4383e-14 tangent=2.12297e-08 pieces=45
+GENERATED extreme:265 source=2.11949e-13 tangent=3.35795e-08 pieces=21
+GENERATED extreme:266 source=6.22414e-13 tangent=9.80441e-08 pieces=38
+GENERATED extreme:267 source=6.08933e-13 tangent=7.63004e-08 pieces=16
+GENERATED extreme:268 source=6.63517e-12 tangent=1.6706e-07 pieces=44
+GENERATED extreme:269 source=6.46941e-12 tangent=1.16424e-07 pieces=20
+GENERATED extreme:270 source=6.52629e-11 tangent=1.12732e-07 pieces=45
+GENERATED extreme:271 source=6.54903e-11 tangent=8.61126e-08 pieces=21
+GENERATED extreme:272 source=4.0452e-11 tangent=1.66834e-05 pieces=44
+GENERATED extreme:273 source=2.5949e-11 tangent=7.32281e-06 pieces=44
+GENERATED extreme:274 source=4.04281e-11 tangent=1.66833e-05 pieces=44
+GENERATED extreme:275 source=2.58234e-11 tangent=7.32718e-06 pieces=44
+GENERATED extreme:276 source=6.50282e-11 tangent=1.73972e-05 pieces=44
+GENERATED extreme:277 source=3.92048e-11 tangent=7.6304e-06 pieces=44
+GENERATED extreme:278 source=3.76341e-10 tangent=2.81647e-05 pieces=44
+GENERATED extreme:279 source=2.16607e-10 tangent=2.02909e-05 pieces=44
+GENERATED extreme:280 source=3.6402e-13 tangent=1.293e-08 pieces=38
+GENERATED extreme:281 source=6.1165e-07 tangent=0.000143414 pieces=24
+GENERATED extreme:282 source=5.72107e-13 tangent=1.33643e-08 pieces=38
+GENERATED extreme:283 source=6.11651e-07 tangent=0.000143414 pieces=24
+GENERATED extreme:284 source=2.29973e-11 tangent=9.3348e-08 pieces=38
+GENERATED extreme:285 source=6.11663e-07 tangent=0.000143415 pieces=24
+GENERATED extreme:286 source=2.68622e-10 tangent=1.90382e-06 pieces=38
+GENERATED extreme:287 source=6.11696e-07 tangent=0.000143407 pieces=24
+GENERATED extreme:288 source=5.81711e-12 tangent=7.66927e-08 pieces=62
+REFIT 289 p=3 q=5 reason=Source distance unresolved: 3.04669e-05 tolerance=1e-06
+KNOT 289 axis=1 t=0.625 score=0.00325229 spans=1,4
+REFIT 289 p=3 q=5 reason=Source distance unresolved: 3.18775e-05 tolerance=1e-06
+KNOT 289 axis=1 t=0.375 score=0.00336316 spans=1,5
+REFIT 289 p=3 q=5 reason=Source distance unresolved: 3.10238e-05 tolerance=1e-06
+KNOT 289 axis=1 t=0.875 score=0.00213869 spans=1,6
+REFIT 289 p=3 q=5 reason=Source distance unresolved: 3.10361e-05 tolerance=1e-06
+KNOT 289 axis=1 t=0.125 score=0.0021424 spans=1,7
+REFIT 289 p=3 q=5 reason=Source distance unresolved: 6.43933e-06 tolerance=1e-06
+KNOT 289 axis=1 t=0.6875 score=0.000528964 spans=1,8
+REFIT 289 p=3 q=5 reason=Source distance unresolved: 6.46284e-06 tolerance=1e-06
+KNOT 289 axis=1 t=0.3125 score=0.000542953 spans=1,9
+REFIT 289 p=3 q=5 reason=Source distance unresolved: 6.45463e-06 tolerance=1e-06
+KNOT 289 axis=1 t=0.4375 score=0.000431117 spans=1,10
+REFIT 289 p=3 q=5 reason=Source distance unresolved: 8.747e-06 tolerance=1e-06
+KNOT 289 axis=1 t=0.8125 score=0.000288674 spans=1,11
+REFIT 289 p=3 q=5 reason=Source distance unresolved: 8.7482e-06 tolerance=1e-06
+KNOT 289 axis=1 t=0.1875 score=0.000263747 spans=1,12
+REFIT 289 p=3 q=5 reason=Source distance unresolved: 6.3381e-06 tolerance=1e-06
+KNOT 289 axis=1 t=0.5625 score=0.000224124 spans=1,13
+REFIT 289 p=3 q=5 reason=Source distance unresolved: 6.32024e-06 tolerance=1e-06
+KNOT 289 axis=1 t=0.0625 score=0.000217405 spans=1,14
+REFIT 289 p=3 q=5 reason=Source distance unresolved: 1.46672e-06 tolerance=1e-06
+KNOT 289 axis=1 t=0.9375 score=0.000206883 spans=1,15
+REFIT 289 p=3 q=5 reason=Source distance unresolved: 1.46653e-06 tolerance=1e-06
+KNOT 289 axis=1 t=0.34375 score=6.40859e-05 spans=1,16
+REFIT 289 p=3 q=5 reason=Source distance unresolved: 1.00711e-06 tolerance=1e-06
+KNOT 289 axis=1 t=0.65625 score=6.4381e-05 spans=1,17
+REFIT 289 p=3 q=5 reason=Source distance unresolved: 1.00673e-06 tolerance=1e-06
+KNOT 289 axis=1 t=0.15625 score=5.94017e-05 spans=1,18
+REFIT 289 p=3 q=5 reason=Source distance unresolved: 1.09616e-06 tolerance=1e-06
+KNOT 289 axis=1 t=0.84375 score=5.94039e-05 spans=1,19
+REFIT 289 p=3 q=5 reason=Source distance unresolved: 1.0962e-06 tolerance=1e-06
+KNOT 289 axis=1 t=0.40625 score=5.29248e-05 spans=1,20
+REFIT 289 p=3 q=5 reason=Source distance unresolved: 1.10781e-06 tolerance=1e-06
+KNOT 289 axis=1 t=0.59375 score=4.94152e-05 spans=1,21
+REFIT 289 p=3 q=5 reason=Source distance unresolved: 1.10733e-06 tolerance=1e-06
+KNOT 289 axis=1 t=0.90625 score=4.73476e-05 spans=1,22
+REFIT 289 p=3 q=5 reason=Source distance unresolved: 1.10732e-06 tolerance=1e-06
+KNOT 289 axis=1 t=0.09375 score=4.73475e-05 spans=1,23
+REFIT 289 p=3 q=5 reason=Source distance unresolved: 1.02049e-06 tolerance=1e-06
+KNOT 289 axis=1 t=0.28125 score=3.13073e-06 spans=1,24
+REFIT 289 p=3 q=5 reason=Source distance unresolved: 1.01806e-06 tolerance=1e-06
+KNOT 289 axis=1 t=0.21875 score=3.47583e-06 spans=1,25
+REFIT 289 p=3 q=5 reason=Source distance unresolved: 1.05473e-06 tolerance=1e-06
+KNOT 289 axis=1 t=0.71875 score=3.12861e-06 spans=1,26
+REFIT 289 p=3 q=5 reason=Source distance unresolved: 1.05473e-06 tolerance=1e-06
+KNOT 289 axis=1 t=0.78125 score=3.47056e-06 spans=1,27
+REFIT 289 p=3 q=5 reason=Source distance unresolved: 1.05473e-06 tolerance=1e-06
+KNOT 289 axis=1 t=0.46875 score=2.9267e-06 spans=1,28
+REFIT 289 p=3 q=5 reason=Source distance unresolved: 1.05472e-06 tolerance=1e-06
+KNOT 289 axis=1 t=0.53125 score=3.36418e-06 spans=1,29
+REFIT 289 p=3 q=5 reason=Source distance unresolved: 1.05465e-06 tolerance=1e-06
+KNOT 289 axis=1 t=0.03125 score=2.68419e-06 spans=1,30
+REFIT 289 p=3 q=5 reason=Rational source certificate budget exhausted
+KNOT 289 axis=1 t=0.96875 score=2.50617e-06 spans=1,31
+GENERATED extreme:289 source=9.25156e-07 tangent=7.64042e-05 pieces=98
+GENERATED extreme:290 source=5.88724e-12 tangent=7.72966e-08 pieces=62
+REFIT 291 p=3 q=5 reason=Source distance unresolved: 3.04669e-05 tolerance=1e-06
+KNOT 291 axis=1 t=0.625 score=0.00325229 spans=1,4
+REFIT 291 p=3 q=5 reason=Source distance unresolved: 3.18775e-05 tolerance=1e-06
+KNOT 291 axis=1 t=0.375 score=0.00336316 spans=1,5
+REFIT 291 p=3 q=5 reason=Source distance unresolved: 3.10238e-05 tolerance=1e-06
+KNOT 291 axis=1 t=0.125 score=0.00213869 spans=1,6
+REFIT 291 p=3 q=5 reason=Source distance unresolved: 6.41086e-06 tolerance=1e-06
+KNOT 291 axis=1 t=0.875 score=0.0021424 spans=1,7
+REFIT 291 p=3 q=5 reason=Source distance unresolved: 6.43933e-06 tolerance=1e-06
+KNOT 291 axis=1 t=0.3125 score=0.000528964 spans=1,8
+REFIT 291 p=3 q=5 reason=Source distance unresolved: 6.46794e-06 tolerance=1e-06
+KNOT 291 axis=1 t=0.6875 score=0.000542953 spans=1,9
+REFIT 291 p=3 q=5 reason=Source distance unresolved: 6.45463e-06 tolerance=1e-06
+KNOT 291 axis=1 t=0.5625 score=0.000431117 spans=1,10
+REFIT 291 p=3 q=5 reason=Source distance unresolved: 8.86594e-06 tolerance=1e-06
+KNOT 291 axis=1 t=0.1875 score=0.000288674 spans=1,11
+REFIT 291 p=3 q=5 reason=Source distance unresolved: 6.25673e-06 tolerance=1e-06
+KNOT 291 axis=1 t=0.8125 score=0.000263748 spans=1,12
+REFIT 291 p=3 q=5 reason=Source distance unresolved: 6.25571e-06 tolerance=1e-06
+KNOT 291 axis=1 t=0.4375 score=0.000224082 spans=1,13
+REFIT 291 p=3 q=5 reason=Source distance unresolved: 6.32024e-06 tolerance=1e-06
+KNOT 291 axis=1 t=0.0625 score=0.000217405 spans=1,14
+REFIT 291 p=3 q=5 reason=Source distance unresolved: 1.46672e-06 tolerance=1e-06
+KNOT 291 axis=1 t=0.9375 score=0.000206883 spans=1,15
+REFIT 291 p=3 q=5 reason=Source distance unresolved: 1.46653e-06 tolerance=1e-06
+KNOT 291 axis=1 t=0.34375 score=6.40859e-05 spans=1,16
+REFIT 291 p=3 q=5 reason=Source distance unresolved: 1.00711e-06 tolerance=1e-06
+KNOT 291 axis=1 t=0.65625 score=6.4381e-05 spans=1,17
+REFIT 291 p=3 q=5 reason=Source distance unresolved: 1.00673e-06 tolerance=1e-06
+KNOT 291 axis=1 t=0.15625 score=5.94017e-05 spans=1,18
+REFIT 291 p=3 q=5 reason=Source distance unresolved: 1.09616e-06 tolerance=1e-06
+KNOT 291 axis=1 t=0.84375 score=5.94039e-05 spans=1,19
+REFIT 291 p=3 q=5 reason=Source distance unresolved: 1.0962e-06 tolerance=1e-06
+KNOT 291 axis=1 t=0.59375 score=5.29248e-05 spans=1,20
+REFIT 291 p=3 q=5 reason=Source distance unresolved: 1.09715e-06 tolerance=1e-06
+KNOT 291 axis=1 t=0.40625 score=4.94152e-05 spans=1,21
+REFIT 291 p=3 q=5 reason=Source distance unresolved: 1.10733e-06 tolerance=1e-06
+KNOT 291 axis=1 t=0.90625 score=4.73476e-05 spans=1,22
+REFIT 291 p=3 q=5 reason=Source distance unresolved: 1.10732e-06 tolerance=1e-06
+KNOT 291 axis=1 t=0.09375 score=4.73475e-05 spans=1,23
+REFIT 291 p=3 q=5 reason=Source distance unresolved: 1.02049e-06 tolerance=1e-06
+KNOT 291 axis=1 t=0.28125 score=3.13074e-06 spans=1,24
+REFIT 291 p=3 q=5 reason=Source distance unresolved: 1.01806e-06 tolerance=1e-06
+KNOT 291 axis=1 t=0.21875 score=3.47583e-06 spans=1,25
+REFIT 291 p=3 q=5 reason=Source distance unresolved: 1.05473e-06 tolerance=1e-06
+KNOT 291 axis=1 t=0.71875 score=3.12861e-06 spans=1,26
+REFIT 291 p=3 q=5 reason=Source distance unresolved: 1.05473e-06 tolerance=1e-06
+KNOT 291 axis=1 t=0.78125 score=3.47056e-06 spans=1,27
+REFIT 291 p=3 q=5 reason=Source distance unresolved: 1.05473e-06 tolerance=1e-06
+KNOT 291 axis=1 t=0.46875 score=2.9267e-06 spans=1,28
+REFIT 291 p=3 q=5 reason=Source distance unresolved: 1.05472e-06 tolerance=1e-06
+KNOT 291 axis=1 t=0.53125 score=3.36418e-06 spans=1,29
+REFIT 291 p=3 q=5 reason=Source distance unresolved: 1.05465e-06 tolerance=1e-06
+KNOT 291 axis=1 t=0.03125 score=2.68419e-06 spans=1,30
+REFIT 291 p=3 q=5 reason=Rational source certificate budget exhausted
+KNOT 291 axis=1 t=0.96875 score=2.50617e-06 spans=1,31
+GENERATED extreme:291 source=9.25156e-07 tangent=7.64042e-05 pieces=98
+GENERATED extreme:292 source=3.79525e-11 tangent=1.87867e-07 pieces=62
+REFIT 293 p=3 q=5 reason=Source distance unresolved: 3.0467e-05 tolerance=1e-06
+KNOT 293 axis=1 t=0.375 score=0.00325229 spans=1,4
+REFIT 293 p=3 q=5 reason=Source distance unresolved: 3.17573e-05 tolerance=1e-06
+KNOT 293 axis=1 t=0.625 score=0.00336316 spans=1,5
+REFIT 293 p=3 q=5 reason=Source distance unresolved: 3.10238e-05 tolerance=1e-06
+KNOT 293 axis=1 t=0.125 score=0.00213869 spans=1,6
+REFIT 293 p=3 q=5 reason=Source distance unresolved: 6.41085e-06 tolerance=1e-06
+KNOT 293 axis=1 t=0.875 score=0.0021424 spans=1,7
+REFIT 293 p=3 q=5 reason=Source distance unresolved: 6.43932e-06 tolerance=1e-06
+KNOT 293 axis=1 t=0.6875 score=0.000528964 spans=1,8
+REFIT 293 p=3 q=5 reason=Source distance unresolved: 6.46284e-06 tolerance=1e-06
+KNOT 293 axis=1 t=0.3125 score=0.000542953 spans=1,9
+REFIT 293 p=3 q=5 reason=Source distance unresolved: 6.45463e-06 tolerance=1e-06
+KNOT 293 axis=1 t=0.5625 score=0.000431117 spans=1,10
+REFIT 293 p=3 q=5 reason=Source distance unresolved: 8.86593e-06 tolerance=1e-06
+KNOT 293 axis=1 t=0.1875 score=0.000288674 spans=1,11
+REFIT 293 p=3 q=5 reason=Source distance unresolved: 6.25673e-06 tolerance=1e-06
+KNOT 293 axis=1 t=0.8125 score=0.000263748 spans=1,12
+REFIT 293 p=3 q=5 reason=Source distance unresolved: 6.25571e-06 tolerance=1e-06
+KNOT 293 axis=1 t=0.4375 score=0.000224082 spans=1,13
+REFIT 293 p=3 q=5 reason=Source distance unresolved: 6.32024e-06 tolerance=1e-06
+KNOT 293 axis=1 t=0.0625 score=0.000217405 spans=1,14
+REFIT 293 p=3 q=5 reason=Source distance unresolved: 1.46672e-06 tolerance=1e-06
+KNOT 293 axis=1 t=0.9375 score=0.000206883 spans=1,15
+REFIT 293 p=3 q=5 reason=Source distance unresolved: 1.46653e-06 tolerance=1e-06
+KNOT 293 axis=1 t=0.34375 score=6.40859e-05 spans=1,16
+REFIT 293 p=3 q=5 reason=Source distance unresolved: 1.00711e-06 tolerance=1e-06
+KNOT 293 axis=1 t=0.65625 score=6.4381e-05 spans=1,17
+REFIT 293 p=3 q=5 reason=Source distance unresolved: 1.00673e-06 tolerance=1e-06
+KNOT 293 axis=1 t=0.15625 score=5.94018e-05 spans=1,18
+REFIT 293 p=3 q=5 reason=Source distance unresolved: 1.09615e-06 tolerance=1e-06
+KNOT 293 axis=1 t=0.84375 score=5.94039e-05 spans=1,19
+REFIT 293 p=3 q=5 reason=Source distance unresolved: 1.0962e-06 tolerance=1e-06
+KNOT 293 axis=1 t=0.40625 score=5.29248e-05 spans=1,20
+REFIT 293 p=3 q=5 reason=Source distance unresolved: 1.10781e-06 tolerance=1e-06
+KNOT 293 axis=1 t=0.59375 score=4.94152e-05 spans=1,21
+REFIT 293 p=3 q=5 reason=Source distance unresolved: 1.10732e-06 tolerance=1e-06
+KNOT 293 axis=1 t=0.09375 score=4.73476e-05 spans=1,22
+REFIT 293 p=3 q=5 reason=Source distance unresolved: 1.02049e-06 tolerance=1e-06
+KNOT 293 axis=1 t=0.90625 score=4.73475e-05 spans=1,23
+REFIT 293 p=3 q=5 reason=Source distance unresolved: 1.02049e-06 tolerance=1e-06
+KNOT 293 axis=1 t=0.28125 score=3.13076e-06 spans=1,24
+REFIT 293 p=3 q=5 reason=Source distance unresolved: 1.01805e-06 tolerance=1e-06
+KNOT 293 axis=1 t=0.21875 score=3.47585e-06 spans=1,25
+REFIT 293 p=3 q=5 reason=Source distance unresolved: 1.05472e-06 tolerance=1e-06
+KNOT 293 axis=1 t=0.71875 score=3.12863e-06 spans=1,26
+REFIT 293 p=3 q=5 reason=Source distance unresolved: 1.05473e-06 tolerance=1e-06
+KNOT 293 axis=1 t=0.78125 score=3.4706e-06 spans=1,27
+REFIT 293 p=3 q=5 reason=Source distance unresolved: 1.05473e-06 tolerance=1e-06
+KNOT 293 axis=1 t=0.46875 score=2.92671e-06 spans=1,28
+REFIT 293 p=3 q=5 reason=Source distance unresolved: 1.05471e-06 tolerance=1e-06
+KNOT 293 axis=1 t=0.53125 score=3.36419e-06 spans=1,29
+REFIT 293 p=3 q=5 reason=Source distance unresolved: 1.05465e-06 tolerance=1e-06
+KNOT 293 axis=1 t=0.03125 score=2.6842e-06 spans=1,30
+REFIT 293 p=3 q=5 reason=Rational source certificate budget exhausted
+KNOT 293 axis=1 t=0.96875 score=2.5062e-06 spans=1,31
+GENERATED extreme:293 source=9.2516e-07 tangent=7.64042e-05 pieces=98
+GENERATED extreme:294 source=3.87334e-10 tangent=8.16214e-07 pieces=62
+REFIT 295 p=3 q=5 reason=Source distance unresolved: 3.04669e-05 tolerance=1e-06
+KNOT 295 axis=1 t=0.625 score=0.00325229 spans=1,4
+REFIT 295 p=3 q=5 reason=Source distance unresolved: 3.18775e-05 tolerance=1e-06
+KNOT 295 axis=1 t=0.375 score=0.00336316 spans=1,5
+REFIT 295 p=3 q=5 reason=Source distance unresolved: 3.10238e-05 tolerance=1e-06
+KNOT 295 axis=1 t=0.875 score=0.00213869 spans=1,6
+REFIT 295 p=3 q=5 reason=Source distance unresolved: 3.10361e-05 tolerance=1e-06
+KNOT 295 axis=1 t=0.125 score=0.0021424 spans=1,7
+REFIT 295 p=3 q=5 reason=Source distance unresolved: 6.43935e-06 tolerance=1e-06
+KNOT 295 axis=1 t=0.3125 score=0.000528964 spans=1,8
+REFIT 295 p=3 q=5 reason=Source distance unresolved: 6.46796e-06 tolerance=1e-06
+KNOT 295 axis=1 t=0.6875 score=0.000542953 spans=1,9
+REFIT 295 p=3 q=5 reason=Source distance unresolved: 6.45465e-06 tolerance=1e-06
+KNOT 295 axis=1 t=0.4375 score=0.000431117 spans=1,10
+REFIT 295 p=3 q=5 reason=Source distance unresolved: 8.74702e-06 tolerance=1e-06
+KNOT 295 axis=1 t=0.8125 score=0.000288674 spans=1,11
+REFIT 295 p=3 q=5 reason=Source distance unresolved: 8.74823e-06 tolerance=1e-06
+KNOT 295 axis=1 t=0.1875 score=0.000263747 spans=1,12
+REFIT 295 p=3 q=5 reason=Source distance unresolved: 6.33812e-06 tolerance=1e-06
+KNOT 295 axis=1 t=0.5625 score=0.000224124 spans=1,13
+REFIT 295 p=3 q=5 reason=Source distance unresolved: 6.32026e-06 tolerance=1e-06
+KNOT 295 axis=1 t=0.0625 score=0.000217405 spans=1,14
+REFIT 295 p=3 q=5 reason=Source distance unresolved: 1.4667e-06 tolerance=1e-06
+KNOT 295 axis=1 t=0.9375 score=0.000206883 spans=1,15
+REFIT 295 p=3 q=5 reason=Source distance unresolved: 1.46652e-06 tolerance=1e-06
+KNOT 295 axis=1 t=0.34375 score=6.40861e-05 spans=1,16
+REFIT 295 p=3 q=5 reason=Source distance unresolved: 1.0071e-06 tolerance=1e-06
+KNOT 295 axis=1 t=0.65625 score=6.4381e-05 spans=1,17
+REFIT 295 p=3 q=5 reason=Source distance unresolved: 1.00672e-06 tolerance=1e-06
+KNOT 295 axis=1 t=0.84375 score=5.94019e-05 spans=1,18
+REFIT 295 p=3 q=5 reason=Source distance unresolved: 1.00669e-06 tolerance=1e-06
+KNOT 295 axis=1 t=0.15625 score=5.94041e-05 spans=1,19
+REFIT 295 p=3 q=5 reason=Source distance unresolved: 1.09622e-06 tolerance=1e-06
+KNOT 295 axis=1 t=0.59375 score=5.29249e-05 spans=1,20
+REFIT 295 p=3 q=5 reason=Source distance unresolved: 1.09717e-06 tolerance=1e-06
+KNOT 295 axis=1 t=0.40625 score=4.94153e-05 spans=1,21
+REFIT 295 p=3 q=5 reason=Source distance unresolved: 1.10734e-06 tolerance=1e-06
+KNOT 295 axis=1 t=0.90625 score=4.73476e-05 spans=1,22
+REFIT 295 p=3 q=5 reason=Source distance unresolved: 1.10734e-06 tolerance=1e-06
+KNOT 295 axis=1 t=0.09375 score=4.73474e-05 spans=1,23
+REFIT 295 p=3 q=5 reason=Source distance unresolved: 1.02053e-06 tolerance=1e-06
+KNOT 295 axis=1 t=0.28125 score=3.13096e-06 spans=1,24
+REFIT 295 p=3 q=5 reason=Source distance unresolved: 1.01809e-06 tolerance=1e-06
+KNOT 295 axis=1 t=0.21875 score=3.47585e-06 spans=1,25
+REFIT 295 p=3 q=5 reason=Source distance unresolved: 1.05476e-06 tolerance=1e-06
+KNOT 295 axis=1 t=0.71875 score=3.12901e-06 spans=1,26
+REFIT 295 p=3 q=5 reason=Source distance unresolved: 1.05477e-06 tolerance=1e-06
+KNOT 295 axis=1 t=0.78125 score=3.47074e-06 spans=1,27
+REFIT 295 p=3 q=5 reason=Source distance unresolved: 1.05477e-06 tolerance=1e-06
+KNOT 295 axis=1 t=0.46875 score=2.927e-06 spans=1,28
+REFIT 295 p=3 q=5 reason=Source distance unresolved: 1.05476e-06 tolerance=1e-06
+KNOT 295 axis=1 t=0.53125 score=3.36443e-06 spans=1,29
+REFIT 295 p=3 q=5 reason=Source distance unresolved: 1.05469e-06 tolerance=1e-06
+KNOT 295 axis=1 t=0.03125 score=2.68438e-06 spans=1,30
+REFIT 295 p=3 q=5 reason=Rational source certificate budget exhausted
+KNOT 295 axis=1 t=0.96875 score=2.50629e-06 spans=1,31
+GENERATED extreme:295 source=9.25196e-07 tangent=7.64047e-05 pieces=98
+GENERATED extreme:296 source=1.08398e-13 tangent=9.64647e-10 pieces=33
+REFIT 297 p=5 q=5 reason=Source distance unresolved: 1.00007e-06 tolerance=1e-06
+KNOT 297 axis=1 t=0.5 score=1.75478e-06 spans=1,1
+GENERATED extreme:297 source=9.8222e-07 tangent=0.00184627 pieces=18
+GENERATED extreme:298 source=3.06054e-13 tangent=1.08245e-09 pieces=33
+REFIT 299 p=5 q=5 reason=Source distance unresolved: 1.00006e-06 tolerance=1e-06
+KNOT 299 axis=1 t=0.5 score=1.75478e-06 spans=1,1
+GENERATED extreme:299 source=9.8222e-07 tangent=0.00184627 pieces=18
+GENERATED extreme:300 source=2.48277e-11 tangent=5.69741e-08 pieces=33
+REFIT 301 p=5 q=5 reason=Source distance unresolved: 1.00007e-06 tolerance=1e-06
+KNOT 301 axis=1 t=0.5 score=1.75479e-06 spans=1,1
+GENERATED extreme:301 source=9.82223e-07 tangent=0.00184627 pieces=18
+GENERATED extreme:302 source=2.81365e-10 tangent=9.58844e-07 pieces=33
+REFIT 303 p=5 q=5 reason=Source distance unresolved: 1.00008e-06 tolerance=1e-06
+KNOT 303 axis=1 t=0.5 score=1.75465e-06 spans=1,1
+GENERATED extreme:303 source=9.82269e-07 tangent=0.00184638 pieces=18
+GENERATED extreme:304 source=2.36819e-12 tangent=7.93932e-10 pieces=45
+GENERATED extreme:305 source=1.05157e-07 tangent=9.18659e-06 pieces=31
+GENERATED extreme:306 source=2.45915e-12 tangent=7.9491e-10 pieces=45
+GENERATED extreme:307 source=1.05157e-07 tangent=9.18659e-06 pieces=31
+GENERATED extreme:308 source=2.98894e-11 tangent=2.01447e-09 pieces=45
+GENERATED extreme:309 source=1.05162e-07 tangent=9.18691e-06 pieces=31
+GENERATED extreme:310 source=2.68016e-10 tangent=1.4347e-08 pieces=45
+GENERATED extreme:311 source=1.05137e-07 tangent=9.18101e-06 pieces=31
+GENERATED extreme:312 source=5.80429e-11 tangent=1.89968e-05 pieces=45
+REFIT 313 p=5 q=5 reason=Source boundary tangent unresolved
+KNOT 313 axis=0 t=0.5 score=1.81047e-07 spans=1,1
+REFIT 313 p=5 q=5 reason=Source boundary tangent unresolved
+KNOT 313 axis=1 t=0.5 score=1.59976e-07 spans=2,1
+REFIT 313 p=5 q=5 reason=Source boundary tangent unresolved
+KNOT 313 axis=1 t=0.25 score=2.25525e-08 spans=2,2
+GENERATED extreme:313 source=2.68362e-07 tangent=0.00967623 pieces=29
+GENERATED extreme:314 source=5.80819e-11 tangent=1.90066e-05 pieces=45
+REFIT 315 p=5 q=5 reason=Source boundary tangent unresolved
+KNOT 315 axis=0 t=0.5 score=1.81047e-07 spans=1,1
+REFIT 315 p=5 q=5 reason=Source boundary tangent unresolved
+KNOT 315 axis=1 t=0.5 score=1.59976e-07 spans=2,1
+REFIT 315 p=5 q=5 reason=Source boundary tangent unresolved
+KNOT 315 axis=1 t=0.25 score=2.25525e-08 spans=2,2
+GENERATED extreme:315 source=2.68362e-07 tangent=0.00967623 pieces=29
+GENERATED extreme:316 source=7.84442e-11 tangent=2.17062e-05 pieces=45
+REFIT 317 p=5 q=5 reason=Source boundary tangent unresolved
+KNOT 317 axis=0 t=0.5 score=1.81064e-07 spans=1,1
+REFIT 317 p=5 q=5 reason=Source boundary tangent unresolved
+KNOT 317 axis=1 t=0.5 score=1.5998e-07 spans=2,1
+REFIT 317 p=5 q=5 reason=Source boundary tangent unresolved
+KNOT 317 axis=1 t=0.75 score=2.25788e-08 spans=2,2
+GENERATED extreme:317 source=2.45244e-07 tangent=0.0096844 pieces=25
+GENERATED extreme:318 source=3.25581e-10 tangent=4.81232e-05 pieces=45
+REFIT 319 p=5 q=5 reason=Source boundary tangent unresolved
+KNOT 319 axis=0 t=0.5 score=1.81254e-07 spans=1,1
+REFIT 319 p=5 q=5 reason=Source boundary tangent unresolved
+KNOT 319 axis=1 t=0.5 score=1.60107e-07 spans=2,1
+REFIT 319 p=5 q=5 reason=Source boundary tangent unresolved
+KNOT 319 axis=1 t=0.75 score=2.2734e-08 spans=2,2
+GENERATED extreme:319 source=2.45258e-07 tangent=0.0096852 pieces=25

@@ -61,20 +61,29 @@ if(BSPLINE2ANALYTIC_BUILD_TESTS)
     set_tests_properties(BSpline2Analytic.MotherDistanceUnit BSpline2Analytic.MotherDistanceSphereTorus PROPERTIES TIMEOUT 120
         WORKING_DIRECTORY "${SGGK_SDK_DIR}"
         ENVIRONMENT_MODIFICATION "PATH=path_list_prepend:${SGGK_SDK_DIR}/x64-win/bin${_sgk_config}")
-    add_executable(BSpline2AnalyticGeneralRationalBoundaryTests tests/GeneralRationalBoundaryTests.cpp
+    add_library(BSpline2AnalyticRationalFixtures STATIC
         tests/GeneralDataset.cpp tests/GeneralDatasetCertificate.cpp
-        tests/GeneralExtremeDataset.cpp tests/GeneralExtremeCertificate.cpp)
+        tests/GeneralExtremeDataset.cpp tests/GeneralExtremeCertificate.cpp
+        tests/GeneralRationalReference.cpp tests/GeneralRationalDataset.cpp
+        tests/GeneralRationalDatasetCertificate.cpp)
+    target_link_libraries(BSpline2AnalyticRationalFixtures PUBLIC BSpline2Analytic)
+    target_include_directories(BSpline2AnalyticRationalFixtures PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src")
+    target_compile_options(BSpline2AnalyticRationalFixtures PRIVATE /W4 /utf-8 /fp:strict)
+    add_executable(BSpline2AnalyticGeneralRationalDatasetTests tests/GeneralRationalDatasetTests.cpp)
+    target_link_libraries(BSpline2AnalyticGeneralRationalDatasetTests PRIVATE BSpline2AnalyticRationalFixtures)
+    target_include_directories(BSpline2AnalyticGeneralRationalDatasetTests PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src")
+    target_compile_options(BSpline2AnalyticGeneralRationalDatasetTests PRIVATE /W4 /utf-8 /fp:strict)
+    add_executable(BSpline2AnalyticGeneralRationalBoundaryTests tests/GeneralRationalBoundaryTests.cpp)
     set_source_files_properties(tests/GeneralExtremeCertificate.cpp PROPERTIES COMPILE_OPTIONS "/fp:strict")
-    target_link_libraries(BSpline2AnalyticGeneralRationalBoundaryTests PRIVATE BSpline2Analytic)
+    target_link_libraries(BSpline2AnalyticGeneralRationalBoundaryTests PRIVATE BSpline2AnalyticRationalFixtures)
     target_include_directories(BSpline2AnalyticGeneralRationalBoundaryTests PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src")
     target_compile_options(BSpline2AnalyticGeneralRationalBoundaryTests PRIVATE /W4 /utf-8 /fp:strict)
-    add_executable(BSpline2AnalyticGeneralRationalRecoveryDiagnostics tests/GeneralRationalRecoveryDiagnostics.cpp
-        tests/GeneralDataset.cpp tests/GeneralDatasetCertificate.cpp)
-    target_link_libraries(BSpline2AnalyticGeneralRationalRecoveryDiagnostics PRIVATE BSpline2Analytic)
+    add_executable(BSpline2AnalyticGeneralRationalRecoveryDiagnostics tests/GeneralRationalRecoveryDiagnostics.cpp)
+    target_link_libraries(BSpline2AnalyticGeneralRationalRecoveryDiagnostics PRIVATE BSpline2AnalyticRationalFixtures)
     target_include_directories(BSpline2AnalyticGeneralRationalRecoveryDiagnostics PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src")
     target_compile_options(BSpline2AnalyticGeneralRationalRecoveryDiagnostics PRIVATE /W4 /utf-8 /fp:strict)
     add_test(NAME BSpline2Analytic.GeneralRationalBoundaryUnit COMMAND BSpline2AnalyticGeneralRationalBoundaryTests --rational-unit
-        "${CMAKE_CURRENT_SOURCE_DIR}/tests/data/dataset500")
+        "${CMAKE_CURRENT_SOURCE_DIR}/tests/data/general-rational-v2")
     set_tests_properties(BSpline2Analytic.GeneralRationalBoundaryUnit PROPERTIES TIMEOUT 120
         WORKING_DIRECTORY "${SGGK_SDK_DIR}"
         ENVIRONMENT_MODIFICATION "PATH=path_list_prepend:${SGGK_SDK_DIR}/x64-win/bin${_sgk_config}")
@@ -216,4 +225,9 @@ if(BSPLINE2ANALYTIC_BUILD_TESTS)
         BSpline2Analytic.Cone BSpline2Analytic.Approximate
         BSpline2Analytic.Plateau BSpline2Analytic.Jacobian
         PROPERTIES DISABLED TRUE)
+endif()
+
+# Retired analytic-UV fallback datasets: preserved only as historical evidence.
+if(BSPLINE2ANALYTIC_BUILD_TESTS)
+    set_tests_properties(BSpline2Analytic.General600 BSpline2Analytic.GeneralPositive500 BSpline2Analytic.GeneralExtra60 PROPERTIES DISABLED TRUE)
 endif()

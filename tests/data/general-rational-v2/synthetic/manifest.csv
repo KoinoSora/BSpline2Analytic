@@ -1,0 +1,6 @@
+id,file,contract,group,expectation,type,rational,degree_u,degree_v,controls,collapsed_mask,source_bound,source_tangent_deg
+0,synthetic-000.b2a,rational-domain-v2,feasible,accept,0,1,5,5,200,0,1.085936959786276e-13,1.0749842978354022e-09
+1,synthetic-001.b2a,rational-domain-v2,feasible,accept,1,1,5,5,200,0,1.7515960604876578e-13,4.3730896544379879e-09
+2,synthetic-002.b2a,rational-domain-v2,feasible,accept,2,1,5,5,200,0,1.8991392777993158e-13,1.2450177579310396e-08
+3,synthetic-003.b2a,rational-domain-v2,feasible,accept,3,1,5,5,200,0,1.5170405878191483e-13,1.741700331176932e-08
+4,synthetic-004.b2a,rational-domain-v2,feasible,accept,4,1,5,5,200,0,2.204691858065858e-13,2.8090703023154371e-08

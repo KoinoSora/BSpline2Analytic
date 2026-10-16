@@ -39,10 +39,12 @@ def sha(p):
 
 def main():
     p = argparse.ArgumentParser(description=__doc__)
-    for key in ('baseline', 'updated', 'sdk', 'data', 'extreme-data', 'output'):
+    for key in ('baseline', 'updated', 'sdk', 'data', 'output'):
         p.add_argument('--'+key, type=Path, required=True)
     p.add_argument('--runs', type=int, default=5)
     args = p.parse_args()
+    from RationalDatasetSupport import require_v2_data
+    require_v2_data(args.data)
     assert args.runs > 0
     output = args.output.resolve()
     output.mkdir(parents=True, exist_ok=False)
@@ -51,22 +53,19 @@ def main():
     sdk = args.sdk.resolve()
     env[key] = str(sdk/'x64-win/bin')+os.pathsep+env[key]
     rows, attempts, summaries = [], [], []
-    manifest = dict(runs=args.runs, cases=CASES, baseline_sha256=sha(args.baseline),
+    manifest = dict(dataset_contract='rational-domain-v2', runs=args.runs, cases=CASES, baseline_sha256=sha(args.baseline),
                     updated_sha256=sha(args.updated), inputs={}, retired_validators_run=False,
                     parallel_processes=1, cpu_affinity_fixed=False, exclusive_machine=False)
     for index, (suite, case) in enumerate(CASES):
-        data = (args.extreme_data if suite == 'extreme' else args.data).resolve()
-        if suite != 'synthetic':
-            name = {'main': 'manifest-general600.csv', 'extra': 'manifest-general-extra60.csv',
-                    'extreme': 'manifest.csv'}[suite]
-            meta = next(x for x in read(data/name) if int(x['id']) == case)
-            manifest['inputs'][f'{suite}:{case}'] = sha(data/meta['file'])
+        data = args.data.resolve()
+        meta = next(x for x in read(data/suite/'manifest.csv') if int(x['id']) == case)
+        manifest['inputs'][f'{suite}:{case}'] = sha(data/suite/meta['file'])
         pair = {}
         for backend in (('baseline', 'updated') if index % 2 == 0 else ('updated', 'baseline')):
             target = output/f'{backend}-{suite}-{case}.csv'
             with target.with_suffix('.log').open('wb') as log:
                 subprocess.run([str(getattr(args, backend).resolve()), '--rational-full-case',
-                                str(data), str(target), suite, str(case), str(args.runs), '--rational-only'],
+                                str(data), str(target), suite, str(case), str(args.runs), '--rational-v2-only'],
                                cwd=sdk, env=env, stdout=log, stderr=subprocess.STDOUT,
                                timeout=120, check=True, creationflags=getattr(subprocess, 'CREATE_NO_WINDOW', 0))
             part = read(target)

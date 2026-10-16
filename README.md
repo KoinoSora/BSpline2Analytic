@@ -30,7 +30,7 @@
 - 默认进行边界和母面的 Bézier/Bernstein 误差界估计；节点区间采样用于快速检查。
 - 失败结果区分无效输入、退化、病态、边界关系不一致、歧义、验证失败和不支持。
 
-模块包含静态库、示例、回归测试和批量性能测试。一般兜底包含 600 个带独立证书的主案例和 60 个专项，数据与旧 500 例共存；构造方法见 [GENERAL600.md](docs/testing/GENERAL600.md)，首次结果见 [兜底测试报告](docs/testing/GENERAL600_REPORT_2026-10-13.md)，边界与参数坐标系修复后的结果见 [正例修复报告](docs/testing/GENERAL_POSITIVE500_FIX_REPORT_2026-10-13.md)。本轮仅复测直接调用 `ConvertGeneral` 的 500 个正例，不代表负例、额外专项和统一入口均已通过回归。Dataset500 已改为直接调用两条等参专用接口，保留 40 个退化预期；不通过统一入口进入一般兜底。
+模块包含静态库、示例和测试工具。2026-10-16 一般兜底数据已重构为 [rational-domain-v2](docs/testing/GENERAL_RATIONAL_DATASET_V2.md)：600 主案例、60 专项、320 极端和 5 压力输入，正例约束定义于母面 NURBS 参数域。两方向次数均为 3–5，控制顶点总数不超过 200，算法几何容差保持 `1e-5`。原一般兜底数据已废弃并保留归档，旧测试入口关闭；`dataset500/case-*.b2a` 专用路径数据不受影响。本轮只生成数据、独立认证来源并编译入口，暂不运行兜底模块测试。以下旧一般兜底性能报告均为历史结果，不适用于新版输入。
 
 候选评分前去重的最新结果见 [评分去重报告](docs/testing/GENERAL_POSITIVE500_DEDUP_REPORT_2026-10-13.md)，包含本轮重新测得的 500 个正例基线、修改后结果与实际评分次数。
 
@@ -66,11 +66,8 @@
 # 单独克隆本仓库时，指定 SDK 根目录（其中含 include、x64-win）
 .\Build.ps1 -SdkDirectory 'D:\YourSdk\SGGK' -Configuration Release -Benchmark
 
-# 仅测试一般兜底：600 个主案例和 60 个专项
-.\Build.ps1 -Configuration Release -GeneralOnly
-
-# 仅测试一般兜底的 500 个正例
-.\Build.ps1 -Configuration Release -GeneralPositiveOnly
+# 一般兜底旧 GeneralOnly / GeneralPositiveOnly 开关已废弃。
+# 新版数据生成和认证命令见 tests/README.md；本轮暂不运行兜底测试。
 ```
 
 脚本默认构建库、示例及测试程序，并运行精确、近似、平台、Jacobian/五类扰动、Dataset500 及两组圆锥专项回归。`-Benchmark` 额外运行原有 1000 面片精确识别测试，记录写入 `build/benchmark-Release.csv`。`-ApproximateBenchmark` 运行 35 次近似转换计时（含优化成功和禁用优化的失败分支），记录写入 `build/approximate-benchmark-Release.csv`。数据生成、预热和日志不计入转换耗时。可用 `-BuildJobs` 指定构建并发数，默认 1。`-JacobianOnly` 单独运行解析导数及五类扰动对照测试，输出 `build/perturbation-Release.csv` 和附加 `.jacobian.csv`；`-PlateauOnly` 保留平台专项入口；`-Dataset500Only` 单独加载已保存的 500 个面片并输出 `build/dataset500-Release.csv`。`-ConeOnly` 只构建并运行 100 个圆锥固定案例及圆锥专项检查，输出 `build/dataset500-cone-Release.csv` 和 `build/cone249-Release.csv`，保留原 500 例结果。专项开关互斥。
