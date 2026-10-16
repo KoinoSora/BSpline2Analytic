@@ -13,7 +13,8 @@ class Certifier
 {
     SurfaceSampleContext &samples;const Trim &trim;const Target &target;
     const GeneralRationalBoundaryOptions &options;GeneralRationalBoundaryReport &report;
-    paired::Products products;CurveErrors errors;double distance=0,ratio=0,limit;
+    paired::Products products;CurveErrors errors;CurveEnvelopes envelopes;double distance=0,ratio=0,limit;
+    std::array<bool,4> envelopeOnEdge{true,true,true,true};
     bool Visit(const BezierCell &s,unsigned edge,double lo,double hi,unsigned depth)
     {
         if(++report.boundaryNodes>options.maxBoundaryNodes)throw Budget("Rational boundary node budget exhausted");
@@ -29,32 +30,77 @@ class Certifier
         for(const auto &p:target.edges[edge])if(p.u0<=lo&&hi<=p.u1){part=&p;break;}
         if(!part)return false;
         auto t=paired::Crop(*part,lo,hi,0,1);
-        bool fused=false;auto error=errors.Build(s,t,products,fused);
-        report.fusedErrorBuilds+=fused;
-        double bound=paired::PositionBoxUpper(error.numerator,error.denominator);
-        if(bound>=options.general.fitting.validation.distanceTolerance)
-            bound=std::min(bound,paired::PositionControlUpper(error.numerator,error.denominator,products));
-        double angleRatio=INFINITY;
-        if(!(bound<options.general.fitting.validation.distanceTolerance))++report.positionOnlyNodes;
-        else if(trim.collapsed[edge])angleRatio=0;
+        // Filter the SAME source/target pair with double coefficients and a
+        // conservative rounding envelope. An inconclusive filter consumes no
+        // extra node and cannot change the correspondence or acceptance limits.
+        // Pure polynomial differences have no rational convolution to save.
+        bool useEnvelope=envelopeOnEdge[edge]&&(s.w.u||t.w.u);
+        bool positionExceeded=false,tangentExceeded=false,fastPositionPassed=false;
+        if(useEnvelope)++report.envelopeChecks;
+        if(auto fast=useEnvelope?envelopes.Build(s,t):std::nullopt)
+        {
+            double bound=paired::PositionBoxUpper(fast->numerator,fast->denominator);
+            if(bound<options.general.fitting.validation.distanceTolerance)
+            {
+                fastPositionPassed=true;
+                double angleRatio=trim.collapsed[edge]?0:INFINITY;
+                if(!trim.collapsed[edge])
+                    if(auto st=envelopes.Tangent(s))
+                    {
+                        angleRatio=ResidualTangentRatio(*fast,s,*st,bound);
+                        if(!(angleRatio<limit))
+                            if(auto tt=envelopes.Tangent(t))
+                            {
+                                tangentExceeded=envelopes.TangentExceeded(*st,*tt,limit);
+                                if(!tangentExceeded)angleRatio=std::min(angleRatio,envelopes.TangentRatio(*st,*tt));
+                            }
+                    }
+                if(angleRatio<limit)
+                {
+                    distance=std::max(distance,bound);ratio=std::max(ratio,angleRatio);
+                    ++report.envelopeAccepted;++report.boundarySegments;return true;
+                }
+            }
+            else positionExceeded=envelopes.PositionExceeded(*fast,options.general.fitting.validation.distanceTolerance);
+        }
+        if(positionExceeded){++report.envelopePositionWitnesses;++report.positionOnlyNodes;}
+        else if(tangentExceeded)++report.envelopeTangentWitnesses;
         else
         {
-            auto st=TangentNumerator(s,products);
-            ++report.tangentFastChecks;
-            angleRatio=ResidualTangentRatio(error,s,st,bound);
-            if(angleRatio<limit)++report.tangentFastAccepted;
+            if(useEnvelope)++report.envelopeFallbacks;
+            bool fused=false;auto error=errors.Build(s,t,products,fused);
+            report.fusedErrorBuilds+=fused;
+            double bound=paired::PositionBoxUpper(error.numerator,error.denominator);
+            if(bound>=options.general.fitting.validation.distanceTolerance)
+                bound=std::min(bound,paired::PositionControlUpper(error.numerator,error.denominator,products));
+            double angleRatio=INFINITY;
+            if(!(bound<options.general.fitting.validation.distanceTolerance))++report.positionOnlyNodes;
+            else if(trim.collapsed[edge])angleRatio=0;
             else
             {
-                ++report.tangentFallbacks;
-                auto tt=TangentNumerator(t,products);
-                I dot=products.Dot(st,tt).range();IV cross=Range(products.Cross(st,tt));
-                if(dot.lo>0)angleRatio=std::min(angleRatio,(Sqrt(Sqr(cross.x)+Sqr(cross.y)+Sqr(cross.z))/I(dot.lo)).hi);
+                auto st=TangentNumerator(s,products);
+                ++report.tangentFastChecks;
+                angleRatio=ResidualTangentRatio(error,s,st,bound);
+                if(angleRatio<limit)++report.tangentFastAccepted;
+                else
+                {
+                    ++report.tangentFallbacks;
+                    auto tt=TangentNumerator(t,products);
+                    I dot=products.Dot(st,tt).range();IV cross=Range(products.Cross(st,tt));
+                    if(dot.lo>0)angleRatio=std::min(angleRatio,(Sqrt(Sqr(cross.x)+Sqr(cross.y)+Sqr(cross.z))/I(dot.lo)).hi);
+                }
             }
-        }
-        if(bound<options.general.fitting.validation.distanceTolerance&&angleRatio<limit)
-        {
-            distance=std::max(distance,bound);ratio=std::max(ratio,angleRatio);
-            ++report.boundarySegments;return true;
+            if(bound<options.general.fitting.validation.distanceTolerance&&angleRatio<limit)
+            {
+                distance=std::max(distance,bound);ratio=std::max(ratio,angleRatio);
+                ++report.boundarySegments;return true;
+            }
+            // Some edges need subdivision to tighten tangent hulls, while their
+            // position already passes. If BOTH kernels are inconclusive, stop
+            // paying for two tangent kernels on this edge. Other edges and all
+            // position-witness paths retain the filter. This affects cost only.
+            if(fastPositionPassed&&bound<options.general.fitting.validation.distanceTolerance)
+                envelopeOnEdge[edge]=false;
         }
         if(depth>=options.maxBoundaryDepth)return false;
         double mid=s.u0+(s.u1-s.u0)*.5,mapped=lo+(hi-lo)*.5;

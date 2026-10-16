@@ -34,6 +34,35 @@ class CurveErrors
 public:
     CurveError Build(const BezierCell &source,const BezierCell &target,paired::Products &,bool &fused);
 };
+// Double Bernstein coefficients plus a uniform outward-rounded error radius.
+// Only the current general verifier uses this filter. Inconclusive nodes are
+// recomputed by CurveErrors before subdivision, with the same node budget.
+class CurveEnvelopes
+{
+    struct Polynomial
+    {
+        std::vector<double> c;
+        double radius=0, magnitude=0;
+    };
+    struct Plan
+    {
+        std::vector<double> weights;
+        double norm=0, error=0, gamma=0;
+    };
+    std::map<std::pair<unsigned,unsigned>,Plan> plans;
+    const Plan &Weights(unsigned,unsigned);
+    Polynomial Read(const BPoly &);
+    Polynomial Mul(const Polynomial &,const Polynomial &);
+    Polynomial Subtract(Polynomial,Polynomial);
+    BPoly Enclose(const Polynomial &);
+    I Midpoint(const BPoly &);
+public:
+    std::optional<CurveError> Build(const BezierCell &,const BezierCell &);
+    std::optional<BV> Tangent(const BezierCell &);
+    double TangentRatio(const BV &,const BV &);
+    bool PositionExceeded(const CurveError &,double tolerance);
+    bool TangentExceeded(const BV &,const BV &,double ratioLimit);
+};
 BV TangentNumerator(const BezierCell &,paired::Products &);
 // Sufficient same-direction angle bound from E'=T'-S'. INFINITY is inconclusive.
 double ResidualTangentRatio(const CurveError &,const BezierCell &source,

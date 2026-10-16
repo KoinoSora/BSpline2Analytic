@@ -1,0 +1,21 @@
+Start testing: Oct 16 10:30 中国标准时间
+----------------------------------------------------------
+3/22 Testing: BSpline2Analytic.GeneralRationalBoundaryUnit
+3/22 Test: BSpline2Analytic.GeneralRationalBoundaryUnit
+Command: "D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-rational-envelope/final/Release/BSpline2AnalyticGeneralRationalBoundaryTests.exe" "--rational-unit" "D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-rational-envelope/final-source/tests/data/dataset500"
+Directory: D:/Projects/CppProjects/SeaGo/SGK1.7.11/SGGK
+"BSpline2Analytic.GeneralRationalBoundaryUnit" start time: Oct 16 10:30 中国标准时间
+Output:
+----------------------------------------------------------
+Failed to open log output file.
+Failed to open log output file.
+Rational boundary unit assertions=9934
+<end of output>
+Test time =   0.28 sec
+----------------------------------------------------------
+Test Passed.
+"BSpline2Analytic.GeneralRationalBoundaryUnit" end time: Oct 16 10:30 中国标准时间
+"BSpline2Analytic.GeneralRationalBoundaryUnit" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Oct 16 10:30 中国标准时间

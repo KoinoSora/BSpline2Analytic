@@ -174,6 +174,77 @@ void ErrorKernelUnit()
     }
     auto invalid=s;invalid.w.c[0]=I(-1,1);
     Require(!std::isfinite(ratio(invalid,s)),"Nonpositive denominator accepted");
+    rb::CurveEnvelopes envelopes;
+    auto parallel=envelopes.Tangent(s),scaled=envelopes.Tangent(fast),opposite=envelopes.Tangent(line(-1,0,0));
+    Require(parallel&&scaled&&opposite,"Missing tangent envelopes");
+    Require(envelopes.TangentRatio(*parallel,*scaled)<1e-12,"Parallel envelope tangent failed");
+    Require(!std::isfinite(envelopes.TangentRatio(*parallel,*opposite)),"Opposite envelope tangent accepted");
+    Require(envelopes.TangentExceeded(*parallel,*opposite,.001)&&
+            !envelopes.TangentExceeded(*parallel,*scaled,.001),"Wrong tangent midpoint witness");
+    auto tiltedTangent=envelopes.Tangent(line(1,1e-4,0));
+    double envelopeRatio=envelopes.TangentRatio(*parallel,*tiltedTangent);
+    Require(envelopeRatio>=1e-4&&envelopeRatio<std::tan(.1*Pi/180),"Envelope tangent ratio understated");
+    Require(envelopes.TangentExceeded(*parallel,*tiltedTangent,.99e-4)&&
+            !envelopes.TangentExceeded(*parallel,*tiltedTangent,1.01e-4),"Tangent witness crossed tolerance");
+    auto near=envelopes.Build(s,line(1,0,.99e-5)),far=envelopes.Build(s,line(1,0,1.01e-5));
+    Require(near&&far&&!envelopes.PositionExceeded(*near,1e-5)&&envelopes.PositionExceeded(*far,1e-5),
+            "Envelope midpoint witness crossed tolerance");
+    auto uncertain=*near;uncertain.numerator.y.c[0]=I(0,2e-5);
+    Require(!envelopes.PositionExceeded(uncertain,1e-5),"Uncertain midpoint incorrectly excluded");
+    auto invalidWeight=*far;invalidWeight.denominator.c[0]=I(-1,1);
+    Require(!envelopes.PositionExceeded(invalidWeight,1e-5),"Nonpositive witness denominator accepted");
+}
+void EnvelopeExport(const std::filesystem::path &path)
+{
+    std::ofstream out(path);Require(bool(out),"Cannot open envelope audit output");
+    out<<std::setprecision(17)<<'[';rb::CurveEnvelopes envelope;
+    auto poly=[&](const BPoly &p)
+    {
+        out<<'[';for(size_t i=0;i<p.c.size();++i){if(i)out<<',';out<<'['<<p.c[i].lo<<','<<p.c[i].hi<<']';}out<<']';
+    };
+    auto cell=[&](const BezierCell &c)
+    {out<<'[';poly(c.p.x);out<<',';poly(c.p.y);out<<',';poly(c.p.z);out<<',';poly(c.w);out<<']';};
+    unsigned count=0;
+    for(unsigned p:{1u,3u,5u,7u,12u})for(unsigned q:{1u,2u,4u,8u})for(unsigned mode=0;mode<8;++mode)
+    {
+        auto make=[&](unsigned n,int sign,bool rational)
+        {
+            BezierCell c;c.p={BPoly(n,0),BPoly(n,0),BPoly(n,0)};c.w=BPoly(rational?n:0,0,I(1));
+            double scale=mode==4?0x1p-500:mode==5?0x1p400:mode==6?0x1p-1030:mode==7?0x1p-600:1;
+            for(unsigned i=0;i<=n;++i)
+            {
+                unsigned k=0;for(auto axis:{&c.p.x,&c.p.y,&c.p.z})
+                {
+                    double x=scale*(sign*(int((i*17+3*k)%23)-11)+.125*i);
+                    axis->c[i]=mode==3?I(std::nextafter(x,-INFINITY),std::nextafter(x,INFINITY)):I(x);++k;
+                }
+                if(rational)c.w.c[i]=I((1+(i%5)*.25)*(mode==7?0x1p-500:1));
+            }
+            return c;
+        };
+        auto s=make(p,1,(mode&1)!=0),t=make(q,-1,(mode&2)!=0);
+        auto error=envelope.Build(s,t);auto tangent=envelope.Tangent(s);
+        Require(error.has_value()&&tangent.has_value(),"Finite envelope unavailable");
+        if(count++)out<<',';out<<"{\"source\":";cell(s);out<<",\"target\":";cell(t);
+        out<<",\"error\":";cell({error->numerator,0,1,0,1,error->denominator});
+        out<<",\"tangent\":";cell({*tangent});
+        auto direction=[](unsigned n,double slope)
+        {
+            BV v{BPoly(n,0),BPoly(n,0),BPoly(n,0)};
+            for(unsigned i=0;i<=n;++i){v.x.c[i]=I(1+i*.125);v.y.c[i]=I(slope*(1+i*.125));v.z.c[i]=I((i%3)*1e-5);}
+            return v;
+        };
+        auto a=direction(p,.001),b=direction(q,.0011);
+        double ratio=envelope.TangentRatio(a,b);Require(std::isfinite(ratio),"Missing dot/cross envelope bound");
+        out<<",\"angle_source\":";cell({a});out<<",\"angle_target\":";cell({b});
+        out<<",\"angle_ratio\":"<<ratio<<'}';
+    }
+    // Invalid/nonfinite arithmetic must defer to the existing interval path.
+    BezierCell invalid;invalid.p.x=BPoly(1,1);
+    Require(!envelope.Build(invalid,invalid),"Tensor input accepted by 1D envelope");
+    invalid={};invalid.p.x.c[0]=I::Whole();
+    Require(!envelope.Build(invalid,invalid),"Nonfinite input accepted by envelope");
+    out<<"]\n";std::cout<<"Envelope export cases="<<count<<'\n';
 }
 void Unit(const std::filesystem::path &data)
 {
@@ -184,6 +255,7 @@ void Unit(const std::filesystem::path &data)
         auto a=Mother(type);auto s=Fixture(a,domain,true);GeneralRationalBoundaryOptions o;o.chartDomain=domain;
         auto r=ValidateGeneralRationalBoundaries(*s,a,o);
         Require(r.Passed(),"Rational skew fixture rejected type "+std::to_string(type)+": "+r.message);Audit(*s,r);
+        Require((type==0||r.envelopeAccepted>0)&&r.envelopeChecks==r.envelopeAccepted+r.envelopeFallbacks+r.envelopePositionWitnesses+r.envelopeTangentWitnesses,"Envelope filter not exercised");
         Require(r.maxTargetDegree<=4&&!r.certifiesInteriorContinuum,"Wrong certificate contract");
         s->UReverse();auto reverse=ValidateGeneralRationalBoundaries(*s,a,o);
         Require(reverse.Passed(),"Reversed rational boundary rejected");Audit(*s,reverse);
@@ -284,7 +356,7 @@ void FullCase(const std::filesystem::path &data,const std::filesystem::path &csv
     {if(id%2)options.general.fitting.validation.distanceTolerance=-1;else options.general.fitting.sampling.maxSamples=0;}
     if(extra&&c.group==GeneralFixtureGroup::ValidationBudget)options.maxBoundaryNodes=1;
     if(extra&&c.group==GeneralFixtureGroup::SpherePriority)options.general.similarScoreAbsoluteRatio=1e6;
-    const std::string header="suite,id,run,mode,group,source_type,rational,degree_u,degree_v,controls,source_certified,source_bound,certificate_ms,entry,status,accepted,audit_status,audit_sample_max,classify_ms,validate_ms,sampling_ms,recovery_ms,prepare_ms,boundary_ms,total_ms,attempts,chart_attempts,nodes,refinements,fast_checks,fast_accepted,tangent_fallbacks,position_only,fused_errors,boundary_bound,tangent_deg,mother_bound,output_type,raw_candidates,full_scores,message,audit_message\n";
+    const std::string header="suite,id,run,mode,group,source_type,rational,degree_u,degree_v,controls,source_certified,source_bound,certificate_ms,entry,status,accepted,audit_status,audit_sample_max,classify_ms,validate_ms,sampling_ms,recovery_ms,prepare_ms,boundary_ms,total_ms,attempts,chart_attempts,nodes,refinements,fast_checks,fast_accepted,tangent_fallbacks,position_only,fused_errors,boundary_bound,tangent_deg,mother_bound,output_type,raw_candidates,full_scores,message,audit_message,envelope_checks,envelope_accepted,envelope_fallbacks,envelope_position_witnesses,envelope_tangent_witnesses\n";
     std::vector<std::string> rows;bool anyFailure=false;
     auto save=[&]{std::ofstream out(csv);Require(bool(out),"Cannot write full-suite CSV");out<<header;for(const auto &row:rows)out<<row;};
     auto attemptPath=csv.parent_path()/(csv.stem().string()+"-attempts.csv");
@@ -298,6 +370,7 @@ void FullCase(const std::filesystem::path &data,const std::filesystem::path &csv
         GeneralClassificationDiagnostics classification;std::vector<Attempt> attempts;
         double classify=0,validate=0,sampling=0,recovery=0,prepare=0,boundary=0;
         unsigned charts=0,nodes=0,refinements=0,fast=0,fastAccepted=0,fallback=0,position=0,fused=0;
+        unsigned envelopeChecks=0,envelopeAccepted=0,envelopeFallbacks=0,envelopeWitnesses=0,envelopeTangentWitnesses=0;
         try
         {
             SurfaceSampleContext samples(*c.input,options.general.fitting.sampling.maxSamples);
@@ -307,6 +380,7 @@ void FullCase(const std::filesystem::path &data,const std::filesystem::path &csv
                 prepare+=r.preparationMs;boundary+=r.boundaryMs;charts+=r.chartAttempts;nodes+=r.boundaryNodes;
                 refinements+=r.mappingRefinements;fast+=r.tangentFastChecks;fastAccepted+=r.tangentFastAccepted;
                 fallback+=r.tangentFallbacks;position+=r.positionOnlyNodes;fused+=r.fusedErrorBuilds;
+                envelopeChecks+=r.envelopeChecks;envelopeAccepted+=r.envelopeAccepted;envelopeFallbacks+=r.envelopeFallbacks;envelopeWitnesses+=r.envelopePositionWitnesses;envelopeTangentWitnesses+=r.envelopeTangentWitnesses;
                 attempts.push_back({a.type,r});
             };
             if(supplied)attempt(c.truth);
@@ -334,7 +408,7 @@ void FullCase(const std::filesystem::path &data,const std::filesystem::path &csv
                 <<(synthetic?"fixed_chart":supplied?"supplied_mother":"classified")<<','<<HybridValidationStatusName(r.status)<<','<<passed<<','<<auditStatus<<','<<audit<<','
                 <<classify<<','<<validate<<','<<sampling<<','<<recovery<<','<<prepare<<','<<boundary<<','<<total<<','<<attempts.size()<<','<<charts<<','<<nodes<<','<<refinements<<','
                 <<fast<<','<<fastAccepted<<','<<fallback<<','<<position<<','<<fused<<','<<r.boundaryDistanceUpperBound<<','<<r.boundaryTangentUpperBoundDeg<<','<<r.outputMotherDistanceUpperBound<<','
-                <<(passed?TypeName(r.patch->mother.type):"Unknown")<<','<<classification.rawCandidateCount<<','<<classification.fullScoreCount<<','<<Quote(r.message)<<','<<Quote(auditMessage)<<'\n';
+                <<(passed?TypeName(r.patch->mother.type):"Unknown")<<','<<classification.rawCandidateCount<<','<<classification.fullScoreCount<<','<<Quote(r.message)<<','<<Quote(auditMessage)<<','<<envelopeChecks<<','<<envelopeAccepted<<','<<envelopeFallbacks<<','<<envelopeWitnesses<<','<<envelopeTangentWitnesses<<'\n';
             return out.str();
         };
         // Save measured algorithm time before the independent SDK audit, so
@@ -427,7 +501,8 @@ int main(int argc,char **argv)
     sggk::init();try
     {
         Require(argc>=3,"Usage: --rational-unit data | --rational-case data csv id repeats synthetic --rational-only");
-        if(std::string(argv[1])=="--rational-unit"){Require(argc==3,"Invalid unit arguments");Unit(argv[2]);}
+        if(std::string(argv[1])=="--envelope-export"){Require(argc==3,"Invalid export arguments");EnvelopeExport(argv[2]);}
+        else if(std::string(argv[1])=="--rational-unit"){Require(argc==3,"Invalid unit arguments");Unit(argv[2]);}
         else if(std::string(argv[1])=="--rational-full-case")
         {
             Require(argc==8&&std::string(argv[7])=="--rational-only","Invalid full-suite arguments");

@@ -21,9 +21,9 @@ add_library(BSpline2Analytic STATIC
     src/GeneralClassification.cpp src/GeneralSeedNumerics.cpp src/GeneralConversion.cpp src/GeneralConversionValidation.cpp
     src/GeneralGeometry.cpp src/GeneralPCurve.cpp src/GeneralRefinement.cpp src/GeneralPairedBounds.cpp src/GeneralSphereChart.cpp
     src/GeneralHybridValidation.cpp src/GeneralRationalBoundaryRecovery.cpp
-    src/GeneralRationalBoundaryCurves.cpp src/GeneralBoundaryError.cpp src/GeneralRationalBoundaryValidation.cpp)
+    src/GeneralRationalBoundaryCurves.cpp src/GeneralBoundaryError.cpp src/GeneralBoundaryEnvelope.cpp src/GeneralRationalBoundaryValidation.cpp)
 set_source_files_properties(src/GeneralRationalBoundaryRecovery.cpp src/GeneralRationalBoundaryCurves.cpp
-    src/GeneralBoundaryError.cpp src/GeneralRationalBoundaryValidation.cpp PROPERTIES COMPILE_OPTIONS "/fp:strict")
+    src/GeneralBoundaryError.cpp src/GeneralBoundaryEnvelope.cpp src/GeneralRationalBoundaryValidation.cpp PROPERTIES COMPILE_OPTIONS "/fp:strict")
 set_source_files_properties(src/GeneralHybridValidation.cpp PROPERTIES COMPILE_OPTIONS "/fp:strict")
 set_source_files_properties(src/IntervalBounds.cpp src/ConversionValidation.cpp src/GeneralConversionValidation.cpp src/GeneralPairedBounds.cpp PROPERTIES COMPILE_OPTIONS "/fp:strict")
 set_source_files_properties(src/PairedRationalChart.cpp src/PairedConversionValidation.cpp src/PairedSourcePreparation.cpp src/PairedPositionBounds.cpp src/PairedBoundaryValidation.cpp PROPERTIES COMPILE_OPTIONS "/fp:strict")

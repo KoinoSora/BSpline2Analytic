@@ -1,0 +1,1 @@
+PASS: 160 cases; 9584 exact rational coefficient enclosures; 160 dot/cross bounds; no failures

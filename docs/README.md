@@ -17,6 +17,7 @@
 | 测试 | [连续边界误差曲线优化](testing/GENERAL_BOUNDARY_ERROR_2026-10-15.md) | 一维齐次误差联合构造、误差导数切向快速认证；12 个慢例/典型案例的当前验证器前后对照。 |
 | 测试 | [兜底新验证器 985 例全面测试](testing/GENERAL_RATIONAL_FULL_2026-10-15.md) | 固定 3567db0；主集、专项、极端和新合同压力样本，2955 次耗时及完整失败清单。 |
 | 测试 | [主集 240 个失败定向诊断](testing/GENERAL_RATIONAL_MAIN240_DIAGNOSIS_2026-10-16.md) | 720 次重测、具体恢复分支、固定参数图距离排除及球面参数架交换实验。 |
+| 测试 | [一般边界双精度误差包络](testing/GENERAL_BOUNDARY_ENVELOPE_2026-10-16.md) | 保守数值包络、34 例前后耗时、精确分数审计及主集失败的后续方案。 |
 | 测试 | [2026-10-13 全量重测](testing/DATASET500_RETEST_2026-10-13.md) | 固定批次统计、慢例与误差上界。 |
 | 测试 | [一般兜底正例修复报告](testing/GENERAL_POSITIVE500_FIX_REPORT_2026-10-13.md) | 边界参数方向、球参数图与奇异端点修复；500 个正例及性能对比。 |
 | 测试 | [一般兜底评分前去重报告](testing/GENERAL_POSITIVE500_DEDUP_REPORT_2026-10-13.md) | 重复候选免于评分；500 个正例的前后比较及评分次数。 |
