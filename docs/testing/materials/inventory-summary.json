@@ -1,0 +1,21 @@
+{
+  "scope": "tracked .b2a fixtures; identities, not independent geometric shapes",
+  "total": 2866,
+  "families": {
+    "business200": 200,
+    "historical_extreme200": 200,
+    "introduction_triangle": 1,
+    "iso500": 500,
+    "retired_extra60": 60,
+    "retired_extreme320": 320,
+    "retired_general600": 600,
+    "v2_extra": 60,
+    "v2_extreme": 320,
+    "v2_main": 600,
+    "v2_synthetic": 5
+  },
+  "test_source_files": 83,
+  "inventory_sha256": "d5ce742c9a15c291b2948d9a6c2974111b84500e111bb56714ed4215c71000e9",
+  "source_inventory_sha256": "c77bff949c56f156fd29a98796e044d60dc8dca8c43e9d11551c12d696c5917b",
+  "geometry_executed": false
+}

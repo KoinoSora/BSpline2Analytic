@@ -1,0 +1,29 @@
+{
+  "date": "2026-10-16",
+  "implementation_baseline": "70e03d112b0ede3672b66bef12468f5b4af1c560",
+  "artifact": "测试材料说明.pdf",
+  "pages": 13,
+  "pdf_bytes": 293374,
+  "pdf_sha256": "11d42ab06bb64a1fb16f1a0170faeb3d1d61ebcc9f7f7c46f839bebd30f7ead4",
+  "tex_sha256": "d50e6895786f7b7d31f81ce748d97eae8b0b935e26fcd9eef1a6b6a01f2ab8e3",
+  "builtin_compiler": "success",
+  "native_compiler": "XeLaTeX two passes, success",
+  "overfull_boxes": 0,
+  "missing_glyphs": 0,
+  "latex_warnings": 0,
+  "visual_review": "13 pages rendered and inspected; modified pages re-rendered and reviewed",
+  "fixed_inputs": 2866,
+  "archived_no_algorithm_runs": 980,
+  "test_source_files": 83,
+  "inventory_v2_declared_hash_check": "passed",
+  "inventory_python_syntax": "passed",
+  "powershell_example_blocks_syntax_checked": 5,
+  "runner_help_checked": [
+    "RunSequentialNonExtreme.py",
+    "RunGeneralRationalBoundaryFull.py",
+    "RunIsoSpecializedFull.py"
+  ],
+  "cpp_example": "checked against current public header; not compiled or executed",
+  "geometry_tests_rerun": false,
+  "performance_evidence": "existing sequential-non-extreme-20261016 batch only"
+}
