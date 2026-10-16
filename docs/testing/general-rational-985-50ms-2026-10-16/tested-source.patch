@@ -1,0 +1,275 @@
+--- a/include/GeneralRationalBoundaryValidation.h
++++ b/include/GeneralRationalBoundaryValidation.h
+@@ -13,0 +14,3 @@
++    // Wall-clock budget; 0 explicitly disables it for diagnostics. Includes all
++    // validation stages. Classified callers share one deadline across candidates.
++    double maxTotalMs = 50;
+@@ -48,0 +52,2 @@
++    bool timeBudgetExceeded = false;
++    std::string timeoutStage;
+--- /dev/null
++++ b/src/ExecutionDeadline.h
+@@ -0,0 +1,46 @@
++#pragma once
++#include <algorithm>
++#include <chrono>
++#include <cmath>
++#include <exception>
++#include <stdexcept>
++
++namespace bspline2analytic::detail
++{
++// Deliberately not a runtime_error: geometric candidate catches must not swallow cancellation.
++struct DeadlineExceeded : std::exception
++{
++    const char *stage;
++    explicit DeadlineExceeded(const char *where) : stage(where) {}
++    const char *what() const noexcept override { return "Case time budget exhausted"; }
++};
++class ExecutionDeadline
++{
++public:
++    using Clock = std::chrono::steady_clock;
++    explicit ExecutionDeadline(double milliseconds, Clock::time_point start = Clock::now())
++        : enabled(milliseconds > 0)
++    {
++        if (!std::isfinite(milliseconds) || milliseconds < 0 || milliseconds > 60000)
++            throw std::invalid_argument("Invalid case time budget");
++        // Cooperative cancellation: reserve 10% (at most 5ms) for the current
++        // indivisible operation and stack cleanup. This is not a real-time OS guarantee.
++        if (enabled) stop = start + std::chrono::duration_cast<Clock::duration>(
++            std::chrono::duration<double, std::milli>(milliseconds - std::min(5., milliseconds * .1)));
++    }
++    void Check(const char *stage) const
++    { if (enabled && Clock::now() >= stop) throw DeadlineExceeded(stage); }
++private:
++    bool enabled;
++    Clock::time_point stop{};
++};
++class DeadlineScope
++{
++    const ExecutionDeadline *&slot;
++    const ExecutionDeadline *previous;
++public:
++    DeadlineScope(const ExecutionDeadline *&slot, const ExecutionDeadline &local)
++        : slot(slot), previous(slot) { if (!slot) slot = &local; }
++    ~DeadlineScope() { slot = previous; }
++};
++}
+--- a/src/GeneralClassification.cpp
++++ b/src/GeneralClassification.cpp
+@@ -198,0 +199 @@
++        context.CheckDeadline("classification_scores");
+@@ -254,0 +256 @@
++                context.CheckDeadline("classification_boundary_scores");
+@@ -303,0 +306 @@
++    context.CheckDeadline("classification");
+@@ -328,0 +332 @@
++            context.CheckDeadline("classification_seeds");
+@@ -423,0 +428 @@
++            context.CheckDeadline("classification_scores");
+@@ -442,0 +448 @@
++    context.CheckDeadline("classification_batch");
+@@ -465,0 +472 @@
++            context.CheckDeadline("classification_scores");
+--- a/src/GeneralRationalBoundaryCurves.cpp
++++ b/src/GeneralRationalBoundaryCurves.cpp
+@@ -111 +111,2 @@
+-Target BuildTarget(const Trim &t,double outputTolerance,GeneralRationalBoundaryReport &report)
++Target BuildTarget(const Trim &t,double outputTolerance,GeneralRationalBoundaryReport &report,
++                   const ExecutionDeadline *deadline)
+@@ -126,0 +128 @@
++        if(deadline)deadline->Check("target_preparation");
+@@ -132,0 +135 @@
++            if(deadline)deadline->Check("target_preparation");
+@@ -167,0 +171 @@
++            if(deadline)deadline->Check("target_export_certificate");
+--- a/src/GeneralRationalBoundaryInternal.h
++++ b/src/GeneralRationalBoundaryInternal.h
+@@ -82 +82,2 @@
+-Target BuildTarget(const Trim &,double outputTolerance,GeneralRationalBoundaryReport &);
++Target BuildTarget(const Trim &,double outputTolerance,GeneralRationalBoundaryReport &,
++                   const ExecutionDeadline *deadline=nullptr);
+--- a/src/GeneralRationalBoundaryRecovery.cpp
++++ b/src/GeneralRationalBoundaryRecovery.cpp
+@@ -61,0 +62 @@
++        samples.CheckDeadline("chart_recovery");
+@@ -255,0 +257 @@
++        samples.CheckDeadline("chart_recovery");
+--- a/src/GeneralRationalBoundaryValidation.cpp
++++ b/src/GeneralRationalBoundaryValidation.cpp
+@@ -42,0 +43 @@
++        samples.CheckDeadline("boundary_certificate");
+@@ -208,0 +210,2 @@
++        ExecutionDeadline localDeadline(o.maxTotalMs,start);
++        DeadlineScope deadlineScope(samples.deadline,localDeadline);
+@@ -227,0 +231 @@
++        samples.CheckDeadline("validation_input");
+@@ -246,0 +251 @@
++            samples.CheckDeadline("chart_recovery");
+@@ -253 +258,2 @@
+-                for(const auto &p:samples.Greville(false))bound=std::max(bound,FiniteDistance(trim,p.point));
++                for(const auto &p:samples.Greville(false))
++                {samples.CheckDeadline("finite_patch_sampling");bound=std::max(bound,FiniteDistance(trim,p.point));}
+@@ -261 +267,2 @@
+-                target=BuildTarget(trim,v.distanceTolerance*.1,r);
++                samples.CheckDeadline("source_preparation");
++                target=BuildTarget(trim,v.distanceTolerance*.1,r,samples.deadline);
+@@ -265,0 +273 @@
++            samples.CheckDeadline("validation_complete");
+@@ -274,0 +283,3 @@
++    catch(const DeadlineExceeded &e)
++    {r.patch.reset();r.status=HybridValidationStatus::BudgetExceeded;r.timeBudgetExceeded=true;r.timeoutStage=e.stage;r.message=e.what();}
++    catch(const std::invalid_argument &e){r.status=HybridValidationStatus::InvalidInput;r.message=e.what();}
+@@ -282 +293,8 @@
+-    r.totalMs=Ms(start);return r;
++    r.totalMs=Ms(start);
++    if(o.maxTotalMs>0&&r.totalMs>o.maxTotalMs)
++    {
++        r.patch.reset();r.status=HybridValidationStatus::BudgetExceeded;r.timeBudgetExceeded=true;
++        r.timeoutStage="validation_completion_overrun";r.message="Validation wall time exceeded hard limit";
++        r.boundaryDistanceUpperBound=r.boundaryTangentUpperBoundDeg=r.outputMotherDistanceUpperBound=INFINITY;
++    }
++    return r;
+--- a/src/SurfaceSampleContext.h
++++ b/src/SurfaceSampleContext.h
+@@ -2,0 +3 @@
++#include "ExecutionDeadline.h"
+@@ -31,0 +33,3 @@
++    // Optional shared call budget. Null preserves all other conversion paths.
++    const ExecutionDeadline *deadline = nullptr;
++    void CheckDeadline(const char *stage) const { if (deadline) deadline->Check(stage); }
+--- a/src/SurfaceSampleContext.cpp
++++ b/src/SurfaceSampleContext.cpp
+@@ -43,0 +44 @@
++    CheckDeadline("sampling");
+@@ -78,0 +80 @@
++    CheckDeadline("sampling");
+--- a/tests/GeneralRationalBoundaryTests.cpp
++++ b/tests/GeneralRationalBoundaryTests.cpp
+@@ -21,0 +22,5 @@
++struct StageTimer
++{
++    double &out;std::chrono::steady_clock::time_point start=std::chrono::steady_clock::now();
++    explicit StageTimer(double &value):out(value){}~StageTimer(){out+=Ms(start);}
++};
+@@ -293,0 +299,19 @@
++    {
++        GeneralRationalBoundaryOptions deadlineOptions;deadlineOptions.chartDomain=domain;
++        SurfaceSampleContext samples(*flat);
++        ExecutionDeadline expired(50,ExecutionDeadline::Clock::now()-std::chrono::seconds(1));
++        samples.deadline=&expired;
++        auto timed=rb::Validate(samples,plane,deadlineOptions);
++        Require(timed.timeBudgetExceeded&&timed.status==HybridValidationStatus::BudgetExceeded&&!timed.patch,
++                "Expired shared budget reset or leaked output");
++        Require(samples.deadline==&expired,"Validator replaced the caller deadline");
++        GeneralClassificationDiagnostics d;bool stopped=false;
++        try{InitializeGeneralCandidates(samples,deadlineOptions.general,d);}
++        catch(const DeadlineExceeded &){stopped=true;}
++        Require(stopped,"Classification swallowed deadline cancellation");
++        deadlineOptions.maxTotalMs=-1;
++        Require(ValidateGeneralRationalBoundaries(*flat,plane,deadlineOptions).status==HybridValidationStatus::InvalidInput,
++                "Invalid time budget accepted");
++        deadlineOptions.maxTotalMs=0;
++        Require(ValidateGeneralRationalBoundaries(*flat,plane,deadlineOptions).Passed(),"Explicit diagnostic no-deadline mode failed");
++    }
+@@ -355 +379 @@
+-              const std::string &suite,unsigned id,unsigned repeats,bool forceFixed=false)
++              const std::string &suite,unsigned id,unsigned repeats,bool forceFixed=false,double maxCaseMs=50)
+@@ -366,0 +391 @@
++    options.maxTotalMs=maxCaseMs;
+@@ -373 +398 @@
+-    const std::string header="suite,id,run,mode,group,source_type,rational,degree_u,degree_v,controls,source_certified,source_bound,certificate_ms,entry,status,accepted,audit_status,audit_sample_max,classify_ms,validate_ms,sampling_ms,recovery_ms,prepare_ms,boundary_ms,total_ms,attempts,chart_attempts,nodes,refinements,fast_checks,fast_accepted,tangent_fallbacks,position_only,fused_errors,boundary_bound,tangent_deg,mother_bound,output_type,raw_candidates,full_scores,message,audit_message,envelope_checks,envelope_accepted,envelope_fallbacks,envelope_position_witnesses,envelope_tangent_witnesses,tangent_residual_checks,tangent_residual_accepted,tangent_residual_interval_fallbacks\n";
++    const std::string header="suite,id,run,mode,group,source_type,rational,degree_u,degree_v,controls,source_certified,source_bound,certificate_ms,entry,status,accepted,audit_status,audit_sample_max,classify_ms,validate_ms,sampling_ms,recovery_ms,prepare_ms,boundary_ms,total_ms,attempts,chart_attempts,nodes,refinements,fast_checks,fast_accepted,tangent_fallbacks,position_only,fused_errors,boundary_bound,tangent_deg,mother_bound,output_type,raw_candidates,full_scores,message,audit_message,envelope_checks,envelope_accepted,envelope_fallbacks,envelope_position_witnesses,envelope_tangent_witnesses,tangent_residual_checks,tangent_residual_accepted,tangent_residual_interval_fallbacks,max_case_ms,time_budget_exceeded,timeout_stage,within_time_limit\n";
+@@ -390,0 +416 @@
++            ExecutionDeadline deadline(maxCaseMs,start);
+@@ -391,0 +418 @@
++            samples.deadline=&deadline;
+@@ -405 +432,2 @@
+-                auto t=std::chrono::steady_clock::now();auto pool=InitializeGeneralCandidates(samples,options.general,classification);classify+=Ms(t);
++                GeneralCandidatePool pool;
++                {StageTimer timer(classify);pool=InitializeGeneralCandidates(samples,options.general,classification);}
+@@ -408 +436,2 @@
+-                    t=std::chrono::steady_clock::now();auto batch=NextGeneralCandidateBatch(pool,samples,options.general,classification);classify+=Ms(t);
++                    std::vector<GeneralSeed> batch;
++                    {StageTimer timer(classify);batch=NextGeneralCandidateBatch(pool,samples,options.general,classification);}
+@@ -410,2 +439,2 @@
+-                    for(const auto &candidate:batch){attempt(candidate.parameters);if(r.Passed())break;}
+-                    if(r.Passed())break;
++                    for(const auto &candidate:batch){attempt(candidate.parameters);if(r.Passed()||r.timeBudgetExceeded)break;}
++                    if(r.Passed()||r.timeBudgetExceeded)break;
+@@ -415,0 +445,2 @@
++        catch(const DeadlineExceeded &e)
++        {r.patch.reset();r.status=HybridValidationStatus::BudgetExceeded;r.timeBudgetExceeded=true;r.timeoutStage=e.stage;r.message=e.what();}
+@@ -417 +448,4 @@
+-        double total=Ms(start);bool passed=r.Passed();anyFailure|=!passed;
++        double total=Ms(start);
++        if(maxCaseMs>0&&total>maxCaseMs)
++        {r.patch.reset();r.status=HybridValidationStatus::BudgetExceeded;r.timeBudgetExceeded=true;r.timeoutStage="case_completion_overrun";r.message="Case wall time exceeded hard limit";}
++        bool passed=r.Passed();anyFailure|=!passed;
+@@ -427 +461,2 @@
+-                <<(passed?TypeName(r.patch->mother.type):"Unknown")<<','<<classification.rawCandidateCount<<','<<classification.fullScoreCount<<','<<Quote(r.message)<<','<<Quote(auditMessage)<<','<<envelopeChecks<<','<<envelopeAccepted<<','<<envelopeFallbacks<<','<<envelopeWitnesses<<','<<envelopeTangentWitnesses<<','<<residualChecks<<','<<residualAccepted<<','<<residualFallbacks<<'\n';
++                <<(passed?TypeName(r.patch->mother.type):"Unknown")<<','<<classification.rawCandidateCount<<','<<classification.fullScoreCount<<','<<Quote(r.message)<<','<<Quote(auditMessage)<<','<<envelopeChecks<<','<<envelopeAccepted<<','<<envelopeFallbacks<<','<<envelopeWitnesses<<','<<envelopeTangentWitnesses<<','<<residualChecks<<','<<residualAccepted<<','<<residualFallbacks
++                <<','<<maxCaseMs<<','<<r.timeBudgetExceeded<<','<<Quote(r.timeoutStage)<<','<<(maxCaseMs<=0||total<=maxCaseMs)<<'\n';
+@@ -452 +487 @@
+-        GeneralRationalBoundaryOptions knownOptions;knownOptions.chartDomain=c.chartDomain;
++        GeneralRationalBoundaryOptions knownOptions;knownOptions.chartDomain=c.chartDomain;knownOptions.maxTotalMs=maxCaseMs;
+@@ -528,2 +563,2 @@
+-            Require(argc==8&&std::string(argv[7])=="--rational-v2-only","Invalid full-suite arguments");
+-            FullCase(argv[2],argv[3],argv[4],unsigned(std::stoul(argv[5])),unsigned(std::stoul(argv[6])),std::string(argv[1])=="--rational-fixed-case");
++            Require(argc==9&&std::string(argv[7])=="--rational-v2-only","Invalid full-suite arguments");
++            FullCase(argv[2],argv[3],argv[4],unsigned(std::stoul(argv[5])),unsigned(std::stoul(argv[6])),std::string(argv[1])=="--rational-fixed-case",std::stod(argv[8]));
+--- a/tests/RunGeneralRationalBoundaryFull.py
++++ b/tests/RunGeneralRationalBoundaryFull.py
+@@ -10,0 +11 @@
++import math
+@@ -44,0 +46,2 @@
++    p.add_argument('--max-case-ms', type=float, default=50,
++                   help='Shared classification + validation wall budget; 0 disables only for explicit diagnostics')
+@@ -49,0 +53,2 @@
++    if not math.isfinite(args.max_case_ms) or not 0 <= args.max_case_ms <= 60000:
++        p.error('Invalid max-case-ms')
+@@ -72 +77,2 @@
+-                  runs=args.runs, timeout_seconds=args.timeout, cases=cases,
++                  runs=args.runs, timeout_seconds=args.timeout, max_case_ms=args.max_case_ms,
++                  cancellation_reserve_ms=min(5.,args.max_case_ms*.1), cases=cases,
+@@ -99 +105 @@
+-                                             str(target), suite, str(case), str(args.runs), '--rational-v2-only'],
++                                             str(target), suite, str(case), str(args.runs), '--rational-v2-only', str(args.max_case_ms)],
+@@ -117,0 +124,2 @@
++            if float(row.get('max_case_ms', 'nan')) != args.max_case_ms:
++                raise ValueError('Executable did not apply the requested case budget')
+@@ -143 +151,4 @@
+-    return int(bool(errors))
++    overruns = [r for r in all_rows if r.get('within_time_limit') == '0']
++    print(f'Wall-budget violations: {len(overruns)} runs; cooperative cancellations: '
++          f'{sum(r.get("time_budget_exceeded") == "1" for r in all_rows)} runs', flush=True)
++    return int(bool(errors or overruns))
+--- a/tests/SummarizeGeneralRationalBoundaryFull.py
++++ b/tests/SummarizeGeneralRationalBoundaryFull.py
+@@ -73,0 +74,2 @@
++        cancelled = sum(r.get('time_budget_exceeded') == '1' for r in current)
++        overruns = sum(r.get('within_time_limit') == '0' for r in current)
+@@ -76,0 +79,4 @@
++        elif overruns:
++            outcome = 'wall_time_exceeded'
++        elif cancelled:
++            outcome = 'time_budget_exceeded'
+@@ -94,0 +101,2 @@
++        item.update(time_budget_runs=cancelled, over_time_limit_runs=overruns,
++                    timeout_stages='|'.join(sorted({r.get('timeout_stage', '') for r in current} - {''})))
+@@ -108 +116,3 @@
+-        if outcome == 'not_certified_positive':
++        if cancelled:
++            item['diagnosis'] = 'time_budget/' + item['timeout_stages']
++        elif outcome == 'not_certified_positive':
+@@ -125,0 +136,2 @@
++    write(directory / 'over-time-limit.csv', [c for c in cases if c['over_time_limit_runs']])
++    write(directory / 'time-budget-cases.csv', [c for c in cases if c['time_budget_runs']])
+@@ -129,0 +142,2 @@
++                    time_budget_cases=sum(c['time_budget_runs'] > 0 for c in selected),
++                    over_time_limit_cases=sum(c['over_time_limit_runs'] > 0 for c in selected),
+@@ -157,0 +172,3 @@
++                   max_case_ms=config.get('max_case_ms'),
++                   time_budget_cases=sum(c['time_budget_runs'] > 0 for c in cases),
++                   over_time_limit_cases=sum(c['over_time_limit_runs'] > 0 for c in cases),

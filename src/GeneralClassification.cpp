@@ -196,6 +196,7 @@ static void ScoreInterior(GeneralScoringCandidate &candidate, SurfaceSampleConte
     const auto &points = context.Greville();
     for (size_t i : indices)
     {
+        context.CheckDeadline("classification_scores");
         ++diagnostics.interiorPointEvaluations;
         const auto &s = points[i];
         V q = ProjectToMother(a, s.point);
@@ -252,6 +253,7 @@ static void CompleteScore(GeneralScoringCandidate &candidate, SurfaceSampleConte
         for (const auto &edge : context.Boundaries())
             for (const auto &s : edge)
             {
+                context.CheckDeadline("classification_boundary_scores");
                 ++diagnostics.boundaryPointEvaluations;
                 double d = Norm(s.point - ProjectToMother(candidate.seed.parameters, s.point));
                 if (!std::isfinite(d)) throw Failure(Status::IllConditioned, "Nonfinite boundary distance");
@@ -301,6 +303,7 @@ static std::vector<SurfaceSample> SeedSupport(const std::vector<SurfaceSample> &
 GeneralCandidatePool InitializeGeneralCandidates(SurfaceSampleContext &context, const GeneralConversionOptions &o,
                                                  GeneralClassificationDiagnostics &diagnostics)
 {
+    context.CheckDeadline("classification");
     diagnostics = {};
     const auto &points = context.Greville();
     const auto &indices = context.Seeds();
@@ -326,6 +329,7 @@ GeneralCandidatePool InitializeGeneralCandidates(SurfaceSampleContext &context, 
         auto &family = pool.families[familyIndex++];
         for (unsigned attempt = 0; attempt < o.seedAttemptsPerType; ++attempt)
         {
+            context.CheckDeadline("classification_seeds");
             ++diagnostics.seedAttemptCount;
             unsigned groupIndex=static_cast<unsigned>(diagnostics.seedGroups.size());
             diagnostics.seedGroups.emplace_back();
@@ -421,6 +425,7 @@ GeneralCandidatePool InitializeGeneralCandidates(SurfaceSampleContext &context, 
     for (auto &family : pool.families)
         for (auto &candidate : family)
         {
+            context.CheckDeadline("classification_scores");
             ++diagnostics.scoreEvaluationCount;
             ++diagnostics.seedGroups[candidate.seed.score.seedGroup].scored;
             try
@@ -440,6 +445,7 @@ static double PrimaryScore(const GeneralCandidateScore &s) { return std::max(s.i
 std::vector<GeneralSeed> NextGeneralCandidateBatch(GeneralCandidatePool &pool, SurfaceSampleContext &context,
     const GeneralConversionOptions &o, GeneralClassificationDiagnostics &diagnostics)
 {
+    context.CheckDeadline("classification_batch");
     std::vector<GeneralSeed> candidates;
     for (auto &family : pool.families)
     {
@@ -463,6 +469,7 @@ std::vector<GeneralSeed> NextGeneralCandidateBatch(GeneralCandidatePool &pool, S
         };
         for (size_t i : pending)
         {
+            context.CheckDeadline("classification_scores");
             // Only the maximum distance is a lower bound. A coarse RMS is NOT
             // a lower bound on the full weighted RMS. Equal maxima must finish.
             if (best.size() == o.candidatesPerType && lower(i) > PrimaryScore(family[best.back()].seed.score)) break;

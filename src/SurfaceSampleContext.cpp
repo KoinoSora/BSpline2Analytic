@@ -41,6 +41,7 @@ static std::vector<double> GrevilleParameters(const sggk::RealArray &knots,
 const SurfaceSample &SurfaceSampleContext::At(double u, double v,
     sggk::DerivType sideU, sggk::DerivType sideV, bool needDerivatives)
 {
+    CheckDeadline("sampling");
     if (sideU == sggk::DerivType::NONE)
         sideU = u == source.MaxParamU() ? sggk::DerivType::LEFT : sggk::DerivType::RIGHT;
     if (sideV == sggk::DerivType::NONE)
@@ -76,6 +77,7 @@ const SurfaceSample &SurfaceSampleContext::At(double u, double v,
 }
 const std::vector<SurfaceSample> &SurfaceSampleContext::Greville(bool needNormals)
 {
+    CheckDeadline("sampling");
     if (grevilleReady)
     {
         if (needNormals && !grevilleNormalsReady)

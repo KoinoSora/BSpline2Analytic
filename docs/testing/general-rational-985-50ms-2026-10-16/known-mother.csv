@@ -1,0 +1,136 @@
+suite,id,status,accepted,total_ms,charts,nodes,message
+main,204,Passed,1,2.2744,1,16,Sampled interior; continuous exported NURBS boundary position/tangent; no analytic PCurve
+main,205,Passed,1,2.0766,1,12,Sampled interior; continuous exported NURBS boundary position/tangent; no analytic PCurve
+main,206,Passed,1,2.5343,1,16,Sampled interior; continuous exported NURBS boundary position/tangent; no analytic PCurve
+main,207,Passed,1,2.2917000000000001,1,12,Sampled interior; continuous exported NURBS boundary position/tangent; no analytic PCurve
+main,208,Passed,1,2.298,1,14,Sampled interior; continuous exported NURBS boundary position/tangent; no analytic PCurve
+main,209,Passed,1,1.8491,1,10,Sampled interior; continuous exported NURBS boundary position/tangent; no analytic PCurve
+main,210,Passed,1,1.9675,1,16,Sampled interior; continuous exported NURBS boundary position/tangent; no analytic PCurve
+main,211,Passed,1,2.5148999999999999,1,12,Sampled interior; continuous exported NURBS boundary position/tangent; no analytic PCurve
+main,212,Passed,1,2.1692,1,16,Sampled interior; continuous exported NURBS boundary position/tangent; no analytic PCurve
+main,213,Passed,1,2.2612000000000001,1,12,Sampled interior; continuous exported NURBS boundary position/tangent; no analytic PCurve
+main,214,Passed,1,1.8431,1,14,Sampled interior; continuous exported NURBS boundary position/tangent; no analytic PCurve
+main,215,Passed,1,1.8212999999999999,1,10,Sampled interior; continuous exported NURBS boundary position/tangent; no analytic PCurve
+main,224,Passed,1,2.9087000000000001,1,24,Sampled interior; continuous exported NURBS boundary position/tangent; no analytic PCurve
+main,225,Passed,1,2.8955000000000002,1,20,Sampled interior; continuous exported NURBS boundary position/tangent; no analytic PCurve
+main,226,Passed,1,2.5794000000000001,1,24,Sampled interior; continuous exported NURBS boundary position/tangent; no analytic PCurve
+main,227,Passed,1,3.2355,1,20,Sampled interior; continuous exported NURBS boundary position/tangent; no analytic PCurve
+main,228,Passed,1,2.4887000000000001,1,22,Sampled interior; continuous exported NURBS boundary position/tangent; no analytic PCurve
+main,229,Passed,1,2.6366999999999998,1,18,Sampled interior; continuous exported NURBS boundary position/tangent; no analytic PCurve
+main,230,Passed,1,2.6273,1,24,Sampled interior; continuous exported NURBS boundary position/tangent; no analytic PCurve
+main,231,Passed,1,2.8193999999999999,1,20,Sampled interior; continuous exported NURBS boundary position/tangent; no analytic PCurve
+main,232,Passed,1,2.4079999999999999,1,24,Sampled interior; continuous exported NURBS boundary position/tangent; no analytic PCurve
+main,233,Passed,1,2.9533999999999998,1,20,Sampled interior; continuous exported NURBS boundary position/tangent; no analytic PCurve
+main,234,Passed,1,2.2332999999999998,1,22,Sampled interior; continuous exported NURBS boundary position/tangent; no analytic PCurve
+main,235,Passed,1,2.5876000000000001,1,18,Sampled interior; continuous exported NURBS boundary position/tangent; no analytic PCurve
+main,244,NotCertified,0,0.91469999999999996,1,0,Walk outside selected rational chart
+main,245,NotCertified,0,0.74670000000000003,1,0,Walk outside selected rational chart
+main,246,NotCertified,0,0.88380000000000003,1,0,Walk outside selected rational chart
+main,247,NotCertified,0,0.73909999999999998,1,0,Walk outside selected rational chart
+main,248,Passed,1,4.1887999999999996,1,28,Sampled interior; continuous exported NURBS boundary position/tangent; no analytic PCurve
+main,249,Passed,1,3.3643999999999998,1,24,Sampled interior; continuous exported NURBS boundary position/tangent; no analytic PCurve
+main,250,NotCertified,0,0.93969999999999998,1,0,Walk outside selected rational chart
+main,251,NotCertified,0,1.0418000000000001,1,0,Walk outside selected rational chart
+main,252,Passed,1,2.9590000000000001,1,30,Sampled interior; continuous exported NURBS boundary position/tangent; no analytic PCurve
+main,253,Passed,1,4.1237000000000004,1,26,Sampled interior; continuous exported NURBS boundary position/tangent; no analytic PCurve
+main,254,Passed,1,3.0011999999999999,1,28,Sampled interior; continuous exported NURBS boundary position/tangent; no analytic PCurve
+main,255,Passed,1,3.7113999999999998,1,24,Sampled interior; continuous exported NURBS boundary position/tangent; no analytic PCurve
+main,264,Passed,1,3.5472000000000001,1,34,Sampled interior; continuous exported NURBS boundary position/tangent; no analytic PCurve
+main,265,Passed,1,5.1477000000000004,1,30,Sampled interior; continuous exported NURBS boundary position/tangent; no analytic PCurve
+main,266,Passed,1,3.1901000000000002,1,34,Sampled interior; continuous exported NURBS boundary position/tangent; no analytic PCurve
+main,267,Passed,1,3.9582999999999999,1,30,Sampled interior; continuous exported NURBS boundary position/tangent; no analytic PCurve
+main,268,Passed,1,3.1088,1,32,Sampled interior; continuous exported NURBS boundary position/tangent; no analytic PCurve
+main,269,Passed,1,3.7273000000000001,1,28,Sampled interior; continuous exported NURBS boundary position/tangent; no analytic PCurve
+main,270,Passed,1,4.2682000000000002,1,34,Sampled interior; continuous exported NURBS boundary position/tangent; no analytic PCurve
+main,271,Passed,1,4.0319000000000003,1,30,Sampled interior; continuous exported NURBS boundary position/tangent; no analytic PCurve
+main,272,Passed,1,3.7936000000000001,1,34,Sampled interior; continuous exported NURBS boundary position/tangent; no analytic PCurve
+main,273,Passed,1,4.0072999999999999,1,30,Sampled interior; continuous exported NURBS boundary position/tangent; no analytic PCurve
+main,274,Passed,1,4.4897999999999998,1,32,Sampled interior; continuous exported NURBS boundary position/tangent; no analytic PCurve
+main,275,Passed,1,3.7082999999999999,1,28,Sampled interior; continuous exported NURBS boundary position/tangent; no analytic PCurve
+main,284,Passed,1,3.9946000000000002,1,44,Sampled interior; continuous exported NURBS boundary position/tangent; no analytic PCurve
+main,285,Passed,1,5.2454999999999998,1,40,Sampled interior; continuous exported NURBS boundary position/tangent; no analytic PCurve
+main,286,Passed,1,3.7921999999999998,1,44,Sampled interior; continuous exported NURBS boundary position/tangent; no analytic PCurve
+main,287,Passed,1,4.9295999999999998,1,40,Sampled interior; continuous exported NURBS boundary position/tangent; no analytic PCurve
+main,288,Passed,1,4.4881000000000002,1,44,Sampled interior; continuous exported NURBS boundary position/tangent; no analytic PCurve
+main,289,Passed,1,5.1071999999999997,1,40,Sampled interior; continuous exported NURBS boundary position/tangent; no analytic PCurve
+main,290,Passed,1,3.8468,1,44,Sampled interior; continuous exported NURBS boundary position/tangent; no analytic PCurve
+main,291,Passed,1,5.0437000000000003,1,40,Sampled interior; continuous exported NURBS boundary position/tangent; no analytic PCurve
+main,292,Passed,1,3.8616000000000001,1,44,Sampled interior; continuous exported NURBS boundary position/tangent; no analytic PCurve
+main,293,Passed,1,5.8068,1,40,Sampled interior; continuous exported NURBS boundary position/tangent; no analytic PCurve
+main,294,NotCertified,0,0.90229999999999999,1,0,Walk outside selected rational chart
+main,295,NotCertified,0,1.1389,1,0,Walk outside selected rational chart
+extreme,68,NotCertified,0,0.75629999999999997,1,0,Walk outside selected rational chart
+extreme,70,NotCertified,0,1.4266000000000001,1,0,Walk outside selected rational chart
+extreme,76,NotCertified,0,1.5444,1,8,Rational boundary correspondence not certified
+extreme,78,NotCertified,0,2.7132000000000001,1,9,Rational boundary correspondence not certified
+extreme,86,NotCertified,0,1.3323,1,0,Walk outside selected rational chart
+extreme,92,NotCertified,0,2.242,1,9,Rational boundary correspondence not certified
+extreme,94,NotCertified,0,3.1932,1,11,Rational boundary correspondence not certified
+extreme,95,NotCertified,0,7.4340000000000002,1,34,Rational boundary correspondence not certified
+extreme,100,NotCertified,0,1.161,1,0,Walk outside selected rational chart
+extreme,102,NotCertified,0,1.2983,1,0,Walk outside selected rational chart
+extreme,108,NotCertified,0,1.0730999999999999,1,0,Walk outside selected rational chart
+extreme,110,NotCertified,0,0.90059999999999996,1,0,Walk outside selected rational chart
+extreme,116,NotCertified,0,0.95950000000000002,1,0,Walk outside selected rational chart
+extreme,118,NotCertified,0,1.2442,1,0,Walk outside selected rational chart
+extreme,124,NotCertified,0,1.0124,1,0,Walk outside selected rational chart
+extreme,125,NotCertified,0,1.26,1,0,Walk outside selected rational chart
+extreme,126,NotCertified,0,1.5692999999999999,1,0,Walk outside selected rational chart
+extreme,127,NotCertified,0,1.8194999999999999,1,0,Walk outside selected rational chart
+extreme,128,NotCertified,0,0.3881,1,0,NURBS-domain straight-boundary recovery unresolved
+extreme,129,NotCertified,0,0.33989999999999998,1,0,NURBS-domain straight-boundary recovery unresolved
+extreme,130,NotCertified,0,0.60619999999999996,1,0,Walk outside selected rational chart
+extreme,131,NotCertified,0,0.46089999999999998,1,0,Walk outside selected rational chart
+extreme,132,NotCertified,0,0.80640000000000001,1,0,NURBS-domain straight-boundary recovery unresolved
+extreme,133,NotCertified,0,0.39229999999999998,1,0,NURBS-domain straight-boundary recovery unresolved
+extreme,134,NotCertified,0,0.73580000000000001,1,0,Walk outside selected rational chart
+extreme,135,NotCertified,0,0.60089999999999999,1,0,Walk outside selected rational chart
+extreme,136,NotCertified,0,0.57850000000000001,1,0,NURBS-domain straight-boundary recovery unresolved
+extreme,137,NotCertified,0,0.57999999999999996,1,0,NURBS-domain straight-boundary recovery unresolved
+extreme,138,NotCertified,0,0.67420000000000002,1,0,Walk outside selected rational chart
+extreme,139,NotCertified,0,0.87170000000000003,1,0,Walk outside selected rational chart
+extreme,140,NotCertified,0,0.81120000000000003,1,0,NURBS-domain straight-boundary recovery unresolved
+extreme,141,NotCertified,0,0.7742,1,0,NURBS-domain straight-boundary recovery unresolved
+extreme,142,NotCertified,0,0.79269999999999996,1,0,Walk outside selected rational chart
+extreme,143,NotCertified,0,1.3526,1,0,Walk outside selected rational chart
+extreme,160,NotCertified,0,0.72799999999999998,1,0,NURBS-domain straight-boundary recovery unresolved
+extreme,161,NotCertified,0,0.64529999999999998,1,0,NURBS-domain straight-boundary recovery unresolved
+extreme,162,NotCertified,0,0.78580000000000005,1,0,Walk outside selected rational chart
+extreme,163,NotCertified,0,0.37880000000000003,1,0,Walk outside selected rational chart
+extreme,164,NotCertified,0,0.69850000000000001,1,0,NURBS-domain straight-boundary recovery unresolved
+extreme,165,NotCertified,0,0.29759999999999998,1,0,NURBS-domain straight-boundary recovery unresolved
+extreme,166,NotCertified,0,0.67459999999999998,1,0,Walk outside selected rational chart
+extreme,167,NotCertified,0,0.43619999999999998,1,0,Walk outside selected rational chart
+extreme,168,NotCertified,0,0.43659999999999999,1,0,NURBS-domain straight-boundary recovery unresolved
+extreme,169,NotCertified,0,0.81100000000000005,1,0,NURBS-domain straight-boundary recovery unresolved
+extreme,170,NotCertified,0,0.74770000000000003,1,0,Walk outside selected rational chart
+extreme,171,NotCertified,0,0.95709999999999995,1,0,Walk outside selected rational chart
+extreme,172,NotCertified,0,0.73619999999999997,1,0,NURBS-domain straight-boundary recovery unresolved
+extreme,173,NotCertified,0,0.51870000000000005,1,0,NURBS-domain straight-boundary recovery unresolved
+extreme,174,NotCertified,0,0.57909999999999995,1,0,Walk outside selected rational chart
+extreme,175,NotCertified,0,0.91620000000000001,1,0,Walk outside selected rational chart
+extreme,180,NotCertified,0,2.1137999999999999,1,13,Rational boundary correspondence not certified
+extreme,182,NotCertified,0,0.96850000000000003,1,0,Walk outside selected rational chart
+extreme,188,NotCertified,0,1.9649000000000001,1,6,Rational boundary correspondence not certified
+extreme,190,NotCertified,0,2.5994000000000002,1,10,Rational boundary correspondence not certified
+extreme,196,NotCertified,0,1.4734,1,9,Rational boundary correspondence not certified
+extreme,198,NotCertified,0,1.2345999999999999,1,0,Walk outside selected rational chart
+extreme,204,NotCertified,0,2.1164000000000001,1,12,Rational boundary correspondence not certified
+extreme,206,NotCertified,0,3.1848000000000001,1,12,Rational boundary correspondence not certified
+extreme,213,NotCertified,0,0.4602,1,0,Walk outside selected rational chart
+extreme,215,NotCertified,0,0.54990000000000006,1,0,Walk outside selected rational chart
+extreme,221,NotCertified,0,0.49330000000000002,1,0,Walk outside selected rational chart
+extreme,223,NotCertified,0,0.4819,1,0,Walk outside selected rational chart
+extreme,229,NotCertified,0,0.6351,1,0,Walk outside selected rational chart
+extreme,231,NotCertified,0,0.76910000000000001,1,0,Walk outside selected rational chart
+extreme,237,NotCertified,0,0.435,1,0,Walk outside selected rational chart
+extreme,239,NotCertified,0,0.83979999999999999,1,0,Walk outside selected rational chart
+extreme,288,NotCertified,0,0.91439999999999999,1,0,Walk outside selected rational chart
+extreme,290,NotCertified,0,1.0588,1,0,Walk outside selected rational chart
+extreme,296,NotCertified,0,0.77649999999999997,1,0,NURBS-domain straight-boundary recovery unresolved
+extreme,297,NotCertified,0,0.36709999999999998,1,0,NURBS-domain straight-boundary recovery unresolved
+extreme,299,NotCertified,0,0.72729999999999995,1,0,NURBS-domain straight-boundary recovery unresolved
+extreme,300,NotCertified,0,0.80759999999999998,1,0,Walk outside selected rational chart
+extreme,301,NotCertified,0,0.66279999999999994,1,0,Walk outside selected rational chart
+extreme,302,NotCertified,0,0.83179999999999998,1,0,Walk outside selected rational chart
+extreme,303,NotCertified,0,0.57389999999999997,1,0,Walk outside selected rational chart

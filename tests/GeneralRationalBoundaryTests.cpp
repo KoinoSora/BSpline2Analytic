@@ -19,6 +19,11 @@ namespace
 unsigned assertions=0;
 void Require(bool p,const std::string &m){++assertions;if(!p)throw std::runtime_error(m);}
 double Ms(std::chrono::steady_clock::time_point t){return std::chrono::duration<double,std::milli>(std::chrono::steady_clock::now()-t).count();}
+struct StageTimer
+{
+    double &out;std::chrono::steady_clock::time_point start=std::chrono::steady_clock::now();
+    explicit StageTimer(double &value):out(value){}~StageTimer(){out+=Ms(start);}
+};
 double Mid(I a){return a.lo+(a.hi-a.lo)*.5;}
 std::string Quote(std::string s){std::string o="\"";for(char c:s){if(c=='"')o+='"';o+=c=='\n'?' ':c;}return o+'"';}
 AnalyticParameters Mother(unsigned type)
@@ -291,6 +296,25 @@ void Unit(const std::filesystem::path &data)
         Require(budget.status==HybridValidationStatus::BudgetExceeded&&!budget.patch,"Budget leaked output");
     }
     auto plane=Mother(0);auto flat=Fixture(plane,domain,false);
+    {
+        GeneralRationalBoundaryOptions deadlineOptions;deadlineOptions.chartDomain=domain;
+        SurfaceSampleContext samples(*flat);
+        ExecutionDeadline expired(50,ExecutionDeadline::Clock::now()-std::chrono::seconds(1));
+        samples.deadline=&expired;
+        auto timed=rb::Validate(samples,plane,deadlineOptions);
+        Require(timed.timeBudgetExceeded&&timed.status==HybridValidationStatus::BudgetExceeded&&!timed.patch,
+                "Expired shared budget reset or leaked output");
+        Require(samples.deadline==&expired,"Validator replaced the caller deadline");
+        GeneralClassificationDiagnostics d;bool stopped=false;
+        try{InitializeGeneralCandidates(samples,deadlineOptions.general,d);}
+        catch(const DeadlineExceeded &){stopped=true;}
+        Require(stopped,"Classification swallowed deadline cancellation");
+        deadlineOptions.maxTotalMs=-1;
+        Require(ValidateGeneralRationalBoundaries(*flat,plane,deadlineOptions).status==HybridValidationStatus::InvalidInput,
+                "Invalid time budget accepted");
+        deadlineOptions.maxTotalMs=0;
+        Require(ValidateGeneralRationalBoundaries(*flat,plane,deadlineOptions).Passed(),"Explicit diagnostic no-deadline mode failed");
+    }
     auto variableSpeed=Fixture(plane,domain,false);variableSpeed->UDegreeElevation(3-variableSpeed->DegreeU());
     for(unsigned j=0;j<variableSpeed->ControlPoints().front().size();++j)
         variableSpeed->SetControlPoint(Point(Get(variableSpeed->ControlPoints()[1][j])+Get(plane.xDirection)*1e-6),1,j);
@@ -352,7 +376,7 @@ void Unit(const std::filesystem::path &data)
     std::cout<<"Rational boundary unit assertions="<<assertions<<'\n';
 }
 void FullCase(const std::filesystem::path &data,const std::filesystem::path &csv,
-              const std::string &suite,unsigned id,unsigned repeats,bool forceFixed=false)
+              const std::string &suite,unsigned id,unsigned repeats,bool forceFixed=false,double maxCaseMs=50)
 {
     bool synthetic=suite=="synthetic",extra=suite=="extra",extreme=suite=="extreme";
     Require(synthetic||extra||extreme||suite=="main","Unknown rational suite");
@@ -364,13 +388,14 @@ void FullCase(const std::filesystem::path &data,const std::filesystem::path &csv
     auto cert=CertifyRationalDomain(c);certificateMs=Ms(certificateStart);
     Require(cert.passed,"V2 input certificate failed: "+cert.message);
     GeneralRationalBoundaryOptions options;
+    options.maxTotalMs=maxCaseMs;
     bool supplied=forceFixed||synthetic||(extra&&(id<20||id>=40));
     if(forceFixed||synthetic||(extra&&id<20))options.chartDomain=c.chartDomain;
     if(extra&&c.group==GeneralFixtureGroup::InvalidOptions)
     {if(id%2)options.general.fitting.validation.distanceTolerance=-1;else options.general.fitting.sampling.maxSamples=0;}
     if(extra&&c.group==GeneralFixtureGroup::ValidationBudget)options.maxBoundaryNodes=1;
     if(extra&&c.group==GeneralFixtureGroup::SpherePriority)options.general.similarScoreAbsoluteRatio=1e6;
-    const std::string header="suite,id,run,mode,group,source_type,rational,degree_u,degree_v,controls,source_certified,source_bound,certificate_ms,entry,status,accepted,audit_status,audit_sample_max,classify_ms,validate_ms,sampling_ms,recovery_ms,prepare_ms,boundary_ms,total_ms,attempts,chart_attempts,nodes,refinements,fast_checks,fast_accepted,tangent_fallbacks,position_only,fused_errors,boundary_bound,tangent_deg,mother_bound,output_type,raw_candidates,full_scores,message,audit_message,envelope_checks,envelope_accepted,envelope_fallbacks,envelope_position_witnesses,envelope_tangent_witnesses,tangent_residual_checks,tangent_residual_accepted,tangent_residual_interval_fallbacks\n";
+    const std::string header="suite,id,run,mode,group,source_type,rational,degree_u,degree_v,controls,source_certified,source_bound,certificate_ms,entry,status,accepted,audit_status,audit_sample_max,classify_ms,validate_ms,sampling_ms,recovery_ms,prepare_ms,boundary_ms,total_ms,attempts,chart_attempts,nodes,refinements,fast_checks,fast_accepted,tangent_fallbacks,position_only,fused_errors,boundary_bound,tangent_deg,mother_bound,output_type,raw_candidates,full_scores,message,audit_message,envelope_checks,envelope_accepted,envelope_fallbacks,envelope_position_witnesses,envelope_tangent_witnesses,tangent_residual_checks,tangent_residual_accepted,tangent_residual_interval_fallbacks,max_case_ms,time_budget_exceeded,timeout_stage,within_time_limit\n";
     std::vector<std::string> rows;bool anyFailure=false;
     auto save=[&]{std::ofstream out(csv);Require(bool(out),"Cannot write full-suite CSV");out<<header;for(const auto &row:rows)out<<row;};
     auto attemptPath=csv.parent_path()/(csv.stem().string()+"-attempts.csv");
@@ -388,7 +413,9 @@ void FullCase(const std::filesystem::path &data,const std::filesystem::path &csv
         unsigned residualChecks=0,residualAccepted=0,residualFallbacks=0;
         try
         {
+            ExecutionDeadline deadline(maxCaseMs,start);
             SurfaceSampleContext samples(*c.input,options.general.fitting.sampling.maxSamples);
+            samples.deadline=&deadline;
             auto attempt=[&](const AnalyticParameters &a)
             {
                 r=rb::Validate(samples,a,options);validate+=r.totalMs;sampling+=r.samplingMs;recovery+=r.recoveryMs;
@@ -402,19 +429,26 @@ void FullCase(const std::filesystem::path &data,const std::filesystem::path &csv
             if(supplied)attempt(c.truth);
             else
             {
-                auto t=std::chrono::steady_clock::now();auto pool=InitializeGeneralCandidates(samples,options.general,classification);classify+=Ms(t);
+                GeneralCandidatePool pool;
+                {StageTimer timer(classify);pool=InitializeGeneralCandidates(samples,options.general,classification);}
                 for(;;)
                 {
-                    t=std::chrono::steady_clock::now();auto batch=NextGeneralCandidateBatch(pool,samples,options.general,classification);classify+=Ms(t);
+                    std::vector<GeneralSeed> batch;
+                    {StageTimer timer(classify);batch=NextGeneralCandidateBatch(pool,samples,options.general,classification);}
                     if(batch.empty())break;
-                    for(const auto &candidate:batch){attempt(candidate.parameters);if(r.Passed())break;}
-                    if(r.Passed())break;
+                    for(const auto &candidate:batch){attempt(candidate.parameters);if(r.Passed()||r.timeBudgetExceeded)break;}
+                    if(r.Passed()||r.timeBudgetExceeded)break;
                 }
                 if(attempts.empty())r.message="No classified candidate available";
             }
         }
+        catch(const DeadlineExceeded &e)
+        {r.patch.reset();r.status=HybridValidationStatus::BudgetExceeded;r.timeBudgetExceeded=true;r.timeoutStage=e.stage;r.message=e.what();}
         catch(const std::exception &e){r.patch.reset();r.status=HybridValidationStatus::NotCertified;r.message=std::string("Algorithm exception: ")+e.what();}
-        double total=Ms(start);bool passed=r.Passed();anyFailure|=!passed;
+        double total=Ms(start);
+        if(maxCaseMs>0&&total>maxCaseMs)
+        {r.patch.reset();r.status=HybridValidationStatus::BudgetExceeded;r.timeBudgetExceeded=true;r.timeoutStage="case_completion_overrun";r.message="Case wall time exceeded hard limit";}
+        bool passed=r.Passed();anyFailure|=!passed;
         std::cout<<"END_ALGORITHM "<<run<<std::endl;
         std::string auditStatus=passed?"pending":"not_applicable",auditMessage;double audit=std::numeric_limits<double>::quiet_NaN();
         auto line=[&]
@@ -424,7 +458,8 @@ void FullCase(const std::filesystem::path &data,const std::filesystem::path &csv
                 <<(options.chartDomain?"fixed_chart":supplied?"supplied_mother":"classified")<<','<<HybridValidationStatusName(r.status)<<','<<passed<<','<<auditStatus<<','<<audit<<','
                 <<classify<<','<<validate<<','<<sampling<<','<<recovery<<','<<prepare<<','<<boundary<<','<<total<<','<<attempts.size()<<','<<charts<<','<<nodes<<','<<refinements<<','
                 <<fast<<','<<fastAccepted<<','<<fallback<<','<<position<<','<<fused<<','<<r.boundaryDistanceUpperBound<<','<<r.boundaryTangentUpperBoundDeg<<','<<r.outputMotherDistanceUpperBound<<','
-                <<(passed?TypeName(r.patch->mother.type):"Unknown")<<','<<classification.rawCandidateCount<<','<<classification.fullScoreCount<<','<<Quote(r.message)<<','<<Quote(auditMessage)<<','<<envelopeChecks<<','<<envelopeAccepted<<','<<envelopeFallbacks<<','<<envelopeWitnesses<<','<<envelopeTangentWitnesses<<','<<residualChecks<<','<<residualAccepted<<','<<residualFallbacks<<'\n';
+                <<(passed?TypeName(r.patch->mother.type):"Unknown")<<','<<classification.rawCandidateCount<<','<<classification.fullScoreCount<<','<<Quote(r.message)<<','<<Quote(auditMessage)<<','<<envelopeChecks<<','<<envelopeAccepted<<','<<envelopeFallbacks<<','<<envelopeWitnesses<<','<<envelopeTangentWitnesses<<','<<residualChecks<<','<<residualAccepted<<','<<residualFallbacks
+                <<','<<maxCaseMs<<','<<r.timeBudgetExceeded<<','<<Quote(r.timeoutStage)<<','<<(maxCaseMs<=0||total<=maxCaseMs)<<'\n';
             return out.str();
         };
         // Save measured algorithm time before the independent SDK audit, so
@@ -449,7 +484,7 @@ void FullCase(const std::filesystem::path &data,const std::filesystem::path &csv
     if(anyFailure&&((suite=="main"&&id<500)||extreme))
     {
         std::cout<<"BEGIN_KNOWN_MOTHER_DIAGNOSTIC"<<std::endl;
-        GeneralRationalBoundaryOptions knownOptions;knownOptions.chartDomain=c.chartDomain;
+        GeneralRationalBoundaryOptions knownOptions;knownOptions.chartDomain=c.chartDomain;knownOptions.maxTotalMs=maxCaseMs;
         auto known=ValidateGeneralRationalBoundaries(*c.input,c.truth,knownOptions);
         std::ofstream out(csv.parent_path()/(csv.stem().string()+"-known.csv"));
         out<<"suite,id,status,accepted,total_ms,charts,nodes,message\n"<<std::setprecision(17)<<suite<<','<<id<<','<<HybridValidationStatusName(known.status)<<','<<known.Passed()<<','
@@ -525,8 +560,8 @@ int main(int argc,char **argv)
         else if(std::string(argv[1])=="--rational-unit"){Require(argc==3,"Invalid unit arguments");Unit(argv[2]);}
         else if(std::string(argv[1])=="--rational-full-case"||std::string(argv[1])=="--rational-fixed-case")
         {
-            Require(argc==8&&std::string(argv[7])=="--rational-v2-only","Invalid full-suite arguments");
-            FullCase(argv[2],argv[3],argv[4],unsigned(std::stoul(argv[5])),unsigned(std::stoul(argv[6])),std::string(argv[1])=="--rational-fixed-case");
+            Require(argc==9&&std::string(argv[7])=="--rational-v2-only","Invalid full-suite arguments");
+            FullCase(argv[2],argv[3],argv[4],unsigned(std::stoul(argv[5])),unsigned(std::stoul(argv[6])),std::string(argv[1])=="--rational-fixed-case",std::stod(argv[8]));
         }
         else
         {

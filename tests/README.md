@@ -4,6 +4,10 @@
 
 985 例两方向次数均为 **3–5**，控制顶点总数 **≤200**，算法几何容差保持 **1e-5**；有意超差的负例/探针不改变验收阈值。生成器、清单发布和运行器均检查表示约束。
 
+后续已获准并完成新版全量回归：**985 例 × 3 次**，默认单例共享 **50ms** 分类＋验证预算，实际最大 **18.7393ms**，无时间预算退出；850 个正例中 710 个认证、140 个未认证。见 [全量耗时与失败报告](../docs/testing/GENERAL_RATIONAL_985_50MS_2026-10-16.md)。单测及残差包络精确有理数审计也已执行通过。以下“未运行”记录描述此前生成/残差替换阶段，不再表示最新测试状态。
+
+`RunGeneralRationalBoundaryFull.py --max-case-ms 50` 默认保留 5ms 清理余量、45ms 协作取消。CSV 记录真实耗时、`time_budget_exceeded`、`timeout_stage` 和 `within_time_limit`；汇总将时间取消与几何未认证分开。`over-time-limit.csv` 列出实际超过上限的案例，`time-budget-cases.csv` 列出预算中止案例。运行器对进程错误或实际超时返回非零；正例未认证须查看 `failures.csv`，不能以进程运行成功代替回归通过。`--max-case-ms 0` 只用于明确的不限时诊断；默认运行绝不取消 50ms 约束。
+
 2026-10-16 本轮仅生成并独立认证数据、编译迁移后的入口，**没有运行兜底单测、转换、分类或性能测试**。来源认证通过不代表兜底识别通过，也不产生新的 10 ms 性能结论。构造方法、次数变化、来源证书和命令见 [V2 数据说明](../docs/testing/GENERAL_RATIONAL_DATASET_V2.md)。
 
 后续已将一般兜底的切向叉乘后备替换为正比例缩放残差，见 [实现与编译记录](../docs/testing/GENERAL_TANGENT_RESIDUAL_2026-10-16.md)。本轮仅编译和静态检查，未运行单测、包络导出/数值审计或数据集。全量及选例 CSV 新增 `tangent_residual_checks`、`tangent_residual_accepted`、`tangent_residual_interval_fallbacks`；后续获准运行时用于区分残差构造次数、通过次数及区间残差调用次数（含直接调用）。`AuditGeneralBoundaryEnvelope.py` 已改为精确有理数残差系数和角度界审计，需要重新导出的残差格式；不读取旧点积/叉乘导出作为新实现证据。

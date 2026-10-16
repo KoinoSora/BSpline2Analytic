@@ -1,5 +1,6 @@
 #pragma once
 #include "Numerics.h"
+#include "ExecutionDeadline.h"
 #include <map>
 #include <tuple>
 
@@ -29,6 +30,9 @@ public:
     const std::array<std::vector<SurfaceSample>, 4> &Boundaries();
     unsigned Evaluations() const { return static_cast<unsigned>(values.size()); }
     const sggk::BSplineSurface &source;
+    // Optional shared call budget. Null preserves all other conversion paths.
+    const ExecutionDeadline *deadline = nullptr;
+    void CheckDeadline(const char *stage) const { if (deadline) deadline->Check(stage); }
 private:
     unsigned budget;
     bool grevilleReady = false, grevilleNormalsReady = false, boundariesReady = false;

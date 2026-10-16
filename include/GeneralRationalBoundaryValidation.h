@@ -11,6 +11,9 @@ struct GeneralRationalBoundaryOptions
     // No analytic PCurve is constructed. Omitted: infer a box from boundary walks.
     std::optional<std::array<double,4>> chartDomain;
     unsigned maxChartAttempts = 12, maxBoundaryNodes = 4096, maxBoundaryDepth = 14;
+    // Wall-clock budget; 0 explicitly disables it for diagnostics. Includes all
+    // validation stages. Classified callers share one deadline across candidates.
+    double maxTotalMs = 50;
 };
 struct GeneralBoundaryPatch
 {
@@ -46,6 +49,8 @@ struct GeneralRationalBoundaryReport
     // Certified output-curve distance to the ideal rational trace on the mother.
     double outputMotherDistanceUpperBound = INFINITY;
     double samplingMs = 0, recoveryMs = 0, preparationMs = 0, boundaryMs = 0, totalMs = 0;
+    bool timeBudgetExceeded = false;
+    std::string timeoutStage;
     std::string message;
     bool Passed() const noexcept {return status==HybridValidationStatus::Passed&&patch.has_value();}
 };

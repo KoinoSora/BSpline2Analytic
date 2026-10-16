@@ -108,7 +108,8 @@ V ChartPoint(const Trim &t,std::array<double,2> uv)
     if(!Finite(point))throw Failure(Status::VerificationFailed,"Nonfinite chart sample point");
     return point;
 }
-Target BuildTarget(const Trim &t,double outputTolerance,GeneralRationalBoundaryReport &report)
+Target BuildTarget(const Trim &t,double outputTolerance,GeneralRationalBoundaryReport &report,
+                   const ExecutionDeadline *deadline)
 {
     Target result;auto &patch=result.patch;patch.mother=t.mother;patch.chartDomain=t.domain;
     patch.rationalCorners=t.polygon.corners;patch.tangentNotApplicable=t.collapsed;
@@ -124,12 +125,14 @@ Target BuildTarget(const Trim &t,double outputTolerance,GeneralRationalBoundaryR
     paired::Products products;
     for(unsigned e=0;e<4;++e)
     {
+        if(deadline)deadline->Check("target_preparation");
         auto ideal=ComposeEdge(t,e,products);unsigned degree=1;
         for(const auto &c:ideal)degree=std::max({degree,c.p.x.u,c.p.y.u,c.p.z.u,c.w.u});
         report.maxTargetDegree=std::max(report.maxTargetDegree,degree);
         sggk::Point3DArray cp;sggk::RealArray weights,knots{0};sggk::UIntArray mults{degree+1};
         for(size_t k=0;k<ideal.size();++k)
         {
+            if(deadline)deadline->Check("target_preparation");
             auto &c=ideal[k];c.p={products.Elevate(c.p.x,degree,0),products.Elevate(c.p.y,degree,0),
                                   products.Elevate(c.p.z,degree,0)};c.w=products.Elevate(c.w,degree,0);
             if(c.w.range().lo<=0)throw Failure(Status::VerificationFailed,"Nonpositive target weight");
@@ -165,6 +168,7 @@ Target BuildTarget(const Trim &t,double outputTolerance,GeneralRationalBoundaryR
         }
         for(size_t k=0;k<ideal.size();++k)
         {
+            if(deadline)deadline->Check("target_export_certificate");
             const auto &c=ideal[k];
             BezierCell actual{{BPoly(degree,0),BPoly(degree,0),BPoly(degree,0)},c.u0,c.u1,0,1,BPoly(degree,0)};
             for(unsigned i=0;i<=degree;++i)

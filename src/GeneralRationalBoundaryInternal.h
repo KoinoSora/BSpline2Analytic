@@ -79,7 +79,8 @@ double ScaledTangentSineSquaredUpper(const BV &source,const BV &residual,const B
 BezierCell ComposeLine(const paired::TargetCell &,sggk::Point2D,sggk::Point2D,
                        double,double,paired::Products &);
 std::vector<BezierCell> ComposeEdge(const Trim &,unsigned,paired::Products &);
-Target BuildTarget(const Trim &,double outputTolerance,GeneralRationalBoundaryReport &);
+Target BuildTarget(const Trim &,double outputTolerance,GeneralRationalBoundaryReport &,
+                   const ExecutionDeadline *deadline=nullptr);
 // Optional diagnostic sink. Normal validation does not collect walks or change
 // any recovery decision. Detailed analysis is run outside performance timers.
 struct RecoveryDiagnostics

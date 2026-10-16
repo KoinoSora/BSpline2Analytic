@@ -40,6 +40,7 @@ class Certifier
     }
     bool Visit(const BezierCell &s,unsigned edge,double lo,double hi,unsigned depth)
     {
+        samples.CheckDeadline("boundary_certificate");
         if(++report.boundaryNodes>options.maxBoundaryNodes)throw Budget("Rational boundary node budget exhausted");
         if(!(lo<hi))return false;
         for(const auto &part:target.edges[edge])if(part.u1>lo&&part.u1<hi)
@@ -206,6 +207,8 @@ GeneralRationalBoundaryReport Validate(SurfaceSampleContext &samples,const Analy
     GeneralRationalBoundaryReport r;auto start=Clock::now();
     try
     {
+        ExecutionDeadline localDeadline(o.maxTotalMs,start);
+        DeadlineScope deadlineScope(samples.deadline,localDeadline);
         const auto &s=samples.source;ValidateSurface(s);const auto &v=o.general.fitting.validation;
         if(!(v.distanceTolerance>0&&std::isfinite(v.distanceTolerance))||
            !(v.boundaryTangentToleranceDeg>0&&v.boundaryTangentToleranceDeg<90)||
@@ -225,6 +228,7 @@ GeneralRationalBoundaryReport Validate(SurfaceSampleContext &samples,const Analy
             throw Failure(Status::Unsupported,"Only regular ring torus supported");
         if(a.type==T::Cone&&!(a.halfAngle>0&&a.halfAngle<Pi/2))throw Failure(Status::InvalidInput,"Invalid cone angle");
         auto frame=FrameOf(a);if(!Finite(frame.o)||!Finite(frame.x)||!Finite(frame.z))throw Failure(Status::InvalidInput,"Invalid mother frame");
+        samples.CheckDeadline("validation_input");
         if(s.IsRational())for(const auto &row:s.Weights())for(double w:row)
             if(!(w>0))throw Failure(Status::Unsupported,"Positive source weights required");
         for(bool u:{false,true})
@@ -244,13 +248,15 @@ GeneralRationalBoundaryReport Validate(SurfaceSampleContext &samples,const Analy
         std::optional<std::array<std::vector<BezierCell>,4>> source;
         for(const auto &chart:charts)
         {
+            samples.CheckDeadline("chart_recovery");
             ++r.chartAttempts;Trim trim;bool recovered=false;
             try{Measure timer(r.recoveryMs);recovered=Recover(samples,chart,o,trim);}
             catch(const Failure &e){r.message=e.what();continue;}
             if(!recovered){r.message="NURBS-domain straight-boundary recovery unresolved";continue;}
             {
                 Measure timer(r.samplingMs);double bound=0;
-                for(const auto &p:samples.Greville(false))bound=std::max(bound,FiniteDistance(trim,p.point));
+                for(const auto &p:samples.Greville(false))
+                {samples.CheckDeadline("finite_patch_sampling");bound=std::max(bound,FiniteDistance(trim,p.point));}
                 r.interiorSampleMaxFiniteDistance=bound;
                 if(!(bound<v.distanceTolerance)){r.message="Finite-patch sample witness exceeded";continue;}
             }
@@ -258,11 +264,13 @@ GeneralRationalBoundaryReport Validate(SurfaceSampleContext &samples,const Analy
             {
                 Measure timer(r.preparationMs);
                 if(!source)source=ExtractHybridBoundaries(s,Get(a.origin));
-                target=BuildTarget(trim,v.distanceTolerance*.1,r);
+                samples.CheckDeadline("source_preparation");
+                target=BuildTarget(trim,v.distanceTolerance*.1,r,samples.deadline);
                 target.patch.sourceDomain={s.MinParamU(),s.MaxParamU(),s.MinParamV(),s.MaxParamV()};
             }
             bool passed;
             {Measure timer(r.boundaryMs);Certifier validator(samples,trim,target,o,r);passed=validator.Run(*source);}
+            samples.CheckDeadline("validation_complete");
             if(passed)
             {
                 r.outputMotherDistanceUpperBound=target.motherBound;r.patch=std::move(target.patch);
@@ -272,6 +280,9 @@ GeneralRationalBoundaryReport Validate(SurfaceSampleContext &samples,const Analy
             r.message="Rational boundary correspondence not certified";
         }
     }
+    catch(const DeadlineExceeded &e)
+    {r.patch.reset();r.status=HybridValidationStatus::BudgetExceeded;r.timeBudgetExceeded=true;r.timeoutStage=e.stage;r.message=e.what();}
+    catch(const std::invalid_argument &e){r.status=HybridValidationStatus::InvalidInput;r.message=e.what();}
     catch(const Budget &e){r.status=HybridValidationStatus::BudgetExceeded;r.message=e.what();}
     catch(const Failure &e)
     {r.status=e.status==Status::InvalidInput?HybridValidationStatus::InvalidInput:e.status==Status::Unsupported?
@@ -279,7 +290,14 @@ GeneralRationalBoundaryReport Validate(SurfaceSampleContext &samples,const Analy
     catch(const std::exception &e){r.status=HybridValidationStatus::NotCertified;r.message=e.what();}
     if(!r.Passed())
     {r.patch.reset();r.boundaryDistanceUpperBound=r.boundaryTangentUpperBoundDeg=r.outputMotherDistanceUpperBound=INFINITY;}
-    r.totalMs=Ms(start);return r;
+    r.totalMs=Ms(start);
+    if(o.maxTotalMs>0&&r.totalMs>o.maxTotalMs)
+    {
+        r.patch.reset();r.status=HybridValidationStatus::BudgetExceeded;r.timeBudgetExceeded=true;
+        r.timeoutStage="validation_completion_overrun";r.message="Validation wall time exceeded hard limit";
+        r.boundaryDistanceUpperBound=r.boundaryTangentUpperBoundDeg=r.outputMotherDistanceUpperBound=INFINITY;
+    }
+    return r;
 }
 }
 namespace bspline2analytic

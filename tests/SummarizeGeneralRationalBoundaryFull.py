@@ -71,9 +71,15 @@ def main():
         accepted = sum(r['accepted'] == '1' for r in current)
         audited = sum(r['accepted'] == '1' and r['audit_status'] == 'passed' for r in current)
         measured = numbers(current, 'total_ms')
+        cancelled = sum(r.get('time_budget_exceeded') == '1' for r in current)
+        overruns = sum(r.get('within_time_limit') == '0' for r in current)
         expectation = config["expectations"][f"{suite}:{case}"]
         if len(measured) != config['runs'] or any(r['execution_status'] != 'completed' for r in current):
             outcome = 'execution_incomplete'
+        elif overruns:
+            outcome = 'wall_time_exceeded'
+        elif cancelled:
+            outcome = 'time_budget_exceeded'
         elif accepted and accepted != config['runs']:
             outcome = 'unstable_acceptance'
         elif accepted != audited:
@@ -92,6 +98,8 @@ def main():
                     median_total_ms=statistics.median(measured) if measured else None,
                     min_total_ms=min(measured) if measured else None, max_total_ms=max(measured) if measured else None,
                     runs_under_10ms=sum(t < 10 for t in measured))
+        item.update(time_budget_runs=cancelled, over_time_limit_runs=overruns,
+                    timeout_stages='|'.join(sorted({r.get('timeout_stage', '') for r in current} - {''})))
         for k in TIMES[1:] + COUNTS:
             values = numbers(current, k)
             item['median_' + k] = statistics.median(values) if values else None
@@ -105,7 +113,9 @@ def main():
         item['last_message'] = current[-1]['message']
         item['audit_message'] = '|'.join(sorted({r.get('audit_message', '') for r in current} - {''}))
         item['output_types'] = '|'.join(sorted({r.get('output_type', '') for r in current} - {'Unknown', ''}))
-        if outcome == 'not_certified_positive':
+        if cancelled:
+            item['diagnosis'] = 'time_budget/' + item['timeout_stages']
+        elif outcome == 'not_certified_positive':
             if ka.get('accepted') == '1':
                 item['diagnosis'] = 'known_mother_passes_candidate_path_fails'
             elif 'recovery unresolved' in ka.get('message', ''):
@@ -123,10 +133,14 @@ def main():
     write(directory / 'failures.csv', failures)
     slow = sorted([c for c in cases if c['max_total_ms'] is not None and c['max_total_ms'] >= 10], key=lambda c: c['max_total_ms'], reverse=True)
     write(directory / 'over-10ms.csv', slow)
+    write(directory / 'over-time-limit.csv', [c for c in cases if c['over_time_limit_runs']])
+    write(directory / 'time-budget-cases.csv', [c for c in cases if c['time_budget_runs']])
     def aggregate(selected):
         timed = [c['median_total_ms'] for c in selected if c['median_total_ms'] is not None]
         successful = [c for c in selected if c['outcome'] == 'accepted']
         return dict(cases=len(selected), outcomes=dict(Counter(c['outcome'] for c in selected)),
+                    time_budget_cases=sum(c['time_budget_runs'] > 0 for c in selected),
+                    over_time_limit_cases=sum(c['over_time_limit_runs'] > 0 for c in selected),
                     measured_cases=len(timed), median_case_ms=statistics.median(timed) if timed else None,
                     p95_case_median_ms=quantile(timed, .95), p99_case_median_ms=quantile(timed, .99),
                     max_case_median_ms=max(timed) if timed else None,
@@ -155,6 +169,9 @@ def main():
                    failure_diagnoses=dict(Counter(c['diagnosis'] for c in failures)),
                    slowest_cases=sorted([c for c in cases if c['median_total_ms'] is not None], key=lambda c: c['median_total_ms'], reverse=True)[:30],
                    over_10ms_cases=len(slow),
+                   max_case_ms=config.get('max_case_ms'),
+                   time_budget_cases=sum(c['time_budget_runs'] > 0 for c in cases),
+                   over_time_limit_cases=sum(c['over_time_limit_runs'] > 0 for c in cases),
                    input_certificate_errors=sum(r.get('source_certified') == '0' for r in rows),
                    independent_audit_unresolved_runs=sum(r.get('audit_status') == 'unresolved' for r in rows),
                    interior_blindspot=read(directory / 'cases/extra-049-interior.csv'))

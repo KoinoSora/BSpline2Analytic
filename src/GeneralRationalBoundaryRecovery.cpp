@@ -59,6 +59,7 @@ bool Recover(SurfaceSampleContext &samples,const AnalyticParameters &a,
             sggk::DerivType::NONE,false).point);
     for (unsigned edge = 0; edge < 4; ++edge)
     {
+        samples.CheckDeadline("chart_recovery");
         bool fixedU = edge < 2;
         double lo = fixedU ? s.MinParamV() : s.MinParamU(), hi = fixedU ? s.MaxParamV() : s.MaxParamU();
         auto parameters = SampleParameters(fixedU ? s.KnotsV() : s.KnotsU(), lo, hi, o.boundarySamplesPerSpan);
@@ -253,6 +254,7 @@ bool Recover(SurfaceSampleContext &samples,const AnalyticParameters &a,
     if(TrimTriangles(out.polygon).empty())return reject("EmptyTrimTriangles");
     for(unsigned e=0;e<4;++e)
     {
+        samples.CheckDeadline("chart_recovery");
         out.collapsed[e]=Collapsed(samples.source,e);
         for(const auto &entry:trim.walks[e])out.walks[e].push_back({entry.first,map(entry.second)});
         auto start=out.polygon.corners[Ends[e][0]],end=out.polygon.corners[Ends[e][1]];

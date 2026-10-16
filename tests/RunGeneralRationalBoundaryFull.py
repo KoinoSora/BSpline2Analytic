@@ -8,6 +8,7 @@ import argparse
 import csv
 import hashlib
 import json
+import math
 import os
 from pathlib import Path
 import subprocess
@@ -42,11 +43,15 @@ def main():
     p.add_argument('--fixed-chart', action='store_true', help='Separate supplied-mother/chart diagnostics; never classified timing')
     p.add_argument('--runs', type=int, default=3)
     p.add_argument('--timeout', type=float, default=60)
+    p.add_argument('--max-case-ms', type=float, default=50,
+                   help='Shared classification + validation wall budget; 0 disables only for explicit diagnostics')
     p.add_argument('--cases', nargs='*', help='Optional smoke-test keys, e.g. main:100 extreme:0')
     p.add_argument('--resume', action='store_true')
     args = p.parse_args()
     if args.runs < 1 or not 0 < args.timeout <= 300:
         p.error('Invalid runs/timeout')
+    if not math.isfinite(args.max_case_ms) or not 0 <= args.max_case_ms <= 60000:
+        p.error('Invalid max-case-ms')
     exe, sdk, data, output = (getattr(args, name).resolve() for name in ('exe', 'sdk', 'data', 'output'))
     from RationalDatasetSupport import require_v2_data
     require_v2_data(data)
@@ -69,7 +74,8 @@ def main():
         inputs[f'{suite}:{i}'] = sha(data / suite / metadata[(suite, i)]['file'])
     config = dict(validator='rational_boundary', dataset_contract='rational-domain-v2', fixed_chart=args.fixed_chart, exe_sha256=sha(exe), inputs_sha256=inputs,
                   expectations={f"{s}:{i}": metadata[(s, i)]["expectation"] for s, i in cases},
-                  runs=args.runs, timeout_seconds=args.timeout, cases=cases,
+                  runs=args.runs, timeout_seconds=args.timeout, max_case_ms=args.max_case_ms,
+                  cancellation_reserve_ms=min(5.,args.max_case_ms*.1), cases=cases,
                   cpu_affinity_fixed=False, exclusive_machine=False, parallel_processes=1)
     output.mkdir(parents=True, exist_ok=True)
     stamp = output / 'run.json'
@@ -96,7 +102,7 @@ def main():
             with log.open('wb') as capture:
                 try:
                     result = subprocess.run([str(exe), '--rational-fixed-case' if args.fixed_chart else '--rational-full-case', str(data),
-                                             str(target), suite, str(case), str(args.runs), '--rational-v2-only'],
+                                             str(target), suite, str(case), str(args.runs), '--rational-v2-only', str(args.max_case_ms)],
                                             cwd=sdk, env=env, stdout=capture, stderr=subprocess.STDOUT,
                                             timeout=args.timeout, creationflags=getattr(subprocess, 'CREATE_NO_WINDOW', 0))
                     code, timeout = result.returncode, False
@@ -115,6 +121,8 @@ def main():
         if [int(r['run']) for r in rows] != list(range(len(rows))) or len(rows) > args.runs:
             raise ValueError(f'Invalid output run sequence: {target}')
         for row in rows:
+            if float(row.get('max_case_ms', 'nan')) != args.max_case_ms:
+                raise ValueError('Executable did not apply the requested case budget')
             row['input_sha256'] = inputs.get(f'{suite}:{case}', 'constructed')
             row['execution_status'] = 'timeout' if execution['timeout'] else 'process_error' if execution['exit_code'] else 'completed'
             row['watchdog_seconds'] = execution['wall_seconds']
@@ -140,7 +148,10 @@ def main():
     (output / 'executions.json').write_text(json.dumps(executions, indent=2), encoding='utf-8')
     errors = [x for x in executions if x['timeout'] or x['exit_code']]
     print(f'Completed {len(cases)} cases; {len(all_rows)} rows; {len(errors)} execution errors', flush=True)
-    return int(bool(errors))
+    overruns = [r for r in all_rows if r.get('within_time_limit') == '0']
+    print(f'Wall-budget violations: {len(overruns)} runs; cooperative cancellations: '
+          f'{sum(r.get("time_budget_exceeded") == "1" for r in all_rows)} runs', flush=True)
+    return int(bool(errors or overruns))
 
 
 if __name__ == '__main__':
