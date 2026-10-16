@@ -1,0 +1,69 @@
+% 作品介绍：面向线性PCurve的一类通用样条面到二次曲面智能转化方案
+% 第四章：2026-10-16 用户确认稿。此文件为章节片段，待整稿组装。
+% 整稿需加载 tikz，并启用 positioning、arrows.meta、shapes.geometric 库。
+% 总体流程图由确认稿的 Mermaid 转写为 TikZ；版面与总页数待整稿核验。
+\section{技术架构总览}
+
+本方案采用\textbf{统一调度、等参优先、一般兜底、独立验收}的分层架构，将样条面解析化分解为解析母面识别、几何参数恢复、有限边界重建与几何一致性验收。所有输入均首先进入等参专用分支；当该分支未获得满足验收条件的结果时，在剩余计算预算内进入一般兜底分支，进一步处理目标 NURBS 参数域中的线性 PCurve 边界。两条路径通过统一入口组织，以兼顾典型输入的计算效率与一般输入的适应能力。
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+  node distance=4mm and 7mm,
+  process/.style={draw,rounded corners,align=center,font=\small,inner sep=4pt,text width=60mm},
+  decision/.style={draw,diamond,aspect=4,align=center,font=\small,inner sep=1pt},
+  flow/.style={-{Stealth},semithick}
+]
+\node[process] (input) {输入样条面、容差与计算预算};
+\node[process,below=of input] (dispatch) {统一调度};
+\node[process,below=of dispatch] (iso) {等参专用分支：识别、重建与验收};
+\node[decision,below=of iso] (isoPass) {通过验收？};
+\node[process,below=of isoPass] (candidates) {一般兜底：生成并排序母面候选};
+\node[process,below=of candidates] (validate) {边界恢复与几何验收};
+\node[decision,below=of validate] (pass) {通过验收？};
+\node[process,below=of pass] (optimize) {必要时优化母面参数并重新验收};
+\node[decision,below=of optimize] (refinedPass) {通过验收？};
+\node[process,below=of refinedPass] (fail) {返回失败状态与诊断信息};
+\node[process,text width=26mm,right=14mm of pass] (result) {最终预算检查与结果返回};
+\draw[flow] (input) -- (dispatch);
+\draw[flow] (dispatch) -- (iso);
+\draw[flow] (iso) -- (isoPass);
+\draw[flow] (isoPass) -- node[right,font=\scriptsize] {否} (candidates);
+\draw[flow] (candidates) -- (validate);
+\draw[flow] (validate) -- (pass);
+\draw[flow] (pass) -- node[right,font=\scriptsize] {否} (optimize);
+\draw[flow] (optimize) -- (refinedPass);
+\draw[flow] (refinedPass) -- node[right,font=\scriptsize] {候选耗尽} (fail);
+\draw[flow] (isoPass.east) -| node[pos=.2,above,font=\scriptsize] {是} (result.north);
+\draw[flow] (pass) -- node[above,font=\scriptsize] {是} (result);
+\draw[flow] (refinedPass.east) -| node[pos=.2,below,font=\scriptsize] {是} (result.south);
+\draw[flow] (refinedPass.west) -- ++(-16mm,0) |- node[pos=.25,left,font=\scriptsize,align=center] {否，仍有候选} (validate.west);
+\end{tikzpicture}
+\caption{总体计算流程。一般分支的候选重试均在剩余预算内执行；总预算耗尽或最终实测耗时超限时，统一返回计算失败。}
+\label{fig:introduction-architecture}
+\end{figure}
+
+\paragraph{（1）统一调度与几何分析上下文}
+统一入口管理分支调用、计算预算、异常处理与结果状态。各分支围绕输入曲面建立分析上下文，对曲面求值、导数及采样数据进行按需计算和缓存，供分支内部的候选搜索与验收复用，减少重复求值开销。输入曲面保持不变，候选解析表示作为独立对象构建，使失败候选的舍弃与后续重试具有清晰的数据边界。
+
+\paragraph{（2）等参专用识别与重建}
+等参专用分支利用曲面等参数线所携带的几何结构信息，识别解析母面类型并恢复其参数范围。针对有理输入与非有理输入，分别调用相应的识别和验收路径；候选只有通过对应的几何一致性检查，才能作为有效结果返回。
+
+该分支优先处理结构明确的面片。候选不成立、验收未通过或等参子预算耗尽时，控制权转交一般兜底分支，从而避免单一路径的适用条件限制整个转换流程。
+
+\paragraph{（3）一般母面候选生成与参数优化}
+一般兜底分支根据输入曲面的采样位置及几何特征，为目标解析类型生成母面候选，通过去重、评分和排序组织搜索。候选生成与评价使用区分的数据集合，以降低初始化样本对候选评价的偏置。
+
+每个候选首先尝试边界恢复与几何验收；未通过时，再按配置启用母面参数优化。优化以采样点到候选母面的投影残差为基础，采用受约束的迭代求解改善母面参数。参数更新取得改善后，重新执行验收；仍不满足条件则继续搜索其他候选。\textbf{优化负责改善候选，验收负责决定是否接受，残差下降本身不构成转换成功的依据。}
+
+\paragraph{（4）线性 PCurve 边界恢复与分层验收}
+母面候选确定后，一般分支在其对应的 NURBS 参数域内恢复边界端点及直线段连接关系，构造有限参数区域，并生成相应的三维 NURBS 边界曲线。该过程显式处理参数方向、周期接缝、共享顶点及允许的边界退化，使母面恢复与有限面片恢复形成连续的计算链条。
+
+验收分别检查内部采样点与有限目标面片的距离，以及源、目标边界在连续参数区间上的位置和切向一致性。连续边界检查结合分段、细分与 Bernstein 形式的保守界估计；微小边界仅在满足第三章所述条件时允许切向豁免，位置验收仍须执行。各分支保留其实际验收范围，一般分支的内部采样检查不表述为全域连续距离保证。
+
+\paragraph{（5）结果组织与预算控制}
+统一结果记录实际执行路径、几何输出、验收报告、候选数量、优化迭代数及失败原因。失败时清除可供后续使用的转换结果，避免未通过验收的候选被误用。
+
+两条路径共享单例总预算，并通过阶段性期限检查与返回前的实际耗时复核共同控制执行。整体算法耗时覆盖识别、优化、边界恢复和验收，不计入结果打印及文件输出耗时；以是否小于 $10\,\mathrm{ms}$ 评价性能，超过 $50\,\mathrm{ms}$ 则判定计算失败。
+
+上述架构将结构识别的效率、一般参数优化的适应性与独立几何验收的可靠性结合起来。其核心是围绕有限面片建立从母面候选到边界表示、再到验收结果的完整计算流程，并为每次成功或失败保留明确的判定依据，为后续几何内核集成提供可追溯的结果接口。
