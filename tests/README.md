@@ -66,6 +66,8 @@ python tests/RunGeneralRationalBoundarySelected.py --exe build-general-hybrid/Re
 
 流式提取的定向性能测试使用 `BSpline2AnalyticMotherDistanceSelectedTests` 与 `BenchmarkMotherStreaming.py`，只选 16 个代表性及历史慢例，分别记录首次验证和源缓存复验。`AuditMotherExtraction.py` 用 80 位 Decimal 独立核对双精度 Bézier 控制点的误差包络；这些审计在计时外执行。改前、改后五模块耗时、测试命令及 10 ms 目标的剩余差距见[流式提取报告](../docs/testing/MOTHER_STREAMING_2026-10-16.md)。
 
+2026-10-16 后续按用户要求删除母面距离验证器的曲面法向约束。选例 CSV 不再输出 `normal_bound`；与第二验证器对照的 CSV 改为 `paired_normal_bound`，母面验证器行留空，仅第二验证器填写。`boundary_angle_ms` 现只计曲线切向验证。既有 CSV 和性能报告保留原值，代表删除前的合同；本次只更新测试源码和预期，不运行测试，也没有新的性能结果。
+
 2026-10-15 起，旧投影验证器 `ValidateConversion` 废弃，保留代码和历史数据但不再测试、预热或作对照。调用它的 CTest 项已禁用，`RunSpecializedDataset500.py` 已停止执行。正式 `ConvertApproximate` 尚未接入新验证器，其完整流程测试暂缓；以下历史报告中的旧命令不再作为执行入口。
 
 当前使用 `./Build.ps1 -Dataset500Only`（500 例）或 `-SpherePolynomialOnly`（50 个非有理球面），输出分别为 `build/paired-dataset500-Release.csv` 和 `build/paired-sphere-Release.csv`。程序 `BSpline2AnalyticPairedValidationTests` 的 `--dataset` / `--sphere` 与 `--dataset-new-only` / `--sphere-new-only` 均仅使用新验证器。非有理输入验证实际分类首候选，不运行候选重试或优化；200 个有理输入另外调用精确识别 `Recognize`，不套用五模块计时。

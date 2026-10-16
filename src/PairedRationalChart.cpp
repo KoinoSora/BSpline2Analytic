@@ -169,7 +169,7 @@ void Localize(BV &p, const LocalFrame &f)
         p.z.c[i] = detail::Dot(d, f.z);
     }
 }
-void CheckPatch(const AnalyticPatch &p)
+void CheckPatch(const AnalyticPatch &p, bool checkNormalOrientation)
 {
     using T = sggk::SurfaceType;
     const auto &a = p.parameters;
@@ -180,8 +180,10 @@ void CheckPatch(const AnalyticPatch &p)
         if (!std::isfinite(x))
             throw Failure(Status::InvalidInput, "Nonfinite domain");
     if (!(p.domain[0] < p.domain[1] && p.domain[2] < p.domain[3]) ||
-        !(p.normalSign == 1 || p.normalSign == -1))
-        throw Failure(Status::InvalidInput, "Invalid domain or normal orientation");
+        (checkNormalOrientation && !(p.normalSign == 1 || p.normalSign == -1)))
+        throw Failure(Status::InvalidInput, checkNormalOrientation
+                                                ? "Invalid domain or normal orientation"
+                                                : "Invalid domain");
     auto f = FrameOf(a);
     if (!Finite(f.o) || !Finite(f.x) || !Finite(f.z))
         throw Failure(Status::InvalidInput, "Invalid frame");
@@ -197,10 +199,11 @@ void CheckPatch(const AnalyticPatch &p)
                                p.domain[3] - p.domain[2] > 2 * Pi + 1e-12))
         throw Failure(Status::Unsupported, "Only regular ring torus charts supported");
 }
-Chart BuildChart(const AnalyticPatch &p)
+Chart BuildChart(const AnalyticPatch &p, bool includeNormals)
 {
     using T = sggk::SurfaceType;
     Chart chart;
+    chart.hasNormals = includeNormals;
     const auto &a = p.parameters;
     chart.angular = {a.type != T::Plane, a.type == T::Sphere || a.type == T::Torus};
     for (unsigned d = 0; d < 2; ++d)
@@ -224,29 +227,36 @@ Chart BuildChart(const AnalyticPatch &p)
             {
             case T::Plane:
                 q = {u.t, v.t, zero};
-                n = {zero, zero, C(I(1))};
+                if (includeNormals)
+                    n = {zero, zero, C(I(1))};
                 break;
             case T::Cylinder:
                 q = {u.c * I(a.radius), u.s * I(a.radius), products.Mul(v.t, u.w)};
-                n = {u.c, u.s, zero};
+                if (includeNormals)
+                    n = {u.c, u.s, zero};
                 break;
             case T::Cone: {
                 I sn = Sin(I(a.halfAngle)), cs = Cos(I(a.halfAngle));
                 q = {products.Mul(u.c, v.t) * (sn / cs), products.Mul(u.s, v.t) * (sn / cs),
                      products.Mul(v.t, u.w)};
-                n = {u.c * cs, u.s * cs, u.w * (-sn)};
+                if (includeNormals)
+                    n = {u.c * cs, u.s * cs, u.w * (-sn)};
                 break;
             }
-            case T::Sphere:
-                n = {products.Mul(u.c, v.s), products.Mul(u.s, v.s),
-                     products.Mul(u.w, v.c) * I(-1)};
-                q = n * I(a.radius);
+            case T::Sphere: {
+                BV direction = {products.Mul(u.c, v.s), products.Mul(u.s, v.s),
+                                products.Mul(u.w, v.c) * I(-1)};
+                q = direction * I(a.radius);
+                if (includeNormals)
+                    n = std::move(direction);
                 break;
+            }
             default: {
                 auto radial = v.w * I(a.majorRadius) + v.c * I(a.radius);
                 q = {products.Mul(u.c, radial), products.Mul(u.s, radial),
                      products.Mul(u.w, v.s) * I(a.radius)};
-                n = {products.Mul(u.c, v.c), products.Mul(u.s, v.c), products.Mul(u.w, v.s)};
+                if (includeNormals)
+                    n = {products.Mul(u.c, v.c), products.Mul(u.s, v.c), products.Mul(u.w, v.s)};
                 break;
             }
             }
@@ -260,7 +270,8 @@ Chart BuildChart(const AnalyticPatch &p)
                             p.mapping.reversedV ? 1 - high[dv] : low[dv],
                             p.mapping.reversedV ? 1 - low[dv] : high[dv],
                             Orient(w, p.mapping)};
-            cell.normal = Orient(n, p.mapping) * I(p.normalSign);
+            if (includeNormals)
+                cell.normal = Orient(n, p.mapping) * I(p.normalSign);
             cell.weightFactors = {Orient(p.mapping.swappedUV ? v.w : u.w, p.mapping),
                                   Orient(p.mapping.swappedUV ? u.w : v.w, p.mapping)};
             cell.separableWeight = true;
@@ -292,7 +303,8 @@ void PlaceChart(Chart &chart, const AnalyticParameters &parameters, V sourceOrig
             }
         };
         transform(cell.surface.p, &cell.surface.w);
-        transform(cell.normal, nullptr);
+        if (chart.hasNormals)
+            transform(cell.normal, nullptr);
     }
 }
 double RationalCoordinate(const Chart &c, unsigned d, double angle)

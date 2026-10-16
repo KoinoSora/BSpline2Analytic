@@ -42,7 +42,15 @@ def main():
             continue
         assert not int(r["collapsed"]) and int(r["source_cache_hits"]) == 0
         assert float(r["mother_or_paired_bound"]) < 1e-5
-        assert float(r["tangent_bound"]) < .1 and float(r["normal_bound"]) < .1
+        assert float(r["tangent_bound"]) < .1
+        # Old CSVs retain their original normal certificate. Current mother
+        # rows have no normal constraint; the paired backend still checks it.
+        if "normal_bound" in r:
+            assert float(r["normal_bound"]) < .1
+        elif r["backend"] == "paired":
+            assert float(r["paired_normal_bound"]) < .1
+        else:
+            assert not r["paired_normal_bound"]
         if r["backend"] == "mother":
             assert float(r["boundary_position_bound"]) < 1e-5
             assert sum(values[k] for k in ("sample_ms", "residual_build_ms", "residual_bound_ms")) <= values["position_ms"] + 1e-5
@@ -68,7 +76,8 @@ def main():
             cases_mean_under_10ms=sum(x < 10 for x in alg),
             cases_all_runs_under_10ms=sum(r["algorithm_max_run_ms"] < 10 for r in case_rows)))
     summary = dict(schema=1, input_rows=len(rows), runs_per_case_backend=3,
-        contract="mother distance with floating-point guard plus interval paired boundaries",
+        contract="mother distance with floating-point guard plus interval boundary position/tangent",
+        mother_normal_checked="normal_bound" in rows[0],
         algorithm_ms_scope="classification compute plus first candidate validation; no optimizer run",
         status_measurements=dict(Counter(f'{r["type"]}/{r["backend"]}/{r["status"]}' for r in rows)),
         unique_no_candidate_ids=sorted({int(r["id"]) for r in rows if r["status"] != "Passed"}),

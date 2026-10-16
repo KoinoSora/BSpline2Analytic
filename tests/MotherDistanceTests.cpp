@@ -91,13 +91,16 @@ void Unit(const std::filesystem::path &dir)
     for (unsigned mode = 1; mode <= 3; ++mode)
     {
         auto r = ValidateMotherDistanceConversion(*Plane(mode), plane, affine);
-        Require(!r.Passed(), "Negative plane fixture accepted"); Timing(r.timing);
-        if (mode == 1) Require(r.boundaryNormal.state == CheckState::Exceeded, "Normal defect missed");
+        Require(r.Passed() == (mode == 1), "Position/tangent-only plane contract failed"); Timing(r.timing);
         if (mode == 2) Require(r.boundaryTangent.state == CheckState::Exceeded, "Tangent defect missed");
         if (mode == 3) Require(r.motherDistance.state == CheckState::Exceeded, "Interior defect missed");
     }
     wrong = plane; wrong.normalSign = -1;
-    Require(!ValidateMotherDistanceConversion(*Plane(0), wrong, affine).Passed(), "Reversed normal accepted");
+    Require(ValidateMotherDistanceConversion(*Plane(0), wrong, affine).Passed(), "Unused normal sign affected validation");
+    auto normalIgnored = affine;
+    normalIgnored.boundary.validation.boundaryNormalToleranceDeg = NAN;
+    Require(ValidateMotherDistanceConversion(*Plane(0), plane, normalIgnored).Passed(),
+        "Unused normal tolerance affected validation");
     auto warped = Plane(4); plane.domain = {0, 1, 0, 1};
     auto mapped = ValidateMotherDistanceConversion(*warped, plane);
     Require(mapped.Passed() && mapped.mappingAttempts == 2 && mapped.uMap.source.size() > 2,
@@ -225,7 +228,7 @@ void Batch(const std::filesystem::path &dir, const std::filesystem::path &file)
         "source_boundary_ms,target_preparation_ms,mapping_ms,sample_ms,residual_build_ms,residual_bound_ms,"
         "boundary_position_ms,boundary_angle_ms,surface_nodes,boundary_position_nodes,boundary_nodes,"
         "surface_depth,mapping_attempts,source_cache_hits,mother_or_paired_bound,boundary_position_bound,"
-        "tangent_bound,normal_bound,source_certificate_bound,message\n";
+        "tangent_bound,paired_normal_bound,source_certificate_bound,message\n";
     // Both current validators get independent cold source caches and the same
     // real first candidate. Alternate their order to reduce systematic bias.
     for (unsigned warm : {301u, 401u})
@@ -307,9 +310,9 @@ void Batch(const std::filesystem::path &dir, const std::filesystem::path &file)
                     << (third ? m.sourceCacheHits : p.sourceCacheHits) << ','
                     << (third ? m.motherDistance.upperBound : p.certificate.geometry.upperBound) << ','
                     << m.boundaryPosition.upperBound << ','
-                    << (third ? m.boundaryTangent.upperBound : p.certificate.boundaryTangent.upperBound) << ','
-                    << (third ? m.boundaryNormal.upperBound : p.certificate.boundaryNormal.upperBound) << ','
-                    << bound.upper << ',' << Quote(message) << '\n';
+                    << (third ? m.boundaryTangent.upperBound : p.certificate.boundaryTangent.upperBound) << ',';
+                if (!third) csv << p.certificate.boundaryNormal.upperBound;
+                csv << ',' << bound.upper << ',' << Quote(message) << '\n';
                 csv.flush();
             }
         }

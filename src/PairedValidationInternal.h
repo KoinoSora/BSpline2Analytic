@@ -18,6 +18,7 @@ struct TargetCell
 };
 struct Chart
 {
+    bool hasNormals = true;
     std::array<std::vector<double>, 2> angles;
     std::array<bool, 2> angular{};
     std::vector<TargetCell> cells;
@@ -43,9 +44,9 @@ double PositionControlUpper(const BV &, const BPoly &, Products &);
 BPoly Restrict(const BPoly &, bool alongU, I lo, I hi);
 BV Restrict(const BV &, bool alongU, I lo, I hi);
 BezierCell Crop(const BezierCell &, double, double, double, double);
-Chart BuildChart(const AnalyticPatch &);
+Chart BuildChart(const AnalyticPatch &, bool includeNormals = true);
 void PlaceChart(Chart &, const AnalyticParameters &, V sourceOrigin);
-void CheckPatch(const AnalyticPatch &);
+void CheckPatch(const AnalyticPatch &, bool checkNormalOrientation = true);
 double RationalCoordinate(const Chart &, unsigned dimension, double analyticParameter);
 struct LocalFrame
 {
@@ -78,7 +79,7 @@ Boundaries PrepareTargetBoundaries(const Chart &, Products &);
 BoundaryResult ValidateBoundaries(const Boundaries &, const Boundaries &,
                                   const PairedParameterMap &, const PairedParameterMap &,
                                   const PairedValidationOptions &, PairedValidationReport &,
-                                  Products &);
+                                  Products &, bool checkNormals = true);
 struct Budget : std::runtime_error
 {
     using std::runtime_error::runtime_error;

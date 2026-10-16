@@ -133,7 +133,7 @@ void Run(const std::filesystem::path &dir, unsigned id, const std::filesystem::p
            "preparation_ms,position_ms,subdivision_ms,boundary_ms,reporting_ms,source_extraction_"
            "ms,source_boundary_ms,target_preparation_ms,sample_ms,residual_build_ms,residual_bound_"
            "ms,boundary_position_ms,boundary_angle_ms,surface_nodes,boundary_nodes,mapping_"
-           "attempts,source_cache_hits,mother_bound,edge_bound,tangent_bound,normal_bound,source_"
+           "attempts,source_cache_hits,mother_bound,edge_bound,tangent_bound,source_"
            "certificate_bound,source_cells,extracted_cells,cached_cell_hits,tightened_cells,"
            "boundary_fallbacks,extraction_plan_ms,source_contraction_ms,source_envelope_ms,"
            "extraction_error\n";
@@ -172,8 +172,7 @@ void Run(const std::filesystem::path &dir, unsigned id, const std::filesystem::p
                 << r.boundaryAngleMs << ',' << r.surfaceNodes << ',' << r.boundaryNodes << ','
                 << r.mappingAttempts << ',' << r.sourceCacheHits << ','
                 << r.motherDistance.upperBound << ',' << r.boundaryPosition.upperBound << ','
-                << r.boundaryTangent.upperBound << ',' << r.boundaryNormal.upperBound << ','
-                << certificate.upper;
+                << r.boundaryTangent.upperBound << ',' << certificate.upper;
 #ifdef BSPLINE_MOTHER_STREAMING
             csv << ',' << r.sourceCells << ',' << r.extractedCells << ',' << r.cachedCellHits << ','
                 << r.tightenedCells << ',' << r.boundaryFallbacks << ',' << r.extractionPlanMs

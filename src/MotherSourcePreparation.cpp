@@ -349,40 +349,19 @@ const paired::PreparedSource &SourceCache::PrepareBoundary(MotherDistanceValidat
             continue;
         next.cells.push_back(Enclose(tight ? Tighten(id, out) : Get(id, out)));
     }
-    paired::Products products;
     for (unsigned edge = 0; edge < 4; ++edge)
         for (const auto &cell : next.cells)
         {
-            bool fixedU = edge < 2, high = edge % 2 != 0;
+            bool fixedU = edge < 2;
             if (!(edge == 0   ? cell.u0 == domain[0]
                   : edge == 1 ? cell.u1 == domain[1]
                   : edge == 2 ? cell.v0 == domain[2]
                               : cell.v1 == domain[3]))
                 continue;
-            unsigned degree = fixedU ? p : q, varying = fixedU ? q : p;
             double begin = fixedU ? cell.v0 : cell.u0, end = fixedU ? cell.v1 : cell.u1;
-            I factor = I(degree) / (I(fixedU ? cell.u1 : cell.v1) - I(fixedU ? cell.u0 : cell.v0));
-            BV c{BPoly(varying, 0), BPoly(varying, 0), BPoly(varying, 0)}, d = c;
-            auto get = [&](unsigned i, unsigned j) {
-                unsigned a = fixedU ? i : j, b = fixedU ? j : i;
-                return IV{cell.p.x.at(a, b), cell.p.y.at(a, b), cell.p.z.at(a, b)};
-            };
-            for (unsigned j = 0; j <= varying; ++j)
-            {
-                IV point = get(high ? degree : 0, j),
-                   derivative =
-                       (high ? get(degree, j) - get(degree - 1, j) : get(1, j) - get(0, j)) *
-                       factor;
-                c.x.c[j] = point.x;
-                c.y.c[j] = point.y;
-                c.z.c[j] = point.z;
-                d.x.c[j] = derivative.x;
-                d.y.c[j] = derivative.y;
-                d.z.c[j] = derivative.z;
-            }
+            BV c = Boundary(cell.p, static_cast<BoundaryId>(edge));
             BV tangent = Derivative(c, true) * (I(1) / (I(end) - I(begin)));
-            BV normal = fixedU ? products.Cross(d, tangent) : products.Cross(tangent, d);
-            next.boundaries[edge].push_back({begin, end, std::move(tangent), std::move(normal)});
+            next.boundaries[edge].push_back({begin, end, std::move(tangent), {}});
         }
     boundary = std::move(next);
     return *boundary;

@@ -52,8 +52,8 @@ bool Run(paired::AnalysisContext &context, const AnalyticPatch &patch,
     auto boundary = options.boundary;
     boundary.validation.distanceTolerance = options.position.distanceTolerance;
     ValidateOptions(options.position);
-    CheckApproximateInput(s, boundary.validation);
-    paired::CheckPatch(patch);
+    CheckApproximateInput(s, boundary.validation, false);
+    paired::CheckPatch(patch, false);
     if (!IntervalEnvironmentSupported())
         throw Failure(Status::VerificationFailed, "Unsupported interval environment");
     if (!options.position.requireBound)
@@ -96,7 +96,7 @@ bool Run(paired::AnalysisContext &context, const AnalyticPatch &patch,
     paired::Boundaries target;
     {
         Measure time(out.targetPreparationMs);
-        chart = paired::BuildChart(patch);
+        chart = paired::BuildChart(patch, false);
         paired::PlaceChart(chart, patch.parameters, source.origin);
         target = paired::PrepareTargetBoundaries(chart, products);
     }
@@ -109,7 +109,6 @@ bool Run(paired::AnalysisContext &context, const AnalyticPatch &patch,
         // from the previous correspondence to the maps returned after failure.
         out.boundaryPosition = {};
         out.boundaryTangent = {};
-        out.boundaryNormal = {};
         ++out.mappingAttempts;
         if (attempt)
             paired::RefineBoundaryMaps(context, patch, chart, boundary, aux, recovered);
@@ -127,12 +126,11 @@ bool Run(paired::AnalysisContext &context, const AnalyticPatch &patch,
                     Measure time(out.boundaryAngleMs);
                     angular =
                         paired::ValidateBoundaries(source.boundary->boundaries, target, aux.uMap,
-                                                   aux.vMap, boundary, aux, products);
+                                                   aux.vMap, boundary, aux, products, false);
                 }
             }
             if ((positionOK && angular.passed) || boundaryTightened ||
-                out.boundaryPosition.state == CheckState::Exceeded || angular.tangentExceeded ||
-                angular.normalExceeded)
+                out.boundaryPosition.state == CheckState::Exceeded || angular.tangentExceeded)
                 break;
             // Only unresolved interval checks warrant a tighter local source.
             // Keep the same correspondence and share the existing node budget.
@@ -149,21 +147,16 @@ bool Run(paired::AnalysisContext &context, const AnalyticPatch &patch,
             {
                 out.boundaryTangent.upperBound =
                     (Atan(I(angular.tangentRatio)) * I(180) / IPi()).hi;
-                out.boundaryNormal.upperBound = (Atan(I(angular.normalRatio)) * I(180) / IPi()).hi;
                 if (out.boundaryTangent.upperBound <
-                        boundary.validation.boundaryTangentToleranceDeg &&
-                    out.boundaryNormal.upperBound < boundary.validation.boundaryNormalToleranceDeg)
+                    boundary.validation.boundaryTangentToleranceDeg)
                 {
-                    out.boundaryTangent.state = out.boundaryNormal.state = out.correspondence =
-                        CheckState::Passed;
+                    out.boundaryTangent.state = out.correspondence = CheckState::Passed;
                     return true;
                 }
             }
             out.boundaryTangent.state =
                 angular.tangentExceeded ? CheckState::Exceeded : CheckState::Unresolved;
-            out.boundaryNormal.state =
-                angular.normalExceeded ? CheckState::Exceeded : CheckState::Unresolved;
-            out.boundaryTangent.upperBound = out.boundaryNormal.upperBound = INFINITY;
+            out.boundaryTangent.upperBound = INFINITY;
         }
     }
     return false;
@@ -182,7 +175,7 @@ MotherDistanceValidationReport Validate(paired::AnalysisContext &context,
         out.status = passed ? PairedValidationStatus::Passed : PairedValidationStatus::NotCertified;
         out.message = passed
                           ? "Floating-point guarded Bernstein mother-distance bound, with interval "
-                            "paired boundary position/tangent/normal checks; not an interior "
+                            "paired boundary position/tangent checks; not an interior "
                             "paired or Hausdorff certificate"
                           : "Mother distance or boundary correspondence not certified; inspect "
                             "individual check states";
@@ -213,8 +206,7 @@ MotherDistanceValidationReport Validate(paired::AnalysisContext &context,
     if (out.status != PairedValidationStatus::Passed)
         out.correspondence = CheckState::Unresolved;
     // Only completed individual checks retain finite bounds after an early exit.
-    for (auto *check :
-         {&out.motherDistance, &out.boundaryPosition, &out.boundaryTangent, &out.boundaryNormal})
+    for (auto *check : {&out.motherDistance, &out.boundaryPosition, &out.boundaryTangent})
         if (check->state != CheckState::Passed)
             check->upperBound = INFINITY;
     timer.Finish();

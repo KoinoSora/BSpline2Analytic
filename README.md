@@ -40,7 +40,7 @@
 
 独立实验验证器 `ValidatePairedConversion` 通过候选的有限矩形域、分段单调参数对应和正权重有理 Bernstein 误差界，验证非有理输入的位置、四边切向及法向。入口为 [`PairedConversionValidation.h`](include/PairedConversionValidation.h)，目前单独接入测试，现有转换流程仍使用原验证器。实现范围、状态含义与配对计时见[独立验证器测试报告](docs/testing/PAIRED_VALIDATION_2026-10-14.md)。
 
-第三个独立入口 [`ValidateMotherDistanceConversion`](include/MotherDistanceValidation.h) 用带浮点保护的母面距离界检查内部位置，保留四边区间位置、切向和法向检查；它不提供内部逐参数配对或有限面片双向 Hausdorff 证明。球面/圆环专项、代表性反例和五模块耗时见[测试报告](docs/testing/MOTHER_DISTANCE_SPHERE_TORUS_2026-10-15.md)。当前仍独立接入测试，未替换正式转换流程。
+第三个独立入口 [`ValidateMotherDistanceConversion`](include/MotherDistanceValidation.h) 用带浮点保护的母面距离界检查整个参数域（包括边界），保留四边区间对应位置与曲线切向检查；2026-10-16 按用户要求删除该入口的曲面法向验证。它不提供内部逐参数配对或有限面片双向 Hausdorff 证明。球面/圆环专项、代表性反例和五模块耗时见[历史测试报告](docs/testing/MOTHER_DISTANCE_SPHERE_TORUS_2026-10-15.md)，其中法向数据对应删除前版本。当前仍独立接入测试，未替换正式转换流程。
 
 该入口现使用逐片双精度 Bézier 提取、误差包络和独立源缓存；代表性慢例的改前/改后测量及高精度包络审计见[流式提取报告](docs/testing/MOTHER_STREAMING_2026-10-16.md)。
 

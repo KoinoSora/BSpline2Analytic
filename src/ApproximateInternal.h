@@ -202,7 +202,8 @@ bool RefineAndValidateCandidate(const sggk::BSplineSurface &, AnalyticPatch &,
                                 unsigned candidateIndex, SurfaceSampleContext * = nullptr);
 bool SolveLeastSquares(std::vector<std::vector<double>>, std::vector<double>,
                        std::vector<double> &);
-void CheckApproximateInput(const sggk::BSplineSurface &, const ValidationOptions &);
+void CheckApproximateInput(const sggk::BSplineSurface &, const ValidationOptions &,
+                           bool checkNormalTolerance = true);
 ConversionResult ConvertApproximateWithSamples(const sggk::BSplineSurface &,
                                                const ConversionOptions &, SurfaceSampleContext &);
 double Angle(V, V);

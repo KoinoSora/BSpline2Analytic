@@ -87,7 +87,7 @@ Boundaries PrepareTargetBoundaries(const Chart &chart, Products &products)
             BV tangent =
                 products.Mul(Derivative(p, true), w) - products.Mul(p, Derivative(w, true));
             out[edge].push_back({edge < 2 ? s.v0 : s.u0, edge < 2 ? s.v1 : s.u1, std::move(tangent),
-                                 Boundary(cell.normal, id)});
+                                 chart.hasNormals ? Boundary(cell.normal, id) : BV{}});
         }
     for (auto &edge : out)
     {
@@ -109,12 +109,17 @@ Boundaries PrepareTargetBoundaries(const Chart &chart, Products &products)
 BoundaryResult ValidateBoundaries(const Boundaries &source, const Boundaries &target,
                                   const PairedParameterMap &uMap, const PairedParameterMap &vMap,
                                   const PairedValidationOptions &options,
-                                  PairedValidationReport &report, Products &products)
+                                  PairedValidationReport &report, Products &products,
+                                  bool checkNormals)
 {
     BoundaryResult result;
     I t = I(options.validation.boundaryTangentToleranceDeg) * IPi() / I(180);
-    I n = I(options.validation.boundaryNormalToleranceDeg) * IPi() / I(180);
-    I tLimit = Sin(t) / Cos(t), nLimit = Sin(n) / Cos(n);
+    I tLimit = Sin(t) / Cos(t), nLimit;
+    if (checkNormals)
+    {
+        I n = I(options.validation.boundaryNormalToleranceDeg) * IPi() / I(180);
+        nLimit = Sin(n) / Cos(n);
+    }
     for (unsigned edge = 0; edge < 4; ++edge)
     {
         const auto &map = edge < 2 ? vMap : uMap;
@@ -147,16 +152,19 @@ BoundaryResult ValidateBoundaries(const Boundaries &source, const Boundaries &ta
                     throw Failure(Status::VerificationFailed,
                                   "Boundary partition coverage failure");
                 st = CropEdge(src[si].tangent, src[si].begin, src[si].end, I(a), I(b));
-                sn = CropEdge(src[si].normal, src[si].begin, src[si].end, I(a), I(b));
+                if (checkNormals)
+                    sn = CropEdge(src[si].normal, src[si].begin, src[si].end, I(a), I(b));
                 I ma = Value(map, a), mb = Value(map, b);
                 tt = CropEdge(dst[ti].tangent, dst[ti].begin, dst[ti].end, ma, mb);
-                tn = CropEdge(dst[ti].normal, dst[ti].begin, dst[ti].end, ma, mb);
+                if (checkNormals)
+                    tn = CropEdge(dst[ti].normal, dst[ti].begin, dst[ti].end, ma, mb);
             }
             AngleData tangent, normal;
             {
                 Measure time(report.edgeAlgebraMs);
                 tangent = {products.Dot(st, tt), products.Cross(st, tt)};
-                normal = {products.Dot(sn, tn), products.Cross(sn, tn)};
+                if (checkNormals)
+                    normal = {products.Dot(sn, tn), products.Cross(sn, tn)};
             }
             ++report.boundarySegments;
             std::function<bool(const AngleData &, const AngleData &, unsigned)> certify;
@@ -164,15 +172,16 @@ BoundaryResult ValidateBoundaries(const Boundaries &source, const Boundaries &ta
                 if (++report.certificate.piecesVisited > options.validation.maxValidationPieces)
                     throw Budget("Validation node budget exhausted");
                 ++report.boundaryNodes;
-                AngleResult tr, nr;
+                AngleResult tr, nr{0, false};
                 {
                     Measure time(report.edgeBoundsMs);
                     tr = Bound(ta, tLimit);
-                    nr = Bound(no, nLimit);
+                    if (checkNormals)
+                        nr = Bound(no, nLimit);
                 }
                 result.tangentExceeded |= tr.exceeded;
                 result.normalExceeded |= nr.exceeded;
-                if (tr.ratio < tLimit.lo && nr.ratio < nLimit.lo)
+                if (tr.ratio < tLimit.lo && (!checkNormals || nr.ratio < nLimit.lo))
                 {
                     result.tangentRatio = std::max(result.tangentRatio, tr.ratio);
                     result.normalRatio = std::max(result.normalRatio, nr.ratio);
@@ -184,7 +193,8 @@ BoundaryResult ValidateBoundaries(const Boundaries &source, const Boundaries &ta
                 {
                     Measure time(report.edgeSubdivisionMs);
                     ts = SplitAngle(ta);
-                    ns = SplitAngle(no);
+                    if (checkNormals)
+                        ns = SplitAngle(no);
                 }
                 return certify(ts.first, ns.first, depth + 1) &&
                        certify(ts.second, ns.second, depth + 1);

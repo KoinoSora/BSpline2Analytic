@@ -514,11 +514,13 @@ AnalyticPatch RecoverApproxPatch(const ClassificationSamples &cache, const Analy
         *savedTrace = std::move(trace);
     return p;
 }
-void CheckApproximateInput(const sggk::BSplineSurface &s, const ValidationOptions &o)
+void CheckApproximateInput(const sggk::BSplineSurface &s, const ValidationOptions &o,
+                           bool checkNormalTolerance)
 {
     if (!(o.distanceTolerance > 0 && std::isfinite(o.distanceTolerance)) ||
         !(o.boundaryTangentToleranceDeg > 0 && o.boundaryTangentToleranceDeg < 90) ||
-        !(o.boundaryNormalToleranceDeg > 0 && o.boundaryNormalToleranceDeg < 90) ||
+        (checkNormalTolerance &&
+         !(o.boundaryNormalToleranceDeg > 0 && o.boundaryNormalToleranceDeg < 90)) ||
         o.maxSubdivisionDepth > 30 || !o.maxValidationPieces)
         throw Failure(Status::InvalidInput, "Invalid conversion tolerances or budgets");
     if (s.IsRational())

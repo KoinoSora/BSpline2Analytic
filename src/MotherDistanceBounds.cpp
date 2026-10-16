@@ -288,6 +288,8 @@ bool ValidatePosition(SourceCache &source, const AnalyticParameters &p,
         }
         return visit(children.first, depth + 1) && visit(children.second, depth + 1);
     };
+    // All active cells cover the closed source domain, including its four edges.
+    // Streaming permits early failure, but Passed requires every cell to pass.
     for (size_t id = 0; id < source.cells.size(); ++id)
     {
         const SourceCell *cell;
