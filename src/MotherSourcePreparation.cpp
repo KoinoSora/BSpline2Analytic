@@ -332,6 +332,7 @@ const SourceCell &SourceCache::Tighten(size_t id, MotherDistanceValidationReport
         }
     cell.tight = std::move(b);
     boundary.reset();
+    boundaryTangents = {};
     ++out.tightenedCells;
     return cell;
 }
@@ -341,6 +342,7 @@ const paired::PreparedSource &SourceCache::PrepareBoundary(MotherDistanceValidat
     if (boundary && !tight)
         return *boundary;
     paired::PreparedSource next;
+    BoundaryTangents tangents;
     next.origin = origin;
     for (size_t id = 0; id < cells.size(); ++id)
     {
@@ -359,11 +361,11 @@ const paired::PreparedSource &SourceCache::PrepareBoundary(MotherDistanceValidat
                               : cell.v1 == domain[3]))
                 continue;
             double begin = fixedU ? cell.v0 : cell.u0, end = fixedU ? cell.v1 : cell.u1;
-            BV c = Boundary(cell.p, static_cast<BoundaryId>(edge));
-            BV tangent = Derivative(c, true) * (I(1) / (I(end) - I(begin)));
-            next.boundaries[edge].push_back({begin, end, std::move(tangent), {}});
+            tangents[edge].push_back(
+                {begin, end, BoundaryPartials(cell.p, static_cast<BoundaryId>(edge))});
         }
     boundary = std::move(next);
+    boundaryTangents = std::move(tangents);
     return *boundary;
 }
 } // namespace bspline2analytic::detail::mother

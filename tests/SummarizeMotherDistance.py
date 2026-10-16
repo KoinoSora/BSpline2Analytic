@@ -42,7 +42,14 @@ def main():
             continue
         assert not int(r["collapsed"]) and int(r["source_cache_hits"]) == 0
         assert float(r["mother_or_paired_bound"]) < 1e-5
-        assert float(r["tangent_bound"]) < .1
+        if r["backend"] == "mother" and "joint_tangent_bound_deg" in r:
+            assert float(r["tangent_u_bound_deg"]) < .1
+            assert float(r["tangent_v_bound_deg"]) < .1
+            assert float(r["joint_tangent_bound_deg"]) < .1
+            assert float(r["joint_sine_squared_bound"]) < math.sin(math.radians(.1)) ** 2
+            assert not r["joint_tangent_failure"]
+        else:
+            assert float(r["paired_tangent_bound"] if "paired_tangent_bound" in r else r["tangent_bound"]) < .1
         # Old CSVs retain their original normal certificate. Current mother
         # rows have no normal constraint; the paired backend still checks it.
         if "normal_bound" in r:
@@ -75,8 +82,11 @@ def main():
             algorithm_max_case_mean_ms=max(alg),
             cases_mean_under_10ms=sum(x < 10 for x in alg),
             cases_all_runs_under_10ms=sum(r["algorithm_max_run_ms"] < 10 for r in case_rows)))
-    summary = dict(schema=1, input_rows=len(rows), runs_per_case_backend=3,
-        contract="mother distance with floating-point guard plus interval boundary position/tangent",
+    joint = "joint_tangent_bound_deg" in rows[0]
+    summary = dict(schema=2 if joint else 1, input_rows=len(rows), runs_per_case_backend=3,
+        contract=("mother distance with floating-point guard plus interval boundary position and joint U/V tangent budget"
+                  if joint else "mother distance with floating-point guard plus interval boundary position/tangent"),
+        joint_tangent_budget=joint,
         mother_normal_checked="normal_bound" in rows[0],
         algorithm_ms_scope="classification compute plus first candidate validation; no optimizer run",
         status_measurements=dict(Counter(f'{r["type"]}/{r["backend"]}/{r["status"]}' for r in rows)),

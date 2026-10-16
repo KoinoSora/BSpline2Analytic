@@ -5,20 +5,33 @@ namespace bspline2analytic
 {
 // Independent experimental validator for polynomial sources. Full-domain distance
 // uses the exact-recognition settings and a floating-point Bernstein guard.
-// Four paired boundary positions and oriented tangents use intervals.
+// Four paired boundary positions and both parameter tangents use intervals.
 // This is NOT an interior paired-distance or trimmed Hausdorff certificate.
 struct MotherDistanceValidationOptions
 {
     RecognitionOptions position;
     // position.distanceTolerance also controls boundary position and mapping.
-    // boundary.validation.distanceTolerance and boundaryNormalToleranceDeg are ignored;
-    // tangent/budget fields apply. Surface normal orientation is not certified.
+    // The legacy distance/tangent/normal tolerances in boundary.validation are
+    // ignored. Its subdivision and mapping budgets still apply.
     PairedValidationOptions boundary;
+    // Require sin^2(angle(Su,Qu)) + sin^2(angle(Sv,Qv)) < sin^2(tolerance)
+    // on every boundary interval, with positive direction dot products.
+    // Target parameter directions are analytically orthogonal. No normal field
+    // is constructed, and failure never falls back to direct normal validation.
+    double jointTangentToleranceDeg = 0.1;
 };
 struct MotherDistanceValidationReport
 {
     PairedValidationStatus status = PairedValidationStatus::NotCertified;
-    ConstraintReport motherDistance, boundaryPosition, boundaryTangent;
+    ConstraintReport motherDistance, boundaryPosition;
+    ConstraintReport boundaryTangentU, boundaryTangentV, boundaryJointTangent;
+    // Joint bound is max over shared leaf intervals, NOT the sum of separately
+    // maximized U/V bounds. boundaryJointTangent.upperBound is in degrees and
+    // bounds asin(sqrt(the joint sine-squared budget)), not a measured normal.
+    double jointTangentSineSquaredUpperBound = INFINITY;
+    // Empty on success/not checked. Stable failure codes distinguish a witnessed
+    // joint-condition violation from an inconclusive or budget-limited bound.
+    std::string jointTangentFailure;
     CheckState correspondence = CheckState::NotChecked;
     ValidationTiming timing;
     std::string message;
@@ -28,7 +41,7 @@ struct MotherDistanceValidationReport
     unsigned sourceExtractions = 0, sourceCacheHits = 0;
     double sourceExtractionMs = 0, sourceBoundaryMs = 0, targetPreparationMs = 0;
     double mappingMs = 0, sampleMs = 0, residualBuildMs = 0, residualBoundMs = 0;
-    double boundaryPositionMs = 0, boundaryAngleMs = 0; // Angle timing is tangent-only.
+    double boundaryPositionMs = 0, boundaryAngleMs = 0; // Both tangents + joint budget.
     double sourceEnclosureRadius = 0;
     // Streaming extraction diagnostics. All source times are preparation subsets.
     unsigned sourceCells = 0, extractedCells = 0, cachedCellHits = 0;
@@ -40,7 +53,10 @@ struct MotherDistanceValidationReport
         return status == PairedValidationStatus::Passed &&
                motherDistance.state == CheckState::Passed &&
                boundaryPosition.state == CheckState::Passed &&
-               boundaryTangent.state == CheckState::Passed && correspondence == CheckState::Passed;
+               boundaryTangentU.state == CheckState::Passed &&
+               boundaryTangentV.state == CheckState::Passed &&
+               boundaryJointTangent.state == CheckState::Passed &&
+               correspondence == CheckState::Passed;
     }
 };
 MotherDistanceValidationReport ValidateMotherDistanceConversion(

@@ -51,6 +51,11 @@ bool Run(paired::AnalysisContext &context, const AnalyticPatch &patch,
     const auto &s = context.samples.source;
     auto boundary = options.boundary;
     boundary.validation.distanceTolerance = options.position.distanceTolerance;
+    if (!(options.jointTangentToleranceDeg > 0 && options.jointTangentToleranceDeg < 90))
+        throw Failure(Status::InvalidInput, "Joint tangent tolerance must be finite and in (0,90) degrees");
+    // CheckApproximateInput validates this legacy field. Only the independent
+    // joint budget controls the third validator's actual angle acceptance.
+    boundary.validation.boundaryTangentToleranceDeg = options.jointTangentToleranceDeg;
     ValidateOptions(options.position);
     CheckApproximateInput(s, boundary.validation, false);
     paired::CheckPatch(patch, false);
@@ -93,12 +98,12 @@ bool Run(paired::AnalysisContext &context, const AnalyticPatch &patch,
     }
     paired::Products products;
     paired::Chart chart;
-    paired::Boundaries target;
+    BoundaryTangents target;
     {
         Measure time(out.targetPreparationMs);
         chart = paired::BuildChart(patch, false);
         paired::PlaceChart(chart, patch.parameters, source.origin);
-        target = paired::PrepareTargetBoundaries(chart, products);
+        target = PrepareTargetTangents(chart, products);
     }
     aux.uMap = {{s.MinParamU(), s.MaxParamU()}, {0, 1}};
     aux.vMap = {{s.MinParamV(), s.MaxParamV()}, {0, 1}};
@@ -108,13 +113,18 @@ bool Run(paired::AnalysisContext &context, const AnalyticPatch &patch,
         // A failed refinement can partially change a map. Never attach a bound
         // from the previous correspondence to the maps returned after failure.
         out.boundaryPosition = {};
-        out.boundaryTangent = {};
+        out.boundaryTangentU = {};
+        out.boundaryTangentV = {};
+        out.boundaryJointTangent = {};
+        out.jointTangentSineSquaredUpperBound = INFINITY;
+        out.jointTangentFailure.clear();
+        out.message.clear();
         ++out.mappingAttempts;
         if (attempt)
             paired::RefineBoundaryMaps(context, patch, chart, boundary, aux, recovered);
         paired::CompleteChartMaps(aux, chart);
         bool positionOK;
-        paired::BoundaryResult angular;
+        bool angularOK = false;
         for (unsigned retry = 0; retry < 2; ++retry)
         {
             {
@@ -124,13 +134,13 @@ bool Run(paired::AnalysisContext &context, const AnalyticPatch &patch,
                 if (positionOK)
                 {
                     Measure time(out.boundaryAngleMs);
-                    angular =
-                        paired::ValidateBoundaries(source.boundary->boundaries, target, aux.uMap,
-                                                   aux.vMap, boundary, aux, products, false);
+                    angularOK = ValidateJointTangents(source.boundaryTangents, target, options,
+                                                      aux, products, out);
                 }
             }
-            if ((positionOK && angular.passed) || boundaryTightened ||
-                out.boundaryPosition.state == CheckState::Exceeded || angular.tangentExceeded)
+            if ((positionOK && angularOK) || boundaryTightened ||
+                out.boundaryPosition.state == CheckState::Exceeded ||
+                out.boundaryJointTangent.state == CheckState::Exceeded)
                 break;
             // Only unresolved interval checks warrant a tighter local source.
             // Keep the same correspondence and share the existing node budget.
@@ -139,24 +149,21 @@ bool Run(paired::AnalysisContext &context, const AnalyticPatch &patch,
             boundaryTightened = true;
             ++out.boundaryFallbacks;
             out.boundaryPosition = {};
-            angular = {};
+            angularOK = false;
+            out.boundaryTangentU = {};
+            out.boundaryTangentV = {};
+            out.boundaryJointTangent = {};
+            out.jointTangentSineSquaredUpperBound = INFINITY;
+            out.jointTangentFailure.clear();
+            out.message.clear();
         }
         {
             ValidationTimer::Scope reporting(timer, out.timing.reporting);
-            if (positionOK && angular.passed)
+            if (positionOK && angularOK)
             {
-                out.boundaryTangent.upperBound =
-                    (Atan(I(angular.tangentRatio)) * I(180) / IPi()).hi;
-                if (out.boundaryTangent.upperBound <
-                    boundary.validation.boundaryTangentToleranceDeg)
-                {
-                    out.boundaryTangent.state = out.correspondence = CheckState::Passed;
-                    return true;
-                }
+                out.correspondence = CheckState::Passed;
+                return true;
             }
-            out.boundaryTangent.state =
-                angular.tangentExceeded ? CheckState::Exceeded : CheckState::Unresolved;
-            out.boundaryTangent.upperBound = INFINITY;
         }
     }
     return false;
@@ -173,12 +180,14 @@ MotherDistanceValidationReport Validate(paired::AnalysisContext &context,
     {
         bool passed = Run(context, patch, recovered, options, out, aux, timer);
         out.status = passed ? PairedValidationStatus::Passed : PairedValidationStatus::NotCertified;
-        out.message = passed
-                          ? "Floating-point guarded Bernstein mother-distance bound, with interval "
-                            "paired boundary position/tangent checks; not an interior "
-                            "paired or Hausdorff certificate"
-                          : "Mother distance or boundary correspondence not certified; inspect "
-                            "individual check states";
+        if (passed)
+            out.message = "Floating-point guarded Bernstein mother-distance bound, with interval "
+                "paired boundary positions and joint U/V tangent budget; no direct normal "
+                "certification or fallback, no adjacent-face G1 check, not an interior paired "
+                "or Hausdorff certificate";
+        else if (out.message.empty())
+            out.message = "Mother distance or boundary correspondence not certified; inspect "
+                          "individual check states";
     }
     catch (const paired::Budget &e)
     {
@@ -206,9 +215,16 @@ MotherDistanceValidationReport Validate(paired::AnalysisContext &context,
     if (out.status != PairedValidationStatus::Passed)
         out.correspondence = CheckState::Unresolved;
     // Only completed individual checks retain finite bounds after an early exit.
-    for (auto *check : {&out.motherDistance, &out.boundaryPosition, &out.boundaryTangent})
+    for (auto *check : {&out.motherDistance, &out.boundaryPosition, &out.boundaryTangentU,
+                        &out.boundaryTangentV, &out.boundaryJointTangent})
         if (check->state != CheckState::Passed)
             check->upperBound = INFINITY;
+    if (out.boundaryJointTangent.state != CheckState::Passed)
+        out.jointTangentSineSquaredUpperBound = INFINITY;
+    if (!out.jointTangentFailure.empty() &&
+        out.message.find(out.jointTangentFailure) == std::string::npos)
+        out.message = out.jointTangentFailure + ": " + out.message +
+                      "; joint condition was not certified, no direct normal fallback";
     timer.Finish();
     return out;
 }

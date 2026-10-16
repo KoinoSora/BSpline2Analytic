@@ -75,8 +75,71 @@ sggk::BSplineSurfacePtr Plane(unsigned mode)
     return std::make_shared<sggk::BSplineSurface>(3, 3, cp, sggk::RealArray{0, 1},
         sggk::RealArray{0, 1}, sggk::UIntArray{4, 4}, sggk::UIntArray{4, 4});
 }
+void JointTangentUnit()
+{
+    auto constant = [](V v) { return BV{BPoly(0, 0, I(v.x)), BPoly(0, 0, I(v.y)), BPoly(0, 0, I(v.z))}; };
+    auto check = [&](double uDegrees, double vDegrees, unsigned nodes = 40000) {
+        const double u = uDegrees * Pi / 180, v = vDegrees * Pi / 180;
+        mother::BoundaryTangents source, target;
+        for (unsigned edge = 0; edge < 4; ++edge)
+        {
+            source[edge].push_back({0, 1, {constant({std::cos(u), std::sin(u), 0}),
+                                          constant({-std::sin(v), std::cos(v), 0})}});
+            target[edge].push_back({0, 1, {constant({1, 0, 0}), constant({0, 1, 0})}});
+        }
+        MotherDistanceValidationOptions options;
+        options.boundary.validation.maxValidationPieces = nodes;
+        PairedValidationReport aux;
+        aux.uMap = aux.vMap = {{0, 1}, {0, 1}};
+        paired::Products products;
+        MotherDistanceValidationReport out;
+        try { (void)mother::ValidateJointTangents(source, target, options, aux, products, out); }
+        catch (const paired::Budget &) { out.status = PairedValidationStatus::BudgetExceeded; }
+        return out;
+    };
+    auto asymmetric = check(.099, 0);
+    Require(asymmetric.boundaryJointTangent.state == CheckState::Passed &&
+        asymmetric.boundaryTangentU.upperBound > .09 &&
+        asymmetric.boundaryJointTangent.upperBound < .1,
+        "Joint budget incorrectly imposed equal per-direction tolerances");
+    auto shared = check(.06, .06);
+    Require(shared.boundaryJointTangent.state == CheckState::Passed &&
+        shared.boundaryJointTangent.upperBound > .08, "Joint budget underestimates combined error");
+    // Both parameter directions rotate within the SAME plane. The actual normal
+    // does not change, but the chosen sufficient joint condition must reject.
+    auto failed = check(.08, .08);
+    Require(failed.boundaryJointTangent.state == CheckState::Exceeded &&
+        failed.boundaryJointTangent.hasWitness &&
+        failed.jointTangentFailure == "JointTangentConditionExceeded" &&
+        failed.message.find("no direct normal fallback") != std::string::npos &&
+        !std::isfinite(failed.boundaryJointTangent.upperBound),
+        "Joint-condition failure was replaced by normal acceptance");
+    auto budget = check(0, 0, 1);
+    Require(budget.status == PairedValidationStatus::BudgetExceeded &&
+        budget.jointTangentFailure == "JointTangentBudgetExceeded" &&
+        !std::isfinite(budget.jointTangentSineSquaredUpperBound),
+        "Incomplete joint budget reported as a complete certificate");
+    mother::BoundaryTangents zero, target;
+    for (unsigned edge = 0; edge < 4; ++edge)
+    {
+        zero[edge].push_back({0, 1, {constant({0, 0, 0}), constant({0, 1, 0})}});
+        target[edge].push_back({0, 1, {constant({1, 0, 0}), constant({0, 1, 0})}});
+    }
+    MotherDistanceValidationOptions options;
+    options.boundary.validation.maxSubdivisionDepth = 0;
+    PairedValidationReport aux;
+    aux.uMap = aux.vMap = {{0, 1}, {0, 1}};
+    paired::Products products;
+    MotherDistanceValidationReport unresolved;
+    Require(!mother::ValidateJointTangents(zero, target, options, aux, products, unresolved) &&
+        unresolved.boundaryJointTangent.state == CheckState::Unresolved &&
+        !unresolved.boundaryJointTangent.hasWitness &&
+        unresolved.jointTangentFailure == "JointTangentConditionUnresolved",
+        "Degenerate tangent accepted or incorrectly reported as a witnessed violation");
+}
 void Unit(const std::filesystem::path &dir)
 {
+    JointTangentUnit();
     MotherDistanceValidationOptions affine;
     affine.boundary.enablePiecewiseMapping = false;
     AnalyticPatch plane;
@@ -91,16 +154,22 @@ void Unit(const std::filesystem::path &dir)
     for (unsigned mode = 1; mode <= 3; ++mode)
     {
         auto r = ValidateMotherDistanceConversion(*Plane(mode), plane, affine);
-        Require(r.Passed() == (mode == 1), "Position/tangent-only plane contract failed"); Timing(r.timing);
-        if (mode == 2) Require(r.boundaryTangent.state == CheckState::Exceeded, "Tangent defect missed");
+        Require(!r.Passed(), "Position/joint-tangent plane contract failed"); Timing(r.timing);
+        if (mode <= 2) Require(r.boundaryJointTangent.state == CheckState::Exceeded &&
+            r.jointTangentFailure == "JointTangentConditionExceeded", "U/V tangent defect missed");
         if (mode == 3) Require(r.motherDistance.state == CheckState::Exceeded, "Interior defect missed");
     }
     wrong = plane; wrong.normalSign = -1;
     Require(ValidateMotherDistanceConversion(*Plane(0), wrong, affine).Passed(), "Unused normal sign affected validation");
     auto normalIgnored = affine;
     normalIgnored.boundary.validation.boundaryNormalToleranceDeg = NAN;
+    normalIgnored.boundary.validation.boundaryTangentToleranceDeg = NAN;
     Require(ValidateMotherDistanceConversion(*Plane(0), plane, normalIgnored).Passed(),
-        "Unused normal tolerance affected validation");
+        "Unused legacy angle tolerance affected validation");
+    auto invalidJoint = affine;
+    invalidJoint.jointTangentToleranceDeg = NAN;
+    Require(ValidateMotherDistanceConversion(*Plane(0), plane, invalidJoint).status ==
+        PairedValidationStatus::InvalidInput, "Invalid joint tolerance accepted");
     auto warped = Plane(4); plane.domain = {0, 1, 0, 1};
     auto mapped = ValidateMotherDistanceConversion(*warped, plane);
     Require(mapped.Passed() && mapped.mappingAttempts == 2 && mapped.uMap.source.size() > 2,
@@ -228,7 +297,8 @@ void Batch(const std::filesystem::path &dir, const std::filesystem::path &file)
         "source_boundary_ms,target_preparation_ms,mapping_ms,sample_ms,residual_build_ms,residual_bound_ms,"
         "boundary_position_ms,boundary_angle_ms,surface_nodes,boundary_position_nodes,boundary_nodes,"
         "surface_depth,mapping_attempts,source_cache_hits,mother_or_paired_bound,boundary_position_bound,"
-        "tangent_bound,paired_normal_bound,source_certificate_bound,message\n";
+        "paired_tangent_bound,paired_normal_bound,tangent_u_bound_deg,tangent_v_bound_deg,"
+        "joint_tangent_bound_deg,joint_sine_squared_bound,joint_tangent_failure,source_certificate_bound,message\n";
     // Both current validators get independent cold source caches and the same
     // real first candidate. Alternate their order to reduce systematic bias.
     for (unsigned warm : {301u, 401u})
@@ -309,9 +379,19 @@ void Batch(const std::filesystem::path &dir, const std::filesystem::path &file)
                     << (third ? m.mappingAttempts : p.mappingAttempts) << ','
                     << (third ? m.sourceCacheHits : p.sourceCacheHits) << ','
                     << (third ? m.motherDistance.upperBound : p.certificate.geometry.upperBound) << ','
-                    << m.boundaryPosition.upperBound << ','
-                    << (third ? m.boundaryTangent.upperBound : p.certificate.boundaryTangent.upperBound) << ',';
+                    << m.boundaryPosition.upperBound << ',';
+                if (!third) csv << p.certificate.boundaryTangent.upperBound;
+                csv << ',';
                 if (!third) csv << p.certificate.boundaryNormal.upperBound;
+                csv << ',';
+                if (third) csv << m.boundaryTangentU.upperBound;
+                csv << ',';
+                if (third) csv << m.boundaryTangentV.upperBound;
+                csv << ',';
+                if (third) csv << m.boundaryJointTangent.upperBound;
+                csv << ',';
+                if (third) csv << m.jointTangentSineSquaredUpperBound;
+                csv << ',' << Quote(m.jointTangentFailure);
                 csv << ',' << bound.upper << ',' << Quote(message) << '\n';
                 csv.flush();
             }

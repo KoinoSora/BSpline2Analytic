@@ -1,6 +1,7 @@
 #pragma once
 #include "MotherDistanceValidation.h"
 #include "PairedValidationInternal.h"
+#include "MotherTangentValidation.h"
 
 namespace bspline2analytic::detail::mother
 {
@@ -41,6 +42,7 @@ struct SourceCache
     std::vector<std::optional<SourceStrip>> strips;
     std::vector<std::optional<SourceCell>> cells;
     std::optional<paired::PreparedSource> boundary;
+    BoundaryTangents boundaryTangents;
     bool Matches(const sggk::BSplineSurface &) const;
     void Initialize(const sggk::BSplineSurface &, MotherDistanceValidationReport &);
     const SourceCell &Get(size_t, MotherDistanceValidationReport &);
