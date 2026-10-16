@@ -1,0 +1,613 @@
+{
+  "validator": "rational_boundary",
+  "dataset_contract": "rational-domain-v2",
+  "fixed_chart": false,
+  "exe_sha256": "0fa84640bff05c18f0329f24181331f445bea52f9cfb0de08a9e8dc8cf47983c",
+  "inputs_sha256": {
+    "extreme:68": "b27ab040dc1ec4dce18784f3bccb6cdb396defb78b38623e53535e8078a211c1",
+    "extreme:70": "536fbd45b2c204fc1df9547b99a69b46ca34dbbfb5ad5838ac2585482bedbb4f",
+    "extreme:76": "6184e5b1980c36d4f2f499111cff734433f57c5e76adb3ba8de84b6d9d57db3d",
+    "extreme:78": "81472f77f15dfe437d8c0bdc89c1a014017d63c7fadfc77034bfa95103c97085",
+    "extreme:86": "3059a8fb0ef7f5e9665c5ed988fd699a4511eff68cc829b72c6ea59250f3ffa9",
+    "extreme:92": "f40de78861a5778524552912926396b5701ae998e38e26214334a7012c0499c7",
+    "extreme:94": "5237c4d92baa4af633c0f6180cf508b884aa28652bcfa26f6014bedcc275797b",
+    "extreme:100": "2a9f160fd47d4a72a348ec5ca83157bf3ba2afd3ecff78ef4e39a176eb1043aa",
+    "extreme:102": "689e8f47e2e6072f136fcf17bd77b0c60b55a41796a8147eb7ae509a6bec4105",
+    "extreme:108": "ebec67adc96ff12873b50e2787051b46492dcb6764e8b0a4fdee0edcd2337f80",
+    "extreme:110": "f616e9e899e4d731eb2f805410c98d265528cc6b9facfdf004e742b6cc58622b",
+    "extreme:116": "10ab5ca465ffaa3c31dcfadbcbd8eea28d1158ef1b469f73fb82e09bb812f5d8",
+    "extreme:118": "cdf10c2954a8069252eb09386726419fcac1d440a48d53695edf3046809e27df",
+    "extreme:124": "3a4e8447ea659e55eee3ca6993597eb780f0396e6f8b152f75e708fb131e1ab4",
+    "extreme:125": "965eee5da6a92b3a13cd3ad95bd64b4396e1e37f40d3c1d77d25f31eabff99db",
+    "extreme:126": "e6141ab47c3ab11596bce30c8ba078cb6e01ee55c26d3e6b4e2df023f0329568",
+    "extreme:128": "a4497934d1c061dc32f0b395b76a8fce370991ca4c4569c0e64d38ab5116001a",
+    "extreme:129": "9a6266bd6d04b3b141e52ebe92a8920635d14dc326c9b4e9edbadc51d5c31fcf",
+    "extreme:130": "47493a1afa24999e396d0ef71c3dae6c341c847dc955a79a7bebada2d20df754",
+    "extreme:131": "5eae187ecc80bad95562b40c6ed746f54ce955b18747efc0ab14b0bd8bfbb93b",
+    "extreme:132": "679fbce1345a9e7c795646e1a265594d121a28bd2e043edd7048e903c1fdc011",
+    "extreme:133": "3f60a870c3f1482b84682f80f9059577db9fd553f6d620b45bf212774b79589b",
+    "extreme:134": "5551c07a8ffc028812c86bb255453245f0116d1225f8753c096cd6567b5b5e72",
+    "extreme:135": "e11a3d0b436e31742df53c13a8b8258f1652ba09ea7e46dea6a0d4155c67fcfc",
+    "extreme:136": "bd110dc98f81f55b0ab850c5e66d76d2120f44c30f25e57e62f9321852f63298",
+    "extreme:137": "ef21a9030f75debfbdc18d8fa584fe27571e2789a7f5566db7a48b9beb538e3c",
+    "extreme:138": "113c565db85f61e2c38a53d1245145e8f62c9ad1c248b436595b22d76ce414e8",
+    "extreme:139": "d361d9d9899e013a549e8a948da2409032be054e8e57de38e925d98d68974e1e",
+    "extreme:140": "8a99e710c4c6bf5623a4579e9544a186ba07b952f1b28a9fdd08eef23cb90684",
+    "extreme:141": "844e503447235d7885df3b564509e6445095051066aae33a035055f1b0b182fa",
+    "extreme:142": "665c3c06af5a17ae081ea3327173f654cd1154d748dddd51e3748974f164602f",
+    "extreme:143": "c1b20e20e2f3e4a2409ecdb4a7558e5ee03ebb9d3f262856d175824955b3397b",
+    "extreme:160": "ad29077bf006a925604478fccf4a76764d8cf39f8d75702e37409310528817ba",
+    "extreme:161": "935b3c4c2b71482741415bf9cfdfddc7beb97e80f45c53c4ad770aee725fc2fe",
+    "extreme:162": "1ee7e479ed6642f4b20b26539831c6078121511234e459acefd495f80b46e858",
+    "extreme:163": "200a7d4dd80156520a8264db374c7492b7c03c55c9e05230cd6743d452798a54",
+    "extreme:164": "02673cb74a3f1e4ae963f67b38a54fd57fb18686cbcba1bbd0814cd7beafde7b",
+    "extreme:165": "5be7cee98818a20ed2c6706fb14e920879029b72de7e9e49de165fd40accf3d6",
+    "extreme:166": "184163e6753717f31e98804d1952cc87fc9e9121153919f73488e74b9b32ac67",
+    "extreme:167": "e474040e2aa9c88316fad0a558a4bd9af7ce57ff41a0e0dcad6bc7f7d864678d",
+    "extreme:168": "de33c4c3a8532bbc1cb9d10d8b775fdd96ad768d1a0ed958fd630d7147efe075",
+    "extreme:169": "f8beeeec386b178d882de84606889184d5a5418246e7fc96292ca176cc65a073",
+    "extreme:170": "9dc4c6b7644464192965d6f7110b5238f1e904de85a9bced633587ac9c89803a",
+    "extreme:171": "fff9587e6c316b17b4f497c5024a6e4766256626a09fda6649a57f40ec0404cd",
+    "extreme:172": "1597a214ae89f35554c1c425d7c7e161b7e0e00ec9db0abfa94f9448ca41725b",
+    "extreme:173": "1e23557e82cfba6108fb0b75bba03aa3b5ee6e243a241c1f68b43fd9740ad22f",
+    "extreme:174": "d785741a5ef81e9efbc7b58e6cf07a1cf7f128688f17c29714ab71b30c445ebf",
+    "extreme:175": "c22ba8b509931889e2de89f89f3009efc520c571a20c59e082c7efb72654f831",
+    "extreme:180": "b33a0422d38be7e8717750075f159e7d8fcdfc1b2947724f356cbd479c873a2d",
+    "extreme:182": "b3226c3d139208a4a483973c3575f5480dc897e7907c4751e336f9c08d656c4e",
+    "extreme:188": "5b751334bbecd2c41f263dd46a9690b7b07382d6a930d5fc1f622bf139ce04d7",
+    "extreme:190": "4545b787e6d9a2e43d150f02dc8b2c26a920e98ac84fa32e35226a5ad0b4d3c7",
+    "extreme:196": "544e231ecc668aa50155fe976de4e037238bfcf5661852808f42a41a36dff751",
+    "extreme:198": "c39d968e904de061f96c8eb7f3f333df26d0f7e2b824d6de6179410ff3137ba9",
+    "extreme:204": "6c5b6f5ed27214510d0d8d91aa03df6da6a00d1cda4832fd2fe63fee7aadcf3c",
+    "extreme:206": "788742d75fc3b43ff981c9a317d7c02064e25e26443ed9f369478653ddcafc57",
+    "extreme:213": "627b38af0dc02afd78b8054e1361e162c60061391b2bdb6ab9afc80ab2f8cc0b",
+    "extreme:215": "bf4b123c5b65037a522080bb135f5b7a2abebd7a8b6ca89ef748c95808917115",
+    "extreme:221": "b24b9f17a4db72699d1c3a4667839eb052d693cbb9dbec3b2a323700a1676186",
+    "extreme:223": "99a0f18b8d4f66a6a1782688715ced29a9aa0b31c7776e25943d35b2186a7b17",
+    "extreme:229": "becacf2d8778a9c067c28845ad6f05d9809794e65cd12da84b3204f4f62cd321",
+    "extreme:231": "a7011715e3217e56c70378922faf62735ebb2596410d6e7865882968c42ffd19",
+    "extreme:237": "5df7aa93b7c6c5084226d3e188e1309cdbc2f2d5b6cc554af83bf8fdfc43b926",
+    "extreme:239": "a5e8f1c2b4eeef050e38daa3281ea07002cf04868d80076b5b945d87d25d5d42",
+    "extreme:288": "c8b2fd39cd805fee330cc53ee09e22a455e7e9d3bb7d3d8148403e4805b1fe9d",
+    "extreme:290": "77b1bd8c21e46484fa5db77f0ed5815edf40607f2c55826fe1446ed43f76503e",
+    "extreme:296": "1b4724ae2f84b0e2ee9185382a8cbb8812f7df020d822c8e41413abe407b3021",
+    "extreme:297": "57316f83cdf90c096fad6ac15e0fd400b716c74ec787f25e0ab5a6f4ed6c321b",
+    "extreme:299": "94f01e94cb15706cb29cddb56eac24689dff977fb9cf9cb26b3d8e429b9175f5",
+    "extreme:300": "3e5efe313f0d6f3f581c6638e45c1b9418126fadb4230d8fcfedbbd72521082c",
+    "extreme:301": "00b9c708407f93c6ba4ba167e3a643b45671b5d97888f07c221b85ccf3c0b4a2",
+    "extreme:302": "acadf55f32907f8e33356315cd2f75c1b9d9861093cd731f65f06595425041d2",
+    "extreme:303": "2db1e8aec93bc7568b1a5c29182c1c84d2e092b8fdc663cb2bb9d0f28a558bb3",
+    "main:0": "8f94e1ada59ec6f01baee630e7af4bbae0275ee881a56757d0daeac8d6da96a6",
+    "main:100": "25364d75ddd6099be02b398e590bba620a72b2eb46f1450cfdf55dd5640da722",
+    "main:188": "4a55b5287fdb4485c9beab596bb771af62d57803aeee8abffab7919d1efbb2c7",
+    "main:218": "fb8e1810e002931892275ea5d868ef469e69d45e527022cbaef880cc6a1e62e3",
+    "main:318": "88dc9ff07ed2b4d623d6d891aba13bb140e9ae8a7135fd69cc5d8c8e2db97f6c",
+    "main:400": "51e51f51e54471ddd51a9be1b124d6f63669f0e1a35ba31142c574f3be2cf5a6",
+    "main:486": "99967af337a2478298a525618980411adadb1f4e8155a1398816a788445179a3",
+    "main:500": "717f7d9b0a47e2583bc92fce6ea8ad093a2f5fa7536a8eccc2d147480bbebf5f",
+    "main:599": "72cf72f24500449071694e5bf59c1e7083713c2d246ce5bf008efec0437a4f52",
+    "extreme:0": "f0e79872cc618ff93b9c1e80141022685e59a7e7de9ab01c5ac7c5013f9d7c8e",
+    "extreme:64": "421ecb5a216974f5cec09d468231d01ff508cd4fb8c06729f8354ac3d2a989f9",
+    "extreme:144": "b06b7fa9969580446903f9267baac71681737d5c7bbfec21c139e0ad79de1521",
+    "extreme:176": "45b13a79a64a508d6980a7e0a1c0e3a49c23a53bff153aebabd135b2f7415ebd",
+    "extreme:240": "db53ebd6c1910d7031320766c41ba4a8f8b354a221cf7d156a2d2fad5728e741",
+    "extreme:298": "733add225831c23102f6febc4b2cfcd2015ffb730b7e00430c312ef685efd5bd",
+    "extra:0": "d9236863ee183cdd36ad6dfe4ac96922814f4f070f0d359665edca2d0c7438cd",
+    "extra:20": "db11597f6ecfdb5431b0d202205b07bc1543a6b4cb545b3dc7b72966318e96ce",
+    "extra:40": "10f9568ccb5c083af94558a2b24347a031c882aefca31fe5af4799dcbd7212be",
+    "extra:41": "c7ea230910a25f6a11ab5af6c86d4a93d39dcf8a5cc8d6cdccf0b4ed2efe29df",
+    "extra:50": "04b47bf04f8738b1ccc0eadd66bfcf794425c59d7cd56dd18c007925a7cda2ce",
+    "extra:55": "32ff4442e61f06e893335da4c5169ed551bf663a80258c625bf361b9ad48791f",
+    "synthetic:0": "447b68656985757bea814adbcac1df2119ba48a2b0b5623927702ff3cb6127ea",
+    "synthetic:1": "4cccaa4d4a4813b412140d78cec25e7451bc6ab05214f962127a938ef8c02703",
+    "synthetic:2": "478df95aa9ef8e2906eddcdc8773aa3304de07c4b369e00c237f01e559650fe6",
+    "synthetic:3": "30f4a63f51919ad68073d2dbdc1745417e5ccea44ea0cde0f64235113a3529ce",
+    "synthetic:4": "5313048687569739b265a087e7606b0be0bdd42b0e6ae5ccf8405d0ab5bae6e0"
+  },
+  "expectations": {
+    "extreme:68": "accept",
+    "extreme:70": "accept",
+    "extreme:76": "accept",
+    "extreme:78": "accept",
+    "extreme:86": "accept",
+    "extreme:92": "accept",
+    "extreme:94": "accept",
+    "extreme:100": "accept",
+    "extreme:102": "accept",
+    "extreme:108": "accept",
+    "extreme:110": "accept",
+    "extreme:116": "accept",
+    "extreme:118": "accept",
+    "extreme:124": "accept",
+    "extreme:125": "accept",
+    "extreme:126": "accept",
+    "extreme:128": "accept",
+    "extreme:129": "accept",
+    "extreme:130": "accept",
+    "extreme:131": "accept",
+    "extreme:132": "accept",
+    "extreme:133": "accept",
+    "extreme:134": "accept",
+    "extreme:135": "accept",
+    "extreme:136": "accept",
+    "extreme:137": "accept",
+    "extreme:138": "accept",
+    "extreme:139": "accept",
+    "extreme:140": "accept",
+    "extreme:141": "accept",
+    "extreme:142": "accept",
+    "extreme:143": "accept",
+    "extreme:160": "accept",
+    "extreme:161": "accept",
+    "extreme:162": "accept",
+    "extreme:163": "accept",
+    "extreme:164": "accept",
+    "extreme:165": "accept",
+    "extreme:166": "accept",
+    "extreme:167": "accept",
+    "extreme:168": "accept",
+    "extreme:169": "accept",
+    "extreme:170": "accept",
+    "extreme:171": "accept",
+    "extreme:172": "accept",
+    "extreme:173": "accept",
+    "extreme:174": "accept",
+    "extreme:175": "accept",
+    "extreme:180": "accept",
+    "extreme:182": "accept",
+    "extreme:188": "accept",
+    "extreme:190": "accept",
+    "extreme:196": "accept",
+    "extreme:198": "accept",
+    "extreme:204": "accept",
+    "extreme:206": "accept",
+    "extreme:213": "accept",
+    "extreme:215": "accept",
+    "extreme:221": "accept",
+    "extreme:223": "accept",
+    "extreme:229": "accept",
+    "extreme:231": "accept",
+    "extreme:237": "accept",
+    "extreme:239": "accept",
+    "extreme:288": "accept",
+    "extreme:290": "accept",
+    "extreme:296": "accept",
+    "extreme:297": "accept",
+    "extreme:299": "accept",
+    "extreme:300": "accept",
+    "extreme:301": "accept",
+    "extreme:302": "accept",
+    "extreme:303": "accept",
+    "main:0": "accept",
+    "main:100": "accept",
+    "main:188": "accept",
+    "main:218": "accept",
+    "main:318": "accept",
+    "main:400": "accept",
+    "main:486": "accept",
+    "main:500": "reject_infeasible",
+    "main:599": "reject_infeasible",
+    "extreme:0": "accept",
+    "extreme:64": "accept",
+    "extreme:144": "accept",
+    "extreme:176": "accept",
+    "extreme:240": "accept",
+    "extreme:298": "accept",
+    "extra:0": "boundary_probe",
+    "extra:20": "accept",
+    "extra:40": "accept",
+    "extra:41": "accept",
+    "extra:50": "invalid_options",
+    "extra:55": "reject_budget",
+    "synthetic:0": "accept",
+    "synthetic:1": "accept",
+    "synthetic:2": "accept",
+    "synthetic:3": "accept",
+    "synthetic:4": "accept"
+  },
+  "runs": 3,
+  "timeout_seconds": 60,
+  "max_case_ms": 50,
+  "cancellation_reserve_ms": 5.0,
+  "cases": [
+    [
+      "extreme",
+      68
+    ],
+    [
+      "extreme",
+      70
+    ],
+    [
+      "extreme",
+      76
+    ],
+    [
+      "extreme",
+      78
+    ],
+    [
+      "extreme",
+      86
+    ],
+    [
+      "extreme",
+      92
+    ],
+    [
+      "extreme",
+      94
+    ],
+    [
+      "extreme",
+      100
+    ],
+    [
+      "extreme",
+      102
+    ],
+    [
+      "extreme",
+      108
+    ],
+    [
+      "extreme",
+      110
+    ],
+    [
+      "extreme",
+      116
+    ],
+    [
+      "extreme",
+      118
+    ],
+    [
+      "extreme",
+      124
+    ],
+    [
+      "extreme",
+      125
+    ],
+    [
+      "extreme",
+      126
+    ],
+    [
+      "extreme",
+      128
+    ],
+    [
+      "extreme",
+      129
+    ],
+    [
+      "extreme",
+      130
+    ],
+    [
+      "extreme",
+      131
+    ],
+    [
+      "extreme",
+      132
+    ],
+    [
+      "extreme",
+      133
+    ],
+    [
+      "extreme",
+      134
+    ],
+    [
+      "extreme",
+      135
+    ],
+    [
+      "extreme",
+      136
+    ],
+    [
+      "extreme",
+      137
+    ],
+    [
+      "extreme",
+      138
+    ],
+    [
+      "extreme",
+      139
+    ],
+    [
+      "extreme",
+      140
+    ],
+    [
+      "extreme",
+      141
+    ],
+    [
+      "extreme",
+      142
+    ],
+    [
+      "extreme",
+      143
+    ],
+    [
+      "extreme",
+      160
+    ],
+    [
+      "extreme",
+      161
+    ],
+    [
+      "extreme",
+      162
+    ],
+    [
+      "extreme",
+      163
+    ],
+    [
+      "extreme",
+      164
+    ],
+    [
+      "extreme",
+      165
+    ],
+    [
+      "extreme",
+      166
+    ],
+    [
+      "extreme",
+      167
+    ],
+    [
+      "extreme",
+      168
+    ],
+    [
+      "extreme",
+      169
+    ],
+    [
+      "extreme",
+      170
+    ],
+    [
+      "extreme",
+      171
+    ],
+    [
+      "extreme",
+      172
+    ],
+    [
+      "extreme",
+      173
+    ],
+    [
+      "extreme",
+      174
+    ],
+    [
+      "extreme",
+      175
+    ],
+    [
+      "extreme",
+      180
+    ],
+    [
+      "extreme",
+      182
+    ],
+    [
+      "extreme",
+      188
+    ],
+    [
+      "extreme",
+      190
+    ],
+    [
+      "extreme",
+      196
+    ],
+    [
+      "extreme",
+      198
+    ],
+    [
+      "extreme",
+      204
+    ],
+    [
+      "extreme",
+      206
+    ],
+    [
+      "extreme",
+      213
+    ],
+    [
+      "extreme",
+      215
+    ],
+    [
+      "extreme",
+      221
+    ],
+    [
+      "extreme",
+      223
+    ],
+    [
+      "extreme",
+      229
+    ],
+    [
+      "extreme",
+      231
+    ],
+    [
+      "extreme",
+      237
+    ],
+    [
+      "extreme",
+      239
+    ],
+    [
+      "extreme",
+      288
+    ],
+    [
+      "extreme",
+      290
+    ],
+    [
+      "extreme",
+      296
+    ],
+    [
+      "extreme",
+      297
+    ],
+    [
+      "extreme",
+      299
+    ],
+    [
+      "extreme",
+      300
+    ],
+    [
+      "extreme",
+      301
+    ],
+    [
+      "extreme",
+      302
+    ],
+    [
+      "extreme",
+      303
+    ],
+    [
+      "main",
+      0
+    ],
+    [
+      "main",
+      100
+    ],
+    [
+      "main",
+      188
+    ],
+    [
+      "main",
+      218
+    ],
+    [
+      "main",
+      318
+    ],
+    [
+      "main",
+      400
+    ],
+    [
+      "main",
+      486
+    ],
+    [
+      "main",
+      500
+    ],
+    [
+      "main",
+      599
+    ],
+    [
+      "extreme",
+      0
+    ],
+    [
+      "extreme",
+      64
+    ],
+    [
+      "extreme",
+      144
+    ],
+    [
+      "extreme",
+      176
+    ],
+    [
+      "extreme",
+      240
+    ],
+    [
+      "extreme",
+      298
+    ],
+    [
+      "extra",
+      0
+    ],
+    [
+      "extra",
+      20
+    ],
+    [
+      "extra",
+      40
+    ],
+    [
+      "extra",
+      41
+    ],
+    [
+      "extra",
+      50
+    ],
+    [
+      "extra",
+      55
+    ],
+    [
+      "synthetic",
+      0
+    ],
+    [
+      "synthetic",
+      1
+    ],
+    [
+      "synthetic",
+      2
+    ],
+    [
+      "synthetic",
+      3
+    ],
+    [
+      "synthetic",
+      4
+    ]
+  ],
+  "cpu_affinity_fixed": false,
+  "exclusive_machine": false,
+  "parallel_processes": 1
+}

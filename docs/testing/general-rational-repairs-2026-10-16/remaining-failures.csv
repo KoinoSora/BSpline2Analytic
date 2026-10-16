@@ -1,0 +1,8 @@
+﻿suite,id,group,before_status,after_status,before_accepted_runs,after_accepted_runs,after_audited_runs,before_median_ms,before_max_ms,after_median_ms,after_max_ms,after_all_runs_under_10ms,after_exemption_count,after_recovery_3d_refinements,after_message
+extreme,172,triangle,NotCertified,NotCertified,0,0,0,4.0329,4.5693,4.5241,5.2571,True,0,14,Interior sampled mother distance exceeded
+extreme,173,triangle,NotCertified,NotCertified,0,0,0,4.3486,4.5476,4.3545,4.5485,True,0,14,Interior sampled mother distance exceeded
+extreme,174,triangle,NotCertified,NotCertified,0,0,0,3.9056,4.2493,4.1882,4.4582,True,0,14,Interior sampled mother distance exceeded
+extreme,175,triangle,NotCertified,NotCertified,0,0,0,4.259,4.3023,4.5134,5.7285,True,0,12,Interior sampled mother distance exceeded
+extreme,223,cone,NotCertified,NotCertified,0,0,0,2.4675,3.2315,2.4479,2.5329,True,0,28,Interior sampled mother distance exceeded
+extreme,229,cone,NotCertified,NotCertified,0,0,0,1.9761,2.1351,1.9292,2.072,True,0,11,Interior sampled mother distance exceeded
+extreme,239,cone,NotCertified,NotCertified,0,0,0,1.947,2.1579,2.0974,2.3158,True,0,11,Interior sampled mother distance exceeded

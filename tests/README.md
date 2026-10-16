@@ -22,6 +22,8 @@ python tests/RunSequentialNonExtreme.py --exe build-sequential-20261016/Release/
 
 985 例两方向次数均为 **3–5**，控制顶点总数 **≤200**，算法几何容差保持 **1e-5**；有意超差的负例/探针不改变验收阈值。生成器、清单发布和运行器均检查表示约束。
 
+后续三角形参数域、微小分段和圆锥对应修正见 [99 例定向回归](../docs/testing/GENERAL_RATIONAL_REPAIRS_2026-10-16.md)：73 个目标失败恢复 66 个，26 个控制案例结果不变，剩余 7 个失败单列。默认允许源/目标三维直径界均不超过 `1e-8` 的小段豁免切向，但仍连续认证 `1e-5` 位置约束，并在输出 `tangentExemptions` 记录区间；角度上界不覆盖这些豁免段。设置 `microSegmentDiameter=0` 可禁用该策略。CSV 新增 `micro_merged_segments`、`tangent_exemption_count`、`recovery_3d_refinements`，逐例另存 `*-exemptions.csv`。
+
 后续已获准并完成新版全量回归：**985 例 × 3 次**，默认单例共享 **50ms** 分类＋验证预算，实际最大 **18.7393ms**，无时间预算退出；850 个正例中 710 个认证、140 个未认证。见 [全量耗时与失败报告](../docs/testing/GENERAL_RATIONAL_985_50MS_2026-10-16.md)。单测及残差包络精确有理数审计也已执行通过。以下“未运行”记录描述此前生成/残差替换阶段，不再表示最新测试状态。
 
 `RunGeneralRationalBoundaryFull.py --max-case-ms 50` 默认保留 5ms 清理余量、45ms 协作取消。CSV 记录真实耗时、`time_budget_exceeded`、`timeout_stage` 和 `within_time_limit`；汇总将时间取消与几何未认证分开。`over-time-limit.csv` 列出实际超过上限的案例，`time-budget-cases.csv` 列出预算中止案例。运行器对进程错误或实际超时返回非零；正例未认证须查看 `failures.csv`，不能以进程运行成功代替回归通过。`--max-case-ms 0` 只用于明确的不限时诊断；默认运行绝不取消 50ms 约束。

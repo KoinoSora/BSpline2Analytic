@@ -1,0 +1,59 @@
+{
+  "cases": 99,
+  "runs_per_case": 3,
+  "target_cases": 73,
+  "recovered_cases": 66,
+  "remaining_cases": 7,
+  "control_regressions": 0,
+  "groups": {
+    "triangle": {
+      "cases": 39,
+      "before_accepted": 0,
+      "after_accepted": 35,
+      "before_median_case_ms": 4.0329,
+      "before_max_run_ms": 11.4601,
+      "after_median_case_ms": 3.0165,
+      "after_max_run_ms": 5.7285
+    },
+    "micro": {
+      "cases": 26,
+      "before_accepted": 0,
+      "after_accepted": 26,
+      "before_median_case_ms": 4.105449999999999,
+      "before_max_run_ms": 8.6516,
+      "after_median_case_ms": 4.1526499999999995,
+      "after_max_run_ms": 8.8623
+    },
+    "cone": {
+      "cases": 8,
+      "before_accepted": 0,
+      "after_accepted": 5,
+      "before_median_case_ms": 2.0913,
+      "before_max_run_ms": 3.2315,
+      "after_median_case_ms": 2.5729,
+      "after_max_run_ms": 3.8614
+    },
+    "control": {
+      "cases": 26,
+      "before_accepted": 21,
+      "after_accepted": 21,
+      "before_median_case_ms": 2.4969,
+      "before_max_run_ms": 7.3141,
+      "after_median_case_ms": 2.477,
+      "after_max_run_ms": 6.6223
+    }
+  },
+  "all_runs_under_10ms_cases": 99,
+  "max_run_ms": 8.8623,
+  "runs_over_10ms": 0,
+  "runs_over_50ms": 0,
+  "time_budget_runs": 0,
+  "audit_failures": 0,
+  "exemption_rows": 318,
+  "exemption_cases": 26,
+  "max_source_diameter": 8.81453605247721e-09,
+  "max_target_diameter": 9.90486028065019e-09,
+  "max_exempt_distance": 1.058565594845834e-07,
+  "baseline_commit": "1978a9469ea95572fa008f7d965fd3c3a4d5cff6",
+  "unit_assertions": 9974
+}

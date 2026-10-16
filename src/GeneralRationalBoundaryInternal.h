@@ -14,6 +14,8 @@ struct Trim
     GeneralTrim polygon; // Only corners used: these are rational-chart coordinates.
     std::array<std::vector<std::pair<double,std::array<double,2>>>,4> walks;
     std::array<bool,4> collapsed{};
+    std::array<bool,4> refine3D{};
+    unsigned refinementCalls = 0;
 };
 struct Target
 {
@@ -95,7 +97,14 @@ bool Recover(SurfaceSampleContext &,const AnalyticParameters &,const GeneralRati
 std::vector<AnalyticParameters> RecoveryCharts(SurfaceSampleContext &,const AnalyticParameters &,
                                               const GeneralRationalBoundaryOptions &);
 std::array<double,2> Coordinates(const Trim &,V,std::array<double,2> reference);
-V ChartPoint(const Trim &,std::array<double,2>);
+V ChartPoint(const Trim &,std::array<double,2>,std::array<V,2> *derivatives=nullptr);
+// Proposal only: bounded, distance-decreasing 3D Gauss-Newton along the same
+// rational-domain straight edge. The exported error spline decides acceptance.
+double RefineFraction(const Trim &,unsigned,V,double);
+bool ValidRationalPolygon(const std::array<sggk::Point2D,4> &,const std::array<bool,4> &);
+// Full Cartesian distance bound; supports an endpoint paired to a tiny segment.
+std::optional<GeneralBoundaryTangentExemption> MicroSegmentBound(const BezierCell &,
+    const std::vector<BezierCell> &,double,double,double,double);
 double Fraction(const Trim &,unsigned,V,double reference);
 double FiniteDistance(const Trim &,V);
 GeneralRationalBoundaryReport Validate(SurfaceSampleContext &,const AnalyticParameters &,

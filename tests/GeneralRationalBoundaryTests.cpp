@@ -85,6 +85,20 @@ double Audit(const sggk::BSplineSurface &s,const GeneralRationalBoundaryReport &
 {
     Require(r.Passed(),"Cannot audit failed output");double maximum=0;const auto &patch=*r.patch;
     SurfaceSampleContext samples(s);
+    for(const auto &piece:patch.tangentExemptions)
+    {
+        Require(piece.edge<4&&piece.sourceFirst<=piece.sourceLast&&piece.targetFirst<=piece.targetLast&&
+            piece.sourceDiameterUpper<=1e-8&&piece.targetDiameterUpper<=1e-8&&piece.distanceUpper<1e-5,
+            "Invalid tangent exemption certificate");
+        for(unsigned i=0;i<=2;++i)for(unsigned j=0;j<=2;++j)
+        {
+            unsigned e=piece.edge;double t=piece.sourceFirst+(piece.sourceLast-piece.sourceFirst)*(.5*i);
+            auto source=s.CalcPoint(e<2?(e==0?s.MinParamU():s.MaxParamU()):t,
+                                   e<2?t:(e==2?s.MinParamV():s.MaxParamV()));
+            auto target=patch.boundaries[e]->CalcPoint(piece.targetFirst+(piece.targetLast-piece.targetFirst)*(.5*j));
+            Require(Norm(Get(source)-Get(target))<1.001e-5,"Exempt piece failed independent position audit");
+        }
+    }
     for(unsigned e=0;e<4;++e)
     {
         const auto &curve=*patch.boundaries[e];
@@ -104,7 +118,10 @@ double Audit(const sggk::BSplineSurface &s,const GeneralRationalBoundaryReport &
             auto nearest=curve.CalcNearestPoint(Point(point.point),parameter);
             double distance=Norm(point.point-Get(nearest));maximum=std::max(maximum,distance);
             Require(distance<1.001e-5,"Independent SDK boundary distance audit failed");
-            if(!patch.tangentNotApplicable[e]&&i>0&&i<32)
+            bool exempt=false;
+            for(const auto &piece:patch.tangentExemptions)
+                if(piece.edge==e&&(e<2?v:u)>=piece.sourceFirst&&(e<2?v:u)<=piece.sourceLast)exempt=true;
+            if(!patch.tangentNotApplicable[e]&&!exempt&&i>0&&i<32)
             {
                 V a=e<2?point.dv:point.du,b=Get(curve.CalcDeriv1(parameter));
                 Require(Dot(a,b)>0&&Norm(Cross(a,b))/Dot(a,b)<std::tan(.1*Pi/180),"Independent tangent audit failed");
@@ -279,9 +296,50 @@ void EnvelopeExport(const std::filesystem::path &path)
     Require(!envelope.Build(invalid,invalid),"Nonfinite input accepted by envelope");
     out<<"]\n";std::cout<<"Envelope export cases="<<count<<'\n';
 }
+void RecoveryRepairUnit()
+{
+    using P=sggk::Point2D;
+    std::array<P,4> quad{P{0,0},P{1,0},P{0,1},P{1,1}};
+    std::array<bool,4> collapsed{};
+    Require(rb::ValidRationalPolygon(quad,collapsed),"Regular rational quadrilateral rejected");
+    for(unsigned edge=0;edge<4;++edge)
+    {
+        auto triangle=quad;triangle[rb::Ends[edge][1]]=triangle[rb::Ends[edge][0]];
+        collapsed={};collapsed[edge]=true;
+        Require(rb::ValidRationalPolygon(triangle,collapsed),"Exact adjacent triangle rejected");
+        Require(!rb::ValidRationalPolygon(triangle,{}),"UV collapse without point source edge accepted");
+    }
+    collapsed.fill(true);
+    Require(!rb::ValidRationalPolygon({P{0,0},P{0,0},P{0,0},P{0,0}},collapsed),"Point domain accepted");
+    Require(!rb::ValidRationalPolygon({P{0,0},P{1,0},P{0,0},P{2,0}},collapsed),"Collinear triangle accepted");
+    Require(!rb::ValidRationalPolygon({P{0,0},P{1,1},P{0,1},P{1,0}},collapsed),"Folded quadrilateral accepted");
+    Require(!rb::ValidRationalPolygon({P{0,0},P{1,0},P{0,1},P{0,0}},collapsed),"Nonadjacent duplicate accepted");
+    auto line=[](double length,double offset,double lo=0,double hi=1)
+    {
+        BezierCell c;c.p={BPoly(1,0),BPoly(1,0,I(offset)),BPoly(1,0)};
+        c.p.x.c={I(0),I(length)};c.u0=lo;c.u1=hi;return c;
+    };
+    auto small=line(4e-9,0),near=line(4e-9,2e-6);
+    auto merge=rb::MicroSegmentBound(small,{near},0,1,1e-8,1e-5);
+    Require(merge&&merge->distanceUpper>=2e-6&&merge->sourceDiameterUpper<=1e-8,"Micro spatial certificate missing");
+    Require(!rb::MicroSegmentBound(small,{line(4e-9,2e-5)},0,1,1e-8,1e-5),"Micro merge waived position violation");
+    Require(!rb::MicroSegmentBound(line(1e-4,0),{line(1e-4,0)},0,1,1e-8,1e-5),"Long coincident curves exempted");
+    Require(!rb::MicroSegmentBound(small,{near},0,1,0,1e-5),"Disabled micro merge accepted");
+    Require(!rb::MicroSegmentBound(small,{line(2e-9,0,0,.4),line(2e-9,0,.6,1)},0,1,1e-8,1e-5),"Micro merge omitted target gap");
+    auto point=paired::Crop(small,0,0,0,1);
+    Require(rb::MicroSegmentBound(point,{near},0,1,1e-8,1e-5).has_value(),"Endpoint bridge not certified");
+    rb::Trim trim;trim.mother=Mother(3);trim.domain={.2,.3,1,100};
+    AnalyticPatch patch;patch.parameters=trim.mother;patch.domain=trim.domain;
+    trim.chart=paired::BuildChart(patch,false);paired::PlaceChart(trim.chart,trim.mother,Get(trim.mother.origin));
+    trim.polygon.corners={P{0,0},P{1,.3},P{0,1},P{1,1}};
+    V expected=rb::ChartPoint(trim,{.4,.12});
+    double f=rb::RefineFraction(trim,2,expected,.401);
+    Require(f>=0&&f<=1&&Norm(expected-rb::ChartPoint(trim,{f,.3*f}))<1e-10,"Bounded 3D correspondence failed");
+}
 void Unit(const std::filesystem::path &data)
 {
     ErrorKernelUnit();
+    RecoveryRepairUnit();
     const std::array<double,4> domain{.2,.9,.6,1.2};
     for(unsigned type=0;type<5;++type)
     {
@@ -324,6 +382,8 @@ void Unit(const std::filesystem::path &data)
     Require(speedReport.Passed()&&speedReport.tangentFallbacks>0,"Parallel variable-speed boundary must pass via full tangent fallback");
     GeneralRationalBoundaryOptions bad;bad.general.fitting.validation.distanceTolerance=-1;
     Require(ValidateGeneralRationalBoundaries(*flat,plane,bad).status==HybridValidationStatus::InvalidInput,"Invalid tolerance accepted");
+    bad={};bad.microSegmentDiameter=1e-7;
+    Require(ValidateGeneralRationalBoundaries(*flat,plane,bad).status==HybridValidationStatus::InvalidInput,"Oversized tangent exemption accepted");
     auto wrong=plane;wrong.origin=Point(Get(plane.origin)+Get(plane.axis)*.01);
     Require(!ValidateGeneralRationalBoundaries(*flat,wrong).Passed(),"Wrong mother accepted");
     auto bump=Fixture(plane,domain,false);bump->UDegreeElevation(3-bump->DegreeU());bump->VDegreeElevation(3-bump->DegreeV());
@@ -395,12 +455,14 @@ void FullCase(const std::filesystem::path &data,const std::filesystem::path &csv
     {if(id%2)options.general.fitting.validation.distanceTolerance=-1;else options.general.fitting.sampling.maxSamples=0;}
     if(extra&&c.group==GeneralFixtureGroup::ValidationBudget)options.maxBoundaryNodes=1;
     if(extra&&c.group==GeneralFixtureGroup::SpherePriority)options.general.similarScoreAbsoluteRatio=1e6;
-    const std::string header="suite,id,run,mode,group,source_type,rational,degree_u,degree_v,controls,source_certified,source_bound,certificate_ms,entry,status,accepted,audit_status,audit_sample_max,classify_ms,validate_ms,sampling_ms,recovery_ms,prepare_ms,boundary_ms,total_ms,attempts,chart_attempts,nodes,refinements,fast_checks,fast_accepted,tangent_fallbacks,position_only,fused_errors,boundary_bound,tangent_deg,mother_bound,output_type,raw_candidates,full_scores,message,audit_message,envelope_checks,envelope_accepted,envelope_fallbacks,envelope_position_witnesses,envelope_tangent_witnesses,tangent_residual_checks,tangent_residual_accepted,tangent_residual_interval_fallbacks,max_case_ms,time_budget_exceeded,timeout_stage,within_time_limit\n";
+    const std::string header="suite,id,run,mode,group,source_type,rational,degree_u,degree_v,controls,source_certified,source_bound,certificate_ms,entry,status,accepted,audit_status,audit_sample_max,classify_ms,validate_ms,sampling_ms,recovery_ms,prepare_ms,boundary_ms,total_ms,attempts,chart_attempts,nodes,refinements,fast_checks,fast_accepted,tangent_fallbacks,position_only,fused_errors,boundary_bound,tangent_deg,mother_bound,output_type,raw_candidates,full_scores,message,audit_message,envelope_checks,envelope_accepted,envelope_fallbacks,envelope_position_witnesses,envelope_tangent_witnesses,tangent_residual_checks,tangent_residual_accepted,tangent_residual_interval_fallbacks,max_case_ms,time_budget_exceeded,timeout_stage,within_time_limit,micro_merged_segments,tangent_exemption_count,recovery_3d_refinements\n";
     std::vector<std::string> rows;bool anyFailure=false;
     auto save=[&]{std::ofstream out(csv);Require(bool(out),"Cannot write full-suite CSV");out<<header;for(const auto &row:rows)out<<row;};
     auto attemptPath=csv.parent_path()/(csv.stem().string()+"-attempts.csv");
     std::ofstream attemptsFile(attemptPath);Require(bool(attemptsFile),"Cannot write attempt diagnostics");
     attemptsFile<<"suite,id,run,attempt,type,status,accepted,charts,nodes,refinements,sampling_ms,recovery_ms,prepare_ms,boundary_ms,total_ms,message\n"<<std::setprecision(17);
+    std::ofstream exemptionFile(csv.parent_path()/(csv.stem().string()+"-exemptions.csv"));
+    exemptionFile<<"suite,id,run,edge,source_first,source_last,target_first,target_last,source_diameter,target_diameter,distance_upper\n"<<std::setprecision(17);
     struct Attempt{sggk::SurfaceType type;GeneralRationalBoundaryReport report;};
     for(unsigned run=0;run<repeats;++run)
     {
@@ -411,6 +473,7 @@ void FullCase(const std::filesystem::path &data,const std::filesystem::path &csv
         unsigned charts=0,nodes=0,refinements=0,fast=0,fastAccepted=0,fallback=0,position=0,fused=0;
         unsigned envelopeChecks=0,envelopeAccepted=0,envelopeFallbacks=0,envelopeWitnesses=0,envelopeTangentWitnesses=0;
         unsigned residualChecks=0,residualAccepted=0,residualFallbacks=0;
+        unsigned microMerged=0,refined3D=0;
         try
         {
             ExecutionDeadline deadline(maxCaseMs,start);
@@ -424,6 +487,7 @@ void FullCase(const std::filesystem::path &data,const std::filesystem::path &csv
                 fallback+=r.tangentFallbacks;position+=r.positionOnlyNodes;fused+=r.fusedErrorBuilds;
                 envelopeChecks+=r.envelopeChecks;envelopeAccepted+=r.envelopeAccepted;envelopeFallbacks+=r.envelopeFallbacks;envelopeWitnesses+=r.envelopePositionWitnesses;envelopeTangentWitnesses+=r.envelopeTangentWitnesses;
                 residualChecks+=r.tangentResidualChecks;residualAccepted+=r.tangentResidualAccepted;residualFallbacks+=r.tangentResidualIntervalFallbacks;
+                microMerged+=r.microMergedSegments;refined3D+=r.recovery3DRefinements;
                 attempts.push_back({a.type,r});
             };
             if(supplied)attempt(c.truth);
@@ -459,7 +523,7 @@ void FullCase(const std::filesystem::path &data,const std::filesystem::path &csv
                 <<classify<<','<<validate<<','<<sampling<<','<<recovery<<','<<prepare<<','<<boundary<<','<<total<<','<<attempts.size()<<','<<charts<<','<<nodes<<','<<refinements<<','
                 <<fast<<','<<fastAccepted<<','<<fallback<<','<<position<<','<<fused<<','<<r.boundaryDistanceUpperBound<<','<<r.boundaryTangentUpperBoundDeg<<','<<r.outputMotherDistanceUpperBound<<','
                 <<(passed?TypeName(r.patch->mother.type):"Unknown")<<','<<classification.rawCandidateCount<<','<<classification.fullScoreCount<<','<<Quote(r.message)<<','<<Quote(auditMessage)<<','<<envelopeChecks<<','<<envelopeAccepted<<','<<envelopeFallbacks<<','<<envelopeWitnesses<<','<<envelopeTangentWitnesses<<','<<residualChecks<<','<<residualAccepted<<','<<residualFallbacks
-                <<','<<maxCaseMs<<','<<r.timeBudgetExceeded<<','<<Quote(r.timeoutStage)<<','<<(maxCaseMs<=0||total<=maxCaseMs)<<'\n';
+                <<','<<maxCaseMs<<','<<r.timeBudgetExceeded<<','<<Quote(r.timeoutStage)<<','<<(maxCaseMs<=0||total<=maxCaseMs)<<','<<microMerged<<','<<(passed?r.patch->tangentExemptions.size():0)<<','<<refined3D<<'\n';
             return out.str();
         };
         // Save measured algorithm time before the independent SDK audit, so
@@ -472,6 +536,10 @@ void FullCase(const std::filesystem::path &data,const std::filesystem::path &csv
                 <<v.samplingMs<<','<<v.recoveryMs<<','<<v.preparationMs<<','<<v.boundaryMs<<','<<v.totalMs<<','<<Quote(v.message)<<'\n';
         }
         attemptsFile.flush();
+        if(passed)for(const auto &piece:r.patch->tangentExemptions)
+            exemptionFile<<suite<<','<<id<<','<<run<<','<<piece.edge<<','<<piece.sourceFirst<<','<<piece.sourceLast<<','
+                <<piece.targetFirst<<','<<piece.targetLast<<','<<piece.sourceDiameterUpper<<','<<piece.targetDiameterUpper<<','<<piece.distanceUpper<<'\n';
+        exemptionFile.flush();
         if(passed)
         {
             std::cout<<"BEGIN_AUDIT "<<run<<std::endl;

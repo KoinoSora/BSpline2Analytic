@@ -156,7 +156,10 @@ double AuditGeneral(const sggk::BSplineSurface &s,const GeneralRationalBoundaryR
             auto nearest=curve.CalcNearestPoint(Point(point.point),parameter);
             double distance=Norm(point.point-Get(nearest));maximum=std::max(maximum,distance);
             Require(distance<1.001e-5,"Independent SDK boundary distance audit failed");
-            if(!patch.tangentNotApplicable[e]&&i>0&&i<32)
+            bool exempt=false;
+            for(const auto &piece:patch.tangentExemptions)
+                if(piece.edge==e&&(e<2?v:u)>=piece.sourceFirst&&(e<2?v:u)<=piece.sourceLast)exempt=true;
+            if(!patch.tangentNotApplicable[e]&&!exempt&&i>0&&i<32)
             {
                 V a=e<2?point.dv:point.du,b=Get(curve.CalcDeriv1(parameter));
                 Require(Dot(a,b)>0&&Norm(Cross(a,b))/Dot(a,b)<std::tan(.1*Pi/180),"Independent tangent audit failed");

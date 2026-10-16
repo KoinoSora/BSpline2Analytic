@@ -83,30 +83,66 @@ std::vector<BezierCell> ComposeEdge(const Trim &t,unsigned edge,paired::Products
     }
     return out;
 }
-V ChartPoint(const Trim &t,std::array<double,2> uv)
+V ChartPoint(const Trim &t,std::array<double,2> uv,std::array<V,2> *derivatives)
 {
     const auto &s=CellAt(t.chart,uv).surface;
     double u=(uv[0]-s.u0)/(s.u1-s.u0),v=(uv[1]-s.v0)/(s.v1-s.v0);
     // This is only a sample/proposal evaluation, never a continuous bound.
     // Exported coefficients and all boundary predicates are certified separately.
-    auto value=[&](const BPoly &p)
+    auto value=[&](const BPoly &p,unsigned derivative=0)
     {
         if(p.u>2||p.v>2)throw Failure(Status::Unsupported,"Unexpected rational chart degree");
+        if((derivative==1&&!p.u)||(derivative==2&&!p.v))return 0.;
+        unsigned degreeV=p.v-(derivative==2?1:0);
         double rows[3]{};
         for(unsigned i=0;i<=p.u;++i)
         {
-            double a[3]{};for(unsigned j=0;j<=p.v;++j)a[j]=Mid(p.at(i,j));
-            for(unsigned n=p.v;n>0;--n)for(unsigned j=0;j<n;++j)a[j]=a[j]*(1-v)+a[j+1]*v;
+            double a[3]{};for(unsigned j=0;j<=degreeV;++j)
+                a[j]=derivative==2?p.v*(Mid(p.at(i,j+1))-Mid(p.at(i,j))):Mid(p.at(i,j));
+            for(unsigned n=degreeV;n>0;--n)for(unsigned j=0;j<n;++j)a[j]=a[j]*(1-v)+a[j+1]*v;
             rows[i]=a[0];
         }
-        for(unsigned n=p.u;n>0;--n)for(unsigned i=0;i<n;++i)rows[i]=rows[i]*(1-u)+rows[i+1]*u;
+        unsigned degreeU=p.u;
+        if(derivative==1){for(unsigned i=0;i<p.u;++i)rows[i]=p.u*(rows[i+1]-rows[i]);--degreeU;}
+        for(unsigned n=degreeU;n>0;--n)for(unsigned i=0;i<n;++i)rows[i]=rows[i]*(1-u)+rows[i+1]*u;
         return rows[0];
     };
     double w=value(s.w);
     if(!(w>0&&std::isfinite(w)))throw Failure(Status::VerificationFailed,"Invalid chart sample weight");
-    V point=Get(t.mother.origin)+V{value(s.p.x)/w,value(s.p.y)/w,value(s.p.z)/w};
+    V local{value(s.p.x)/w,value(s.p.y)/w,value(s.p.z)/w};
+    V point=Get(t.mother.origin)+local;
     if(!Finite(point))throw Failure(Status::VerificationFailed,"Nonfinite chart sample point");
+    if(derivatives)for(unsigned d=0;d<2;++d)
+    {
+        double span=d?s.v1-s.v0:s.u1-s.u0,dw=value(s.w,d+1);
+        (*derivatives)[d]=(V{value(s.p.x,d+1),value(s.p.y,d+1),value(s.p.z,d+1)}-local*dw)*(1/(w*span));
+    }
     return point;
+}
+double RefineFraction(const Trim &t,unsigned edge,V point,double initial)
+{
+    auto a=t.polygon.corners[Ends[edge][0]],b=t.polygon.corners[Ends[edge][1]];
+    double dx=b.X()-a.X(),dy=b.Y()-a.Y(),f=std::clamp(initial,0.,1.);
+    if(!std::isfinite(f))return initial;
+    // Only a proposal. Six steps and at most four trial evaluations per step bound
+    // recovery cost; no SDK nearest-point search or unconstrained root solver.
+    for(unsigned iteration=0;iteration<6;++iteration)
+    {
+        std::array<V,2> derivative;
+        V residual=ChartPoint(t,{a.X()+dx*f,a.Y()+dy*f},&derivative)-point;
+        V tangent=derivative[0]*dx+derivative[1]*dy;
+        double speed2=Dot(tangent,tangent),error2=Dot(residual,residual);
+        if(!(speed2>0&&std::isfinite(speed2)&&std::isfinite(error2)))break;
+        double step=Dot(residual,tangent)/speed2;bool improved=false;
+        for(unsigned backtrack=0;backtrack<4;++backtrack,step*=.5)
+        {
+            double next=std::clamp(f-step,0.,1.);if(next==f)break;
+            V nextResidual=ChartPoint(t,{a.X()+dx*next,a.Y()+dy*next})-point;
+            if(Dot(nextResidual,nextResidual)<error2){f=next;improved=true;break;}
+        }
+        if(!improved)break;
+    }
+    return f;
 }
 Target BuildTarget(const Trim &t,double outputTolerance,GeneralRationalBoundaryReport &report,
                    const ExecutionDeadline *deadline)

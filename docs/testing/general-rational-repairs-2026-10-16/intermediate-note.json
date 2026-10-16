@@ -1,0 +1,8 @@
+{
+  "purpose": "Retained intermediate revision measurements; not the final binary",
+  "max_run_ms": 13.9032,
+  "runs_over_10ms": 1,
+  "runs_over_50ms": 0,
+  "case": "extreme:102",
+  "run": 1
+}

@@ -71,6 +71,39 @@ CurveError CurveErrors::Build(const BezierCell &s,const BezierCell &t,paired::Pr
     }
     fused=true;return out;
 }
+std::optional<GeneralBoundaryTangentExemption> MicroSegmentBound(const BezierCell &source,
+    const std::vector<BezierCell> &target,double lo,double hi,double diameterTolerance,double distanceTolerance)
+{
+    if(!(diameterTolerance>0&&lo<=hi))return {};
+    auto box=[](const BezierCell &c)->std::optional<IV>
+    {
+        I w=c.w.range();if(!w.finite()||!(w.lo>0))return {};
+        IV p=Range(c.p);p={p.x/w,p.y/w,p.z/w};
+        if(!p.x.finite()||!p.y.finite()||!p.z.finite())return {};
+        return p;
+    };
+    auto diameter=[](IV b){return Length({I(b.x.hi)-I(b.x.lo),I(b.y.hi)-I(b.y.lo),I(b.z.hi)-I(b.z.lo)}).hi;};
+    auto s=box(source);if(!s)return {};
+    double sd=diameter(*s);if(!(sd<=diameterTolerance))return {};
+    std::optional<IV> t;double covered=lo;
+    auto hull=[](I a,I b){return I(std::min(a.lo,b.lo),std::max(a.hi,b.hi));};
+    for(const auto &part:target)
+    {
+        double first=std::max(lo,part.u0),last=std::min(hi,part.u1);
+        if(first>last)continue;
+        if(first>covered)return {}; // A tiny piece may not hide a gap in coverage.
+        auto b=box(paired::Crop(part,first,last,0,1));if(!b)return {};
+        if(t)t=IV{hull(t->x,b->x),hull(t->y,b->y),hull(t->z,b->z)};else t=b;
+        covered=std::max(covered,last);
+    }
+    if(!t||covered<hi)return {};
+    double td=diameter(*t),distance=Length(*s-*t).hi;
+    if(!(td<=diameterTolerance&&distance<distanceTolerance))return {};
+    GeneralBoundaryTangentExemption result;
+    result.sourceFirst=source.u0;result.sourceLast=source.u1;result.targetFirst=lo;result.targetLast=hi;
+    result.sourceDiameterUpper=sd;result.targetDiameterUpper=td;result.distanceUpper=distance;
+    return result;
+}
 BV TangentNumerator(const BezierCell &c,paired::Products &products)
 {
     if(!c.w.u&&!c.w.v)return Derivative(c.p,true)*c.w.c[0];

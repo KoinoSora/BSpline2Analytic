@@ -1,0 +1,74 @@
+suite,id,status,accepted,total_ms,charts,nodes,message
+extreme,68,NotCertified,0,0.75690000000000002,1,0,Walk outside selected rational chart
+extreme,70,NotCertified,0,1.2538,1,0,Walk outside selected rational chart
+extreme,76,NotCertified,0,1.9912000000000001,1,8,Rational boundary correspondence not certified
+extreme,78,NotCertified,0,2.6434000000000002,1,9,Rational boundary correspondence not certified
+extreme,86,NotCertified,0,1.1754,1,0,Walk outside selected rational chart
+extreme,92,NotCertified,0,1.7410000000000001,1,9,Rational boundary correspondence not certified
+extreme,94,NotCertified,0,3.3509000000000002,1,11,Rational boundary correspondence not certified
+extreme,100,NotCertified,0,0.73460000000000003,1,0,Walk outside selected rational chart
+extreme,102,NotCertified,0,0.90269999999999995,1,0,Walk outside selected rational chart
+extreme,108,NotCertified,0,0.92010000000000003,1,0,Walk outside selected rational chart
+extreme,110,NotCertified,0,1.0567,1,0,Walk outside selected rational chart
+extreme,116,NotCertified,0,1.0596000000000001,1,0,Walk outside selected rational chart
+extreme,118,NotCertified,0,1.6107,1,0,Walk outside selected rational chart
+extreme,124,NotCertified,0,1.1734,1,0,Walk outside selected rational chart
+extreme,125,NotCertified,0,1.4573,1,0,Walk outside selected rational chart
+extreme,126,NotCertified,0,1.3960999999999999,1,0,Walk outside selected rational chart
+extreme,128,NotCertified,0,0.45579999999999998,1,0,NURBS-domain straight-boundary recovery unresolved
+extreme,129,NotCertified,0,0.57850000000000001,1,0,NURBS-domain straight-boundary recovery unresolved
+extreme,130,NotCertified,0,0.49399999999999999,1,0,Walk outside selected rational chart
+extreme,131,NotCertified,0,0.39600000000000002,1,0,Walk outside selected rational chart
+extreme,132,NotCertified,0,0.80169999999999997,1,0,NURBS-domain straight-boundary recovery unresolved
+extreme,133,NotCertified,0,0.43259999999999998,1,0,NURBS-domain straight-boundary recovery unresolved
+extreme,134,NotCertified,0,0.51359999999999995,1,0,Walk outside selected rational chart
+extreme,135,NotCertified,0,0.41449999999999998,1,0,Walk outside selected rational chart
+extreme,136,NotCertified,0,0.57030000000000003,1,0,NURBS-domain straight-boundary recovery unresolved
+extreme,137,NotCertified,0,0.52690000000000003,1,0,NURBS-domain straight-boundary recovery unresolved
+extreme,138,NotCertified,0,0.80200000000000005,1,0,Walk outside selected rational chart
+extreme,139,NotCertified,0,1.2238,1,0,Walk outside selected rational chart
+extreme,140,NotCertified,0,0.72419999999999995,1,0,NURBS-domain straight-boundary recovery unresolved
+extreme,141,NotCertified,0,1.3,1,0,NURBS-domain straight-boundary recovery unresolved
+extreme,142,NotCertified,0,0.78080000000000005,1,0,Walk outside selected rational chart
+extreme,143,NotCertified,0,0.72409999999999997,1,0,Walk outside selected rational chart
+extreme,160,NotCertified,0,0.437,1,0,NURBS-domain straight-boundary recovery unresolved
+extreme,161,NotCertified,0,0.40610000000000002,1,0,NURBS-domain straight-boundary recovery unresolved
+extreme,162,NotCertified,0,0.47039999999999998,1,0,Walk outside selected rational chart
+extreme,163,NotCertified,0,0.42159999999999997,1,0,Walk outside selected rational chart
+extreme,164,NotCertified,0,0.48420000000000002,1,0,NURBS-domain straight-boundary recovery unresolved
+extreme,165,NotCertified,0,0.37430000000000002,1,0,NURBS-domain straight-boundary recovery unresolved
+extreme,166,NotCertified,0,0.76770000000000005,1,0,Walk outside selected rational chart
+extreme,167,NotCertified,0,0.66310000000000002,1,0,Walk outside selected rational chart
+extreme,168,NotCertified,0,0.65469999999999995,1,0,NURBS-domain straight-boundary recovery unresolved
+extreme,169,NotCertified,0,0.50209999999999999,1,0,NURBS-domain straight-boundary recovery unresolved
+extreme,170,NotCertified,0,0.54300000000000004,1,0,Walk outside selected rational chart
+extreme,171,NotCertified,0,0.51490000000000002,1,0,Walk outside selected rational chart
+extreme,172,NotCertified,0,0.75549999999999995,1,0,NURBS-domain straight-boundary recovery unresolved
+extreme,173,NotCertified,0,0.7379,1,0,NURBS-domain straight-boundary recovery unresolved
+extreme,174,NotCertified,0,0.49130000000000001,1,0,Walk outside selected rational chart
+extreme,175,NotCertified,0,0.8992,1,0,Walk outside selected rational chart
+extreme,180,NotCertified,0,2.1425999999999998,1,13,Rational boundary correspondence not certified
+extreme,182,NotCertified,0,1.0710999999999999,1,0,Walk outside selected rational chart
+extreme,188,NotCertified,0,1.3625,1,6,Rational boundary correspondence not certified
+extreme,190,NotCertified,0,3.0489999999999999,1,10,Rational boundary correspondence not certified
+extreme,196,NotCertified,0,1.7523,1,9,Rational boundary correspondence not certified
+extreme,198,NotCertified,0,1.3115000000000001,1,0,Walk outside selected rational chart
+extreme,204,NotCertified,0,1.8326,1,12,Rational boundary correspondence not certified
+extreme,206,NotCertified,0,3.0891999999999999,1,12,Rational boundary correspondence not certified
+extreme,213,NotCertified,0,0.36570000000000003,1,0,Walk outside selected rational chart
+extreme,215,NotCertified,0,0.65669999999999995,1,0,Walk outside selected rational chart
+extreme,221,NotCertified,0,0.63560000000000005,1,0,Walk outside selected rational chart
+extreme,223,NotCertified,0,0.40860000000000002,1,0,Walk outside selected rational chart
+extreme,229,NotCertified,0,0.41310000000000002,1,0,Walk outside selected rational chart
+extreme,231,NotCertified,0,0.70430000000000004,1,0,Walk outside selected rational chart
+extreme,237,NotCertified,0,0.60640000000000005,1,0,Walk outside selected rational chart
+extreme,239,NotCertified,0,0.89700000000000002,1,0,Walk outside selected rational chart
+extreme,288,NotCertified,0,0.98129999999999995,1,0,Walk outside selected rational chart
+extreme,290,NotCertified,0,0.91930000000000001,1,0,Walk outside selected rational chart
+extreme,296,NotCertified,0,0.63539999999999996,1,0,NURBS-domain straight-boundary recovery unresolved
+extreme,297,NotCertified,0,0.48670000000000002,1,0,NURBS-domain straight-boundary recovery unresolved
+extreme,299,NotCertified,0,0.40610000000000002,1,0,NURBS-domain straight-boundary recovery unresolved
+extreme,300,NotCertified,0,0.54569999999999996,1,0,Walk outside selected rational chart
+extreme,301,NotCertified,0,0.65629999999999999,1,0,Walk outside selected rational chart
+extreme,302,NotCertified,0,0.78590000000000004,1,0,Walk outside selected rational chart
+extreme,303,NotCertified,0,0.95250000000000001,1,0,Walk outside selected rational chart

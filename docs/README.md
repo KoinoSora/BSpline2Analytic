@@ -15,6 +15,7 @@
 | 测试 | [独立验证器位置误差界优化](testing/PAIRED_POSITION_2026-10-15.md) | 快速连续上界、直接升阶、可分离权重乘法及 500 例覆盖。 |
 | 测试 | [独立混合验证器](testing/GENERAL_HYBRID_VALIDATION_2026-10-15.md) | 内部增强 Greville 采样、四边位置与切向连续认证，600+60 例三轮测量及采样合同边界。 |
 | 测试 | [NURBS 参数直线边界验证](testing/GENERAL_RATIONAL_BOUNDARY_2026-10-15.md) | 输出母面及四条三维 NURBS 边界；有理误差曲线、输出舍入认证、慢例及新合同代表案例。 |
+| 测试 | [三角形、微小分段和圆锥对应修正](testing/GENERAL_RATIONAL_REPAIRS_2026-10-16.md) | 73 个目标失败恢复 66 个；26 个控制案例无结果退化，切向豁免范围及逐例耗时。 |
 | 测试 | [连续边界误差曲线优化](testing/GENERAL_BOUNDARY_ERROR_2026-10-15.md) | 一维齐次误差联合构造、误差导数切向快速认证；12 个慢例/典型案例的当前验证器前后对照。 |
 | 测试 | [兜底新验证器 985 例全面测试](testing/GENERAL_RATIONAL_FULL_2026-10-15.md) | 固定 3567db0；主集、专项、极端和新合同压力样本，2955 次耗时及完整失败清单。 |
 | 测试 | [主集 240 个失败定向诊断](testing/GENERAL_RATIONAL_MAIN240_DIAGNOSIS_2026-10-16.md) | 720 次重测、具体恢复分支、固定参数图距离排除及球面参数架交换实验。 |

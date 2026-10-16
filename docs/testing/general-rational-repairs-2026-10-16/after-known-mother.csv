@@ -1,0 +1,8 @@
+suite,id,status,accepted,total_ms,charts,nodes,message
+extreme,172,Passed,1,2.3862000000000001,1,20,Sampled interior; continuous exported NURBS boundary position/tangent; no analytic PCurve
+extreme,173,Passed,1,2.7749000000000001,1,18,Sampled interior; continuous exported NURBS boundary position/tangent; no analytic PCurve
+extreme,174,NotCertified,0,0.93569999999999998,1,0,Walk outside selected rational chart
+extreme,175,NotCertified,0,0.58930000000000005,1,0,Walk outside selected rational chart
+extreme,223,NotCertified,0,0.47410000000000002,1,0,Walk outside selected rational chart
+extreme,229,NotCertified,0,0.39090000000000003,1,0,Walk outside selected rational chart
+extreme,239,NotCertified,0,0.51419999999999999,1,0,Walk outside selected rational chart

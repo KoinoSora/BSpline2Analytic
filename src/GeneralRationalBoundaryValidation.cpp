@@ -16,6 +16,15 @@ class Certifier
     paired::Products products;CurveErrors errors;CurveEnvelopes envelopes;
     double distance=0,ratio=0,sineSquared=0,limit;I sineSquaredLimit;
     std::array<bool,4> envelopeOnEdge{true,true,true,true};
+    std::vector<GeneralBoundaryTangentExemption> exemptions;
+    bool MergeMicro(const BezierCell &s,unsigned edge,double lo,double hi)
+    {
+        auto proof=MicroSegmentBound(s,target.edges[edge],lo,hi,options.microSegmentDiameter,
+                                    options.general.fitting.validation.distanceTolerance);
+        if(!proof)return false;
+        proof->edge=edge;exemptions.push_back(*proof);++report.microMergedSegments;++report.boundarySegments;
+        distance=std::max(distance,proof->distanceUpper);return true;
+    }
     double ScaledTangent(const BV &s,const BV &t,std::optional<BPoly> &scale,bool envelope)
     {
         ++report.tangentResidualChecks;
@@ -42,11 +51,21 @@ class Certifier
     {
         samples.CheckDeadline("boundary_certificate");
         if(++report.boundaryNodes>options.maxBoundaryNodes)throw Budget("Rational boundary node budget exhausted");
-        if(!(lo<hi))return false;
+        if(!(lo<hi))return lo==hi&&MergeMicro(s,edge,lo,hi);
         for(const auto &part:target.edges[edge])if(part.u1>lo&&part.u1<hi)
         {
             double cut=s.u0+(s.u1-s.u0)*(part.u1-lo)/(hi-lo);
-            if(!(cut>s.u0&&cut<s.u1))return false;
+            if(!(cut>s.u0&&cut<s.u1))
+            {
+                // Preserve the entire target seam fragment. Pair it with the
+                // source endpoint under the spatial micro-piece certificate,
+                // then certify the remaining correspondence normally.
+                if(cut<=s.u0&&MergeMicro(paired::Crop(s,s.u0,s.u0,0,1),edge,lo,part.u1))
+                    return Visit(s,edge,part.u1,hi,depth);
+                if(cut>=s.u1&&MergeMicro(paired::Crop(s,s.u1,s.u1,0,1),edge,part.u1,hi))
+                    return Visit(s,edge,lo,part.u1,depth);
+                return false;
+            }
             return Visit(paired::Crop(s,s.u0,cut,0,1),edge,lo,part.u1,depth)&&
                    Visit(paired::Crop(s,cut,s.u1,0,1),edge,part.u1,hi,depth);
         }
@@ -123,6 +142,7 @@ class Certifier
             if(fastPositionPassed&&bound<options.general.fitting.validation.distanceTolerance)
                 envelopeOnEdge[edge]=false;
         }
+        if(MergeMicro(s,edge,lo,hi))return true;
         if(depth>=options.maxBoundaryDepth)return false;
         double mid=s.u0+(s.u1-s.u0)*.5,mapped=lo+(hi-lo)*.5;
         if(!(mid>s.u0&&mid<s.u1))return false;
@@ -139,6 +159,7 @@ class Certifier
         return Visit(halves.first,edge,lo,mapped,depth+1)&&Visit(halves.second,edge,mapped,hi,depth+1);
     }
 public:
+    const std::vector<GeneralBoundaryTangentExemption> &Exemptions() const {return exemptions;}
     Certifier(SurfaceSampleContext &s,const Trim &t,const Target &dst,const GeneralRationalBoundaryOptions &o,
         GeneralRationalBoundaryReport &r):samples(s),trim(t),target(dst),options(o),report(r)
     {
@@ -162,7 +183,7 @@ public:
                         u?cell.u1:(e==2?s.MinParamV():s.MaxParamV()),sggk::DerivType::NONE,sggk::DerivType::NONE,false).point;
                     next=Fraction(trim,e,p,next);
                 }
-                if(!(next>previous&&next<=1)||!Visit(cell,e,previous,next,0))return false;
+                if(!(next>=previous&&next<=1)||!Visit(cell,e,previous,next,0))return false;
                 previous=next;
             }
         }
@@ -212,6 +233,7 @@ GeneralRationalBoundaryReport Validate(SurfaceSampleContext &samples,const Analy
         const auto &s=samples.source;ValidateSurface(s);const auto &v=o.general.fitting.validation;
         if(!(v.distanceTolerance>0&&std::isfinite(v.distanceTolerance))||
            !(v.boundaryTangentToleranceDeg>0&&v.boundaryTangentToleranceDeg<90)||
+           !(o.microSegmentDiameter>=0&&o.microSegmentDiameter<=1e-8)||
            !o.maxBoundaryNodes||o.maxBoundaryDepth>20||!o.maxChartAttempts||o.maxChartAttempts>64||
            o.general.boundarySamplesPerSpan<3||o.general.boundarySamplesPerSpan>64||!o.general.fitting.sampling.maxSamples)
             throw Failure(Status::InvalidInput,"Invalid rational boundary options");
@@ -252,6 +274,7 @@ GeneralRationalBoundaryReport Validate(SurfaceSampleContext &samples,const Analy
             ++r.chartAttempts;Trim trim;bool recovered=false;
             try{Measure timer(r.recoveryMs);recovered=Recover(samples,chart,o,trim);}
             catch(const Failure &e){r.message=e.what();continue;}
+            r.recovery3DRefinements+=trim.refinementCalls;
             if(!recovered){r.message="NURBS-domain straight-boundary recovery unresolved";continue;}
             {
                 Measure timer(r.samplingMs);double bound=0;
@@ -269,13 +292,19 @@ GeneralRationalBoundaryReport Validate(SurfaceSampleContext &samples,const Analy
                 target.patch.sourceDomain={s.MinParamU(),s.MaxParamU(),s.MinParamV(),s.MaxParamV()};
             }
             bool passed;
-            {Measure timer(r.boundaryMs);Certifier validator(samples,trim,target,o,r);passed=validator.Run(*source);}
+            {
+                Measure timer(r.boundaryMs);Certifier validator(samples,trim,target,o,r);passed=validator.Run(*source);
+                if(passed)target.patch.tangentExemptions=validator.Exemptions();
+            }
             samples.CheckDeadline("validation_complete");
             if(passed)
             {
                 r.outputMotherDistanceUpperBound=target.motherBound;r.patch=std::move(target.patch);
                 r.status=HybridValidationStatus::Passed;
-                r.message="Sampled interior; continuous exported NURBS boundary position/tangent; no analytic PCurve";break;
+                r.message=r.patch->tangentExemptions.empty()?
+                    "Sampled interior; continuous exported NURBS boundary position/tangent; no analytic PCurve":
+                    "Sampled interior; continuous boundary position; tangent excludes documented spatial micro-segments";
+                break;
             }
             r.message="Rational boundary correspondence not certified";
         }

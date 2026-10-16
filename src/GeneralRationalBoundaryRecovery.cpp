@@ -28,6 +28,37 @@ std::array<double,2> UV(const Trim &t,V p,std::array<double,2> reference)
     return a;
 }
 }
+bool ValidRationalPolygon(const std::array<sggk::Point2D,4> &corners,const std::array<bool,4> &collapsed)
+{
+    auto equal=[&](unsigned a,unsigned b){return corners[a].X()==corners[b].X()&&corners[a].Y()==corners[b].Y();};
+    for(const auto &p:corners)if(!std::isfinite(p.X())||!std::isfinite(p.Y()))return false;
+    std::array<unsigned,4> unique{};unsigned count=0,zeroEdges=0;
+    for(unsigned i=0;i<4;++i)
+    {
+        bool seen=false;for(unsigned j=0;j<count;++j)seen|=equal(i,unique[j]);
+        if(!seen)unique[count++]=i;
+        if(equal(Ends[i][0],Ends[i][1])){if(!collapsed[i])return false;++zeroEdges;}
+    }
+    auto turn=[&](unsigned i,unsigned j,unsigned k)
+    {
+        const auto &p=corners[i],&q=corners[j],&r=corners[k];
+        I determinant=(I(q.X())-I(p.X()))*(I(r.Y())-I(q.Y()))-
+                      (I(q.Y())-I(p.Y()))*(I(r.X())-I(q.X()));
+        return determinant.lo>0?1:determinant.hi<0?-1:0;
+    };
+    // Exact duplicate adjacent vertices only. A spatial pole with distinct
+    // parameter vertices still takes the ordinary quadrilateral path.
+    if(count==3&&zeroEdges==1)return turn(unique[0],unique[1],unique[2])!=0;
+    if(count!=4||zeroEdges)return false;
+    constexpr unsigned loop[]={0,1,3,2};int orientation=0;
+    for(unsigned i=0;i<4;++i)
+    {
+        int sign=turn(loop[i],loop[(i+1)%4],loop[(i+2)%4]);
+        if(!sign||(orientation&&sign!=orientation))return false;
+        orientation=sign;
+    }
+    return true;
+}
 bool Recover(SurfaceSampleContext &samples,const AnalyticParameters &a,
              const GeneralRationalBoundaryOptions &options,Trim &out,RecoveryDiagnostics *diagnostics)
 {
@@ -235,43 +266,42 @@ bool Recover(SurfaceSampleContext &samples,const AnalyticParameters &a,
     {
         auto q=map(connected[i]);out.polygon.corners[i]={q[0],q[1]};
     }
-    if(diagnostics)for(unsigned e=0;e<4;++e)
-        for(const auto &entry:trim.walks[e])diagnostics->walks[e].push_back({entry.first,map(entry.second)});
-    // Certify a strictly convex parameter quadrilateral. A spatially collapsed
-    // pole/apex edge can still have two distinct rational-chart endpoints.
-    constexpr unsigned loop[]={0,1,3,2};int orientation=0;
-    for(unsigned i=0;i<4;++i)
-    {
-        auto p=out.polygon.corners[loop[i]],q=out.polygon.corners[loop[(i+1)%4]],
-             r=out.polygon.corners[loop[(i+2)%4]];
-        I turn=(I(q.X())-I(p.X()))*(I(r.Y())-I(q.Y()))-
-               (I(q.Y())-I(p.Y()))*(I(r.X())-I(q.X()));
-        int sign=turn.lo>0?1:turn.hi<0?-1:0;
-        if(!sign)return reject("UnresolvedConvexTurn",int(i),-1,NAN,turn.lo,turn.hi);
-        if(orientation&&sign!=orientation)return reject("NonConvexCorners",int(i),-1,NAN,double(sign),double(orientation));
-        orientation=sign;
-    }
+    for(unsigned e=0;e<4;++e)out.collapsed[e]=Collapsed(samples.source,e);
+    if(!ValidRationalPolygon(out.polygon.corners,out.collapsed))return reject("InvalidRationalPolygon");
     if(TrimTriangles(out.polygon).empty())return reject("EmptyTrimTriangles");
     for(unsigned e=0;e<4;++e)
     {
         samples.CheckDeadline("chart_recovery");
-        out.collapsed[e]=Collapsed(samples.source,e);
-        for(const auto &entry:trim.walks[e])out.walks[e].push_back({entry.first,map(entry.second)});
-        auto start=out.polygon.corners[Ends[e][0]],end=out.polygon.corners[Ends[e][1]];
-        double dx=end.X()-start.X(),dy=end.Y()-start.Y(),length=dx*dx+dy*dy,last=-INFINITY;
-        if(!(length>0))return reject("ZeroParameterEdge",int(e),-1,NAN,length);
-        if(out.collapsed[e])continue;
-        for(size_t i=0;i<out.walks[e].size();++i)
+        for(const auto &entry:trim.walks[e])
         {
-            auto q=out.walks[e][i].second;
-            double f=((q[0]-start.X())*dx+(q[1]-start.Y())*dy)/length;
-            if(f<last-1e-10)return reject("NonMonotoneParameter",int(e),int(i),out.walks[e][i].first,f,last-1e-10);
-            last=f;f=std::clamp(f,0.,1.);
-            auto uv=trim.walks[e][i].second;
-            V projected=FrameOf(a).global(CanonicalPoint(a,uv[0],uv[1]));
-            double distance=Norm(projected-ChartPoint(out,{start.X()+dx*f,start.Y()+dy*f}));
-            if(!(distance<o.fitting.validation.distanceTolerance))
-                return reject("RationalLineWitnessExceeded",int(e),int(i),out.walks[e][i].first,distance,o.fitting.validation.distanceTolerance);
+            auto mapped=map(entry.second);out.walks[e].push_back({entry.first,mapped});
+            if(diagnostics)diagnostics->walks[e].push_back({entry.first,mapped});
+        }
+        auto start=out.polygon.corners[Ends[e][0]],end=out.polygon.corners[Ends[e][1]];
+        double dx=end.X()-start.X(),dy=end.Y()-start.Y(),length=dx*dx+dy*dy;
+        if(out.collapsed[e])continue;
+        if(!(length>0))return reject("ZeroParameterEdge",int(e),-1,NAN,length);
+        for(unsigned pass=0;pass<2;++pass)
+        {
+            double last=-INFINITY;bool retry=false;
+            for(size_t i=0;i<out.walks[e].size();++i)
+            {
+                samples.CheckDeadline("chart_recovery");
+                auto q=out.walks[e][i].second,uv=trim.walks[e][i].second;
+                double raw=((q[0]-start.X())*dx+(q[1]-start.Y())*dy)/length;
+                double f=std::clamp(raw,0.,1.);
+                V projected=FrameOf(a).global(CanonicalPoint(a,uv[0],uv[1]));
+                if(out.refine3D[e]){f=RefineFraction(out,e,projected,f);++out.refinementCalls;}
+                double distance=Norm(projected-ChartPoint(out,{start.X()+dx*f,start.Y()+dy*f}));
+                if(!(distance<o.fitting.validation.distanceTolerance)&&a.type==sggk::SurfaceType::Cone&&!out.refine3D[e])
+                {out.refine3D[e]=true;retry=true;break;}
+                double orderedFraction=out.refine3D[e]?f:raw;
+                if(orderedFraction<last-1e-10)return reject("NonMonotoneParameter",int(e),int(i),out.walks[e][i].first,orderedFraction,last-1e-10);
+                if(!(distance<o.fitting.validation.distanceTolerance))
+                    return reject("RationalLineWitnessExceeded",int(e),int(i),out.walks[e][i].first,distance,o.fitting.validation.distanceTolerance);
+                last=orderedFraction;
+            }
+            if(!retry)break;
         }
     }
     if(diagnostics)diagnostics->reason="Recovered";
@@ -289,7 +319,8 @@ double Fraction(const Trim &t,unsigned e,V p,double reference)
     for(unsigned d=0;d<2;++d)ref[d]=(t.domain[2*d]+t.domain[2*d+1])*.5;
     auto q=Coordinates(t,p,ref);
     double dx=b.X()-a.X(),dy=b.Y()-a.Y(),length=dx*dx+dy*dy;
-    return length>0?((q[0]-a.X())*dx+(q[1]-a.Y())*dy)/length:reference;
+    double f=length>0?((q[0]-a.X())*dx+(q[1]-a.Y())*dy)/length:reference;
+    return t.refine3D[e]?RefineFraction(t,e,p,f):f;
 }
 double FiniteDistance(const Trim &t,V p)
 {
