@@ -45,6 +45,8 @@ struct GeneralRationalBoundaryReport
     std::string message;
     bool Passed() const noexcept {return status==HybridValidationStatus::Passed&&patch.has_value();}
 };
+// Sampled interior distance; continuous exported-boundary position and tangent.
+// No surface normal coefficients are built and no normal angles are checked.
 GeneralRationalBoundaryReport ValidateGeneralRationalBoundaries(const sggk::BSplineSurface &,
     const AnalyticParameters &,const GeneralRationalBoundaryOptions & = {});
 }

@@ -10,6 +10,8 @@
 
 2026-10-15 用户明确要求：旧解析 UV 直线边界验证器 `ValidateGeneralHybrid` 废弃，保留实现和历史测试代码，但今后不再运行其单测、数据集测试或性能对照。历史报告和测量文件仅供查阅，不按其中旧命令重跑。当前开发和测试使用 `ValidateGeneralRationalBoundaries`；其测试也不得调用旧验证器作为对照。共享类型和边界提取代码仍可复用。本约束适用于上述一般兜底旧验证器；后续用户明确修改约束时再调整。
 
+2026-10-16 用户明确取消当前一般兜底验证器 `ValidateGeneralRationalBoundaries` 的曲面法向夹角约束：不构造法向认证数据，不检查或报告法向夹角。保留内部采样距离、连续边界位置和边界曲线切向检查；上游分类所需的几何法向不属于本约束。
+
 ## 验证器约束（2026-10-15）
 
 等参专用路径的旧投影验证器 `ValidateConversion`（`src/ConversionValidation.cpp`）已废弃。保留其实现、接口和历史测试证据，但今后不得直接或间接运行其测试、预热或性能对照；尚调用它的 `ConvertApproximate` 完整转换测试也暂停。新验证器使用 `ValidatePairedConversion` / `paired::ValidatePrepared`。此约束不表示正式转换入口已经完成迁移。

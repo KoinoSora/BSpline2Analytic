@@ -214,7 +214,9 @@ bool Recover(SurfaceSampleContext &samples,const AnalyticParameters &a,
     if(a.type==sggk::SurfaceType::Sphere&&(out.domain[2]<0||out.domain[3]>Pi))return reject("SphereLatitudeOutOfRange");
     if(a.type==sggk::SurfaceType::Cone&&out.domain[2]<0)return reject("NegativeConeHeight");
     AnalyticPatch patch;patch.parameters=a;patch.domain=out.domain;
-    out.chart=paired::BuildChart(patch);paired::PlaceChart(out.chart,a,Get(a.origin));
+    // This validator certifies boundary position/tangent, not surface normals.
+    // Omit unused normal coefficients and their subsequent frame transforms.
+    out.chart=paired::BuildChart(patch,false);paired::PlaceChart(out.chart,a,Get(a.origin));
     auto map=[&](std::array<double,2> uv)
     {
         // Extrapolation/clamping is only a recovery proposal. Gross violations
