@@ -1,0 +1,20 @@
+{
+  "initial_measurements_sha256": "8afb1e1a8ee00169d86f5e975d61a842c3a94683fe12d430428c568121caed54",
+  "initial_executable_sha256": "1f0212a4dbb180dfcb484edabf34e28d3cff1708d298813f5f7cc8d715e286c6",
+  "initial_driver_sha256": "a207f3eb894d96b077cdfa0f6c4a7da38211c4286eb047b8c8857bbb87584d6c",
+  "case_count": 15,
+  "measured_rows_compared": 2700,
+  "unchanged_fields": [
+    "status",
+    "accepted",
+    "mother_bound",
+    "edge_bound",
+    "tangent_u_bound_deg",
+    "tangent_v_bound_deg",
+    "joint_tangent_bound_deg",
+    "candidates"
+  ],
+  "all_compared_fields_identical": true,
+  "production_source_files_changed": false,
+  "note": "Only test audit evaluation was translated; acceptance tolerances and algorithm certificates are identical to the first complete run."
+}

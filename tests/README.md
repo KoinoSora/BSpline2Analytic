@@ -52,6 +52,15 @@ python tests/AuditGeneralRationalMigration.py --data tests/data/general-rational
 
 ## 等参专用路径计时
 
+当前三套固定数据全量入口为 `BSpline2AnalyticMotherDistanceDatasetTests` 和
+`RunIsoSpecializedFull.py`：Dataset500 500 例、业务尺寸极端集 200 例、历史极端集 200 例。
+非有理输入接入 `IsoClassificationSearch` 的两子区间起步、按需加密及候选重试，再调用当前
+`mother::ValidatePrepared`；有理输入调用 `Recognize`。不调用旧验证器、一般兜底或曲面优化器。
+每例三次新缓存运行，不做逐例预热；所有失败候选验证累计进分类验证。来源认证和局部坐标输出审计在计时外。
+超过五次的极端历史输入保留并报告不支持，不自动改写数据。结果与完整复现命令见
+[900 例全量回归报告](../docs/testing/ISO_SPECIALIZED_FULL_2026-10-16.md)。
+该脚本返回 1 表示存在未认证案例或诊断不符合预期，返回 2 表示执行/记录完整性错误；不能将回归已完成等同于全部通过。
+
 第三个独立母面距离验证器使用目标 `BSpline2AnalyticMotherDistanceTests`。构建后执行 `ctest --test-dir <build> -C Release -R '^BSpline2Analytic.MotherDistance(Unit|SphereTorus)$' --output-on-failure --no-tests=error`，只运行代表性覆盖与 100 个非有理球面/圆环输入的三轮对照，输出 `mother-sphere-torus-Release.csv`。对照为当前 `ValidatePairedConversion`，不调用废弃验证器。`python tests/SummarizeMotherDistance.py <csv> <output>` 核验 600 条记录并生成五模块、逐案例和状态汇总。`algorithm_ms` 仅为分类计算加首候选验证，未运行优化器。合同差别、覆盖范围和结果见[专项报告](../docs/testing/MOTHER_DISTANCE_SPHERE_TORUS_2026-10-15.md)。
 
 流式提取的定向性能测试使用 `BSpline2AnalyticMotherDistanceSelectedTests` 与 `BenchmarkMotherStreaming.py`，只选 16 个代表性及历史慢例，分别记录首次验证和源缓存复验。`AuditMotherExtraction.py` 用 80 位 Decimal 独立核对双精度 Bézier 控制点的误差包络；这些审计在计时外执行。改前、改后五模块耗时、测试命令及 10 ms 目标的剩余差距见[流式提取报告](../docs/testing/MOTHER_STREAMING_2026-10-16.md)。

@@ -54,6 +54,11 @@ if(BSPLINE2ANALYTIC_BUILD_TESTS)
     target_include_directories(BSpline2AnalyticMotherDistanceSelectedTests PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src")
     target_compile_options(BSpline2AnalyticMotherDistanceSelectedTests PRIVATE /W4 /utf-8 /fp:strict)
     target_compile_definitions(BSpline2AnalyticMotherDistanceSelectedTests PRIVATE BSPLINE_MOTHER_STREAMING)
+    add_executable(BSpline2AnalyticMotherDistanceDatasetTests tests/MotherDistanceDatasetTests.cpp
+        tests/Dataset500.cpp tests/PairedSurfaceBounds.cpp tests/ExtremeDataset.cpp tests/BusinessExtremeDataset.cpp)
+    target_link_libraries(BSpline2AnalyticMotherDistanceDatasetTests PRIVATE BSpline2Analytic)
+    target_include_directories(BSpline2AnalyticMotherDistanceDatasetTests PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src")
+    target_compile_options(BSpline2AnalyticMotherDistanceDatasetTests PRIVATE /W4 /utf-8 /fp:strict)
     add_test(NAME BSpline2Analytic.MotherDistanceUnit COMMAND BSpline2AnalyticMotherDistanceTests --unit
         "${CMAKE_CURRENT_SOURCE_DIR}/tests/data/dataset500")
     add_test(NAME BSpline2Analytic.MotherDistanceSphereTorus COMMAND BSpline2AnalyticMotherDistanceTests --sphere-torus
