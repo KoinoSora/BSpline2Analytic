@@ -34,6 +34,10 @@ struct GeneralRationalBoundaryReport
     unsigned mappingRefinements = 0, targetSegments = 0, maxTargetDegree = 0;
     unsigned fusedErrorBuilds = 0, positionOnlyNodes = 0;
     unsigned tangentFastChecks = 0, tangentFastAccepted = 0, tangentFallbacks = 0;
+    // Positive-scale residual attempts (including interval recomputations).
+    unsigned tangentResidualChecks = 0, tangentResidualAccepted = 0;
+    // Includes direct interval attempts when the double envelope is disabled.
+    unsigned tangentResidualIntervalFallbacks = 0;
     unsigned envelopeChecks = 0, envelopeAccepted = 0, envelopeFallbacks = 0;
     unsigned envelopePositionWitnesses = 0;
     unsigned envelopeTangentWitnesses = 0;

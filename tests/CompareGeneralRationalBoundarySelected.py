@@ -16,7 +16,8 @@ import subprocess
 CASES = [(0, i) for i in (0, 100, 200, 218, 318, 254, 500)] + [(1, i) for i in range(5)]
 TIMES = ('pipeline_ms', 'validate_ms', 'classify_ms', 'sampling_ms', 'recovery_ms', 'prepare_ms', 'boundary_ms')
 COUNTS = ('nodes', 'refinements', 'max_degree', 'fused_errors', 'position_only', 'fast_checks',
-          'fast_accepted', 'tangent_fallbacks', 'source_degree_u', 'source_degree_v', 'source_controls')
+          'fast_accepted', 'tangent_fallbacks', 'source_degree_u', 'source_degree_v', 'source_controls',
+          'tangent_residual_checks', 'tangent_residual_accepted', 'tangent_residual_interval_fallbacks')
 
 
 def sha(path):

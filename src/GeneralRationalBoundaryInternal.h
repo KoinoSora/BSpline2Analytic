@@ -59,14 +59,22 @@ class CurveEnvelopes
 public:
     std::optional<CurveError> Build(const BezierCell &,const BezierCell &);
     std::optional<BV> Tangent(const BezierCell &);
-    double TangentRatio(const BV &,const BV &);
+    std::optional<BV> TangentResidual(const BV &source,const BV &target,const BPoly &scale);
     bool PositionExceeded(const CurveError &,double tolerance);
-    bool TangentExceeded(const BV &,const BV &,double ratioLimit);
+    bool TangentExceeded(const BV &,const BV &,double sineSquaredLimitUpper);
 };
 BV TangentNumerator(const BezierCell &,paired::Products &);
 // Sufficient same-direction angle bound from E'=T'-S'. INFINITY is inconclusive.
 double ResidualTangentRatio(const CurveError &,const BezierCell &source,
                             const BV &sourceTangentNumerator,double distanceUpper);
+// Positive auxiliary scale selected from point estimates, never a certificate.
+// All arguments use the SAME local parameter. Rebuild after mapping refinement.
+std::optional<BPoly> ChooseTangentScale(const BV &source,const BV &target);
+BV BuildScaledTangentResidual(const BV &source,const BV &target,const BPoly &scale,paired::Products &);
+V TangentResidualReference(const BV &source);
+// ||A-lambda B||^2 / lower(||A||^2); lambda>0 and a bound <1 also prove A.B>0.
+// INFINITY means inconclusive, not a witnessed angle violation.
+double ScaledTangentSineSquaredUpper(const BV &source,const BV &residual,const BPoly &scale);
 // Test-visible, exact tensor-to-line composition in homogeneous Bernstein form.
 BezierCell ComposeLine(const paired::TargetCell &,sggk::Point2D,sggk::Point2D,
                        double,double,paired::Products &);

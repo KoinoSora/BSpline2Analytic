@@ -25,6 +25,22 @@ I DerivativeRange(const BPoly &p)
     {I x=I(p.u)*(p.c[i+1]-p.c[i]);r.lo=std::min(r.lo,x.lo);r.hi=std::max(r.hi,x.hi);}
     return r;
 }
+double Estimate(const BPoly &p,double t)
+{
+    if(p.v||p.c.size()!=p.u+1)return NAN;
+    auto midpoint=[](I x){return x.lo*.5+x.hi*.5;};
+    if(t==0)return midpoint(p.c.front());
+    if(t==1)return midpoint(p.c.back());
+    std::vector<double> values;values.reserve(p.c.size());
+    for(I x:p.c)values.push_back(midpoint(x));
+    for(size_t n=values.size();n>1;--n)for(size_t i=0;i+1<n;++i)
+        values[i]=(1-t)*values[i]+t*values[i+1];
+    return values.front();
+}
+V Estimate(const BV &p,double t)
+{return {Estimate(p.x,t),Estimate(p.y,t),Estimate(p.z,t)};}
+double Magnitude(V p){return std::max({std::abs(p.x),std::abs(p.y),std::abs(p.z)});}
+I LengthSquared(IV p){return Sqr(p.x)+Sqr(p.y)+Sqr(p.z);}
 }
 CurveError CurveErrors::Build(const BezierCell &s,const BezierCell &t,paired::Products &products,bool &fused)
 {
@@ -76,5 +92,65 @@ double ResidualTangentRatio(const CurveError &e,const BezierCell &s,const BV &st
     if(!upper.finite()||!speed.finite()||!(upper.hi<speed.lo))return INFINITY;
     // T'=S'+E': dot(S',T')>0 and tan(theta)<=M/(m-M).
     return (I(upper.hi)/(I(speed.lo)-I(upper.hi))).hi;
+}
+std::optional<BPoly> ChooseTangentScale(const BV &source,const BV &target)
+{
+    double ratio[3];
+    for(unsigned i=0;i<3;++i)
+    {
+        V a=Estimate(source,.5*i),b=Estimate(target,.5*i);
+        double ma=Magnitude(a),mb=Magnitude(b);
+        if(!Finite(a)||!Finite(b)||!(ma>0&&mb>0))return {};
+        a={a.x/ma,a.y/ma,a.z/ma};b={b.x/mb,b.y/mb,b.z/mb};
+        ratio[i]=(ma/mb)*(Dot(a,b)/Dot(b,b));
+        if(!(ratio[i]>0)||!std::isfinite(ratio[i]))return {};
+    }
+    // The stored doubles DEFINE lambda exactly. Rounding in this heuristic
+    // cannot invalidate the proof; the complete residual is enclosed below.
+    double tolerance=64*std::numeric_limits<double>::epsilon()*std::max({ratio[0],ratio[1],ratio[2]});
+    BPoly scale(2,0);scale.c={I(ratio[0]),I(2*ratio[1]-.5*ratio[0]-.5*ratio[2]),I(ratio[2])};
+    if(std::max(std::abs(ratio[0]-ratio[1]),std::abs(ratio[2]-ratio[1]))<=tolerance||
+       !scale.range().finite()||!(scale.range().lo>0))
+        scale=BPoly(0,0,I(ratio[1]));
+    else if(std::abs(ratio[1]-.5*ratio[0]-.5*ratio[2])<=tolerance)
+    {scale=BPoly(1,0);scale.c={I(ratio[0]),I(ratio[2])};}
+    return scale;
+}
+BV BuildScaledTangentResidual(const BV &source,const BV &target,const BPoly &scale,paired::Products &products)
+{return products.Subtract(source,products.MulShared(target,scale));}
+V TangentResidualReference(const BV &source)
+{
+    V e=Estimate(source,.5);double size=Magnitude(e);
+    if(!Finite(e)||!(size>0))return {};
+    // Division by the largest component avoids overflow of 1/size for tiny e.
+    return {e.x/size,e.y/size,e.z/size};
+}
+double ScaledTangentSineSquaredUpper(const BV &source,const BV &residual,const BPoly &scale)
+{
+    I lambda=scale.range();if(!lambda.finite()||!(lambda.lo>0))return INFINITY;
+    V e=TangentResidualReference(source);I e2=LengthSquared(Exact(e));
+    if(!e2.finite()||!(e2.lo>0))return INFINITY;
+    I projection=Dot(source,Exact(e)).range();
+    if(!projection.finite()||!(projection.lo>0))return INFINITY;
+    I length2=Sqr(I(projection.lo))/e2;
+    if(!length2.finite()||!(length2.lo>0))return INFINITY;
+    double error2=0;
+    if(residual.x.u==residual.y.u&&residual.x.u==residual.z.u&&
+       residual.x.v==residual.y.v&&residual.x.v==residual.z.v)
+    {
+        // Convexity bounds the vector itself: no squared-norm spline products.
+        for(size_t i=0;i<residual.x.c.size();++i)
+        {
+            I norm2=LengthSquared({residual.x.c[i],residual.y.c[i],residual.z.c[i]});
+            if(!norm2.finite())return INFINITY;error2=std::max(error2,norm2.hi);
+        }
+    }
+    else
+    {
+        I norm2=LengthSquared(Range(residual));if(!norm2.finite())return INFINITY;error2=norm2.hi;
+    }
+    I q=I(error2)/I(length2.lo);
+    // E<||A|| and lambda>0 prove B!=0 and A.B>0, ruling out antiparallel fields.
+    return q.finite()&&q.hi<1?std::max(0.,q.hi):INFINITY;
 }
 }

@@ -92,6 +92,9 @@ def main():
             summary[backend+'_max_ms'] = max(float(r['total_ms']) for r in part)
         for field in ('envelope_checks', 'envelope_accepted', 'envelope_fallbacks', 'envelope_position_witnesses', 'envelope_tangent_witnesses'):
             summary[field] = pair['updated'][0][field]
+        for field in ('tangent_residual_checks', 'tangent_residual_accepted', 'tangent_residual_interval_fallbacks'):
+            if field in pair['updated'][0]:
+                summary[field] = pair['updated'][0][field]
         summaries.append(summary)
         write(output/'measurements.csv', rows)
         write(output/'attempts.csv', attempts)

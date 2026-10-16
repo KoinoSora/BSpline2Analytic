@@ -13,8 +13,31 @@ class Certifier
 {
     SurfaceSampleContext &samples;const Trim &trim;const Target &target;
     const GeneralRationalBoundaryOptions &options;GeneralRationalBoundaryReport &report;
-    paired::Products products;CurveErrors errors;CurveEnvelopes envelopes;double distance=0,ratio=0,limit;
+    paired::Products products;CurveErrors errors;CurveEnvelopes envelopes;
+    double distance=0,ratio=0,sineSquared=0,limit;I sineSquaredLimit;
     std::array<bool,4> envelopeOnEdge{true,true,true,true};
+    double ScaledTangent(const BV &s,const BV &t,std::optional<BPoly> &scale,bool envelope)
+    {
+        ++report.tangentResidualChecks;
+        if(!envelope)++report.tangentResidualIntervalFallbacks;
+        if(!scale)scale=ChooseTangentScale(s,t);
+        if(!scale)return INFINITY;
+        auto residual=envelope?envelopes.TangentResidual(s,t,*scale):
+            std::optional<BV>(BuildScaledTangentResidual(s,t,*scale,products));
+        double q=residual?ScaledTangentSineSquaredUpper(s,*residual,*scale):INFINITY;
+        if(q<sineSquaredLimit.lo)++report.tangentResidualAccepted;
+        return q;
+    }
+    bool Accept(double bound,double angleRatio,double angleSquared)
+    {
+        if(!(bound<options.general.fitting.validation.distanceTolerance))return false;
+        // Keep the existing fast criterion intact. Only the new fallback uses
+        // sine squared; inverse trigonometry remains in final report assembly.
+        if(angleRatio<limit)ratio=std::max(ratio,angleRatio);
+        else if(angleSquared<sineSquaredLimit.lo)sineSquared=std::max(sineSquared,angleSquared);
+        else return false;
+        distance=std::max(distance,bound);++report.boundarySegments;return true;
+    }
     bool Visit(const BezierCell &s,unsigned edge,double lo,double hi,unsigned depth)
     {
         if(++report.boundaryNodes>options.maxBoundaryNodes)throw Budget("Rational boundary node budget exhausted");
@@ -30,6 +53,9 @@ class Certifier
         for(const auto &p:target.edges[edge])if(p.u0<=lo&&hi<=p.u1){part=&p;break;}
         if(!part)return false;
         auto t=paired::Crop(*part,lo,hi,0,1);
+        // Local to this exact correspondence. Child visits may change mapped
+        // endpoints and must select lambda and rebuild the residual afresh.
+        std::optional<BPoly> tangentScale;
         // Filter the SAME source/target pair with double coefficients and a
         // conservative rounding envelope. An inconclusive filter consumes no
         // extra node and cannot change the correspondence or acceptance limits.
@@ -43,7 +69,7 @@ class Certifier
             if(bound<options.general.fitting.validation.distanceTolerance)
             {
                 fastPositionPassed=true;
-                double angleRatio=trim.collapsed[edge]?0:INFINITY;
+                double angleRatio=trim.collapsed[edge]?0:INFINITY,angleSquared=INFINITY;
                 if(!trim.collapsed[edge])
                     if(auto st=envelopes.Tangent(s))
                     {
@@ -51,14 +77,13 @@ class Certifier
                         if(!(angleRatio<limit))
                             if(auto tt=envelopes.Tangent(t))
                             {
-                                tangentExceeded=envelopes.TangentExceeded(*st,*tt,limit);
-                                if(!tangentExceeded)angleRatio=std::min(angleRatio,envelopes.TangentRatio(*st,*tt));
+                                tangentExceeded=envelopes.TangentExceeded(*st,*tt,sineSquaredLimit.hi);
+                                if(!tangentExceeded)angleSquared=ScaledTangent(*st,*tt,tangentScale,true);
                             }
                     }
-                if(angleRatio<limit)
+                if(Accept(bound,angleRatio,angleSquared))
                 {
-                    distance=std::max(distance,bound);ratio=std::max(ratio,angleRatio);
-                    ++report.envelopeAccepted;++report.boundarySegments;return true;
+                    ++report.envelopeAccepted;return true;
                 }
             }
             else positionExceeded=envelopes.PositionExceeded(*fast,options.general.fitting.validation.distanceTolerance);
@@ -73,7 +98,7 @@ class Certifier
             double bound=paired::PositionBoxUpper(error.numerator,error.denominator);
             if(bound>=options.general.fitting.validation.distanceTolerance)
                 bound=std::min(bound,paired::PositionControlUpper(error.numerator,error.denominator,products));
-            double angleRatio=INFINITY;
+            double angleRatio=INFINITY,angleSquared=INFINITY;
             if(!(bound<options.general.fitting.validation.distanceTolerance))++report.positionOnlyNodes;
             else if(trim.collapsed[edge])angleRatio=0;
             else
@@ -86,15 +111,10 @@ class Certifier
                 {
                     ++report.tangentFallbacks;
                     auto tt=TangentNumerator(t,products);
-                    I dot=products.Dot(st,tt).range();IV cross=Range(products.Cross(st,tt));
-                    if(dot.lo>0)angleRatio=std::min(angleRatio,(Sqrt(Sqr(cross.x)+Sqr(cross.y)+Sqr(cross.z))/I(dot.lo)).hi);
+                    angleSquared=ScaledTangent(st,tt,tangentScale,false);
                 }
             }
-            if(bound<options.general.fitting.validation.distanceTolerance&&angleRatio<limit)
-            {
-                distance=std::max(distance,bound);ratio=std::max(ratio,angleRatio);
-                ++report.boundarySegments;return true;
-            }
+            if(Accept(bound,angleRatio,angleSquared))return true;
             // Some edges need subdivision to tighten tangent hulls, while their
             // position already passes. If BOTH kernels are inconclusive, stop
             // paying for two tangent kernels on this edge. Other edges and all
@@ -123,6 +143,7 @@ public:
     {
         I angle=I(o.general.fitting.validation.boundaryTangentToleranceDeg)*IPi()/I(180);
         limit=(Sin(angle)/Cos(angle)).lo;
+        sineSquaredLimit=Sqr(Sin(angle));
     }
     bool Run(const std::array<std::vector<BezierCell>,4> &source)
     {
@@ -145,7 +166,14 @@ public:
             }
         }
         report.boundaryDistanceUpperBound=distance;
-        report.boundaryTangentUpperBoundDeg=(Atan(I(ratio))*I(180)/IPi()).hi;return true;
+        report.boundaryTangentUpperBoundDeg=(Atan(I(ratio))*I(180)/IPi()).hi;
+        if(sineSquared>0)
+        {
+            I residualAngle=Atan(Sqrt(I(sineSquared)/(I(1)-I(sineSquared))));
+            report.boundaryTangentUpperBoundDeg=std::max(report.boundaryTangentUpperBoundDeg,
+                                                       (residualAngle*I(180)/IPi()).hi);
+        }
+        return report.boundaryTangentUpperBoundDeg<options.general.fitting.validation.boundaryTangentToleranceDeg;
     }
 };
 std::vector<AnalyticParameters> Charts(SurfaceSampleContext &samples,const AnalyticParameters &a,

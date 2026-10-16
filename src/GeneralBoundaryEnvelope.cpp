@@ -188,32 +188,38 @@ std::optional<BV> CurveEnvelopes::Tangent(const BezierCell &s)
         return {};
     }
 }
-double CurveEnvelopes::TangentRatio(const BV &s, const BV &t)
+std::optional<BV> CurveEnvelopes::TangentResidual(const BV &s,const BV &t,const BPoly &scale)
 {
     try
     {
-        std::array<Polynomial, 3> a{Read(s.x), Read(s.y), Read(s.z)}, b{Read(t.x), Read(t.y), Read(t.z)};
-        auto dot = Mul(a[0], b[0]);
-        for (unsigned k = 1; k < 3; ++k)
+        if(!scale.range().finite()||!(scale.range().lo>0))return {};
+        auto lambda=Read(scale);
+        auto axis=[&](const BPoly &a,const BPoly &b)
         {
-            auto next = Mul(a[k], b[k]);
-            for (auto &x : next.c)
-                x = -x; // Exact sign change, then reuse bounded subtraction.
-            dot = Subtract(std::move(dot), std::move(next));
-        }
-        I d = Enclose(dot).range();
-        if (!(d.lo > 0))
-            return INFINITY;
-        std::array<I, 3> cross;
-        for (unsigned k = 0; k < 3; ++k)
-            cross[k] =
-                Enclose(Subtract(Mul(a[(k + 1) % 3], b[(k + 2) % 3]), Mul(a[(k + 2) % 3], b[(k + 1) % 3])))
-                    .range();
-        return (Sqrt(Sqr(cross[0]) + Sqr(cross[1]) + Sqr(cross[2])) / I(d.lo)).hi;
+            auto target=Read(b);
+            Polynomial scaled;
+            if(lambda.c.size()==1)
+            {
+                // A constant auxiliary scale needs no Bernstein convolution.
+                scaled.c.reserve(target.c.size());
+                for(double x:target.c)
+                {
+                    double y=x*lambda.c[0];if(!std::isfinite(y))throw Unavailable{};
+                    scaled.c.push_back(y);scaled.magnitude=std::max(scaled.magnitude,std::abs(y));
+                }
+                scaled.radius=Add(Add(ErrorMul(target.magnitude,lambda.radius),
+                                      ErrorMul(lambda.magnitude,target.radius)),
+                                  Add(ErrorMul(target.radius,lambda.radius),Round(scaled.magnitude)));
+                Check(scaled.radius);
+            }
+            else scaled=Mul(target,lambda);
+            return Enclose(Subtract(Read(a),std::move(scaled)));
+        };
+        return BV{axis(s.x,t.x),axis(s.y,t.y),axis(s.z,t.z)};
     }
     catch (const Unavailable &)
     {
-        return INFINITY;
+        return {};
     }
 }
 I CurveEnvelopes::Midpoint(const BPoly &input)
@@ -245,18 +251,26 @@ bool CurveEnvelopes::PositionExceeded(const CurveError &e, double tolerance)
         return false;
     }
 }
-bool CurveEnvelopes::TangentExceeded(const BV &s, const BV &t, double ratioLimit)
+bool CurveEnvelopes::TangentExceeded(const BV &s, const BV &t, double sineSquaredLimitUpper)
 {
     try
     {
         IV a{Midpoint(s.x), Midpoint(s.y), Midpoint(s.z)}, b{Midpoint(t.x), Midpoint(t.y), Midpoint(t.z)};
-        auto length = [](IV v) { return Sqrt(Sqr(v.x) + Sqr(v.y) + Sqr(v.z)); };
-        if (!(length(a).lo > 0 && length(b).lo > 0))
+        auto length2 = [](IV v) { return Sqr(v.x) + Sqr(v.y) + Sqr(v.z); };
+        I a2=length2(a),b2=length2(b);
+        if(!a2.finite()||!b2.finite()||!(a2.lo>0&&b2.lo>0)||
+           !(sineSquaredLimitUpper>0&&sineSquaredLimitUpper<1))
             return false;
         I dot = Dot(a, b);
+        if(!dot.finite())return false;
         if (dot.hi <= 0)
             return true;
-        return (length(Cross(a, b)) / I(dot.hi)).lo >= ratioLimit;
+        if(!(dot.lo>0))return false;
+        I denominator=a2*b2;if(!denominator.finite()||!(denominator.lo>0))return false;
+        // A cancellation-prone point identity is used only to prove failure.
+        // Inconclusive point bounds never accept an interval or skip subdivision.
+        I q=I(1)-Sqr(dot)/denominator;
+        return q.finite()&&q.lo>=sineSquaredLimitUpper;
     }
     catch (const Unavailable &)
     {

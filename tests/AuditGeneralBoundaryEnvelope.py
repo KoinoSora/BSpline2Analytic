@@ -49,7 +49,11 @@ def main(path):
     cases = json.load(open(path, encoding='utf-8'))
     count = 0
     for case_id, raw in enumerate(cases):
-        ratio = F(raw.pop('angle_ratio'))
+        if 'angle_sine_squared' not in raw:
+            raise ValueError('Residual envelope export required; historical dot/cross exports are archived')
+        sine_squared = F(raw.pop('angle_sine_squared'))
+        scale = [tuple(F(x) for x in pair) for pair in raw.pop('angle_scale')]
+        reference = [F(x) for x in raw.pop('angle_reference')]
         case = {key: [[tuple(F(v) for v in pair) for pair in axis] for axis in cell]
                 for key, cell in raw.items()}
         s, t = case['source'], case['target']
@@ -65,14 +69,28 @@ def main(path):
                     assert lo <= a <= b <= hi, (case_id, label, k, i, 'outside envelope')
                     count += 1
         a, b = case['angle_source'], case['angle_target']
-        dot_axes = [product(a[k], b[k]) for k in range(3)]
-        dot_lo = min(sum(x[0] for x in coefficient) for coefficient in zip(*dot_axes))
-        cross = [difference(product(a[(k+1)%3], b[(k+2)%3]), product(a[(k+2)%3], b[(k+1)%3]))
-                 for k in range(3)]
-        upper_square = sum(max(abs(x) for pair in axis for x in pair)**2 for axis in cross)
-        assert dot_lo > 0 and ratio*ratio*dot_lo*dot_lo >= upper_square, (case_id, 'angle understated')
+        assert all(0 < lo <= hi for lo, hi in scale), (case_id, 'nonpositive scale')
+        residual = case['angle_residual'][:3]
+        for k in range(3):
+            expected = difference(a[k], product(b[k], scale))
+            assert len(expected) == len(residual[k]), (case_id, 'residual degree')
+            for (lo, hi), (x, y) in zip(residual[k], expected):
+                assert lo <= x <= y <= hi, (case_id, 'residual coefficient outside envelope')
+                count += 1
+        assert len({len(axis) for axis in a[:3]}) == 1
+        projection_lo = min(sum(mul(coefficient[k], (reference[k], reference[k]))[0]
+                                for k in range(3)) for coefficient in zip(*a[:3]))
+        reference_squared = sum(x*x for x in reference)
+        assert projection_lo > 0 and reference_squared > 0, (case_id, 'source length unproved')
+        length_squared_lo = projection_lo**2 / reference_squared
+        if len({len(axis) for axis in residual}) == 1:
+            error_squared = max(sum(max(abs(x) for x in component)**2 for component in coefficient)
+                                for coefficient in zip(*residual))
+        else:
+            error_squared = sum(max(abs(x) for pair in axis for x in pair)**2 for axis in residual)
+        assert 0 <= sine_squared < 1 and sine_squared*length_squared_lo >= error_squared, (case_id, 'angle understated')
     print(f'PASS: {len(cases)} cases; {count} exact rational coefficient enclosures; '
-          f'{len(cases)} dot/cross bounds; no failures')
+          f'{len(cases)} positive-scale residual bounds; no failures')
 
 
 if __name__ == '__main__':

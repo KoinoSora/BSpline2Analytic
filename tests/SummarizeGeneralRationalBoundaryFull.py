@@ -8,7 +8,8 @@ import statistics
 from RunGeneralRationalBoundaryFull import read, write
 
 TIMES = ('total_ms', 'classify_ms', 'validate_ms', 'sampling_ms', 'recovery_ms', 'prepare_ms', 'boundary_ms')
-COUNTS = ('attempts', 'chart_attempts', 'nodes', 'refinements', 'fast_checks', 'fast_accepted', 'tangent_fallbacks', 'position_only', 'fused_errors')
+COUNTS = ('attempts', 'chart_attempts', 'nodes', 'refinements', 'fast_checks', 'fast_accepted', 'tangent_fallbacks', 'position_only', 'fused_errors',
+          'tangent_residual_checks', 'tangent_residual_accepted', 'tangent_residual_interval_fallbacks')
 
 
 def numbers(rows, key):

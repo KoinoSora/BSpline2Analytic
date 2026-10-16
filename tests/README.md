@@ -6,6 +6,8 @@
 
 2026-10-16 本轮仅生成并独立认证数据、编译迁移后的入口，**没有运行兜底单测、转换、分类或性能测试**。来源认证通过不代表兜底识别通过，也不产生新的 10 ms 性能结论。构造方法、次数变化、来源证书和命令见 [V2 数据说明](../docs/testing/GENERAL_RATIONAL_DATASET_V2.md)。
 
+后续已将一般兜底的切向叉乘后备替换为正比例缩放残差，见 [实现与编译记录](../docs/testing/GENERAL_TANGENT_RESIDUAL_2026-10-16.md)。本轮仅编译和静态检查，未运行单测、包络导出/数值审计或数据集。全量及选例 CSV 新增 `tangent_residual_checks`、`tangent_residual_accepted`、`tangent_residual_interval_fallbacks`；后续获准运行时用于区分残差构造次数、通过次数及区间残差调用次数（含直接调用）。`AuditGeneralBoundaryEnvelope.py` 已改为精确有理数残差系数和角度界审计，需要重新导出的残差格式；不读取旧点积/叉乘导出作为新实现证据。
+
 只生成和认证数据：
 
 ```powershell

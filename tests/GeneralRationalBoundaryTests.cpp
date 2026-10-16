@@ -156,9 +156,9 @@ void ErrorKernelUnit()
     Require(ratio(s,line(1,0,1e-6))<1e-12,"Translation should have near-zero derivative error");
     auto fast=line(2,0,0);Require(!std::isfinite(ratio(s,fast)),"Speed mismatch must be inconclusive");
     auto st=rb::TangentNumerator(s,products),tt=rb::TangentNumerator(fast,products);
-    IV cross=Range(products.Cross(st,tt));
-    Require(products.Dot(st,tt).range().lo>0&&Sqrt(Sqr(cross.x)+Sqr(cross.y)+Sqr(cross.z)).hi<1e-12,
-            "Full tangent fallback should accept parallel speed mismatch");
+    auto speedScale=rb::ChooseTangentScale(st,tt);Require(speedScale.has_value(),"Missing positive speed scale");
+    Require(rb::ScaledTangentSineSquaredUpper(st,rb::BuildScaledTangentResidual(st,tt,*speedScale,products),*speedScale)<1e-24,
+            "Scaled residual should accept parallel speed mismatch");
     Require(!std::isfinite(ratio(s,line(-1,0,0))),"Opposite direction accepted by residual criterion");
     Require(!std::isfinite(ratio(line(0,0,0),s)),"Zero source speed accepted");
     // Same straight line in rational quadratic form, with W=1+t.
@@ -176,17 +176,39 @@ void ErrorKernelUnit()
     auto invalid=s;invalid.w.c[0]=I(-1,1);
     Require(!std::isfinite(ratio(invalid,s)),"Nonpositive denominator accepted");
     rb::CurveEnvelopes envelopes;
+    auto scaledBound=[&](const BV &a,const BV &b,bool envelope)->double
+    {
+        auto lambda=rb::ChooseTangentScale(a,b);if(!lambda)return INFINITY;
+        auto residual=envelope?envelopes.TangentResidual(a,b,*lambda):
+            std::optional<BV>(rb::BuildScaledTangentResidual(a,b,*lambda,products));
+        return residual?rb::ScaledTangentSineSquaredUpper(a,*residual,*lambda):INFINITY;
+    };
+    auto sine2=[](double tangent){return tangent*tangent/(1+tangent*tangent);};
     auto parallel=envelopes.Tangent(s),scaled=envelopes.Tangent(fast),opposite=envelopes.Tangent(line(-1,0,0));
     Require(parallel&&scaled&&opposite,"Missing tangent envelopes");
-    Require(envelopes.TangentRatio(*parallel,*scaled)<1e-12,"Parallel envelope tangent failed");
-    Require(!std::isfinite(envelopes.TangentRatio(*parallel,*opposite)),"Opposite envelope tangent accepted");
-    Require(envelopes.TangentExceeded(*parallel,*opposite,.001)&&
-            !envelopes.TangentExceeded(*parallel,*scaled,.001),"Wrong tangent midpoint witness");
+    Require(scaledBound(*parallel,*scaled,true)<1e-24,"Parallel envelope tangent failed");
+    Require(!std::isfinite(scaledBound(*parallel,*opposite,true)),"Opposite envelope tangent accepted");
+    Require(envelopes.TangentExceeded(*parallel,*opposite,sine2(.001))&&
+            !envelopes.TangentExceeded(*parallel,*scaled,sine2(.001)),"Wrong tangent midpoint witness");
     auto tiltedTangent=envelopes.Tangent(line(1,1e-4,0));
-    double envelopeRatio=envelopes.TangentRatio(*parallel,*tiltedTangent);
-    Require(envelopeRatio>=1e-4&&envelopeRatio<std::tan(.1*Pi/180),"Envelope tangent ratio understated");
-    Require(envelopes.TangentExceeded(*parallel,*tiltedTangent,.99e-4)&&
-            !envelopes.TangentExceeded(*parallel,*tiltedTangent,1.01e-4),"Tangent witness crossed tolerance");
+    double envelopeSquared=scaledBound(*parallel,*tiltedTangent,true);
+    Require(envelopeSquared>=sine2(1e-4)&&envelopeSquared<sine2(std::tan(.1*Pi/180)),"Envelope tangent bound understated");
+    Require(envelopes.TangentExceeded(*parallel,*tiltedTangent,sine2(.99e-4))&&
+            !envelopes.TangentExceeded(*parallel,*tiltedTangent,sine2(1.01e-4)),"Tangent witness crossed tolerance");
+    BV direction{BPoly(1,0,I(1)),BPoly(1,0),BPoly(1,0)};direction.y.c={I(0),I(.2)};
+    BPoly varyingScale(2,0);varyingScale.c={I(1),I(2),I(4)};
+    auto variable=products.MulShared(direction,varyingScale);
+    for(bool envelope:{false,true})
+    {
+        Require(scaledBound(variable,direction,envelope)<1e-20,"Quadratic positive speed scale rejected");
+        BV zero{BPoly(2,0),BPoly(2,0),BPoly(2,0)};zero.x.c={I(1),I(-1),I(1)};
+        Require(!std::isfinite(scaledBound(zero,*parallel,envelope)),"Vanishing interior source tangent accepted");
+        Require(!std::isfinite(scaledBound(*parallel,BV{},envelope)),"Zero target tangent accepted");
+        auto gap=*parallel;gap.y=BPoly(4,0);gap.y.c={I(0),I(.04),I(-.08/1.5),I(.04),I(0)};
+        Require(!(scaledBound(*parallel,gap,envelope)<sine2(.001)),"Between-sample angular defect accepted");
+        Require(!envelopes.TangentExceeded(*parallel,gap,sine2(.001)),"Residual failure mislabeled as midpoint witness");
+    }
+    Require(!envelopes.TangentResidual(*parallel,*parallel,BPoly(0,0,I(-1))),"Negative auxiliary scale accepted");
     auto near=envelopes.Build(s,line(1,0,.99e-5)),far=envelopes.Build(s,line(1,0,1.01e-5));
     Require(near&&far&&!envelopes.PositionExceeded(*near,1e-5)&&envelopes.PositionExceeded(*far,1e-5),
             "Envelope midpoint witness crossed tolerance");
@@ -236,9 +258,14 @@ void EnvelopeExport(const std::filesystem::path &path)
             return v;
         };
         auto a=direction(p,.001),b=direction(q,.0011);
-        double ratio=envelope.TangentRatio(a,b);Require(std::isfinite(ratio),"Missing dot/cross envelope bound");
+        auto lambda=rb::ChooseTangentScale(a,b);Require(lambda.has_value(),"Missing residual scale");
+        auto residual=envelope.TangentResidual(a,b,*lambda);Require(residual.has_value(),"Missing residual envelope");
+        double q2=rb::ScaledTangentSineSquaredUpper(a,*residual,*lambda);Require(std::isfinite(q2),"Missing residual angle bound");
+        V e=rb::TangentResidualReference(a);
         out<<",\"angle_source\":";cell({a});out<<",\"angle_target\":";cell({b});
-        out<<",\"angle_ratio\":"<<ratio<<'}';
+        out<<",\"angle_scale\":";poly(*lambda);out<<",\"angle_residual\":";cell({*residual});
+        out<<",\"angle_reference\":["<<e.x<<','<<e.y<<','<<e.z<<']';
+        out<<",\"angle_sine_squared\":"<<q2<<'}';
     }
     // Invalid/nonfinite arithmetic must defer to the existing interval path.
     BezierCell invalid;invalid.p.x=BPoly(1,1);
@@ -343,7 +370,7 @@ void FullCase(const std::filesystem::path &data,const std::filesystem::path &csv
     {if(id%2)options.general.fitting.validation.distanceTolerance=-1;else options.general.fitting.sampling.maxSamples=0;}
     if(extra&&c.group==GeneralFixtureGroup::ValidationBudget)options.maxBoundaryNodes=1;
     if(extra&&c.group==GeneralFixtureGroup::SpherePriority)options.general.similarScoreAbsoluteRatio=1e6;
-    const std::string header="suite,id,run,mode,group,source_type,rational,degree_u,degree_v,controls,source_certified,source_bound,certificate_ms,entry,status,accepted,audit_status,audit_sample_max,classify_ms,validate_ms,sampling_ms,recovery_ms,prepare_ms,boundary_ms,total_ms,attempts,chart_attempts,nodes,refinements,fast_checks,fast_accepted,tangent_fallbacks,position_only,fused_errors,boundary_bound,tangent_deg,mother_bound,output_type,raw_candidates,full_scores,message,audit_message,envelope_checks,envelope_accepted,envelope_fallbacks,envelope_position_witnesses,envelope_tangent_witnesses\n";
+    const std::string header="suite,id,run,mode,group,source_type,rational,degree_u,degree_v,controls,source_certified,source_bound,certificate_ms,entry,status,accepted,audit_status,audit_sample_max,classify_ms,validate_ms,sampling_ms,recovery_ms,prepare_ms,boundary_ms,total_ms,attempts,chart_attempts,nodes,refinements,fast_checks,fast_accepted,tangent_fallbacks,position_only,fused_errors,boundary_bound,tangent_deg,mother_bound,output_type,raw_candidates,full_scores,message,audit_message,envelope_checks,envelope_accepted,envelope_fallbacks,envelope_position_witnesses,envelope_tangent_witnesses,tangent_residual_checks,tangent_residual_accepted,tangent_residual_interval_fallbacks\n";
     std::vector<std::string> rows;bool anyFailure=false;
     auto save=[&]{std::ofstream out(csv);Require(bool(out),"Cannot write full-suite CSV");out<<header;for(const auto &row:rows)out<<row;};
     auto attemptPath=csv.parent_path()/(csv.stem().string()+"-attempts.csv");
@@ -358,6 +385,7 @@ void FullCase(const std::filesystem::path &data,const std::filesystem::path &csv
         double classify=0,validate=0,sampling=0,recovery=0,prepare=0,boundary=0;
         unsigned charts=0,nodes=0,refinements=0,fast=0,fastAccepted=0,fallback=0,position=0,fused=0;
         unsigned envelopeChecks=0,envelopeAccepted=0,envelopeFallbacks=0,envelopeWitnesses=0,envelopeTangentWitnesses=0;
+        unsigned residualChecks=0,residualAccepted=0,residualFallbacks=0;
         try
         {
             SurfaceSampleContext samples(*c.input,options.general.fitting.sampling.maxSamples);
@@ -368,6 +396,7 @@ void FullCase(const std::filesystem::path &data,const std::filesystem::path &csv
                 refinements+=r.mappingRefinements;fast+=r.tangentFastChecks;fastAccepted+=r.tangentFastAccepted;
                 fallback+=r.tangentFallbacks;position+=r.positionOnlyNodes;fused+=r.fusedErrorBuilds;
                 envelopeChecks+=r.envelopeChecks;envelopeAccepted+=r.envelopeAccepted;envelopeFallbacks+=r.envelopeFallbacks;envelopeWitnesses+=r.envelopePositionWitnesses;envelopeTangentWitnesses+=r.envelopeTangentWitnesses;
+                residualChecks+=r.tangentResidualChecks;residualAccepted+=r.tangentResidualAccepted;residualFallbacks+=r.tangentResidualIntervalFallbacks;
                 attempts.push_back({a.type,r});
             };
             if(supplied)attempt(c.truth);
@@ -395,7 +424,7 @@ void FullCase(const std::filesystem::path &data,const std::filesystem::path &csv
                 <<(options.chartDomain?"fixed_chart":supplied?"supplied_mother":"classified")<<','<<HybridValidationStatusName(r.status)<<','<<passed<<','<<auditStatus<<','<<audit<<','
                 <<classify<<','<<validate<<','<<sampling<<','<<recovery<<','<<prepare<<','<<boundary<<','<<total<<','<<attempts.size()<<','<<charts<<','<<nodes<<','<<refinements<<','
                 <<fast<<','<<fastAccepted<<','<<fallback<<','<<position<<','<<fused<<','<<r.boundaryDistanceUpperBound<<','<<r.boundaryTangentUpperBoundDeg<<','<<r.outputMotherDistanceUpperBound<<','
-                <<(passed?TypeName(r.patch->mother.type):"Unknown")<<','<<classification.rawCandidateCount<<','<<classification.fullScoreCount<<','<<Quote(r.message)<<','<<Quote(auditMessage)<<','<<envelopeChecks<<','<<envelopeAccepted<<','<<envelopeFallbacks<<','<<envelopeWitnesses<<','<<envelopeTangentWitnesses<<'\n';
+                <<(passed?TypeName(r.patch->mother.type):"Unknown")<<','<<classification.rawCandidateCount<<','<<classification.fullScoreCount<<','<<Quote(r.message)<<','<<Quote(auditMessage)<<','<<envelopeChecks<<','<<envelopeAccepted<<','<<envelopeFallbacks<<','<<envelopeWitnesses<<','<<envelopeTangentWitnesses<<','<<residualChecks<<','<<residualAccepted<<','<<residualFallbacks<<'\n';
             return out.str();
         };
         // Save measured algorithm time before the independent SDK audit, so
@@ -445,7 +474,7 @@ void Case(const std::filesystem::path &data,const std::filesystem::path &csv,uns
     auto cert=CertifyRationalDomain(fixture);Require(cert.passed,"V2 source certificate failed: "+cert.message);
     auto domain=fixture.chartDomain;
     std::ofstream out(csv);out<<std::setprecision(17);
-    out<<"id,synthetic,mode,run,status,accepted,attempts,chart_attempts,nodes,refinements,max_degree,sampling_ms,recovery_ms,prepare_ms,boundary_ms,validate_ms,classify_ms,pipeline_ms,boundary_bound,tangent_deg,mother_bound,audit_sample_max,message,fused_errors,position_only,fast_checks,fast_accepted,tangent_fallbacks,source_degree_u,source_degree_v,source_controls\n";
+    out<<"id,synthetic,mode,run,status,accepted,attempts,chart_attempts,nodes,refinements,max_degree,sampling_ms,recovery_ms,prepare_ms,boundary_ms,validate_ms,classify_ms,pipeline_ms,boundary_bound,tangent_deg,mother_bound,audit_sample_max,message,fused_errors,position_only,fast_checks,fast_accepted,tangent_fallbacks,source_degree_u,source_degree_v,source_controls,tangent_residual_checks,tangent_residual_accepted,tangent_residual_interval_fallbacks\n";
     for(unsigned run=0;run<repeats;++run)
     {
         auto start=std::chrono::steady_clock::now();GeneralRationalBoundaryOptions options;
@@ -453,6 +482,7 @@ void Case(const std::filesystem::path &data,const std::filesystem::path &csv,uns
         SurfaceSampleContext samples(*fixture.input,options.general.fitting.sampling.maxSamples);
         GeneralRationalBoundaryReport r;unsigned attempts=0,charts=0,nodes=0,refinements=0;
         unsigned fused=0,positionOnly=0,fastChecks=0,fastAccepted=0,fallbacks=0;
+        unsigned residualChecks=0,residualAccepted=0,residualFallbacks=0;
         double classify=0,validate=0,sampling=0,recovery=0,prepare=0,boundary=0;bool passed=false;
         auto attempt=[&](const AnalyticParameters &a)
         {
@@ -462,6 +492,7 @@ void Case(const std::filesystem::path &data,const std::filesystem::path &csv,uns
             charts+=r.chartAttempts;nodes+=r.boundaryNodes;refinements+=r.mappingRefinements;
             fused+=r.fusedErrorBuilds;positionOnly+=r.positionOnlyNodes;fastChecks+=r.tangentFastChecks;
             fastAccepted+=r.tangentFastAccepted;fallbacks+=r.tangentFallbacks;
+            residualChecks+=r.tangentResidualChecks;residualAccepted+=r.tangentResidualAccepted;residualFallbacks+=r.tangentResidualIntervalFallbacks;
         };
         if(synthetic)attempt(fixture.truth); // Explicit-chart validator benchmark, not classifier timing.
         else
@@ -481,7 +512,7 @@ void Case(const std::filesystem::path &data,const std::filesystem::path &csv,uns
            <<sampling<<','<<recovery<<','<<prepare<<','<<boundary<<','<<validate<<','<<classify<<','<<pipeline<<','
            <<r.boundaryDistanceUpperBound<<','<<r.boundaryTangentUpperBoundDeg<<','<<r.outputMotherDistanceUpperBound<<','<<audit<<','<<Quote(r.message)<<','
            <<fused<<','<<positionOnly<<','<<fastChecks<<','<<fastAccepted<<','<<fallbacks<<','<<fixture.input->DegreeU()<<','<<fixture.input->DegreeV()<<','
-           <<fixture.input->ControlPoints().size()*fixture.input->ControlPoints().front().size()<<'\n';out.flush();
+           <<fixture.input->ControlPoints().size()*fixture.input->ControlPoints().front().size()<<','<<residualChecks<<','<<residualAccepted<<','<<residualFallbacks<<'\n';out.flush();
     }
 }
 }
