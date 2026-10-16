@@ -2,8 +2,9 @@
 
 | 分类 | 文档 | 用途 |
 | --- | --- | --- |
+| 方案 | [九章方案设计文件](algorithm/design/README.md) | 当前串联入口、数学方法、六幅流程图、工程接口、测试设计及命题交付追踪。 |
 | 测试 | [等参优先、失败兜底的 1,160 例测试](testing/SEQUENTIAL_NON_EXTREME_2026-10-16.md) | 统一入口、共享 50 ms 预算、三次完整算法耗时、逐例正确性与 10 ms 判断。 |
-| 算法 | [算法说明书（10 页 PDF）](algorithm/BSpline2Analytic-algorithm.pdf) | 当前实现的数学方法、流程图、真实案例及工程边界。 |
+| 算法 | [历史算法说明书（10 页 PDF）](algorithm/BSpline2Analytic-algorithm.pdf) | 2026-10-13 实现基线的数学方法、流程图及案例；当前串联设计见上列新文档。 |
 | 算法 | [源文件与编译说明](algorithm/README.md) | LaTeX 源文件、编译入口和测试证据清单。 |
 | 算法 | [精确路径设计](algorithm/IMPLEMENTATION_PLAN.md) | 有理样条识别、解析母面重建及原始设计。 |
 | 算法 | [非有理转换实现说明](algorithm/APPROXIMATE_CONVERSION.md) | 参数优化、Jacobian、连续验收与三阶段计时。 |

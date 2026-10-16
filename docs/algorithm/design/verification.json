@@ -1,0 +1,17 @@
+{
+  "date": "2026-10-16",
+  "source_baseline": "274a070626977224673fa78aebb47b710b334c29",
+  "pages": 13,
+  "sections": 9,
+  "flowcharts": 6,
+  "numbered_equations": 7,
+  "builtin_compilation": "success",
+  "xelatex": "two passes; no warnings, overflow, missing glyphs or undefined references",
+  "visual_review": "all pages inspected; changed pages re-inspected after repair",
+  "algorithm_tests": "not rerun; existing CSV/JSON evidence checked",
+  "skill_validation": "required fields, fixed-page-limit removal and identical personal/repository copies checked; bundled quick_validate.py unavailable because PyYAML is absent",
+  "sha256": {
+    "面向线性PCurve的一类通用样条面到二次曲面智能转化方案—方案设计文件.tex": "71c3627f2ec8d2887a2378e8055b5789b8290394286f5c8915847b681cf221ac",
+    "面向线性PCurve的一类通用样条面到二次曲面智能转化方案—方案设计文件.pdf": "2a5a4c081d131d4e7fd8c4ebe1ccdbe395a7c5154b188fa7a68c7a1dc0ec3c33"
+  }
+}

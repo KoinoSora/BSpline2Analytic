@@ -1,0 +1,492 @@
+% 方案设计文件；单文件 XeLaTeX 源，全部流程图内嵌，便于独立编译。
+% 实现基线 274a070；需求与实验记录均见第九章。正文不调用旧验证器。
+\documentclass[UTF8,zihao=5,fontset=windows,a4paper]{ctexart}
+\usepackage[left=21mm,right=21mm,top=19mm,bottom=19mm,headheight=15pt,headsep=6mm,footskip=10mm]{geometry}
+\usepackage{amsmath,amssymb,booktabs,tabularx,array,longtable,graphicx,xcolor,fancyhdr,tikz,caption,enumitem,listings,xurl,hyperref,lastpage}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric,calc}
+\definecolor{ink}{HTML}{17384A}
+\definecolor{accent}{HTML}{226C82}
+\definecolor{muted}{HTML}{536570}
+\hypersetup{unicode=true,colorlinks=true,linkcolor=accent,urlcolor=accent,
+ pdftitle={面向线性PCurve的一类通用样条面到二次曲面智能转化方案——方案设计文件},
+ pdfauthor={BSpline2Analytic 项目},pdfsubject={算法流程、实现方法、测试方法及交付追踪}}
+\ctexset{section={format=\Large\bfseries\color{ink},beforeskip=10pt,afterskip=6pt},
+ subsection={format=\normalsize\bfseries\color{ink},beforeskip=7pt,afterskip=3pt}}
+\setlength{\parindent}{2em}\setlength{\parskip}{3pt}\linespread{1.13}
+\setlength{\abovedisplayskip}{6pt}\setlength{\belowdisplayskip}{6pt}
+\setlist{nosep,leftmargin=2em,topsep=3pt}
+\captionsetup{font=small,labelfont=bf,skip=5pt,hypcap=false}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\color{muted}BSpline2Analytic\quad 方案设计文件}
+\fancyhead[R]{\small\color{muted}线性 PCurve · 解析几何恢复}
+\fancyfoot[C]{\small\thepage\,/\,\pageref*{LastPage}}
+\renewcommand{\headrulewidth}{0.3pt}
+\fancypagestyle{first}{\fancyhf{}\fancyfoot[C]{\small\thepage\,/\,\pageref*{LastPage}}\renewcommand{\headrulewidth}{0pt}}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcommand{\key}[1]{\par\noindent\textbf{\color{ink}#1}\quad}
+\newcommand{\note}[1]{{\small\color{muted}#1}}
+\newcommand{\code}[1]{\texttt{\detokenize{#1}}}
+\newcommand{\dist}{\operatorname{dist}}
+\newcommand{\R}{\mathbb R}
+\tikzset{box/.style={draw=accent,rounded corners=2pt,align=center,font=\small,inner sep=5pt,text width=64mm},
+ smallbox/.style={box,text width=42mm},
+ decision/.style={draw=accent,diamond,aspect=4,align=center,font=\small,inner sep=1pt},
+ arr/.style={-{Stealth},semithick,draw=accent}}
+\lstset{basicstyle=\ttfamily\footnotesize,breaklines=true,columns=fullflexible,keepspaces=true,
+ frame=single,rulecolor=\color{accent},showstringspaces=false,xleftmargin=2mm,xrightmargin=2mm}
+\raggedbottom
+\begin{document}
+\thispagestyle{first}
+\begin{center}
+{\fontsize{18}{25}\selectfont\bfseries\color{ink}面向线性PCurve的一类通用样条面\par 到二次曲面智能转化方案\par}
+\vspace{5pt}{\large 方案设计文件}\par
+\vspace{4pt}{\small\color{muted}C++17 / 海星 SGK 1.7.11\quad |\quad 2026 年 10 月 16 日}
+\end{center}
+\vspace{-4pt}
+\section{任务目标与需求分析}
+\subsection{任务定义与设计目标}
+CAD 模型导入、格式交换和建模操作可能将平面、圆柱面、圆锥面、球面及圆环面保存为 NURBS 表示。解析结构未显式保留时，后续求交、投影与布尔运算难以直接采用对应的专用求解路径。本方案面向具有指定边界结构的样条面片，恢复解析母面及其有限区域表示，为数据简化和下游解析运算提供几何基础。
+
+输入为有效的 \code{sggk::BSplineSurface} 及容差、搜索与预算选项；输出为\textbf{分支对应的母面／有限域或三维边界，以及验收报告和诊断状态}。成功表示在该分支验收范围内获得有效结果；未认证、候选耗尽或超时均不得发布成功结果。本文不把母面参数恢复等同于完整 B-rep 面的拓扑替换。
+
+\subsection{命题指标及需求追踪}
+依据命题 PDF，第九章列出来源。表中数值为命题目标，现有证据与尚需验证的内容在第八章分别说明。
+\begin{center}\small\renewcommand{\arraystretch}{1.19}
+\begin{tabularx}{\linewidth}{@{}p{10mm}p{23mm}Yp{18mm}@{}}\toprule
+编号 & 需求 & 验收目标 & 对应章节\\\midrule
+R1 & 判定与转换 & 识别可转换样条面，恢复目标母面及有限边界。 & 2--6\\
+R2 & 曲面精度 & 最大、平均几何距离不超过 $d=10^{-5}\,\mathrm{mm}$。 & 2、4、6、8\\
+R3 & 边界一致性 & 输入与生成边界的 Hausdorff 距离不超过 $10^{-5}\,\mathrm{mm}$。 & 6、8\\
+R4 & 相邻面连续性 & 公共边界法向夹角不超过 $0.1^\circ$。 & 2、6、8\\
+R5 & 判定性能 & 50--200 个控制顶点的单面片判定不超过 10 ms。 & 3、7、8\\
+R6 & 下游性能 & 投影、求交、布尔运算分别验证耗时降低至少 50\%。 & 8\\
+R7 & 兼容性 & C++、SGK 1.7；本工程使用 C++17 / SGK 1.7.11。 & 7、9\\
+R8 & 稳定性 & 连续处理 1000 个不同复杂度输入，无崩溃、内存泄漏或结果不一致；异常可追溯。 & 7--9\\\bottomrule
+\end{tabularx}
+\end{center}
+项目追加约束为：\textbf{所有正常测试输入先走等参专用分支，失败后进入一般兜底；完整调用实际耗时超过 50 ms 判计算失败。}性能展示采用更严格的“单例重复测试最大值 $<10$ ms”，不将输出、绘图和文件写入纳入算法计时。
+
+\subsection{方案组织与证据原则}
+第二章规定模型和范围，第三章说明总体协作关系，第四至六章展开求解及验收，第七章定义工程行为，第八章给出测试方法与已测结果，第九章落实交付。各模块区分\textbf{数学假设、实现行为、可计算上界和实验观察}；“智能转化”指结构识别、候选选择、自适应验收及失败回退，不表示采用训练模型。全文以当前统一入口为主，不沿用历史文档中已停用的验证链。
+
+\newpage
+\section{数学模型、条件假设与适用范围}
+\subsection{对象与参数域}
+源面片以张量积 NURBS 表示：
+\begin{equation}
+\mathbf S(u,v)=\frac{\sum_{i,j}N_{i,p}(u)M_{j,q}(v)w_{ij}\mathbf P_{ij}}
+ {\sum_{i,j}N_{i,p}(u)M_{j,q}(v)w_{ij}},\qquad (u,v)\in\Omega_S.
+\end{equation}
+其中 $p,q$ 为次数，$\mathbf P_{ij}$ 为控制顶点，$w_{ij}>0$；非有理输入对应等权情形。节点、重数及数据维度须有效，内部节点不允许位置不连续。四条源参数边按 $U_{\min},U_{\max},V_{\min},V_{\max}$ 保留编号。
+
+目标解析母面记为 $M_{\boldsymbol\theta}$，其对应的 NURBS 参数化为 $\mathbf Q:\Omega_Q\to\R^3$。两者表示同一母面，但 $\Omega_Q$ 与解析原生角度参数域、源参数域 $\Omega_S$ 不可混用。有限目标区域记为 $T=\mathbf Q(P)$，其中 $P\subset\Omega_Q$ 为单一凸四边形或满足退化判据的三角形。
+
+\subsection{线性 PCurve 约束与边界对应}
+第 $i$ 条目标边界满足
+\begin{equation}\label{eq:pcurve}
+\boldsymbol\ell_i(t)=(1-t)\mathbf a_i+t\mathbf b_i,\qquad
+\widehat{\mathbf c}_i(t)=\mathbf Q(\boldsymbol\ell_i(t)),\quad 0\le t\le1.
+\end{equation}
+\textbf{线性指目标母面 NURBS 参数域中的直线段}，其三维像通常为曲线；也不意味着解析角度参数中的 PCurve 为直线。输入自身的矩形参数边界并不能自动满足式\eqref{eq:pcurve}。对于源边界 $\mathbf c_i(s)$，验收允许方向调整后的分段连续单调参数对应 $s=\phi_i(t)$，完整覆盖两侧区间，而非强制同参数比较。
+
+支持平面、圆柱面、圆锥面、球面；规则圆环面 $R>r>0$ 作为扩展解析目标。圆环面在严格代数分类中属于四次曲面，本文沿用命题题名，不将其归为数学上的二次曲面。“通用”限于上述曲面族及边界假设，不承诺任意自由曲面、非线性 PCurve、多环或带孔裁剪。当前一般路径固定数据两方向次数为 3--5、控制顶点不超过 200；这是验证范围，并非线性 PCurve 的数学必要条件。
+
+\subsection{几何误差与连续性假设}
+令 $d(\mathbf x,A)=\inf_{\mathbf y\in A}\|\mathbf x-\mathbf y\|$。全域母面误差为 $\sup_{\Omega_S}d(\mathbf S,M_{\boldsymbol\theta})$，有限面片误差需将目标替换为 $T$。边界 Hausdorff 距离定义为
+\begin{equation}\label{eq:hausdorff}
+d_H(C,\widehat C)=\max\left\{\sup_{\mathbf x\in C}d(\mathbf x,\widehat C),
+\sup_{\mathbf y\in\widehat C}d(\mathbf y,C)\right\}.
+\end{equation}
+平均距离还依赖面积／参数域测度，测试必须注明定义，不能用采样最大值代替。母面全域界、边界对应界和内部采样残差具有不同证明范围，不能互相替代。
+
+\textbf{工程 $G^1$ 保持假设：}原相邻面片满足 $G^1$ 连续性且公共边界位置在容差内吻合，将原曲面与目标曲面对应边界上同向单位法向转角严格小于 $0.1^\circ$ 作为工程保持判据。它适用于法向存在的正则边界。若两侧均转换，输出两侧夹角满足角距离三角不等式 $\alpha_{\rm out}\le\delta_L+\alpha_{\rm in}+\delta_R$，故仍需联合预算或直接复核；不能由两侧各小于 $0.1^\circ$ 推出输出夹角也小于该值。此假设不等同于严格 $G^1$ 证明，沿边曲线切向也不能代替曲面法向。
+
+\newpage
+\section{总体架构与统一转换流程}
+\subsection{统一入口及调度不变量}
+\code{ConvertIsoThenFallback} 对有效预算输入一律先尝试等参路径：有理输入进行精确识别，非有理输入进行增量等参搜索与母面验收。等参成功短路返回；失败后从相同起点的剩余总预算进入一般兜底。所有候选均只使用输入几何，不接收测试来源母面、预设参数图或期望标签。
+\begin{center}
+\begin{tikzpicture}[node distance=4mm and 9mm]
+\node[box] (in) {输入与预算检查；建立统一计时起点};
+\node[box,below=of in] (iso) {等参路径：有理精确识别 / 非有理候选搜索\\按对应验收条件检查};
+\node[decision,below=of iso] (ok) {等参通过？};
+\node[box,below=of ok] (pool) {一般母面候选池：去重、评分、分批选择};
+\node[box,below=of pool] (val) {边界恢复 → 实际输出构造 → 几何验收};
+\node[decision,below=of val] (pass) {通过？};
+\node[box,below=of pass] (refine) {允许优化则优化母面；改善后重新验收\\仍失败取下一候选；耗尽返回失败};
+\node[smallbox,right=12mm of pool,text width=29mm] (out) {返回前复核总耗时\\发布成功结果\\或清除可用输出};
+\draw[arr] (in)--(iso);\draw[arr] (iso)--(ok);
+\draw[arr] (ok)--node[right,font=\small]{否}(pool);
+\draw[arr] (pool)--(val);\draw[arr] (val)--(pass);
+\draw[arr] (pass)--node[right,font=\small]{否}(refine);
+\draw[arr] (ok.east)-|node[pos=.25,above,font=\small]{是}(out.north);
+\draw[arr] (pass.east)-|node[pos=.25,above,font=\small]{是}(out.south);
+\draw[arr] (refine.west)--++(-10mm,0)|-node[pos=.25,left,font=\scriptsize]{下一候选}(val.west);
+\draw[arr] (refine.east)-|node[pos=.2,below,font=\scriptsize]{重验通过 / 耗尽}(out.south east);
+\end{tikzpicture}
+\captionof{figure}{统一转换流程。截止时间检查贯穿分类、恢复、验收与优化。}
+\end{center}
+\subsection{模块职责与数据归属}
+\begin{center}\small\renewcommand{\arraystretch}{1.18}
+\begin{tabularx}{\linewidth}{@{}p{26mm}Yp{42mm}@{}}\toprule
+模块 & 输入、输出与职责 & 主要实现文件（src/）\\\midrule
+统一调度 & 输入面、选项 → 路径、报告、时间及失败诊断。 & \path{SequentialConversion.cpp}\\
+结构识别 & 边界及等参线 → 母面候选、有限域和对应。 & \path{IsoCurveAnalysis.cpp}\\
+一般分类 & 点／法向样本 → 去重、排序后的候选批次。 & \path{GeneralClassification.cpp}\\
+母面优化 & 采样残差与候选 → 改善后的母面参数。 & \path{GeneralRefinement.cpp}\\
+边界恢复与构造 & 母面、源边界 → 参数多边形、实际三维边界。 & \path{GeneralRationalBoundaryRecovery.cpp}\\
+独立几何验收 & 输入与候选／输出 → 界、适用范围与状态。 & \path{MotherDistanceValidation.cpp}\newline\path{GeneralRationalBoundaryValidation.cpp}\\\bottomrule
+\end{tabularx}
+\end{center}
+各分支建立自己的分析上下文，在分支内部按需复用采样、导数、源 Bézier 提取及组合系数；当前\textbf{不宣称跨分支共享全部缓存}。候选变动后重新构造相关目标量；参数对应改变后必须重建误差和切向残差。候选排序可使用启发式信息，结果接受必须依据该路径的验收报告。
+
+\newpage
+\section{等参专用分支的识别与转换设计}
+\subsection{有理输入的结构识别}
+精确路径提取四条边界，在节点区间上识别直线或圆弧，保留方向及有效范围。母面候选由两组相对边的几何关系恢复：共面直线用于平面；平行母线和共轴等半径圆用于圆柱；共顶点母线及匹配圆截面用于圆锥；球面和圆环面通过圆截面的中心、半径、法向关系提出候选。关系判定还需处理退化、病态和不一致，不把单条圆弧直接视为唯一母面证明。
+
+\code{RecognizeWithSamples} 对候选调用母面验证，再恢复解析有限参数范围及 U/V 交换、反向和周期信息；多个不等价候选均通过时报告歧义。成功输出包括 SGK 母面对象、参数、范围、映射与原识别报告。对边界结构不满足要求的有理输入，专用路径失败后仍进入一般兜底。
+
+\subsection{非有理输入的增量等参搜索}
+\code{IsoClassificationSearch} 从边界及少量内部等参线开始，初始采样密度为两个子区间；按需要增加采样／拟合工作。直线和圆拟合产生候选，独立评分点的当前最大距离是完整评分最大距离的下界。因此优先补齐具有竞争力的候选评分，可以减少无效求值，同时保留未消费候选以供验收失败后继续搜索。
+
+当前串联入口对每个非有理候选调用 \code{mother::ValidatePrepared}，通过后保留 \code{isoPatch}；未通过则继续等参候选。它\textbf{没有调用历史完整近似转换流程中的参数优化链}。一般兜底的母面优化见第五章，不能把旧专用优化器的能力记入当前路径。
+
+\begin{center}
+\begin{tikzpicture}[node distance=5mm and 10mm]
+\node[box] (s) {有效源面与专用路径子预算};
+\node[smallbox,below left=5mm and 4mm of s] (r) {有理：提取四边\\直线／圆弧关系 → 候选};
+\node[smallbox,below right=5mm and 4mm of s] (p) {非有理：等参曲线拟合\\增量候选与渐进评分};
+\node[smallbox,below=of r] (rv) {母面距离检查\\范围恢复与歧义判定};
+\node[smallbox,below=of p] (pv) {全域母面界 + 四边位置\\边界 U/V 切向联合条件};
+\node[box,below=17mm of s,yshift=-35mm] (f) {通过：返回对应报告；未通过：继续候选\\搜索耗尽或子预算结束：进入一般兜底};
+\draw[arr] (s)--(r);\draw[arr] (s)--(p);\draw[arr] (r)--(rv);\draw[arr] (p)--(pv);
+\draw[arr] (rv)--(f);\draw[arr] (pv)--(f);
+\end{tikzpicture}
+\captionof{figure}{等参分支的两种实际验收路径。}
+\end{center}
+\subsection{全域母面距离与联合切向条件}
+将源面分段为齐次 Bézier 片，在母面局部坐标系平移、缩放后利用 Bernstein 凸包性质界定隐式残差。例如球面有
+\[
+|\|\mathbf x-\mathbf o\|-r|=\frac{|\|\mathbf x-\mathbf o\|^2-r^2|}{\|\mathbf x-\mathbf o\|+r}
+\le \frac{|\|\mathbf x-\mathbf o\|^2-r^2|}{r}.
+\]
+圆柱使用径向距离，圆锥采用径向／轴向分量并检查分母正性，圆环利用隐式四次式分解和另一因子的非零下界。当前母面界采用浮点保护项，\textbf{不同于有向舍入区间证明}；细分不足时返回未认证。
+
+非有理路径在同一边界子区间内分别求 U/V 切向夹角上界 $\alpha_U,\alpha_V$，并要求方向点积为正且
+\[
+\sin^2\alpha_U+\sin^2\alpha_V<\sin^2(0.1^\circ).
+\]
+目标参数方向解析正交；联合值按共同叶区间求最大，不拼接两个不同位置的最大值。该报告不是直接法向检测或相邻拓扑面 G1 证书。全域母面距离也不等同于有限面片双向 Hausdorff 距离。
+
+\newpage
+\section{一般兜底分支的候选搜索与参数优化设计}
+\subsection{采样、初始化与母面参数}
+一般路径接受有效有理或非有理源面。\code{SurfaceSampleContext} 提供增强 Greville 采样及边界采样，分类点与独立评分点分开使用。无效法向不参与需要法向的初值构造；分类使用源法向不意味着最终验收执行了曲面法向认证。
+
+平面、球面、圆柱面、圆锥面及圆环面的母面自由度分别为 3、4、5、6、7；坐标框架中的参数零点等冗余不计为独立几何自由度。平移／尺度归一化用于降低大坐标及尺寸差异的影响，最终验收仍采用原模型单位。
+\begin{center}\small\renewcommand{\arraystretch}{1.18}
+\begin{tabularx}{\linewidth}{@{}p{17mm}p{35mm}Y@{}}\toprule
+母面 & 主要几何参数 & 初值构造依据及约束\\\midrule
+平面 & 单位法向、偏置 & 非共线点及平面拟合；共线、秩亏组不生成有效初值。\\
+球面 & 球心、半径 & 点与法向直线／多点方程恢复球心和正半径。\\
+圆柱面 & 轴线、半径 & 法向与轴正交；横截面投影拟合圆，要求正半径。\\
+圆锥面 & 顶点、轴、半角 & 切平面交会约束顶点，截面关系确定轴与半角；$0<\beta<\pi/2$。\\
+规则圆环面 & 中心、轴、主／次半径 & 四法线直接求轴，再拟合子午圆；要求 $R>r>0$。\\\bottomrule
+\end{tabularx}
+\end{center}
+
+\subsection{圆环轴线恢复与有限候选搜索}
+对四个点法向直线 $\mathbf x=\mathbf p_i+t\mathbf n_i$，令其矩为 $\mathbf m_i=\mathbf p_i\times\mathbf n_i$。待求轴线的 Plücker 坐标为 $(\mathbf d,\mathbf m)$，满足
+\begin{equation}\label{eq:axis}
+\mathbf m_i\cdot\mathbf d+\mathbf n_i\cdot\mathbf m=0,
+\qquad \mathbf d\cdot\mathbf m=0.
+\end{equation}
+四个线性约束构成 $4\times6$ 系统。带列主元的 Householder QR 在适用秩条件下给出二维零空间，将直线约束代入得到齐次二次方程，最多提出两条实轴候选。随后检查共面／相交残差、非零方向和有限性；关系式还容许退化构型，因此它仅用于候选生成。
+
+将支持点投影为轴向高度和径向距离，在子午平面中中心化、缩放并拟合圆，恢复 $R,r$ 与中心。秩亏、无实轴、非法半径均记录为初值失败。其创新在于直接求轴和保留双候选，避免依赖单一轴向初猜；不声称有限样本下全局唯一或完备。
+
+默认每类型尝试 8 组初值，失败组也消耗配额。几何去重后先以最多 16 个独立内部点粗评，每类型每批最多保留 3 个完成评分候选。粗评最大距离只是完整样本最大距离的下界；当其严格劣于本类型当前保留阈值时，可暂缓补评，同分仍继续。首批全失败后继续后备候选，未完成评分的候选不因“尚未评分”直接被判几何无解。
+
+\begin{center}
+\begin{tikzpicture}[node distance=4mm]
+\node[box] (a) {几何采样 → 初值组 → 类型候选 → 几何去重};
+\node[box,below=of a] (b) {粗评下界 → 补齐竞争候选 → 选择本批};
+\node[box,below=of b] (c) {依次恢复边界并验收；必要时优化后重验};
+\node[box,below=of c] (d) {通过则返回；否则取下一批\\候选／时间耗尽则失败};
+\draw[arr] (a)--(b);\draw[arr] (b)--(c);\draw[arr] (c)--(d);
+\draw[arr] (d.west)--++(-9mm,0)|-(b.west);
+\end{tikzpicture}
+\captionof{figure}{一般候选生成、渐进评分与后备搜索。}
+\end{center}
+
+\newpage
+\subsection{母面优化的目标与数值步骤}
+统一入口首先验收候选；仅在未通过且允许优化时，调用一次母面参数优化过程，其内部可包含多次迭代。优化不调整源面控制顶点，也不把暂存参数矩形作为输出裁剪。令源样本为 $\mathbf x_k$，$\Pi_{M_{\boldsymbol\theta}}$ 为母面投影，距离容差为 $d$：
+\begin{equation}\label{eq:objective}
+\mathbf r_k(\boldsymbol\theta)=\frac{\mathbf x_k-\Pi_{M_{\boldsymbol\theta}}(\mathbf x_k)}{d},\qquad
+F=\sum_k\|\mathbf r_k\|^2,\quad g_k=\|\mathbf r_k\|,\quad G=\max_k g_k.
+\end{equation}
+残差由三个坐标分量组成，$F$ 为最小二乘代价，$G$ 表示最差归一化样本距离。样本数值可行不能替代连续边界验收。旋转、平移及半径等采用内部尺度化增量；只激活母面参数，圆环试探步必须保持 $R>r$。
+
+\textbf{预热阶段}求解带列尺度阻尼的线性最小二乘步
+\[
+\min_{\Delta}\left\|\begin{bmatrix}J\\ \sqrt\lambda D\end{bmatrix}\Delta-
+\begin{bmatrix}-\mathbf r\\0\end{bmatrix}\right\|^2,
+\qquad D_{jj}=\max(\|J_{:j}\|,1),
+\]
+并将步长限制在信赖半径内。初始阻尼为 $10^{-4}$，初始信赖半径为 $0.1$。\textbf{约束阶段}以当前样本约束 Jacobian $C$ 和目标 $\tau=\max(0.70,0.9G)$，求解线性化可行域内的最小范数步：
+\[
+\min_{\Delta}\tfrac12\|\Delta\|^2,
+\qquad C\Delta+\mathbf g\le\tau\mathbf1,\quad -h\mathbf1\le\Delta\le h\mathbf1.
+\]
+实现使用非负乘子的对偶坐标更新；约束线性化可能不可行，需缩步、停机或继续其他候选，而非宣布原几何问题无解。
+
+当前一般母面 Jacobian 采用尺度化坐标中的中心差分，扰动量为 $2\times10^{-6}$；一侧构造非法时使用可行单侧差分。它与历史专用近似路径中的解析 Jacobian 不能混称。若两侧均无有效评价或导数非有限，则停止本次优化。
+
+\subsection{接受、停止与重新验收}
+每步最多执行 12 次回溯。预热阶段要求代价降低且最差残差不恶化至原来的 1.2 倍；约束阶段要求最差残差取得实际改善。失败时增大阻尼、减半信赖半径；接受后更新最佳候选及 Jacobian。满足样本裕量、信赖域过小、迭代上限、连续失败或停滞条件时退出。
+
+独立验收已失败的候选进入优化时，不能仅凭初始样本裕量直接“优化成功”；实现要求获得新的改善候选。仅当最佳 $G$ 比初值降低时，统一入口才再次执行参数图恢复、输出构造和完整边界验收。\textbf{优化改善不保证转换成功；报告通过才允许发布结果。}
+
+\begin{center}
+\begin{tikzpicture}[node distance=4mm]
+\node[box] (i) {固定当前样本、尺度与母面活动参数};
+\node[box,below=of i] (j) {差分 Jacobian；阻尼最小二乘 / 约束步};
+\node[box,below=of j] (s) {信赖域及回溯 → 检查合法性与改善 → 更新最佳值};
+\node[decision,below=of s] (e) {停止条件成立？};
+\node[box,below=of e] (v) {返回最佳母面；若改善则重新恢复并验收};
+\draw[arr] (i)--(j);\draw[arr] (j)--(s);\draw[arr] (s)--(e);
+\draw[arr] (e)--node[right,font=\small]{是}(v);
+\draw[arr] (e.west)--++(-25mm,0)|-node[pos=.25,left,font=\small]{否}(j.west);
+\end{tikzpicture}
+\captionof{figure}{母面参数优化。截止时间检查可在各阶段中止计算。}
+\end{center}
+\note{实现：\path{src/GeneralRefinement.cpp}、\path{src/CandidateRefinement.cpp}。有限搜索与局部优化均无全局完备性承诺；搜索复杂度和认证细分数量须分别记录。}
+
+\newpage
+\section{线性PCurve边界重建与几何验收设计}
+\subsection{参数图、有限区域与对应恢复}
+对母面候选，先通过源边界的投影和周期展开提出有限参数范围，再构造相应的有理母面参数图。在该图中恢复四个顶点及直线边，检查有限性、连通次序、凸性、单调对应和退化标记。球面允许在保持球心、半径不变的前提下提出不同坐标框架；周期分支按整周期平移保持连接一致。默认参数图尝试上限为 12，不能解释为穷尽所有参数化。
+
+四条边以源编号存储，正向边界环为 $V_{\min},U_{\max},-V_{\max},-U_{\min}$。空间极点处参数顶点可以不同而三维位置相同，不能仅依据空间重合将所有情况强制化为参数三角形。当前三角形判据允许恰一条标记坍缩边的相邻参数顶点重合，其余三点形成非零有向面积。
+
+\begin{center}
+\begin{tikzpicture}[node distance=4mm]
+\node[box] (a) {内部母面采样检查；提出有限参数图};
+\node[box,below=of a] (b) {投影与周期展开 → 顶点／直线边 → 多边形有效性};
+\node[box,below=of b] (c) {有限面片采样检查；边界分段齐次复合};
+\node[box,below=of c] (d) {生成 SGK 边界 → 读回系数 → 输出偏差检查};
+\node[box,below=of d] (e) {源边界与实际输出连续验收；通过则保留结果};
+\draw[arr] (a)--(b);\draw[arr] (b)--(c);\draw[arr] (c)--(d);\draw[arr] (d)--(e);
+\draw[arr] (e.west)--++(-11mm,0)|-node[pos=.25,left,font=\scriptsize,align=center]{未通过\\下一参数图}(b.west);
+\end{tikzpicture}
+\captionof{figure}{线性参数边界恢复与实际内核对象验收。}
+\end{center}
+
+\subsection{齐次复合与实际三维边界输出}
+将母面参数图按节点分割为正权重有理 Bézier 片，写为 $\mathbf Q(\xi,\eta)=\mathbf P(\xi,\eta)/W(\xi,\eta)$。以直线段 $\boldsymbol\ell(t)$ 代入；在其跨越节点线的位置分段，每段均落在单一母面片内。双次数为 $(p,q)$ 时，复合后的一维多项式次数不超过 $p+q$，在等参特殊情形可更低。
+
+齐次分子和权重分别复合，Bernstein 乘积利用
+\[
+B_i^p(t)B_j^q(t)=\frac{\binom pi\binom qj}{\binom{p+q}{i+j}}B_{i+j}^{p+q}(t)
+\]
+计算，之后统一各段次数，按共享端点拼接为 \code{sggk::BSplineCurve3D}。分段权重缩放、次数统一及端点共享可能引入舍入变化，故构造完成后必须\textbf{从 SDK 对象读回控制顶点、权重、节点和重数}，以实际对象重建验收数据。
+
+输出曲线与理想母面轨迹的距离采用独立界检查，当前构造阈值为 $0.1d$；源边界到实际输出仍直接按 $d$ 验收，不能将两个独立 $d$ 简单相加后仍称满足 $d$。一般路径输出解析母面参数、四条三维边界和区域元数据，\textbf{不输出解析原生 UV 下的线性 PCurve，也未完成 B-rep 面／壳装配}。
+
+\newpage
+\subsection{连续位置误差与 Hausdorff 上界}
+在已统一局部参数的对应子区间内，源与实际输出曲线分别为 $\mathbf P_s/W_s$、$\mathbf P_t/W_t$。构造
+\begin{equation}\label{eq:error}
+\mathbf E=\frac{\mathbf G}{H},\qquad
+\mathbf G=\mathbf P_sW_t-\mathbf P_tW_s,\quad H=W_sW_t>0.
+\end{equation}
+若 $m_H\le\inf H$ 且 $m_H>0$，则 $\sup\|\mathbf E\|\le\sup\|\mathbf G\|/m_H$。实现先采用包围盒或系数凸包给出便宜上界，不充分时使用更紧求界及细分。只要连续单调对应覆盖两条曲线的全部参数区间，对应距离上界 $U$ 就同时约束式\eqref{eq:hausdorff}中的两个方向；若区间覆盖不完整，这一推论不能使用。它也不扩展为整个有限曲面的双向证明。
+
+\subsection{正比例切向残差与分层求界}
+有理曲线切向可用分子 $\mathbf A=\mathbf P_s'W_s-\mathbf P_sW_s'$ 表示，分母 $W_s^2$ 为正，不改变方向；目标同理记为 $\mathbf B$。在同一区间、统一方向后，构造连续正比例函数 $\lambda(t)>0$ 与残差 $\mathbf R=\mathbf A-\lambda\mathbf B$。设
+\begin{equation}\label{eq:tangent}
+m\le\inf\|\mathbf A\|,\quad M\ge\sup\|\mathbf R\|,\quad 0\le M<m.
+\end{equation}
+则 $\mathbf A\cdot(\lambda\mathbf B)=\|\mathbf A\|^2-\mathbf A\cdot\mathbf R>0$，排除反向；$\mathbf A$ 到 $\mathbf B$ 所在直线的距离不超过 $\|\mathbf R\|$，因此
+\[
+\sin\angle(\mathbf A,\mathbf B)\le M/m.
+\]
+此构造分离方向差异与参数速度差异，不需构造切向样条叉乘。$\lambda$ 由有限点值提出常数、一次或二次 Bernstein 多项式，所存双精度值定义具体函数；最终检查其全区间正性并界定完整残差。长度下界采用对固定参考方向的正投影，若不能排除零，继续细分或返回未认证。
+
+一般路径先尝试误差导数快速条件：若 $\sup\|\mathbf E'\|=M_1<\inf\|\mathbf c_s'\|=m_1$，则可用 $\tan\theta\le M_1/(m_1-M_1)$ 判定；否则转入正比例残差。计算按“双精度保守包络—有向区间重算—必要细分”分层执行。区间对应更新后重建残差，不能复用过期证据。上界未通过只表示当前证据不足；只有独立下界／点值见证成立时才能称为实际约束超限。
+
+\begin{center}
+\begin{tikzpicture}[node distance=4mm and 6mm]
+\node[smallbox] (a) {建立对应区间\\构造位置与切向误差};
+\node[smallbox,right=of a] (b) {快速包络判定\\必要时区间重算};
+\node[smallbox,right=of b] (c) {通过则接受该段\\否则细分或返回状态};
+\draw[arr] (a)--(b);\draw[arr] (b)--(c);
+\draw[arr] (c.south)--++(0,-5mm)-|node[pos=.45,below,font=\scriptsize]{细分并重建对应}(a.south);
+\end{tikzpicture}
+\captionof{figure}{连续边界验收子流程。位置覆盖始终保留。}
+\end{center}
+
+\subsection{三条路径的验收范围}
+有理等参识别保留浮点保护的 Bernstein 母面界及原边界／范围检查；非有理等参路径增加连续四边位置、U/V 联合切向与对应检查；一般兜底采用\textbf{内部母面及有限面片采样}、连续实际输出边界位置和沿边切向检查。一般报告明确 \code{certifiesInteriorContinuum=false}，不构造曲面法向系数或直接法向角度证书。
+
+\newpage
+\section{鲁棒性与工程接口设计}
+\subsection{退化、周期和数值处理}
+\begin{center}\small\renewcommand{\arraystretch}{1.19}
+\begin{tabularx}{\linewidth}{@{}p{24mm}Y@{}}\toprule
+情形 & 处理与验收要求\\\midrule
+球面极点 & 母面几何正则，当前参数化退化；调整参数图或显式处理坍缩边，保留位置检查。\\
+圆锥顶点 & 顶点为几何奇点；不要求不存在的唯一法向／边界切向，检查顶点位置和邻边连接。\\
+圆环三角裁剪 & 规则圆环母面正则，源参数边可坍缩；依据参数多边形与坍缩标记恢复有限区域。\\
+微小分段 & 仅当源段、目标段的连续三维直径上界均 $\le10^{-8}$ mm 时允许切向豁免；位置仍完整验收。\\
+周期接缝 & 参数展开保持同一周期分支，端点与邻边共享；周期等价不等于范围任意移动。\\
+病态与权重 & 正权重、有限量、相对秩和分母下界分别检查；归一化改善条件数，不放宽几何容差。\\\bottomrule
+\end{tabularx}
+\end{center}
+整边坍缩使用 \code{tangentNotApplicable} 标记；微小分段在 \code{tangentExemptions} 中记录源／目标区间、直径界和距离界。二者不能记作“零角度通过”。方向不确定、长度下界为零或参数对应失败时应返回未认证，不删除难以验收的区间。
+
+\subsection{时间预算与失败语义}
+\code{maxTotalMs} 必须在 $(0,50]$ 内；等参子预算默认 20 ms，与总预算使用同一单调时钟起点。统一期限对象为未分割操作和清理预留 10\%、最多 5 ms，故默认约 18 ms 中止等参尝试、约 45 ms 中止总流程。子预算耗尽只结束该分支，总预算仍有剩余时继续兜底。
+
+返回前再次检查实际耗时，超过上限即失败；测试外层还在 API 返回后复核完整调用墙钟。协作取消不是实时抢占保证，超出 50 ms 必须原样记录，不能截断为 50 ms。几何候选错误、证据不足、节点／时间预算耗尽分别保留诊断；超时和搜索耗尽都不等于数学上的不可转换性证明。
+
+\subsection{接口、所有权与集成方式}
+\begin{lstlisting}[language=C++]
+#include "SequentialConversion.h"
+bspline2analytic::SequentialConversionOptions options;
+options.maxTotalMs = 50;
+options.maxIsoMs = 20;
+auto result = bspline2analytic::ConvertIsoThenFallback(input, options);
+if (result.Passed()) {
+    // iso_exact: result.exact
+    // iso_mother: result.isoPatch + result.mother
+    // general_rational: result.fallback.patch + result.fallback
+}
+\end{lstlisting}
+输入按常引用传入；结果持有可选值及 SDK 共享对象，失败时清除可供下游使用的面／边界结果。调用方须依据 \code{Passed()} 和 \code{path} 读取对应报告，不根据单个残差或布尔子项自行判成功。\code{isoMs}、\code{fallbackMs} 是阶段组成量，\code{totalMs} 才是内部整体值；原始测试另存外层整体时间。
+
+工程使用 Windows x64、C++17、SGK 1.7.11，以 CMake 构建静态库；SDK 初始化、许可证及 DLL 环境由宿主／运行器配置。RAII、\code{optional} 与共享对象管理构成生命周期设计，但无内存泄漏仍须实测。异常捕获不能等同于任意损坏文件或底层访问违例均已防护；文件解析层和内核调用层应分别验证。并发、重入及线程安全需按宿主使用方式单独验证。
+
+\newpage
+\section{测试设计、性能评价与误差分析方法}
+\subsection{测试分层与接口覆盖}
+测试围绕需求 R1--R8 建立追踪矩阵；下表是完整验收设计，不表示所有项目已经完成。当前入口不运行 \code{ValidateConversion}、\code{ValidateGeneralHybrid} 及已废弃一般数据集。
+\begin{center}\small\renewcommand{\arraystretch}{1.18}
+\begin{tabularx}{\linewidth}{@{}p{24mm}Y>{\raggedright\arraybackslash}p{37mm}@{}}\toprule
+层级 & 测试内容与预期 & 当前依据／补齐工作\\\midrule
+基础接口 & 对输入验证、边界分析、精确识别、参数求值等逐项列举合法／非法输入、前后置条件。 & 公开头文件清单与单测；仍须逐接口核查覆盖。\\
+独立验收 & 母面界、边界位置、切向残差、对应更新、正权重、区间预算及微段豁免。 & MotherDistanceUnit、GeneralRationalBoundaryUnit。\\
+统一调度 & 等参成功短路、失败进入兜底、共享总预算、超时不发布有效输出。 & SequentialShortCircuit、SequentialFallback。\\
+数据回归 & 固定正例、已认证负例、退化与诊断输入分组；输入来源证书不传入算法。 & 1160 例非极端批次，见下页。\\
+异常与稳定性 & 损坏文件、越界参数、非法权重／节点、非有限量、配置错误；同进程连续 1000 面及内存监测。 & 预算选项已有检查；完整稳定性／异常矩阵待执行。\\
+系统集成 & 相邻面公共边界法向；拓扑替换后合法性；投影、求交、布尔性能及结果等价。 & 独立集成测试设计，不以单面片结果代替。\\\bottomrule
+\end{tabularx}
+\end{center}
+
+\subsection{误差定义、审计与分析方法}
+曲面最大距离应分别报告到母面、到有限目标区域的有向量；需要双向保证时反向也需验证。平均距离建议以源曲面面积测度定义 $\bar d=A(S)^{-1}\int_S d(\mathbf x,T)\,\mathrm dA$，数值求积须报告采样／细分规则与收敛性。现有采样报告不应改名为面积平均误差或连续最大误差证书。
+
+边界按式\eqref{eq:hausdorff}验收，并核查完整覆盖、方向、共享端点和实际 SDK 系数。独立审计使用与候选生成分离的点集和计算路径；来源认证在计时前、输出审计在计时后。审计可否定成功输出，但不能反馈到算法或把失败修饰为成功。分析分别列出源数据拟合误差、母面参数误差、边界对应误差、输出舍入及求界松弛；展示上界不能写成实际误差值。
+
+相邻面法向测试首先统一朝向、建立公共边界对应，再检查正则边界两侧夹角；退化点的适用范围另记。若声称连续角度保证，须覆盖全边界而非仅抽样。第二章的工程假设须通过该独立步骤验证，不能用一般路径的沿边切向证书替代。
+
+\subsection{整体计时与下游对照}
+正式主指标 $T_{i,k}$ 从 API 调用前计时至其返回，包含分类、失败尝试、优化、验收及返回开销；排除加载、来源认证、审计、日志、绘图和文件写入。每例至少三次，报告全部原始值、最大值及成功状态；$\max_kT_{i,k}<10$ ms 才标“是”，任一次超过 50 ms 必须记计算失败。阶段值用于定位瓶颈，不与整体值重复累加。
+
+下游加速应针对相同几何场景、查询集合、容差和硬件，分别测投影、求交与布尔运算，报告 $\gamma=1-T_{\rm analytic}/T_{\rm NURBS}$，每项验证 $\gamma\ge50\%$。同时核查结果几何／拓扑一致性；冷启动、预热和缓存策略保持一致。转换成本单列，并可用 $N_{\rm break}=T_{\rm convert}/(T_{\rm NURBS}-T_{\rm analytic})$ 估计重复调用的成本回收次数，分母不正时不存在该收益。
+
+\newpage
+\subsection{已有统一入口测试及证据边界}
+2026 年 10 月 16 日批次覆盖 Dataset500 全部 500 例及新版一般数据 main 600 例、extra 60 例，每例三次，共 3480 次。环境为 Windows x64、MSVC 19.42、Release；每次新建算法上下文，无逐例预热，保留首次调用。串行逐例子进程，未固定 CPU 亲和性、未独占机器，不能将该批次视作同进程连续 1000 面的稳定性证明。
+\begin{center}\small\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\linewidth}{@{}Yrrrr@{}}\toprule
+数据组 & 输入数 & 三次成功且审计通过 & 三次均 $<10$ ms & 单次最大/ms\\\midrule
+等参 Dataset500 & 500 & 500 & 485 & 24.0191\\
+新版一般 main & 600 & 440 & 425 & 46.4167\\
+新版一般 extra & 60 & 33 & 37 & 46.4460\\\midrule
+合计 & 1160 & 973 & 947 & 46.4460\\\bottomrule
+\end{tabularx}
+\end{center}
+\textbf{成功且审计通过并三次均小于 10 ms 的交集为 943 例}，不能把 947 个纯时间达标案例全部记为转换正确。普通正例 985 个中 920 个三次通过；65 个普通正例预算失败。100 个已认证无解负例均因预算退出，没有误接受，但不能计作正确拒绝。75 个诊断输入中 53 个成功、18 个预算失败、4 个非超时拒绝。
+
+536 个案例进入兜底，349 个最终成功且审计通过；183 个案例、549 次调用因协作预算退出。3480 次实际时间均未超过 50 ms，算法累计时间为 35796.4840 ms。回归运行器返回 1，表示尚未全量通过。成功输出独立审计全部通过，不意味着未认证输入实际无解。
+
+\subsection{代表案例：由调用路径解释结果}
+三个定向案例均先走等参，再进入一般兜底。下表来自独立定向批次，不与上表合并计算；每例三次成功且审计通过，优化迭代均为零、微小分段豁免数均为零。
+\begin{center}\small\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\linewidth}{@{}Yp{29mm}rrr@{}}\toprule
+案例 & 输入与退化 & 边界上界/mm & 最大/ms & $<10$ ms\\\midrule
+球面 case-317 & $5\times5$ 次，64 点；极点坍缩边 & $4.14\times10^{-7}$ & 6.9672 & 是\\
+锥顶 case-217 & $5\times3$ 次，64 点；锥顶坍缩边 & $5.23\times10^{-7}$ & 2.7237 & 是\\
+torus-triangle & $3\times4$ 次，63 点；三角形裁剪 & $2.72\times10^{-11}$ & 2.3761 & 是\\\bottomrule
+\end{tabularx}
+\end{center}
+边界上界向上取整展示。球面例第 1 次记录为：等参 3.6857 ms，兜底 3.2560 ms，外部完整调用 6.9672 ms；最终路径为 \code{general_rational}。一条参数边坍缩至极点，源面与输出边界仍执行完整位置检查，其余边界的连续切向上界约 $0.001072^\circ$。这一轨迹说明退化输入能够经兜底恢复，不能证明母面优化器的收敛性能。
+
+圆锥例的退化点为几何奇点；圆环例来自独立来源生成器，使用固定母面参数构造三角裁剪，退化的是源参数边而非规则圆环母面。三例均验证了有限边界输出及审计链条，全部满足本批次 50 ms 限制。对应真实几何图已在作品介绍中展示，原始几何数据与三次记录随仓库保留。
+
+\subsection{失败分析与实验报告组织}
+全量预算失败主要退出于兜底优化及 Jacobian 阶段，但退出位置不能直接当作几何失败根因。实验报告应分开统计分类无候选、参数图恢复未认证、界过松、实际超差见证、数值非法及预算退出，并比较改善前后同输入、同配置的结果。优化空间包括减少无效候选、改善球面参数图提出、收紧误差界和压缩差分求值开销；每项改动都须保持原验收容差，并以配对实验验证收益。
+
+\newpage
+\section{交付组织与方案总结}
+\subsection{四类提交材料与复现入口}
+命题要求方案设计文件、工程代码、测试材料及实验报告。当前文件覆盖算法流程、实现与测试方法；其他材料应按表组织，已有批次报告可作为实验报告依据，但不自动等同于全部指标均已验证。
+\begin{center}\small\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\linewidth}{@{}p{24mm}Yp{38mm}@{}}\toprule
+交付物 & 应包含的内容 & 仓库位置\\\midrule
+方案设计文件 & 九章正文、总体与子模块流程图、公式、接口与需求追踪、证据边界。 & \path{docs/algorithm/design/}\\
+工程代码 & C++ 源码、公开头文件、CMake 与脚本、配置和使用说明；代码规范与有效注释。 & \path{include/}、\path{src/}、\path{examples/}、根构建文件\\
+测试材料 & 接口单测、测试程序、固定输入、来源认证、逐次原始记录、异常／批量场景和哈希。 & \path{tests/}、\path{docs/testing/}\\
+实验报告 & 测试设计及可行性、准确性与性能、误差分析、失败分类、局限和优化空间。 & 已有批次报告；完整命题验收报告须据实汇编\\\bottomrule
+\end{tabularx}
+\end{center}
+代码通过项目 GitHub 仓库提交并保持当前私有设置。评审可访问性应在提交时核实。SGK SDK、许可证、凭据和本机构建二进制不入库；运行说明应明确第三方依赖的合法获取与配置方式，不将“代码齐全”描述为仓库自带商业内核授权。当前静态库并非独立安装包。
+
+\subsection{构建、测试与结果复核步骤}
+在已配置 Visual Studio 2022 x64 工具链、CMake 及 SGK 1.7.11 的环境中，以下命令对应当前有效路径。独立克隆时显式配置 \code{SGGK_SDK_DIR}；SDK DLL 搜索路径和许可证按本机授权设置。
+\begin{lstlisting}
+cmake -S . -B build-design-check -A x64
+cmake --build build-design-check --config Release --target BSpline2AnalyticSequentialTests BSpline2AnalyticMotherDistanceTests BSpline2AnalyticGeneralRationalBoundaryTests -- /m:1 /nr:false
+ctest --test-dir build-design-check -C Release -R "BSpline2Analytic\.(SequentialShortCircuit|SequentialFallback|MotherDistanceUnit|GeneralRationalBoundaryUnit)$" --output-on-failure --no-tests=error
+python tests/RunSequentialNonExtreme.py --exe build-design-check/Release/BSpline2AnalyticSequentialTests.exe --sdk ../../../SGGK --data tests/data --output build-design-check/full --runs 3
+\end{lstlisting}
+输出目录应全新；恢复执行必须核对可执行文件、输入哈希、重复次数及配置。上述为复现步骤，\textbf{本次文档编写未重新运行算法回归}。原始记录包含实际分支、预算标志、候选与迭代数量、API 内／外时间和独立审计状态，禁止只保留成功或最快记录。
+
+完整提交前还应逐一核查公开接口覆盖清单、同进程 1000 面的内存和一致性测试、损坏文件／异常参数矩阵、相邻面连续性及三类下游加速。旧验证器和旧 general 数据不得为了“补齐覆盖率”重新启用；历史 API 应标记停用并与当前交付范围区分。
+
+\newpage
+\subsection{实现、需求与证据的最终对应}
+\begin{center}\small\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\linewidth}{@{}p{14mm}Yp{40mm}@{}}\toprule
+需求 & 本方案的落实方式 & 当前结论\\\midrule
+R1 & 等参优先、一般候选搜索、母面恢复、线性参数边界重建。 & 已实现；限第二章适用范围。\\
+R2 & 分支母面界／内部采样检查，独立输出审计。 & 一般路径无全域内部证明；面积平均误差未作为现有全量指标。\\
+R3 & 对应覆盖、实际输出位置误差曲线与连续界。 & 已实现一般边界验收；保留对应完整性前提。\\
+R4 & 工程法向假设及独立相邻面测试设计。 & 当前分支报告不等同于相邻面 G1 证书。\\
+R5 & 统一计时、共享 50 ms 预算与严格 10 ms 展示。 & 943/1160 例成功审计且三次 $<10$ ms；未全量达标。\\
+R6 & 同场景、同容差的三类下游对照测试。 & 现有证据未确认至少 50\% 加速。\\
+R7 & C++17 / SGK 1.7.11、可复现构建入口。 & 当前 Windows x64 构建与运行已有记录。\\
+R8 & 生命周期管理、预算取消、异常诊断与批量测试设计。 & 已有串行批次；同进程稳定性及完整异常矩阵需专门证据。\\\bottomrule
+\end{tabularx}
+\end{center}
+
+\subsection{技术贡献与结论}
+本方案将\textbf{母面识别、有限边界恢复与实际输出验收}纳入统一计算链。等参结构优先降低常见输入开销，一般路径以多候选搜索和必要优化拓展适用范围；四法线直接求轴、几何去重与渐进评分减少冗余候选工作；齐次 Bernstein 复合使目标参数域直线约束转化为可构造、可求界的三维有理边界。
+
+鲁棒性来自明确的接受条件及失败语义：正比例切向残差区分方向误差与参数速度差异，分层包络与区间重算控制认证成本，实际 SDK 系数读回复核约束输出舍入影响；极点、锥顶、坍缩边和微小分段分别处理，保持位置覆盖。共享预算使失败可诊断，有限搜索未成功时不宣称不存在解析表示。
+
+当前实现已具有可追溯的接口、测试输入、原始记录和输出审计依据。方案设计覆盖命题各项需求及其验证路径；最终达标结论必须由相应测试证据支持，不用局部成功案例替代完整精度、稳定性或下游性能验证。
+
+\subsection{来源、实现基线与证据索引}
+\noindent\note{本稿核对的仓库基线：\code{274a070}。本次仅修改文档与 Skill，未修改算法或重测数据。以下路径均相对于仓库根目录；历史报告只适用于其记录的源码与测试批次。}
+\begin{enumerate}[label={[\arabic*]},leftmargin=2.4em]
+\item 命题原文：\path{docs/requirements/} 下“中船海舟样条转二次曲面.pdf”，第 2--4 节给出目标、交付及评分要求。
+\item 当前接口与实现：\path{include/SequentialConversion.h}、\path{src/SequentialConversion.cpp}；母面与一般边界验收分别见同名公开头文件及第四、六章实现文件。
+\item 全量批次：\path{docs/testing/SEQUENTIAL_NON_EXTREME_2026-10-16.md}；原始记录及源码／输入哈希位于 \path{docs/testing/results/sequential-non-extreme-20261016/}。
+\item 定向案例：\path{docs/testing/introduction-cases-2026-10-16/}，含 \path{runs.csv}、\path{summary.json}、\path{provenance.json} 及独立三角形输入；对应证据提交 \code{a32b2a9}。
+\item 构建与测试入口：\path{CMakeLists.txt}、\path{tests/SequentialConversionTests.cpp}、\path{tests/RunSequentialNonExtreme.py}、\path{tests/IntroductionCases.cpp}。更早说明中的旧入口以当前 \path{AGENTS.md} 约束为准。
+\end{enumerate}
+\end{document}
