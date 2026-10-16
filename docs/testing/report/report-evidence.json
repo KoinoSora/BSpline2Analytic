@@ -1,0 +1,166 @@
+{
+  "geometry_executed": false,
+  "primary_batch": {
+    "iso": {
+      "cases": 500,
+      "calls": 1500,
+      "audited_success": 500,
+      "under10": 485,
+      "audited_under10": 485,
+      "ordinary_correct_under10": 449,
+      "budget_failures": 0,
+      "mean_ms": 3.3617876666666695,
+      "max_ms": 24.0191,
+      "total_ms": 5042.681500000004
+    },
+    "main": {
+      "cases": 600,
+      "calls": 1800,
+      "audited_success": 440,
+      "under10": 425,
+      "audited_under10": 425,
+      "ordinary_correct_under10": 425,
+      "budget_failures": 160,
+      "mean_ms": 15.146649555555566,
+      "max_ms": 46.4167,
+      "total_ms": 27263.969200000018
+    },
+    "extra": {
+      "cases": 60,
+      "calls": 180,
+      "audited_success": 33,
+      "under10": 37,
+      "audited_under10": 33,
+      "ordinary_correct_under10": 20,
+      "budget_failures": 23,
+      "mean_ms": 19.38796277777779,
+      "max_ms": 46.446,
+      "total_ms": 3489.8333000000025
+    },
+    "all": {
+      "cases": 1160,
+      "calls": 3480,
+      "audited_success": 973,
+      "under10": 947,
+      "audited_under10": 943,
+      "ordinary_correct_under10": 894,
+      "budget_failures": 183,
+      "mean_ms": 10.286345977011505,
+      "max_ms": 46.446,
+      "total_ms": 35796.48400000004
+    }
+  },
+  "successful_path_counts": {
+    "iso_mother": 364,
+    "iso_exact": 260,
+    "general_rational": 349
+  },
+  "budget_exit_stages": {
+    "fallback_optimization": 523,
+    "fallback_candidate": 8,
+    "classification_boundary_scores": 1,
+    "fallback_jacobian": 16,
+    "fallback_validation": 1
+  },
+  "actual_over50_calls": 0,
+  "accepted_calls_with_optimization": 0,
+  "source_differences_from_primary_batch": [
+    {
+      "path": "src/GeneralBoundaryError.cpp",
+      "recorded_sha256": "73f6bce33eab630b0f231707f5f15c93ba2d5046e86a3fa4c9ec03497cc5c3e9",
+      "current_sha256": "c10020f9f9570b3d91d9df94bb37fd095a2a4577bcff6f6489269abfa32c92b4"
+    },
+    {
+      "path": "src/GeneralRationalBoundaryCurves.cpp",
+      "recorded_sha256": "66b406e25f63eca026c596bcc08479405d4c5086fc803e74b0a71c902c2bfcad",
+      "current_sha256": "8b76a6d4ef25cd955e4b3d7877a1ae48e244406b1ad9eac52c625f893e2f0e70"
+    },
+    {
+      "path": "src/GeneralRationalBoundaryInternal.h",
+      "recorded_sha256": "a00d829a8d82941f1c02b452361c6dade202ca3d12d14dcd2743e482f44e9641",
+      "current_sha256": "e84e81ef8583140bf5d326c1994cf42ffe8d3e525e0641deca25436f70e52592"
+    },
+    {
+      "path": "src/GeneralRationalBoundaryRecovery.cpp",
+      "recorded_sha256": "ba5dd07258c100f9ee02d3da2e71f18a4d6b5f988dcb5b39e44cc61402e10bc7",
+      "current_sha256": "ac38f6e306d0d2ee08de59713d45c131395ae990a01cae4c48ef5b2a18e6cf94"
+    },
+    {
+      "path": "src/GeneralRationalBoundaryValidation.cpp",
+      "recorded_sha256": "b00d35b02e240c1b2db2901da0e4a04b300a00416d0e96e385037c5552deadc3",
+      "current_sha256": "13f88f99c6103798b7e2b0e376ceabcf5eae12627626181ace515e86ac2c1ab9"
+    },
+    {
+      "path": "include/GeneralRationalBoundaryValidation.h",
+      "recorded_sha256": "c4b1d4f7f524e52930208ad0f3d237a8b3dfbf71df370c6f1155c8cee42d559f",
+      "current_sha256": "39e76e4efc3d391abcf476870ae4d18729daba0ecdef4bf8f2009fc8eca070de"
+    },
+    {
+      "path": "tests/GeneralRationalBoundaryTests.cpp",
+      "recorded_sha256": "c005f639be98b8a31cd0e8f0c98852e2ab0662482bf383362d23ca54be9a1a00",
+      "current_sha256": "6fd427fb39e7f8a8b072f37825a77ac1a1325c83d2cefdf550ea557914e59810"
+    },
+    {
+      "path": "tests/SequentialOutputAudit.h",
+      "recorded_sha256": "c0d2818cc81b406b1ce941fe2da3d713103cbe2667cdc8460ec56c05aaa5614f",
+      "current_sha256": "2207952d2ba10c5668568edeabbb0e5139c3b21e7afd893d70ccd92639ce8daa"
+    }
+  ],
+  "primary_input_hashes_verified": 1160,
+  "general_batch": {
+    "cases": 985,
+    "calls": 2955,
+    "positive": 850,
+    "positive_passed": 710,
+    "under10": 951,
+    "max_ms": 18.7393
+  },
+  "selected_current_source_hashes_match": true,
+  "selected_cases": [
+    {
+      "case": "sphere-317",
+      "max_ms": 6.9672,
+      "boundary_bound": 4.133721757786145e-07,
+      "tangent_bound_deg": 0.0010718745223675472,
+      "audit_position_max": 2.1357313917391707e-07,
+      "audit_edge_max": 2.72835596094543e-07,
+      "output_mother_bound": 2.9065787458262834e-13
+    },
+    {
+      "case": "cone-217",
+      "max_ms": 2.7237,
+      "boundary_bound": 5.221223662664777e-07,
+      "tangent_bound_deg": 0.001360919982125655,
+      "audit_position_max": 1.2003810201388632e-07,
+      "audit_edge_max": 1.4128939594264507e-07,
+      "output_mother_bound": 9.456758236012474e-14
+    },
+    {
+      "case": "torus-triangle",
+      "max_ms": 2.3761,
+      "boundary_bound": 2.7173510288353906e-11,
+      "tangent_bound_deg": 2.5542726363877026e-09,
+      "audit_position_max": 2.361222328772783e-11,
+      "audit_edge_max": 2.3612707149577582e-11,
+      "output_mother_bound": 9.326874578257444e-13
+    }
+  ],
+  "evidence_sha256": {
+    "docs/testing/results/sequential-non-extreme-20261016/runs.csv": "ec715bf29dba6302ff22ea9ec35e925e7a41248e7d05b3cc5105f83952e577c1",
+    "docs/testing/results/sequential-non-extreme-20261016/cases.csv": "b5243ffba52577d47b9e2702b9b4e3346882db542d2402e88afc45aa15a6f3e9",
+    "docs/testing/results/sequential-non-extreme-20261016/run.json": "350a648b2fdd899350f53fa5c87f76e87d50999c01f6db18b9eec752b0678bd6",
+    "docs/testing/results/sequential-non-extreme-20261016/provenance.json": "db77c53c8077e8f999bf44ebfdf3a91abb1bbaeaadc4720d1fda65c43c2ce826",
+    "docs/testing/results/sequential-non-extreme-20261016/sequential-unit.log": "a0e8f2f15006bad80f79e2825e93b3cef936ddca7a25e75b9bb1092031193f5f",
+    "docs/testing/general-rational-985-50ms-2026-10-16/results.csv": "76408a92ae71c635b0497042eb7e0cc39be6a36dfcc15d831505d94987624271",
+    "docs/testing/general-rational-985-50ms-2026-10-16/case-summary.csv": "73ac70b66e1d22daafd4c8cda87cfe2feb7ccb51f9144cfc21dd61b18d878ea9",
+    "docs/testing/general-rational-985-50ms-2026-10-16/summary.json": "6478d343931d4425e71fe493a280a9c2e26d5fc22d924f61ce1a859f0d7dfe0b",
+    "docs/testing/general-rational-985-50ms-2026-10-16/frozen-source.json": "42275d554029c8db19bfa4da9292c0e2803f817e628c729d67a7033cf58311f3",
+    "docs/testing/general-rational-985-50ms-2026-10-16/extra-049-interior.csv": "a1e7d85218d88d2ed98649383ba480fd149f5737f27bab99061d87be24ce5839",
+    "docs/testing/results/iso-full-20261016/manifest.json": "15cd0449ffc6f2ede6a1461436328912048db8aea892059e7dfdba1246e45fbb",
+    "docs/testing/ISO_SPECIALIZED_FULL_2026-10-16.md": "204b652c03c4d97ec38abff6b06ab6c96e176ca2b147ad0042fdda117465ddc7",
+    "docs/testing/introduction-cases-2026-10-16/runs.csv": "0e8a4fe3db590ff77b3cf988dd651e7afb0c8b4a6a07cb76f42644010711b412",
+    "docs/testing/introduction-cases-2026-10-16/summary.json": "d8cc18e7759c90e56a796f57f182966db5693a81e43756ad64257a42797757fa",
+    "docs/testing/introduction-cases-2026-10-16/provenance.json": "52a3ee20cab413cdd4bb61c408398517968ccad1364621c8abd51c0f0573d3ed",
+    "docs/requirements/中船海舟样条转二次曲面.pdf": "c8550aea60c24b6408ff1d32b072cb17e922216467ef9e344f95f2d371aad1b8"
+  }
+}

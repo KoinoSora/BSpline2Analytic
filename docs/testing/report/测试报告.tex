@@ -1,0 +1,291 @@
+% 测试报告；单文件 XeLaTeX 源，全部流程图内嵌，便于独立编译。
+% 文档整理基线 d527849；实验版本各自独立标识；需求与实验记录均见第九章。正文不调用旧验证器。
+\documentclass[UTF8,zihao=5,fontset=windows,a4paper]{ctexart}
+\usepackage[left=21mm,right=21mm,top=19mm,bottom=19mm,headheight=15pt,headsep=6mm,footskip=10mm]{geometry}
+\usepackage{amsmath,amssymb,booktabs,tabularx,array,longtable,graphicx,xcolor,fancyhdr,tikz,caption,enumitem,listings,xurl,hyperref,lastpage}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric,calc}
+\definecolor{ink}{HTML}{17384A}
+\definecolor{accent}{HTML}{226C82}
+\definecolor{muted}{HTML}{536570}
+\hypersetup{unicode=true,colorlinks=true,linkcolor=accent,urlcolor=accent,
+ pdftitle={面向线性PCurve的一类通用样条面到二次曲面智能转化方案——测试报告},
+ pdfauthor={BSpline2Analytic 项目},pdfsubject={命题指标追踪、测试设计、实验结果、误差分析与优化空间}}
+\ctexset{section={format=\Large\bfseries\color{ink},beforeskip=10pt,afterskip=6pt},
+ subsection={format=\normalsize\bfseries\color{ink},beforeskip=7pt,afterskip=3pt}}
+\setlength{\parindent}{2em}\setlength{\parskip}{3pt}\linespread{1.13}
+\setlength{\abovedisplayskip}{6pt}\setlength{\belowdisplayskip}{6pt}
+\setlist{nosep,leftmargin=2em,topsep=3pt}
+\captionsetup{font=small,labelfont=bf,skip=5pt,hypcap=false}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\color{muted}BSpline2Analytic\quad 测试报告}
+\fancyhead[R]{\small\color{muted}线性 PCurve · 解析几何恢复}
+\fancyfoot[C]{\small\thepage\,/\,\pageref*{LastPage}}
+\renewcommand{\headrulewidth}{0.3pt}
+\fancypagestyle{first}{\fancyhf{}\fancyfoot[C]{\small\thepage\,/\,\pageref*{LastPage}}\renewcommand{\headrulewidth}{0pt}}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcommand{\key}[1]{\par\noindent\textbf{\color{ink}#1}\quad}
+\newcommand{\note}[1]{{\small\color{muted}#1}}
+\newcommand{\code}[1]{\texttt{\detokenize{#1}}}
+\newcommand{\dist}{\operatorname{dist}}
+\newcommand{\R}{\mathbb R}
+\tikzset{box/.style={draw=accent,rounded corners=2pt,align=center,font=\small,inner sep=5pt,text width=64mm},
+ smallbox/.style={box,text width=42mm},
+ decision/.style={draw=accent,diamond,aspect=4,align=center,font=\small,inner sep=1pt},
+ arr/.style={-{Stealth},semithick,draw=accent}}
+\lstset{basicstyle=\ttfamily\footnotesize,breaklines=true,columns=fullflexible,keepspaces=true,
+ frame=single,rulecolor=\color{accent},showstringspaces=false,xleftmargin=2mm,xrightmargin=2mm}
+\raggedbottom
+\begin{document}
+\thispagestyle{first}
+\begin{center}
+{\fontsize{18}{25}\selectfont\bfseries\color{ink}面向线性PCurve的一类通用样条面\par 到二次曲面智能转化方案\par}
+\vspace{5pt}{\large 测试报告（实验报告）}\par
+\vspace{4pt}{\small\color{muted}依据中船海舟赛题 PDF\quad |\quad 文档整理：2026 年 10 月 16 日}
+\end{center}
+\section{报告目的、范围与验收依据}
+本报告对应命题 PDF 的“实验报告”交付项，说明测试设计及可行性，分析正确性、误差与性能，并提出有证据支持的不足和优化空间。测试程序、用例构造及全部固定数据索引另见《测试材料说明》，本文侧重\textbf{实际测量及其可支持的验收结论}。本次仅复算已存原始记录、核对指纹及编制文档，没有重新执行几何算法。
+
+\subsection{对象与范围}
+输入为 NURBS 曲面片，目标为平面、圆柱面、圆锥面、球面及圆环面的解析母面与有限边界表示。“二次曲面”沿用赛题集合称谓；一般圆环面在代数分类中为四次曲面。主要场景要求边界对应于目标母面 \textbf{NURBS 参数图中的直线 PCurve}，允许指定参数边退化为点；不泛化为任意裁剪区域或完整 B-rep 拓扑替换。
+
+\subsection{命题要求与证据判定}
+依据 PDF 第 1 页命题目标、第 2--3 页交付与实验报告评审要求，建立下表。长度容差采用模型单位；命题模型单位为 mm。表中“部分证据”表示不能据现有记录宣称该项全面验收通过。
+\begin{center}\small\renewcommand{\arraystretch}{1.18}
+\begin{tabularx}{\linewidth}{@{}p{8mm}p{25mm}Yp{25mm}@{}}\toprule
+编号 & 指标 & 要求与本报告对应证据 & 当前结论\\\midrule
+R1 & 判定与转换 & 五类母面识别、恢复；主批次 1160 例，见第四章 & 已有功能，非全量通过\\
+R2 & 曲面距离 & 最大及平均误差 $\le10^{-5}$ mm；证书与采样分列，见第五章 & 部分证据\\
+R3 & 边界一致性 & Hausdorff 距离 $\le10^{-5}$ mm；对应与覆盖条件，见第五章 & 部分路径连续证据\\
+R4 & 相邻面 $G^1$ & 法向夹角 $\le0.1^\circ$；不得以沿边切向替代 & 未完成直接验收\\
+R5 & 判定性能 & 50--200 控制点时 $\le10$ ms；本项目按整例最大值 $<10$ ms 展示 & 未全面达到\\
+R6 & 下游加速 & 投影、求交、布尔各降低至少 50\% & 未提供对照实测\\
+R7 & 兼容性 & C++、SGK 1.7；现有构建为 C++17、SGK 1.7.11 & 当前环境构建通过\\
+R8 & 稳定／异常 & 连续 1000 例，无崩溃、泄漏、不一致；损坏输入及越界报错 & 进程批次／单测部分证据\\
+R9 & 测试交付 & 接口单测、程序、用例、原始数据；设计、可行性及误差分析 & 已组织，接口全覆盖未量化\\\bottomrule
+\end{tabularx}
+\end{center}
+项目另加\textbf{等参优先、失败后兜底；完整调用实际耗时 $>50$ ms 判计算失败}。该上限是工程保护条件，不能替代命题的 10 ms 目标。命题原文没有要求报告限定页数，本报告通过合并公共定义减少重复。
+
+\subsection{结论摘要}
+主批次 1160 例、3480 次调用中，973 例成功且审计通过，其中 943 例三次均小于 10 ms；实际最大 46.4460 ms，183 例发生总预算失败。\textbf{主批次回归未全部通过，且不是当前源码的全量复测。}三个与当前相关源码指纹一致的退化展示例均成功，但它们仅构成定向证据。版本差异、分母与局限见下文。
+
+\newpage
+\section{实验版本、环境与数据设计}
+\subsection{四组证据单独标识}
+\begin{center}\small\renewcommand{\arraystretch}{1.18}
+\begin{tabularx}{\linewidth}{@{}p{8mm}p{25mm}Yp{26mm}@{}}\toprule
+批次 & 样本／调用数 & 被测入口与版本定位 & 用途\\\midrule
+A & 1160／3480 & 串联完整 API；\code{d725582} 基线及 \path{provenance.json} 源码指纹 & 主要功能及整体时间证据\\
+B & 985／2955 & 一般分类／边界验证；\code{911ef02}＋已存 50 ms 补丁 & V2 全集与误差反例\\
+C & 900／2700 & 专用分类＋验证，无兜底优化；\code{8b117b9} 及清单指纹 & 等参压力与模块诊断\\
+D & 3／9 & 串联定向案例；\code{898a0d9} 基线及源码指纹 & 球极点、锥顶、圆环点边\\\bottomrule
+\end{tabularx}
+\end{center}
+全部批次日期为 2026-10-16；基线提交不单独代表完整构建状态，\textbf{逐文件 SHA-256 和可执行文件指纹才是该批次的精确身份}。本报告以 \code{d527849} 工作树核对：A 的输入 1160 个哈希均一致，但其记录的源码中有 8 个文件与当前不同，涉及一般边界误差、恢复／输出曲线、验证接口及测试审计；D 清单内源码全部一致。因此 A 的统计只归属原批次，D 也不能替代当前全量回归。差异逐项保存在 \path{report-evidence.json}。
+
+\subsection{运行环境与测量限制}
+各批次采用 Windows x64、MSVC 19.42、Release、SGK 1.7.11；区间认证相关源文件使用严格浮点选项。B 使用独立源码快照；A 采用串行逐例子进程，每进程三次新上下文，无逐例预热。A 未固定 CPU 亲和性或独占工作站，批次期间发生两项短路由单测及 CMake 配置；保留所有测量，不选择最快运行。
+
+B／D 记录处理器为 AMD64 Family 25 Model 68，B 记录 16 个逻辑处理器；A 未单独保存完整 CPU／内存配置，不能以本次查询值补写历史环境。性能是该记录条件下的观察值，不是跨机器承诺。SDK 初始化的日志文件打开提示出现在部分单测及 D 日志中；测试与审计仍完成，但不能称为完全无环境告警。
+
+\subsection{数据构成与可行性}
+A 包括 Dataset500 的 500 例，以及 V2 main 600、extra 60。按正式统计标签分为普通正例 985、已认证无解负例 100、诊断 75；诊断包括 40 个等参点边输入和 35 个专项。Dataset500 实际控制点 50--196、最高五次；V2 两方向 3--5 次、最多 200 点，extra 有小于 50 点的专项，不能全部用来证明 R5 的规定规模性能。
+
+成对的解析转样条／非有理重拟合隔离表示影响；参数反向、交换、周期接缝检验参数恢复；球极点、锥顶与三角域检验退化边；短弧、窄带、大坐标检验条件数与舍入。B 另含 V2 extreme 320、synthetic 5，C 另含业务和历史等参压力各 200。它们与 A 成员重叠且入口不同，\textbf{不能相加为独立样本总量}。
+
+正例由独立构造及连续来源证书确定；负例以内部扰动及四次以下隐式曲面排除证据确定，不依据转换器失败反向赋予标签。所有输入在原运行时均记录来源认证通过，本次仅核对记录及哈希，未重新计算来源证书。完整 2866 个固定输入及程序化构造族见《测试材料说明》。
+
+\newpage
+\section{测试方法、接口覆盖与判定规则}
+\subsection{主批次的执行顺序}
+\begin{figure}[h]\centering
+\begin{tikzpicture}[node distance=5mm]
+\node[box] (a) {读取输入、身份检查、独立来源认证\\失败属于输入／执行错误；计时尚未开始};
+\node[box,below=of a] (b) {启动外层 steady\_clock，调用串联 API\\有理精确识别／非有理增量等参分类与验证};
+\node[box,below=of b] (c) {等参通过：返回；未通过且尚有总预算：兜底\\分类、边界验收、必要优化与候选重试};
+\node[box,below=of c] (d) {API 返回停止计时；实际 $>50$ ms 强制失败\\成功输出独立审计，最后写 CSV／绘图};
+\node[box,below=of d] (e) {三次结果按标签汇总\\正确性、$<10$ ms、预算失败分别报告};
+\foreach \x/\y in {a/b,b/c,c/d,d/e}{\draw[arr](\x)--(\y);}
+\end{tikzpicture}
+\caption{完整调用测量与独立证据分离；不把读取、审计或结果输出计入算法耗时。}
+\end{figure}
+
+\subsection{接口及异常覆盖的证据等级}
+\begin{center}\small\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\linewidth}{@{}p{34mm}Y@{}}\toprule
+接口／测试层 & 已存证测试与边界\\\midrule
+\path{ConvertIsoThenFallback} & A 全量、D 定向；成功短路、强制等参失败回退、非法／零总预算、极小预算取消。A 原批次记录四项当前链路单测通过。\\
+\path{Recognize} 与母面验证 & C 精确及非有理专用路径，含多候选成本；C 母面单测 1585 项断言。配对验证属于另一个验收合同，不能与母面联合切向混用。\\
+\path{ValidateGeneralRationalBoundaries} & B 985 例；当时单测 9953 项断言；正比例残差包络独立审计 160 组、13640 个系数包络及 160 个连续角度界。\\
+恢复、预算与输入异常 & 已有无效容差、采样预算、期限传播、无输出泄漏及微段／自交域专项。损坏文件、所有越界参数及全部公开接口的覆盖率尚无统一矩阵实测。\\\bottomrule
+\end{tabularx}
+\end{center}
+上述断言数分别归属原批次，不能作为当前版本的单测计数；源码中存在测试不等于当前执行通过。旧验证器及旧一般数据禁测，本报告没有执行或将其历史结果计入当前通过率。
+
+\subsection{预算与结果逻辑}
+默认总期限 50 ms、等参子期限 20 ms，共享一次起点；约 45／18 ms 协作取消以留清理余量。总预算失败不代表无几何解，等参子预算失败仍可兜底。普通正例要求三次均接受且审计通过；无解负例要求没有错误接受、没有预算失败和审计失败；诊断单列。设 $T_i=\max_{k=1,2,3}t_{ik}$，严格以 $T_i<10$ ms 展示性能，$t_{ik}>50$ ms 必须失败。阶段时间只用于解释组成，不能用各阶段最大值相加替代整体测量。
+
+\newpage
+\section{主批次功能与整体性能结果}
+\subsection{正确性和耗时分别统计}
+\begin{center}\small\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\linewidth}{@{}Yrrrrr@{}}\toprule
+集合 & 例数 & 审计成功 & 全部三次 $<10$ ms & 预算失败 & 最大 / ms\\\midrule
+iso & 500 & 500 & 485 & 0 & 24.0191\\
+main & 600 & 440 & 425 & 160 & 46.4167\\
+extra & 60 & 33 & 37 & 23 & 46.4460\\\midrule
+合计 & 1160 & 973 & 947 & 183 & 46.4460\\\bottomrule
+\end{tabularx}
+\end{center}
+973 个成功中，943 个同时满足三次均 $<10$ ms。普通正例为 920/985，即 93.40\%；已认证无解负例为 0/100 及时正确拒绝，100 例均预算失败，误接受为 0。75 个诊断中 53 成功、18 预算失败、4 非超时拒绝。普通正负例“正确且 $<10$ ms”为 894/1085，\textbf{不与包含诊断成功的 943 或仅速度达标的 947 混用}。
+
+\begin{figure}[h]\centering
+\begin{tikzpicture}[x=0.105cm,y=0.72cm,font=\small]
+\draw[->,gray](0,0)--(102,0)node[right]{\%};
+\foreach \x in {0,20,40,60,80,100}{\draw[gray](\x,0)--(\x,-.1)node[below]{\x};}
+\fill[accent](0,1)rectangle(81.29,1.48);
+\node[left]at(0,1.24){成功且速度达标};\node[right]at(81.29,1.24){943/1160};
+\fill[accent!65](0,2)rectangle(81.64,2.48);
+\node[left]at(0,2.24){仅速度达标};\node[right]at(81.64,2.24){947/1160};
+\fill[accent!35](0,3)rectangle(83.88,3.48);
+\node[left]at(0,3.24){成功且审计通过};\node[right]at(83.88,3.24){973/1160};
+\end{tikzpicture}
+\caption{同一全集上的三种指标。诊断输入被保留，因此本图不是普通正例正确率。}
+\end{figure}
+
+三次重复的总算法时间为 35796.4840 ms，逐调用均值 10.2863 ms，3480 次实际超过 50 ms 为 0。按每例最大值分布：$<10$ ms 为 947 例，$[10,20)$ 为 23 例，$[20,40)$ 为 7 例，$[40,50]$ 为 183 例。后者均属于预算失败，不能因实际仍小于 50 ms 记为成功。
+
+\subsection{路径、类型及优化诊断}
+成功路径分别为精确等参 260 例、非有理母面 364 例、一般兜底 349 例。共 536 例进入兜底，其中 349 成功；21 次等参子预算退出不直接决定最终失败。Dataset500 五类各 100 例全部成功；main 的 500 个正例中，平面、圆柱、圆锥、圆环各 100 成功，球面 40/100 成功。不得把 main 的 100 个负例按其来源母面混入该正例类型统计。
+
+A 的成功调用均记录零母面优化迭代，尚不能用该批成功率证明优化器收益。549 次总预算退出中，523 次位于兜底优化、16 次位于 Jacobian、8 次位于候选切换、分类评分和边界验收各 1 次。这是\textbf{退出位置计数}，不是耗时占比，也不证明这些阶段是唯一失败根因。
+
+\newpage
+\section{几何误差分析与证据边界}
+\subsection{来源误差、输出误差与舍入误差}
+来源认证衡量实际输入 $S$ 与测试参考面 $R$ 的差；算法验收衡量 $S$ 与恢复输出 $Q$ 的关系。来源界小不意味着转换输出一定正确，二者必须独立计算。对于正权重齐次表示，配对误差可写为
+\begin{equation}
+S-R=\frac{P_sW_r-P_rW_s}{W_sW_r},\quad W_sW_r>0.
+\end{equation}
+连续认证通过控制系数包络、向外舍入和细分覆盖参数区间；离散最大值 $\widehat E_{\max}=\max_{x\in\mathcal X}e(x)$ 只覆盖采样集 $\mathcal X$。均值 $|\mathcal X|^{-1}\sum e(x)$ 同样依赖采样分布；不能将其写为全曲面平均误差。本批 A 未输出统一的逐例距离最大值／均值列，故不编造全量误差分布。
+
+\subsection{各路径实际证明什么}
+\begin{center}\small\renewcommand{\arraystretch}{1.18}
+\begin{tabularx}{\linewidth}{@{}p{24mm}Y Y@{}}\toprule
+路径 & 已有验收内容 & 不能由此推出\\\midrule
+精确等参 & Bernstein 母面距离界、有限参数域恢复；独立位置采样 & 所有有限片边界的双向距离及相邻面法向连续性\\
+非有理母面 & 全域母面距离、四边配对位置；同子区间 U/V 切向联合预算 & 全域有限片双向 Hausdorff 或直接法向认证\\
+一般兜底 & 内部增强采样；实际导出的边界曲线连续位置、沿边切向、输出到母面的一致性 & 内部区域连续最大距离、全曲面平均距离、相邻面 $G^1$\\\bottomrule
+\end{tabularx}
+\end{center}
+边界 Hausdorff 距离为
+\begin{equation}
+d_H(C_s,C_t)=\max\{\sup_{x\in C_s}\inf_{y\in C_t}\|x-y\|,\,
+\sup_{y\in C_t}\inf_{x\in C_s}\|x-y\|\}.
+\end{equation}
+若连续对应 $\phi$ 完整覆盖源、目标边界且 $\sup_t\|C_s(t)-C_t(\phi(t))\|\le\varepsilon$，则两方向距离均不超过 $\varepsilon$。因此配对位置界只有与\textbf{完整覆盖和对应条件}结合才支持边界指标，不能把单向采样最近距离写成无条件的双向证明。
+
+母面路径检查 $\sin^2\alpha_U+\sin^2\alpha_V<\sin^2(0.1^\circ)$，一般兜底只检查沿边切向；二者不是同一个角度合同。项目将转换前后对应边界法向转角小于 $0.1^\circ$ 作为连续性保持的工程假设，但当前链路没有直接完成该项及相邻面 $G^1$ 测量。点边切向无定义；微段豁免也不能标为零角度认证。
+
+\subsection{已有超差见证及其含义}
+B 的内部探针 extra:49 被接受，但加密采样发现超差，记录如下（单位 mm）：
+\[
+\widehat E_{\mathrm{Greville}}=9.988097619\times10^{-6},\qquad
+E_{\mathrm{witness}}=1.004970358\times10^{-5}.
+\]
+见证值超出阈值约 0.497\%。这说明\textbf{内部采样合同不足以证明连续全域距离}；该例是专项诊断，不能作为普通正例通过，但必须保留为 R2 的证据缺口。B 的 2133 次接受输出边界审计通过，与内部出现超差并不矛盾。主批次版本不同，不能不经重测便将该数值归属 A 或当前版本。
+
+\newpage
+\section{退化案例的定向结果与误差细分}
+\subsection{案例身份与执行轨迹}
+D 复用 Dataset500:317 的球极点、217 的圆锥顶点，并补充一个规则圆环面三角裁剪域。圆环案例由一条参数边收缩形成点边，\textbf{不是规则圆环母面自身的几何奇点}。各例先完成独立来源认证，再以默认选项调用串联接口，未向算法传入真值或参数图。
+
+三例每次均先等参后兜底，成功并通过独立审计；每例一条整边退化，微段切向豁免数为 0，母面优化迭代数为 0。每次新上下文、无逐例预热，第一调用保留；输出审计和几何导出在计时外。D 与当前清单内源码指纹一致，但只说明这三例的可追溯性，不外推至全量。
+
+\begin{center}\small\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\linewidth}{@{}Yrrrr@{}}\toprule
+案例 & 次数 U/V & 控制点 & 整体均值 / ms & 整体最大 / ms\\\midrule
+球面极点 317 & 5/5 & 64 & 5.433733 & 6.9672\\
+圆锥顶点 217 & 5/3 & 64 & 2.392133 & 2.7237\\
+圆环三角片 & 3/4 & 63 & 2.313567 & 2.3761\\\bottomrule
+\end{tabularx}
+\end{center}
+三者均为 3/3 成功、三次均 $<10$ ms 且 $\le50$ ms。图像与真实输入／输出几何 CSV 已存于 D 目录及作品介绍图件；图像仅辅助解释，下面以数值界与审计分别报告精度。
+
+\subsection{连续界与离散审计不能混称}
+\begin{center}\small\renewcommand{\arraystretch}{1.23}
+\begin{tabularx}{\linewidth}{@{}Yrrr@{}}\toprule
+误差量 & 球极点 & 锥顶 & 圆环三角片\\\midrule
+边界连续位置界 / mm & $4.13372\!\times\!10^{-7}$ & $5.22122\!\times\!10^{-7}$ & $2.71735\!\times\!10^{-11}$\\
+非退化沿边切向界 / 度 & $1.07187\!\times\!10^{-3}$ & $1.36092\!\times\!10^{-3}$ & $2.55427\!\times\!10^{-9}$\\
+输出边界到母面界 / mm & $2.90658\!\times\!10^{-13}$ & $9.45676\!\times\!10^{-14}$ & $9.32687\!\times\!10^{-13}$\\
+独立边界采样最大 / mm & $2.72836\!\times\!10^{-7}$ & $1.41289\!\times\!10^{-7}$ & $2.36127\!\times\!10^{-11}$\\
+独立内部采样最大 / mm & $2.13573\!\times\!10^{-7}$ & $1.20038\!\times\!10^{-7}$ & $2.36122\!\times\!10^{-11}$\\\bottomrule
+\end{tabularx}
+\end{center}
+表中连续位置／切向界作用于实际输出边界及规定对应；内部为独立 13×13 采样。51×51 绘图采样的最大值与该列可能不同，不能混用。球和锥的连续位置上界大于离散审计值，是保守包络的正常现象，不代表曲面实际误差等于上界；圆环低残差也不意味着所有输入都可达到同等精度。
+
+\subsection{数值稳定性分析}
+正权重和局部坐标有助于降低齐次分母与大坐标相减的误差放大。C 曾在大世界坐标的独立审计中出现 15 个差异，测试端改为对源控制网和目标原点作一致平移后复测，差异消失，而算法接受状态、上界及候选数未变。该证据说明\textbf{审计自身也需处理消减误差}，不能见到采样差异就立即认定算法证书错误；同时应保留修正前后的记录，不能删除不利观测。
+
+本组展示未覆盖优化器收益、相邻面法向、下游运算和内部连续距离。退化成功的结论限于所列输入及其证书范围。
+
+\newpage
+\section{压力结果、未通过案例及优化空间}
+\subsection{模块批次提供的补充证据}
+B 包含 850 个正例，其中 710 个认证、140 个未认证；100 个全局无解负例全部拒绝。951/985 例三次均 $<10$ ms，最大 18.7393 ms，无时间预算退出。其 940 例使用分类入口，25 例固定母面及图、20 例给定母面，\textbf{不含 A 的等参尝试和母面优化}。因此不能用 B 的负例及时拒绝直接宣称 A 已解决负例问题，也不能直接计算两批加速比。
+
+C 的 900 例中 713 认证、48 退化拒绝、139 普通输入未认证；有 6 个退化状态标签与预期不符，严格预期符合 755/900，运行器返回 1。业务、历史压力输入分别有 30、5 例超过五次，不能全部按当前低次合同评价，但剩余低次失败同样需要保留。该批无 50 ms 算法终止限制，实际最大 269.106 ms；\textbf{不能将这一模块结果放入 50 ms 串联达标统计}。
+
+\subsection{主批次未通过项的定位}
+A 的普通正例预算失败共 65 个：main:204--215、224--235、244--255、264--275、284--295，以及 extra:30--34，均属球面；100 个无解负例也均预算失败。诊断中 18 个预算失败、extra:0--3 非超时拒绝。附件 \path{primary-not-accepted.csv} 逐项列出 187 个未接受案例，区分标签、最终路径和实际最大时间。
+
+\begin{center}\small\renewcommand{\arraystretch}{1.18}
+\begin{tabularx}{\linewidth}{@{}p{27mm}Y Y@{}}\toprule
+现有证据 & 可检验的改进方向 & 后续验证要求\\\midrule
+球面候选／参数图未完成恢复；B 中 52 个给定真图后通过 & 检查轴架、极点／接缝展开、图域包含和对应恢复；保持母面拟合与图恢复诊断分离 & 相同输入、相同版本作定向消融；再覆盖全体正例，防止对特例过拟合\\
+A 100 个负例预算失败；成功调用均零优化 & 优化前增加收益或可行性筛选，限制无改进重试，合理分配剩余预算 & 计入全部失败尝试；检查是否误拒可通过优化修复的正例\\
+内部探针出现离散采样漏检 & 引入独立连续内部界，或明确分级输出，拒绝宣称未认证指标 & 重测 extra:49 与采样间窄峰；不得仅增加少量采样后声称已获证明\\
+边界界宽松、对应／微段敏感 & 正比例切向残差、局部细分和完整覆盖追踪；保持微段直径与位置条件 & 无方向定义区间单列；残差未通过不能改写成几何无解\\
+C 有理候选细分成本高，大坐标审计敏感 & 更早的候选淘汰与局部坐标算术；保留向外舍入界 & 同时比较成功与拒绝成本，完整记录容差、版本和预热策略\\\bottomrule
+\end{tabularx}
+\end{center}
+这些是依据已存证失败位置提出的\textbf{待验证改进方向}，本次文档编制未实现或验证新的加速。不得通过放宽 $10^{-5}$、删除失败样本或改变诊断标签提高通过率。
+
+\newpage
+\section{稳定性、复现与交付结论}
+\subsection{稳定性与异常处理结论}
+A 的 3480 条调用记录完整，无运行器执行／完整性错误，成功输出独立审计失败为 0；B 无进程失败、缺失测量或已接受边界审计失败，C 最终记录全部完成且三轮状态一致。\textbf{逐例进程隔离不能证明单进程连续处理 1000 例无泄漏}。现有精确识别的千例构造与确定性检查只属于独立精确路径；本报告未将其升级为当前串联入口的长稳与内存验收。
+
+非法配置、过期期限与预算不足的定向单测证明部分错误路径可追溯，但损坏 NURBS 文件、参数越界、所有公开接口的异常组合尚缺统一实测覆盖矩阵。完成 R8 还需同进程长序列、堆／句柄资源观测、重复结果判定及明确的故障注入；本报告不以“没有进程错误”替代这些指标。
+
+\subsection{复现入口及证据目录}
+当前串联复现命令如下，输出必须使用新目录；详细构建、单例和多例示例见《测试材料说明》。\textbf{重新编译当前代码会得到新批次}，不能保证重现 A 的逐次耗时或状态；严格复现 A 应先按其源码指纹恢复被测快照。
+\begin{lstlisting}
+cmake -S . -B build-report-run -A x64
+cmake --build build-report-run --config Release --target `
+  BSpline2AnalyticSequentialTests -- /m:1 /nr:false
+python tests/RunSequentialNonExtreme.py `
+  --exe build-report-run/Release/BSpline2AnalyticSequentialTests.exe `
+  --sdk ../../../SGGK --data tests/data `
+  --output build-report-run/new-batch --runs 3
+\end{lstlisting}
+按标签读取退出码：A 的运行器返回 1 表示算法／预算未全通过，不能仅以 CSV 完整判成功。B 的原运行器退出规则与 A 不同，应以其未认证清单和逐例结果解释，而非横向比较进程退出码。
+
+\begin{center}\small\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\linewidth}{@{}p{20mm}Y@{}}\toprule
+证据 & 仓库相对路径（均可由版本库追溯）\\\midrule
+命题 PDF & \path{docs/requirements/}《中船海舟样条转二次曲面》\\
+A & \path{docs/testing/results/sequential-non-extreme-20261016/}\\
+B & \path{docs/testing/general-rational-985-50ms-2026-10-16/}\\
+C & \path{docs/testing/results/iso-full-20261016/}\\
+D & \path{docs/testing/introduction-cases-2026-10-16/}\\
+测试材料 & \path{docs/testing/materials/}：构造、接口命令及全部输入索引\\
+报告附件 & 本目录 \path{report-evidence.json}：复算统计、版本差异、原始证据哈希；\path{primary-not-accepted.csv}：187 例未接受记录；\path{Build-Evidence.py}：只读复算脚本\\\bottomrule
+\end{tabularx}
+\end{center}
+本报告的表格由原始 CSV 复核，主批次输入身份及 D 源码身份已核对；编译、页数与文档校验见本目录 \path{verification.json}。SDK、许可证和运行二进制不随仓库提交，运行方需配置本地许可环境。
+
+\subsection{交付结论}
+现有工作形成了可追溯的五类母面测试、分支验收及退化输入证据，并能按完整调用时间执行失败保护。原始记录同时表明，\textbf{全量正确性、10 ms 全覆盖、全域误差合同、相邻面连续性、下游加速及单进程长稳尚不能统一宣布通过}。本报告按命题要求保留这些不足及可验证的优化方向；后续验收应以同一冻结版本、固定输入和完整指标重新形成闭环。
+\end{document}
