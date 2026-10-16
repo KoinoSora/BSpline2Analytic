@@ -123,6 +123,9 @@ std::vector<AnalyticParameters> Charts(SurfaceSampleContext &samples,const Analy
     add({1,0,0});add({0,1,0});add({0,0,1});return out;
 }
 }
+std::vector<AnalyticParameters> RecoveryCharts(SurfaceSampleContext &samples,const AnalyticParameters &a,
+                                              const GeneralRationalBoundaryOptions &o)
+{return Charts(samples,a,o);}
 GeneralRationalBoundaryReport Validate(SurfaceSampleContext &samples,const AnalyticParameters &a,
                                       const GeneralRationalBoundaryOptions &o)
 {

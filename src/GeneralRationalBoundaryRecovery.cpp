@@ -29,8 +29,15 @@ std::array<double,2> UV(const Trim &t,V p,std::array<double,2> reference)
 }
 }
 bool Recover(SurfaceSampleContext &samples,const AnalyticParameters &a,
-             const GeneralRationalBoundaryOptions &options,Trim &out)
+             const GeneralRationalBoundaryOptions &options,Trim &out,RecoveryDiagnostics *diagnostics)
 {
+    if(diagnostics)*diagnostics={};
+    auto reject=[&](const char *reason,int edge=-1,int sample=-1,double parameter=NAN,double value=NAN,double limit=NAN)
+    {
+        if(diagnostics){diagnostics->reason=reason;diagnostics->edge=edge;diagnostics->sample=sample;
+            diagnostics->parameter=parameter;diagnostics->value=value;diagnostics->limit=limit;}
+        return false;
+    };
     // Reuse the established periodic-walk proposals, but never its analytic-UV
     // linearity gate or native PCurve construction. Acceptance is rational-domain.
     GeneralTrim trim;const auto &o=options.general;
@@ -41,6 +48,7 @@ bool Recover(SurfaceSampleContext &samples,const AnalyticParameters &a,
     std::array<bool, 4> assigned{};
     const auto &s = samples.source;
     auto fail = [&](PCurveFailure reason, unsigned edge, double deviation = 0)->bool {
+        reject(PCurveFailureName(reason),int(edge),-1,NAN,deviation);
         std::ostringstream message;
         message << PCurveFailureName(reason) << ": boundary " << edge << ", deviation=" << deviation;
         throw Failure(Status::VerificationFailed,message.str());
@@ -198,13 +206,13 @@ bool Recover(SurfaceSampleContext &samples,const AnalyticParameters &a,
     for(unsigned d=0;d<2;++d)
     {
         double lo=out.domain[2*d],hi=out.domain[2*d+1];
-        if(!(std::isfinite(lo)&&std::isfinite(hi)&&lo<hi))return false;
+        if(!(std::isfinite(lo)&&std::isfinite(hi)&&lo<hi))return reject("InvalidChartExtent",int(d),-1,NAN,hi-lo);
         bool angular=d==0?a.type!=sggk::SurfaceType::Plane:
             (a.type==sggk::SurfaceType::Sphere||a.type==sggk::SurfaceType::Torus);
-        if(angular&&hi-lo>2*Pi+1e-12)return false;
+        if(angular&&hi-lo>2*Pi+1e-12)return reject("AngularExtentExceeded",int(d),-1,NAN,hi-lo,2*Pi+1e-12);
     }
-    if(a.type==sggk::SurfaceType::Sphere&&(out.domain[2]<0||out.domain[3]>Pi))return false;
-    if(a.type==sggk::SurfaceType::Cone&&out.domain[2]<0)return false;
+    if(a.type==sggk::SurfaceType::Sphere&&(out.domain[2]<0||out.domain[3]>Pi))return reject("SphereLatitudeOutOfRange");
+    if(a.type==sggk::SurfaceType::Cone&&out.domain[2]<0)return reject("NegativeConeHeight");
     AnalyticPatch patch;patch.parameters=a;patch.domain=out.domain;
     out.chart=paired::BuildChart(patch);paired::PlaceChart(out.chart,a,Get(a.origin));
     auto map=[&](std::array<double,2> uv)
@@ -213,7 +221,10 @@ bool Recover(SurfaceSampleContext &samples,const AnalyticParameters &a,
         // must not disappear into RationalCoordinate's endpoint clamps.
         for(unsigned d=0;d<2;++d)
             if(uv[d]<out.domain[2*d]-1e-12||uv[d]>out.domain[2*d+1]+1e-12)
+            {
+                reject("WalkOutsideChart",int(d),-1,NAN,uv[d]);
                 throw Failure(Status::VerificationFailed,"Walk outside selected rational chart");
+            }
         return std::array<double,2>{paired::RationalCoordinate(out.chart,0,uv[0]),
                                    paired::RationalCoordinate(out.chart,1,uv[1])};
     };
@@ -221,6 +232,8 @@ bool Recover(SurfaceSampleContext &samples,const AnalyticParameters &a,
     {
         auto q=map(connected[i]);out.polygon.corners[i]={q[0],q[1]};
     }
+    if(diagnostics)for(unsigned e=0;e<4;++e)
+        for(const auto &entry:trim.walks[e])diagnostics->walks[e].push_back({entry.first,map(entry.second)});
     // Certify a strictly convex parameter quadrilateral. A spatially collapsed
     // pole/apex edge can still have two distinct rational-chart endpoints.
     constexpr unsigned loop[]={0,1,3,2};int orientation=0;
@@ -231,31 +244,33 @@ bool Recover(SurfaceSampleContext &samples,const AnalyticParameters &a,
         I turn=(I(q.X())-I(p.X()))*(I(r.Y())-I(q.Y()))-
                (I(q.Y())-I(p.Y()))*(I(r.X())-I(q.X()));
         int sign=turn.lo>0?1:turn.hi<0?-1:0;
-        if(!sign)return false;
-        if(orientation&&sign!=orientation)return false;
+        if(!sign)return reject("UnresolvedConvexTurn",int(i),-1,NAN,turn.lo,turn.hi);
+        if(orientation&&sign!=orientation)return reject("NonConvexCorners",int(i),-1,NAN,double(sign),double(orientation));
         orientation=sign;
     }
-    if(TrimTriangles(out.polygon).empty())return false;
+    if(TrimTriangles(out.polygon).empty())return reject("EmptyTrimTriangles");
     for(unsigned e=0;e<4;++e)
     {
         out.collapsed[e]=Collapsed(samples.source,e);
         for(const auto &entry:trim.walks[e])out.walks[e].push_back({entry.first,map(entry.second)});
         auto start=out.polygon.corners[Ends[e][0]],end=out.polygon.corners[Ends[e][1]];
         double dx=end.X()-start.X(),dy=end.Y()-start.Y(),length=dx*dx+dy*dy,last=-INFINITY;
-        if(!(length>0))return false;
+        if(!(length>0))return reject("ZeroParameterEdge",int(e),-1,NAN,length);
         if(out.collapsed[e])continue;
         for(size_t i=0;i<out.walks[e].size();++i)
         {
             auto q=out.walks[e][i].second;
             double f=((q[0]-start.X())*dx+(q[1]-start.Y())*dy)/length;
-            if(f<last-1e-10)return false;
+            if(f<last-1e-10)return reject("NonMonotoneParameter",int(e),int(i),out.walks[e][i].first,f,last-1e-10);
             last=f;f=std::clamp(f,0.,1.);
             auto uv=trim.walks[e][i].second;
             V projected=FrameOf(a).global(CanonicalPoint(a,uv[0],uv[1]));
-            if(!(Norm(projected-ChartPoint(out,{start.X()+dx*f,start.Y()+dy*f}))<o.fitting.validation.distanceTolerance))
-                return false;
+            double distance=Norm(projected-ChartPoint(out,{start.X()+dx*f,start.Y()+dy*f}));
+            if(!(distance<o.fitting.validation.distanceTolerance))
+                return reject("RationalLineWitnessExceeded",int(e),int(i),out.walks[e][i].first,distance,o.fitting.validation.distanceTolerance);
         }
     }
+    if(diagnostics)diagnostics->reason="Recovered";
     return true;
 }
 std::array<double,2> Coordinates(const Trim &t,V p,std::array<double,2> reference)

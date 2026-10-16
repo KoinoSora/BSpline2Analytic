@@ -1,0 +1,110 @@
+{
+  "cases": 240,
+  "benchmark_runs": 720,
+  "diagnostic_timing_excluded": true,
+  "classification_attempts": 7234,
+  "groups": {
+    "Cone": {
+      "cases": 60,
+      "median_ms": 2.2976,
+      "p95_case_median_ms": 3.4136,
+      "max_run_ms": 4.3401,
+      "matching_charts": 62,
+      "excluded_matching_charts": 62,
+      "known_pass_ids": []
+    },
+    "Cylinder": {
+      "cases": 60,
+      "median_ms": 2.6837999999999997,
+      "p95_case_median_ms": 4.0364,
+      "max_run_ms": 4.9862,
+      "matching_charts": 60,
+      "excluded_matching_charts": 60,
+      "known_pass_ids": []
+    },
+    "Sphere": {
+      "cases": 60,
+      "median_ms": 3.13105,
+      "p95_case_median_ms": 4.673,
+      "max_run_ms": 5.3544,
+      "matching_charts": 480,
+      "excluded_matching_charts": 480,
+      "known_pass_ids": [
+        244,
+        245,
+        288,
+        289
+      ]
+    },
+    "Torus": {
+      "cases": 60,
+      "median_ms": 2.39445,
+      "p95_case_median_ms": 4.2088,
+      "max_run_ms": 5.943,
+      "matching_charts": 140,
+      "excluded_matching_charts": 140,
+      "known_pass_ids": []
+    }
+  },
+  "classified_recovery_reasons": {
+    "RationalLineWitnessExceeded": 951
+  },
+  "chart_rows": 2515,
+  "witness_rows": 2712,
+  "excluded_chart_keys": 2440,
+  "exclusions_by_mode": {
+    "truth_with_candidate_frame": 480,
+    "classified": 892,
+    "known_mother": 624,
+    "candidate_with_truth_frame": 444
+  },
+  "unresolved_exclusions_by_mode": {
+    "classified": 59,
+    "known_mother": 4,
+    "candidate_with_truth_frame": 4
+  },
+  "unresolved_classified_exclusion_case_ids": [
+    105,
+    107,
+    109,
+    111,
+    113,
+    125,
+    127,
+    129,
+    131,
+    133,
+    145,
+    147,
+    149,
+    151,
+    152,
+    154,
+    155,
+    167,
+    169,
+    171,
+    173,
+    175,
+    185,
+    187,
+    189,
+    191,
+    195
+  ],
+  "known_unresolved_exclusion_case_ids": [
+    254,
+    255,
+    272,
+    273
+  ],
+  "cases_all_matching_charts_excluded": 240,
+  "candidate_truth_frame_pass_ids": [
+    244,
+    245,
+    288,
+    289
+  ],
+  "truth_candidate_frame_pass_ids": [],
+  "interpretation": "Exclusion covers only each tested fixed chart and recovered endpoints, including export allowance; it is not a proof that no other chart or boundary is feasible."
+}

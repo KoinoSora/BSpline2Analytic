@@ -1,0 +1,19 @@
+{
+  "benchmark-attempts.csv.gz": "9b034fde6db2204db81ab662665d66cbbfc4adf7c8e8550b3cb5cdaf9c3bf40b",
+  "benchmark-executions.json": "19b7ceb354c636f38e433506a4a4728d09d38b514ec3f9a71cf89e9a0a61d88c",
+  "benchmark-results.csv": "c15207cc6c9d4757318b9c22ca3b24381abfd883888b6accfc7f5c83bffdcb30",
+  "benchmark-run.json": "3eb78fd155078f80401c6cb84888a6ae36c24755b0e94c0378ea7af8cd1e939c",
+  "candidates.csv": "49426b2516c0426b51e160c110fd2aaaffcd673642b06555e339ab7cc2f18d2a",
+  "case-diagnosis.csv": "00253825bcf72af1c5fe8f702b167cf02bcbf11b9677e5f656a2020b3e040662",
+  "charts.csv": "245f579d4082b2eb84aeb711890fd936aabeb9a99cf122e9c59d5bc9720df7a5",
+  "diagnostic-executions.json": "f965e6fa825944bad8a6536ff8a17328fc1ad5eb563d2eb78675cb48515b160f",
+  "diagnostic-run.json": "9b0c71e4092a8e41dff5c1791f8083755a6fa5ce8b533eb03a0615d8d6a405bb",
+  "source-manifest.json": "6fbd9d6bc608a11bffeb5fd0fd38f39068d1effe19fa4e1eec3085bb2d6fe0d1",
+  "summary.json": "d1090ed2099d8077f0753324d36260112ddf0fc4218e4fd98aa84f4f93893d85",
+  "unit-checks.json": "992e446a00df7c91e38867e4fe6ec34f30f9daf6ae6e72621452362393c6ddd2",
+  "unresolved-chart-exclusions.csv": "858d7c69b5081f1b672a24c951d37920cbbaa395ce2af4f9dbab551a2b7d4235",
+  "witnesses.csv": "a6facc31bc525dacf700ed61d138bff1830c6df25763437ee69593c7bc88829f",
+  "../GENERAL_RATIONAL_MAIN240_DIAGNOSIS_2026-10-16.md": "77c141d825f10cb300ce9eaac04d9876b0ef2633795fbd23488145444efad697",
+  "../../../tests/RunGeneralRationalRecoveryDiagnostics.py": "82ebb251de12642b280dbd0749246d6d21b9412ba516fd5a31cc79f89f05a137",
+  "../../../tests/SummarizeGeneralRationalRecoveryDiagnostics.py": "32677fbc82076191fbd9c4a8577e58b9d66e904456cd021131617942fa8cbaa4"
+}

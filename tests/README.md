@@ -21,6 +21,8 @@ python tests/RunGeneralRationalBoundarySelected.py --exe build-general-hybrid/Re
 
 `RunGeneralRationalBoundaryFull.py` 覆盖 600 主案例、60 专项、320 极端及 5 个构造压力样本，默认每例 3 次。`SummarizeGeneralRationalBoundaryFull.py` 检查计时关系、逐例汇总，并导出失败、超 10 ms 和已知母面诊断清单。当前使用“分类＋新验证器”入口，未包含正式转换的参数优化；来源证书、输出审计、诊断均在算法计时外。`--cases main:100 extreme:0` 可做运行器预检，`--resume` 必须匹配批次哈希。完整结果、合同差异和复现说明见[985 例全面测试报告](../docs/testing/GENERAL_RATIONAL_FULL_2026-10-15.md)。
 
+`GeneralRationalRecoveryDiagnostics.cpp` 与 `RunGeneralRationalRecoveryDiagnostics.py` 对其中主集 240 个未认证案例记录具体恢复拒绝分支，并在计时外做固定参数图的点到曲线区间排除及球面参数架交换。诊断记录不改变恢复谓词；每个参数图核对有/无诊断结果，逐候选核对无诊断基线。`SummarizeGeneralRationalRecoveryDiagnostics.py` 导出逐例归因及尚不确定的排除项，不能把参数图排除扩大为所有表示无解。方法和证据见[240 例诊断报告](../docs/testing/GENERAL_RATIONAL_MAIN240_DIAGNOSIS_2026-10-16.md)。
+
 | 文件/目录 | 职责 |
 | --- | --- |
 | `RecognitionTests.cpp`、`ApproximateConversionTests.cpp` | 有理识别与非有理转换回归。 |

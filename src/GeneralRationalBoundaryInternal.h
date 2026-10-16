@@ -43,7 +43,19 @@ BezierCell ComposeLine(const paired::TargetCell &,sggk::Point2D,sggk::Point2D,
                        double,double,paired::Products &);
 std::vector<BezierCell> ComposeEdge(const Trim &,unsigned,paired::Products &);
 Target BuildTarget(const Trim &,double outputTolerance,GeneralRationalBoundaryReport &);
-bool Recover(SurfaceSampleContext &,const AnalyticParameters &,const GeneralRationalBoundaryOptions &,Trim &);
+// Optional diagnostic sink. Normal validation does not collect walks or change
+// any recovery decision. Detailed analysis is run outside performance timers.
+struct RecoveryDiagnostics
+{
+    std::string reason="not_started";
+    int edge=-1,sample=-1;
+    double parameter=NAN,value=NAN,limit=NAN;
+    std::array<std::vector<std::pair<double,std::array<double,2>>>,4> walks;
+};
+bool Recover(SurfaceSampleContext &,const AnalyticParameters &,const GeneralRationalBoundaryOptions &,Trim &,
+             RecoveryDiagnostics *diagnostics=nullptr);
+std::vector<AnalyticParameters> RecoveryCharts(SurfaceSampleContext &,const AnalyticParameters &,
+                                              const GeneralRationalBoundaryOptions &);
 std::array<double,2> Coordinates(const Trim &,V,std::array<double,2> reference);
 V ChartPoint(const Trim &,std::array<double,2>);
 double Fraction(const Trim &,unsigned,V,double reference);

@@ -1,0 +1,21 @@
+[
+  {
+    "exe": "BSpline2AnalyticGeneralRationalRecoveryDiagnostics.exe",
+    "args": [
+      "--diagnostic-unit"
+    ],
+    "exit_code": 0,
+    "stdout": "Failed to open log output file.\r\nFailed to open log output file.\r\nDiagnostic exclusion kernel checks passed\r\n",
+    "stderr": ""
+  },
+  {
+    "exe": "BSpline2AnalyticGeneralRationalBoundaryTests.exe",
+    "args": [
+      "--rational-unit",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500"
+    ],
+    "exit_code": 0,
+    "stdout": "Failed to open log output file.\r\nFailed to open log output file.\r\nRational boundary unit assertions=9920\r\n",
+    "stderr": ""
+  }
+]

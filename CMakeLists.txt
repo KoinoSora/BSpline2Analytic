@@ -62,6 +62,11 @@ if(BSPLINE2ANALYTIC_BUILD_TESTS)
     target_link_libraries(BSpline2AnalyticGeneralRationalBoundaryTests PRIVATE BSpline2Analytic)
     target_include_directories(BSpline2AnalyticGeneralRationalBoundaryTests PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src")
     target_compile_options(BSpline2AnalyticGeneralRationalBoundaryTests PRIVATE /W4 /utf-8 /fp:strict)
+    add_executable(BSpline2AnalyticGeneralRationalRecoveryDiagnostics tests/GeneralRationalRecoveryDiagnostics.cpp
+        tests/GeneralDataset.cpp tests/GeneralDatasetCertificate.cpp)
+    target_link_libraries(BSpline2AnalyticGeneralRationalRecoveryDiagnostics PRIVATE BSpline2Analytic)
+    target_include_directories(BSpline2AnalyticGeneralRationalRecoveryDiagnostics PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src")
+    target_compile_options(BSpline2AnalyticGeneralRationalRecoveryDiagnostics PRIVATE /W4 /utf-8 /fp:strict)
     add_test(NAME BSpline2Analytic.GeneralRationalBoundaryUnit COMMAND BSpline2AnalyticGeneralRationalBoundaryTests --rational-unit
         "${CMAKE_CURRENT_SOURCE_DIR}/tests/data/dataset500")
     set_tests_properties(BSpline2Analytic.GeneralRationalBoundaryUnit PROPERTIES TIMEOUT 120
