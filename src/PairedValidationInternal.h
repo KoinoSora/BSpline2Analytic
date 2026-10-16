@@ -3,6 +3,8 @@
 #include "PairedConversionValidation.h"
 #include <map>
 
+namespace bspline2analytic::detail::mother { struct SourceCache; }
+
 namespace bspline2analytic::detail::paired
 {
 struct TargetCell
@@ -104,6 +106,8 @@ struct AnalysisContext
     SurfaceSampleContext samples;
     std::optional<ClassificationSamples> classification;
     SourceCache source;
+    // Independent polynomial cache used only by the mother-distance validator.
+    std::shared_ptr<mother::SourceCache> motherSource;
 };
 PairedValidationReport ValidatePrepared(AnalysisContext &, const RecoveredCandidate &,
                                         const PairedValidationOptions & = {});

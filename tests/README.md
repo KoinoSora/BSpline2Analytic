@@ -64,6 +64,8 @@ python tests/RunGeneralRationalBoundarySelected.py --exe build-general-hybrid/Re
 
 第三个独立母面距离验证器使用目标 `BSpline2AnalyticMotherDistanceTests`。构建后执行 `ctest --test-dir <build> -C Release -R '^BSpline2Analytic.MotherDistance(Unit|SphereTorus)$' --output-on-failure --no-tests=error`，只运行代表性覆盖与 100 个非有理球面/圆环输入的三轮对照，输出 `mother-sphere-torus-Release.csv`。对照为当前 `ValidatePairedConversion`，不调用废弃验证器。`python tests/SummarizeMotherDistance.py <csv> <output>` 核验 600 条记录并生成五模块、逐案例和状态汇总。`algorithm_ms` 仅为分类计算加首候选验证，未运行优化器。合同差别、覆盖范围和结果见[专项报告](../docs/testing/MOTHER_DISTANCE_SPHERE_TORUS_2026-10-15.md)。
 
+流式提取的定向性能测试使用 `BSpline2AnalyticMotherDistanceSelectedTests` 与 `BenchmarkMotherStreaming.py`，只选 16 个代表性及历史慢例，分别记录首次验证和源缓存复验。`AuditMotherExtraction.py` 用 80 位 Decimal 独立核对双精度 Bézier 控制点的误差包络；这些审计在计时外执行。改前、改后五模块耗时、测试命令及 10 ms 目标的剩余差距见[流式提取报告](../docs/testing/MOTHER_STREAMING_2026-10-16.md)。
+
 2026-10-15 起，旧投影验证器 `ValidateConversion` 废弃，保留代码和历史数据但不再测试、预热或作对照。调用它的 CTest 项已禁用，`RunSpecializedDataset500.py` 已停止执行。正式 `ConvertApproximate` 尚未接入新验证器，其完整流程测试暂缓；以下历史报告中的旧命令不再作为执行入口。
 
 当前使用 `./Build.ps1 -Dataset500Only`（500 例）或 `-SpherePolynomialOnly`（50 个非有理球面），输出分别为 `build/paired-dataset500-Release.csv` 和 `build/paired-sphere-Release.csv`。程序 `BSpline2AnalyticPairedValidationTests` 的 `--dataset` / `--sphere` 与 `--dataset-new-only` / `--sphere-new-only` 均仅使用新验证器。非有理输入验证实际分类首候选，不运行候选重试或优化；200 个有理输入另外调用精确识别 `Recognize`，不套用五模块计时。

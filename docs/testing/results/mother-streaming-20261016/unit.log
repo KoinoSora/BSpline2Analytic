@@ -1,0 +1,29 @@
+Start testing: Oct 16 09:56 中国标准时间
+----------------------------------------------------------
+1/22 Testing: BSpline2Analytic.MotherDistanceUnit
+1/22 Test: BSpline2Analytic.MotherDistanceUnit
+Command: "D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-specialized-timing/mother-streaming-20261016/streaming/out/Release/BSpline2AnalyticMotherDistanceTests.exe" "--unit" "D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-specialized-timing/mother-streaming-20261016/streaming/source/tests/data/dataset500"
+Directory: D:/Projects/CppProjects/SeaGo/SGK1.7.11/SGGK
+"BSpline2Analytic.MotherDistanceUnit" start time: Oct 16 09:56 中国标准时间
+Output:
+----------------------------------------------------------
+Failed to open log output file.
+Failed to open log output file.
+representative 1 preparation_ms=0.2699 position_ms=0.0179 subdivision_ms=0 boundary_ms=0.2582 reporting_ms=0.0874 total_ms=0.6334
+representative 101 preparation_ms=0.5543 position_ms=0.0601 subdivision_ms=0 boundary_ms=0.5942 reporting_ms=0.0609 total_ms=1.2695
+representative 201 preparation_ms=0.4763 position_ms=0.0424 subdivision_ms=0 boundary_ms=0.4559 reporting_ms=0.0558 total_ms=1.0304
+representative 301 preparation_ms=0.8364 position_ms=0.0864 subdivision_ms=0 boundary_ms=0.8829 reporting_ms=0.0565 total_ms=1.8622
+representative 391 preparation_ms=2.3818 position_ms=0.7326 subdivision_ms=0 boundary_ms=2.587 reporting_ms=0.06 total_ms=5.7614
+representative 401 preparation_ms=0.7335 position_ms=0.2935 subdivision_ms=0 boundary_ms=0.7444 reporting_ms=0.0577 total_ms=1.8291
+representative 489 preparation_ms=2.3443 position_ms=3.595 subdivision_ms=0 boundary_ms=2.5571 reporting_ms=0.0502 total_ms=8.5466
+representative 497 preparation_ms=2.3453 position_ms=3.615 subdivision_ms=0 boundary_ms=2.5676 reporting_ms=0.0599 total_ms=8.5878
+Unit checks=1470 PASSED
+<end of output>
+Test time =   0.80 sec
+----------------------------------------------------------
+Test Passed.
+"BSpline2Analytic.MotherDistanceUnit" end time: Oct 16 09:56 中国标准时间
+"BSpline2Analytic.MotherDistanceUnit" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Oct 16 09:56 中国标准时间

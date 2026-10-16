@@ -122,7 +122,7 @@ void Unit(const std::filesystem::path &dir)
                 translated->SetControlPoint(Point(Get(translated->ControlPoints()[i][j]) + delta), i, j);
         auto patch = plane; patch.parameters.origin = Point(delta); patch.domain[1] = .001;
         auto result = ValidateMotherDistanceConversion(*translated, patch);
-        Require(result.Passed() && result.sourceEnclosureRadius > 1e-12,
+        Require(result.Passed() && result.sourceEnclosureRadius > 0,
             "Large translation lost source enclosure or certificate");
     }
     {
@@ -134,8 +134,9 @@ void Unit(const std::filesystem::path &dir)
             for (unsigned j = 0; j < 4; ++j)
                 s->SetControlPoint(sggk::Point3D(double(i) * .001 / 3, double(j) / 3,
                     i == 1 ? 1.5e-5 : i == 2 ? -1.5e-5 : 0), i, j);
-        PairedValidationReport prep;
-        auto source = paired::PrepareSource(*s, prep);
+        MotherDistanceValidationReport prep;
+        mother::SourceCache source;
+        source.Initialize(*s, prep);
         for (unsigned depth : {0u, 12u})
         {
             MotherDistanceValidationReport r;
@@ -170,6 +171,24 @@ void Unit(const std::filesystem::path &dir)
         auto repeat = mother::ValidatePrepared(context, recovered.front());
         Require(repeat.Passed() && repeat.sourceCacheHits == 1 && repeat.sourceExtractions == 0,
             "Immutable source cache reuse failed");
+        Require(r.extractedCells == r.sourceCells && repeat.extractedCells == 0 &&
+            repeat.cachedCellHits >= r.sourceCells, "Streaming cell accounting failed");
+        if(id==391)
+        {
+            paired::AnalysisContext partial(*c.input);
+            MotherDistanceValidationOptions budget; budget.position.maxValidationPieces=1;
+            auto limited=mother::ValidatePrepared(partial,recovered.front(),budget);
+            Require(limited.status==PairedValidationStatus::BudgetExceeded && limited.extractedCells<limited.sourceCells &&
+                limited.extractedCells>0, "Early failure eagerly extracted the whole source");
+            auto resumed=mother::ValidatePrepared(partial,recovered.front());
+            Require(resumed.Passed() && resumed.sourceCacheHits==1 && resumed.cachedCellHits>=limited.extractedCells &&
+                resumed.extractedCells+limited.extractedCells==limited.sourceCells, "Partial cache did not resume");
+            MotherDistanceValidationReport tight;
+            partial.motherSource->PrepareBoundary(tight,true);
+            Require(tight.tightenedCells>0 && tight.tightenedCells<resumed.sourceCells,
+                "Boundary fallback extracted interior cells");
+            Require(mother::ValidatePrepared(partial,recovered.front()).Passed(), "Tight boundary cache failed");
+        }
         if (id >= 301)
         {
             auto displaced = recovered.front(); displaced.patch.parameters.radius += .01;

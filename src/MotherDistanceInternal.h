@@ -2,6 +2,7 @@
 #include "MotherDistanceValidation.h"
 #include "PairedValidationInternal.h"
 #include "ValidationTiming.h"
+#include "MotherSourcePreparation.h"
 
 namespace bspline2analytic::detail::mother
 {
@@ -16,7 +17,7 @@ struct Measure
                        std::chrono::steady_clock::now() - start).count();
     }
 };
-bool ValidatePosition(const paired::PreparedSource &, const AnalyticParameters &,
+bool ValidatePosition(SourceCache &, const AnalyticParameters &,
                       const RecognitionOptions &, MotherDistanceValidationReport &, ValidationTimer &);
 bool ValidateEdgePositions(const paired::PreparedSource &, const paired::Chart &,
                            const PairedValidationOptions &, PairedValidationReport &,

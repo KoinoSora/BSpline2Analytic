@@ -29,6 +29,11 @@ struct MotherDistanceValidationReport
     double mappingMs = 0, sampleMs = 0, residualBuildMs = 0, residualBoundMs = 0;
     double boundaryPositionMs = 0, boundaryAngleMs = 0;
     double sourceEnclosureRadius = 0;
+    // Streaming extraction diagnostics. All source times are preparation subsets.
+    unsigned sourceCells = 0, extractedCells = 0, cachedCellHits = 0;
+    unsigned extractionPlanBuilds = 0, tightenedCells = 0, boundaryFallbacks = 0;
+    double extractionPlanMs = 0, sourceContractionMs = 0, sourceEnvelopeMs = 0;
+    double maxExtractionError = 0;
     bool Passed() const noexcept
     {
         return status == PairedValidationStatus::Passed &&

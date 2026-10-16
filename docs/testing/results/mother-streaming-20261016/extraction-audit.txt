@@ -1,0 +1,17 @@
+case 1: coordinates=384 max_error/envelope=0.102501949 PASSED
+case 101: coordinates=648 max_error/envelope=0.0990208131 PASSED
+case 201: coordinates=432 max_error/envelope=0.0737210798 PASSED
+case 301: coordinates=972 max_error/envelope=0.0869185599 PASSED
+case 351: coordinates=3888 max_error/envelope=0.0839979433 PASSED
+case 381: coordinates=3240 max_error/envelope=0.0694978176 PASSED
+case 383: coordinates=8748 max_error/envelope=0.0794743716 PASSED
+case 391: coordinates=8748 max_error/envelope=0.0748223998 PASSED
+case 395: coordinates=8748 max_error/envelope=0.0944710364 PASSED
+case 401: coordinates=648 max_error/envelope=0.0885139525 PASSED
+case 451: coordinates=3888 max_error/envelope=0.089204108 PASSED
+case 481: coordinates=3240 max_error/envelope=0.087388111 PASSED
+case 485: coordinates=8748 max_error/envelope=0.0742839606 PASSED
+case 489: coordinates=8748 max_error/envelope=0.0747744731 PASSED
+case 491: coordinates=8748 max_error/envelope=0.0883226555 PASSED
+case 497: coordinates=8748 max_error/envelope=0.0857325311 PASSED
+TOTAL coordinates=78576 max_error/envelope=0.102501949 PASSED
