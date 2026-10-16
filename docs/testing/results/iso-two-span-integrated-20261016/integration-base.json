@@ -1,0 +1,13 @@
+{
+  "base_commit": "04006b13344c8da664ee957752415794903e0ff6",
+  "overlaid_files": [
+    "include/ApproximateConversion.h",
+    "src/ApproximateInternal.h",
+    "src/AnalyticReconstruction.h",
+    "src/AnalyticReconstruction.cpp",
+    "src/IsoCurveAnalysis.cpp",
+    "src/SurfaceSampleContext.h",
+    "src/SurfaceSampleContext.cpp",
+    "tests/MotherDistanceSelectedTests.cpp"
+  ]
+}

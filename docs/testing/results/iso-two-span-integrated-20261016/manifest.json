@@ -1,0 +1,482 @@
+{
+  "started_utc": "2026-10-16T08:41:35.927106+00:00",
+  "cases": [
+    1,
+    101,
+    201,
+    301,
+    351,
+    381,
+    383,
+    391,
+    395,
+    401,
+    451,
+    481,
+    485,
+    489,
+    491,
+    497
+  ],
+  "runs": 5,
+  "source_sha256": {
+    "include/ApproximateConversion.h": "d049f98fb0207514d4c674fd54aaa1c3ddcf0e2d155ef2b95bb6c306fcd8df2a",
+    "include/BSpline2Analytic.h": "b1aefd88a61a321fc7f8a6c506704469cc3096d14008ee90abfe882d8acf0fd7",
+    "include/GeneralConversion.h": "76d24bfd2924f4aae532613fe80b50a704c35ebd90fa43695bc216e974592834",
+    "include/GeneralHybridValidation.h": "d16c00514ab8b64e8189d351d59463c47447d11c56aba6ba99b8744d489db143",
+    "include/GeneralRationalBoundaryValidation.h": "371be4259094896ad7bfe8ba6e52b5b7659221e9a46b95ed11451527eab628da",
+    "include/MotherDistanceValidation.h": "854c0ad1c29f2d481534d1f09b2891efafb18d21c735575d53056fccbda1e0ab",
+    "include/PairedConversionValidation.h": "08a89f935b7a6512fbe1c7d9555b6ac634b55ad435ff6dc02d930a7282bcb3b4",
+    "include/SurfaceConversion.h": "f3576d087193c588a51920601301d99c21a79263bf1b938dddd0d1b0ed97330f",
+    "src/AnalyticJacobian.cpp": "7e7a41a1aee3ee6f5199b1d3e7d88fdf13088820abc6367046b37ca460e0176b",
+    "src/AnalyticReconstruction.cpp": "7a9fda3480e7271672d8241a4b75b6d34482cc834cd5c7cdba65aed9b0529478",
+    "src/AnalyticReconstruction.h": "c604a7a196d86ee68066fa2b2b6ae5d7864c8ffa778877a0df8bee05a98c726a",
+    "src/ApproximateConversion.cpp": "de782038b94a4231cce388531595beec8835a3f59ce7e2d22cfa952c952dc5b1",
+    "src/ApproximateEvaluation.cpp": "081ae8caea18e0af998417da0195176faa8bea52d422190298564a7dd79d5bec",
+    "src/ApproximateGeometry.cpp": "0420acdd31943baeebff99b66bf9722b0eccf29a60f41fbd5449bb1315588982",
+    "src/ApproximateInternal.h": "fc22b2f9f21ffb2662a461f874c511701ec8aac6bfb6463047d5958400abd5bc",
+    "src/ApproximateNumerics.cpp": "a44a26fdc2e6033633db191f0f7df79e8d78df3febcae465a831c938a7848d1b",
+    "src/BoundaryAnalysis.cpp": "30ae382a8a3ba1387e95260b701516492099d02d03b992c93dd6482a3b32e3a1",
+    "src/BoundaryAnalysis.h": "41e99961375d79d195899e9118e4c10e49dc0826ef155ea08d28c7eb6a2da7a8",
+    "src/BSpline2Analytic.cpp": "5bc689a7edf8ad65bfe5f0bae8b6c91eb15902ba268fad41aa2cb7e5bf7d4c22",
+    "src/CandidateRefinement.cpp": "a86c0034aed3943ef7882f578a74eb3ea6b1d0e0aaeefb5aee8257e4df3e5e4e",
+    "src/ConversionValidation.cpp": "63435a56960cf228d17c4dc9906f87e77a69e7f5d0c52c5b0c2431335302eecf",
+    "src/ExecutionDeadline.h": "b7b436dbb293084803f6c2fb9611b47830e5502cd8ff59b904909da4295b3ccb",
+    "src/GeneralBoundaryEnvelope.cpp": "84e8b46f67cf54273479c978387ad4ac9ff6691170439fa4155c92d61ec8f40d",
+    "src/GeneralBoundaryError.cpp": "7d01a41d7364e0a62b974b037b4e856b0f03add8b3ca55b471ffd095a6d9964a",
+    "src/GeneralClassification.cpp": "dd319023f01c9e517428a95ff3141c6e71b098a89bb9ce6e78ef30a431f8de29",
+    "src/GeneralConversion.cpp": "0b221eb4e0012a086d5b68471e45aeb506c31df625d36124db0086176d7b24e2",
+    "src/GeneralConversionValidation.cpp": "322452281cf7a47f6b319bf2c6b46b5be739de5c7a8aa67680775ec5692b00cd",
+    "src/GeneralGeometry.cpp": "837517a1b2d19c8fe579587130216ddeb3a4d2e40a51027393db20950269b08f",
+    "src/GeneralHybridInternal.h": "3d7366947912c3236eb9321ef43c87946058f69775d15a1ec3676ef7473d1eb3",
+    "src/GeneralHybridValidation.cpp": "19179918e82f4354735a26b2bfbbf341381c8f41a9fb5a113ec9567b12de6260",
+    "src/GeneralInternal.h": "e49e5cae7a545b3f23a90ad24f718af0f88262a469cd3a70f97025af7adc25b8",
+    "src/GeneralPairedBounds.cpp": "aa601f05515907d14e73c757d0101cd76e2444d86eef4c13c906e120a744eac4",
+    "src/GeneralPCurve.cpp": "0baab2051d4742667582d4a95b314ab5210c38e637abaefb85f10af396949936",
+    "src/GeneralRationalBoundaryCurves.cpp": "6ba068ba6e2d4e299df9755738f984af634b629edae6f5a04f583641d543a895",
+    "src/GeneralRationalBoundaryInternal.h": "c7f5a02c605fe0edea6e03f7d9f1f25cf0742bd6876855241510a43501ff5d9d",
+    "src/GeneralRationalBoundaryRecovery.cpp": "ba5dd07258c100f9ee02d3da2e71f18a4d6b5f988dcb5b39e44cc61402e10bc7",
+    "src/GeneralRationalBoundaryValidation.cpp": "b00d35b02e240c1b2db2901da0e4a04b300a00416d0e96e385037c5552deadc3",
+    "src/GeneralRefinement.cpp": "71982c89510a8356ba68da21c4e62fa4e57359d388702ede8d44074408f002f6",
+    "src/GeneralSeedNumerics.cpp": "f11a4757f84da2c64a34cae35a3bf19880aadc560b8dadd3122a3b0c7c23cc8e",
+    "src/GeneralSphereChart.cpp": "c55eae42b83498c3e9fa28c9823e51d9e38077aaaf13fbce3cc654d2454aeade",
+    "src/IntervalBounds.cpp": "cdd16ed55f0141cfcdc9252a60087d03b23f8c1aa54dea73c0bc03208cf7ece8",
+    "src/IntervalBounds.h": "3828fcbff3a306b5efcf289c461f5d54df983eb2c6f20fd3b6265e177bcc1831",
+    "src/IsoCurveAnalysis.cpp": "a10f50e44513f28d778c260eb176d18e35684d3815cceb22fdee3572de61c63a",
+    "src/MotherDistanceBoundary.cpp": "2e3eb8486e9bc5b174b10340ea7fd25170fe40cfbbe6821f4b6c5354d503290e",
+    "src/MotherDistanceBounds.cpp": "9e2c012c4ddd69ee5c63adf3dadd5fe7f55fdee30b0254c16a792575f8e6522b",
+    "src/MotherDistanceInternal.h": "1777f545d0542876b579829da5dd4827535dfa3104091edc7d442ec65eee9b1b",
+    "src/MotherDistanceValidation.cpp": "b634834141dcc69a18de46ca2fb5c36ab55b0ea0e9cd7802efe61856b479685e",
+    "src/MotherSourcePreparation.cpp": "99c97c92056c2fe50287f759f2d020a18b1cade39925e94f3539d9cca2e974e5",
+    "src/MotherSourcePreparation.h": "64a201a4fbf46e278ff8df23cfb2df6e4f9e5671ecfb74cea57beb24a73fcee6",
+    "src/MotherTangentValidation.cpp": "f28deab8f343d5618a91a23775e9632ba6948b98245562d2e2596b9a57160205",
+    "src/MotherTangentValidation.h": "98fde1f1a365df6c61859e3eb76590ef06a73e11281ec9fce96b106f04849ee4",
+    "src/Numerics.cpp": "cf8391d3b4a1044d300be8129787205adc4443559b9d50ba534116edcbf93f59",
+    "src/Numerics.h": "51f6dde035c4a451906d146900af7d069dca103240d1b94d697bac1dc5727f0c",
+    "src/PairedBoundaryValidation.cpp": "2e96463ab6c127f3e7521461b24d71a9bbe596302e70fc1a10e05c3d4dbbf8ac",
+    "src/PairedConversionValidation.cpp": "56adcfd1137ec8d442fdd53422191731cc4ecae2d797fc71cebd4157751a46e3",
+    "src/PairedPositionBounds.cpp": "ea29d65f5dacef89b94c0789be28cd2f83a47cd653164ba5d3d9032392ebba70",
+    "src/PairedRationalChart.cpp": "99bd11b9cf93506e83746e3ec23ced96c3347d8380f5a788f6abc8bc8b214c87",
+    "src/PairedSourcePreparation.cpp": "5342878f396e006480c44e809c8a6ac746de7fa6f3296947e15c3189ac53c600",
+    "src/PairedValidationInternal.h": "931f91f8a6ad30f0f206fdd00050a270b710a7da180ca67ff5fa2473b0855c78",
+    "src/PatchRecovery.cpp": "074a725e28c9cb84e963a2a8420023809ddd638885b876ec3c09cd21d3061221",
+    "src/PatchRecovery.h": "fec939577edf4ce7dabb8a803270e8f11bcf90a66a770c495ec4d0cafd626cfe",
+    "src/PlaneOffsetRefinement.cpp": "82794102ac1118f39b9802ba89d644ffe053de9eda687cb44a8c743fc950f3e4",
+    "src/RecognitionValidation.cpp": "8e9847c7239073331adff393e6805a9a29a5be3a6e845b3befc6f363d3180814",
+    "src/RecognitionValidation.h": "a7b8809a473818205bf3a9b09d9bca3157b2f1bd871d94cfd051e00262dd1f8a",
+    "src/StageTimer.h": "eb60888f77d9d0612c823427e2e7c33db46d34853ec5a26c637808bb0a240ff3",
+    "src/SurfaceConversion.cpp": "194ad81998a2bc661c695b72ad61f84eb5b1a3c17db967314cb7e0b004c944fe",
+    "src/SurfaceSampleContext.cpp": "5cd16a34a7dc5e9c2ed45583f66a54346f41f0eaf7b6f1b5159b572f8989cb3a",
+    "src/SurfaceSampleContext.h": "1277b6ed914c46f3782c897a2d0b9a4e2aa37d809e67637368bfe769782bf007",
+    "src/SurfaceSampling.cpp": "8ec5406c0669476e619749b87c6be4ea1907406cb97ebef008ca677b54935ff7",
+    "src/ValidationTiming.h": "c885fd58a18536a68cca895e9f9b0470834bc833aaaebb5ffe25301d50e71bad",
+    "CMakeLists.txt": "60c88303ffff0d682fbafb5e9f5ce9b1e6e49dd7853275731901ac0fa80707ab",
+    "tests/MotherDistanceSelectedTests.cpp": "c4ad7c8b97dc0cdb422bba8f8f00a6e31befcb513e610e20a9cf313745140e4f",
+    "tests/Dataset500.cpp": "15293c1f40b556071d9ba1418c2e343ede25bacdd1b475fbcb020a53b1819910",
+    "tests/PairedSurfaceBounds.cpp": "f64bd2c02f244e8a0de4e1fa06d6ab258f8d7d698cbbfc3660e401ec92ed3f32"
+  },
+  "input_sha256": {
+    "1": "42f4a28942e76d2f7e6e61ec7be945fcbd50a99ee9814e9b01467b448a994132",
+    "101": "0aed8f93ea7ef53ac43ff8fb84c3f7941135f4895ce686365b087c867609812e",
+    "201": "86fadbd8ceeb1821dcab060232e0470925dfeb4ea12168e5f1cb6aeed9fe1a2a",
+    "301": "b22b5c5328489f56e06446497d92a4eebc4dec8a6a7d11ca7f41196fab90ee20",
+    "351": "709bf01d84fc8c1f9e6855bb51766f30927a489fd65f55d65ff17471fcf9f592",
+    "381": "edb706bc9c8e445d4527beebacc1afee72e5c7a5a9c86809f27483cbbb63fdf4",
+    "383": "492812d9ab90a884777b4858adc0839657e06b8105fe259f2000dc2342f0547d",
+    "391": "962440aff8942761441deac5889f7802fa26f507e040a4365194e8168c47c243",
+    "395": "09ad542e29bc7a26dec8dd6d64c9f6ee230321d2ff3ed1415cd755d1cf9c2d18",
+    "401": "d1c1a70522a7051628c21fd725ff1ceedc7079ab513ff4eed3926a21070f3839",
+    "451": "5d7bdbdd71a2ebdbebc08d39991e6339b4a1a87ca6e4689ecc6c86ebc41cd45d",
+    "481": "3118b45ab1d670dc8c1564dc71848d09a3e49112dd6a7cf12f6c067065939760",
+    "485": "7d3ff85db964b62456680f91ed950497d7cd4fb779631e1beea2f0e5acb18985",
+    "489": "6aaeb0105a78ab2376283615b86cd00dc2f9c9938a8606d2da167df661a15d03",
+    "491": "b0633cd66ae6c3975ebb48f2c8edcc9325ea7a145a90e46d3692cbfc73ddf664",
+    "497": "1e33b9ae5ae1b236b295530bcdaae8e0b91c011064dea617bf781662bd024f05"
+  },
+  "executable_sha256": "ac1eaa0879657f7437a2183a3c1db6c0c6d2cc40bcf6907ef9596480f5a0a261",
+  "baseline_executable_sha256": "c5b9a7e923f6a92749382f2f9c02050d46c69d73b21f926552107684af98fcba",
+  "baseline_manifest_sha256": "d4c17a74881629a08d1f9afc0f1551a8804e1e2bd82160d4459c00c1cc684fa5",
+  "source_directory": "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-iso-two-span-integrated-20261016\\source",
+  "commands": [
+    {
+      "method": "baseline",
+      "case": 1,
+      "command": [
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-mother-residual-20261016\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+        "1",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-iso-two-span-integrated-20261016\\measurements\\baseline-001.csv",
+        "5"
+      ]
+    },
+    {
+      "method": "incremental",
+      "case": 1,
+      "command": [
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-iso-two-span-integrated-20261016\\build\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+        "1",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-iso-two-span-integrated-20261016\\measurements\\incremental-001.csv",
+        "5"
+      ]
+    },
+    {
+      "method": "incremental",
+      "case": 101,
+      "command": [
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-iso-two-span-integrated-20261016\\build\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+        "101",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-iso-two-span-integrated-20261016\\measurements\\incremental-101.csv",
+        "5"
+      ]
+    },
+    {
+      "method": "baseline",
+      "case": 101,
+      "command": [
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-mother-residual-20261016\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+        "101",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-iso-two-span-integrated-20261016\\measurements\\baseline-101.csv",
+        "5"
+      ]
+    },
+    {
+      "method": "baseline",
+      "case": 201,
+      "command": [
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-mother-residual-20261016\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+        "201",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-iso-two-span-integrated-20261016\\measurements\\baseline-201.csv",
+        "5"
+      ]
+    },
+    {
+      "method": "incremental",
+      "case": 201,
+      "command": [
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-iso-two-span-integrated-20261016\\build\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+        "201",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-iso-two-span-integrated-20261016\\measurements\\incremental-201.csv",
+        "5"
+      ]
+    },
+    {
+      "method": "incremental",
+      "case": 301,
+      "command": [
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-iso-two-span-integrated-20261016\\build\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+        "301",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-iso-two-span-integrated-20261016\\measurements\\incremental-301.csv",
+        "5"
+      ]
+    },
+    {
+      "method": "baseline",
+      "case": 301,
+      "command": [
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-mother-residual-20261016\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+        "301",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-iso-two-span-integrated-20261016\\measurements\\baseline-301.csv",
+        "5"
+      ]
+    },
+    {
+      "method": "baseline",
+      "case": 351,
+      "command": [
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-mother-residual-20261016\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+        "351",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-iso-two-span-integrated-20261016\\measurements\\baseline-351.csv",
+        "5"
+      ]
+    },
+    {
+      "method": "incremental",
+      "case": 351,
+      "command": [
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-iso-two-span-integrated-20261016\\build\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+        "351",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-iso-two-span-integrated-20261016\\measurements\\incremental-351.csv",
+        "5"
+      ]
+    },
+    {
+      "method": "incremental",
+      "case": 381,
+      "command": [
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-iso-two-span-integrated-20261016\\build\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+        "381",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-iso-two-span-integrated-20261016\\measurements\\incremental-381.csv",
+        "5"
+      ]
+    },
+    {
+      "method": "baseline",
+      "case": 381,
+      "command": [
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-mother-residual-20261016\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+        "381",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-iso-two-span-integrated-20261016\\measurements\\baseline-381.csv",
+        "5"
+      ]
+    },
+    {
+      "method": "baseline",
+      "case": 383,
+      "command": [
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-mother-residual-20261016\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+        "383",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-iso-two-span-integrated-20261016\\measurements\\baseline-383.csv",
+        "5"
+      ]
+    },
+    {
+      "method": "incremental",
+      "case": 383,
+      "command": [
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-iso-two-span-integrated-20261016\\build\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+        "383",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-iso-two-span-integrated-20261016\\measurements\\incremental-383.csv",
+        "5"
+      ]
+    },
+    {
+      "method": "incremental",
+      "case": 391,
+      "command": [
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-iso-two-span-integrated-20261016\\build\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+        "391",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-iso-two-span-integrated-20261016\\measurements\\incremental-391.csv",
+        "5"
+      ]
+    },
+    {
+      "method": "baseline",
+      "case": 391,
+      "command": [
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-mother-residual-20261016\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+        "391",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-iso-two-span-integrated-20261016\\measurements\\baseline-391.csv",
+        "5"
+      ]
+    },
+    {
+      "method": "baseline",
+      "case": 395,
+      "command": [
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-mother-residual-20261016\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+        "395",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-iso-two-span-integrated-20261016\\measurements\\baseline-395.csv",
+        "5"
+      ]
+    },
+    {
+      "method": "incremental",
+      "case": 395,
+      "command": [
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-iso-two-span-integrated-20261016\\build\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+        "395",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-iso-two-span-integrated-20261016\\measurements\\incremental-395.csv",
+        "5"
+      ]
+    },
+    {
+      "method": "incremental",
+      "case": 401,
+      "command": [
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-iso-two-span-integrated-20261016\\build\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+        "401",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-iso-two-span-integrated-20261016\\measurements\\incremental-401.csv",
+        "5"
+      ]
+    },
+    {
+      "method": "baseline",
+      "case": 401,
+      "command": [
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-mother-residual-20261016\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+        "401",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-iso-two-span-integrated-20261016\\measurements\\baseline-401.csv",
+        "5"
+      ]
+    },
+    {
+      "method": "baseline",
+      "case": 451,
+      "command": [
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-mother-residual-20261016\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+        "451",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-iso-two-span-integrated-20261016\\measurements\\baseline-451.csv",
+        "5"
+      ]
+    },
+    {
+      "method": "incremental",
+      "case": 451,
+      "command": [
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-iso-two-span-integrated-20261016\\build\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+        "451",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-iso-two-span-integrated-20261016\\measurements\\incremental-451.csv",
+        "5"
+      ]
+    },
+    {
+      "method": "incremental",
+      "case": 481,
+      "command": [
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-iso-two-span-integrated-20261016\\build\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+        "481",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-iso-two-span-integrated-20261016\\measurements\\incremental-481.csv",
+        "5"
+      ]
+    },
+    {
+      "method": "baseline",
+      "case": 481,
+      "command": [
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-mother-residual-20261016\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+        "481",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-iso-two-span-integrated-20261016\\measurements\\baseline-481.csv",
+        "5"
+      ]
+    },
+    {
+      "method": "baseline",
+      "case": 485,
+      "command": [
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-mother-residual-20261016\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+        "485",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-iso-two-span-integrated-20261016\\measurements\\baseline-485.csv",
+        "5"
+      ]
+    },
+    {
+      "method": "incremental",
+      "case": 485,
+      "command": [
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-iso-two-span-integrated-20261016\\build\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+        "485",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-iso-two-span-integrated-20261016\\measurements\\incremental-485.csv",
+        "5"
+      ]
+    },
+    {
+      "method": "incremental",
+      "case": 489,
+      "command": [
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-iso-two-span-integrated-20261016\\build\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+        "489",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-iso-two-span-integrated-20261016\\measurements\\incremental-489.csv",
+        "5"
+      ]
+    },
+    {
+      "method": "baseline",
+      "case": 489,
+      "command": [
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-mother-residual-20261016\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+        "489",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-iso-two-span-integrated-20261016\\measurements\\baseline-489.csv",
+        "5"
+      ]
+    },
+    {
+      "method": "baseline",
+      "case": 491,
+      "command": [
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-mother-residual-20261016\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+        "491",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-iso-two-span-integrated-20261016\\measurements\\baseline-491.csv",
+        "5"
+      ]
+    },
+    {
+      "method": "incremental",
+      "case": 491,
+      "command": [
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-iso-two-span-integrated-20261016\\build\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+        "491",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-iso-two-span-integrated-20261016\\measurements\\incremental-491.csv",
+        "5"
+      ]
+    },
+    {
+      "method": "incremental",
+      "case": 497,
+      "command": [
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-iso-two-span-integrated-20261016\\build\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+        "497",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-iso-two-span-integrated-20261016\\measurements\\incremental-497.csv",
+        "5"
+      ]
+    },
+    {
+      "method": "baseline",
+      "case": 497,
+      "command": [
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-mother-residual-20261016\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+        "497",
+        "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-iso-two-span-integrated-20261016\\measurements\\baseline-497.csv",
+        "5"
+      ]
+    }
+  ],
+  "failures": [],
+  "runner_sha256": {
+    "CompareIsoClassificationSelected.py": "aa0ace52a683136fc8f827dd5913b186febc27cfe383bbf423b131ccf291a889",
+    "RunMotherJointSelected.py": "3e6f6953f70a54f2e32ea0312a9701d81bbc351a2588565fbf22d2fcaa773229"
+  },
+  "contract": "1e-5 positions and strict 0.1-degree U/V joint condition; all failed candidate validation costs included",
+  "order": "serial case blocks alternating baseline/incremental first; process warmup then five cold/warm pairs",
+  "completed_utc": "2026-10-16T08:41:42.404652+00:00"
+}

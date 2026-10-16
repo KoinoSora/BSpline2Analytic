@@ -1,0 +1,24 @@
+{
+  "baseline": {
+    "cases": 16,
+    "measurements": 160,
+    "passed": 160,
+    "cold_case_means_under_10ms": 12,
+    "cold_runs_under_10ms": 60,
+    "cold_max_ms": 12.5794,
+    "cold_mean_ms": 6.609275,
+    "classification_mean_ms": 2.45751375,
+    "validation_mean_ms": 4.15176125
+  },
+  "incremental": {
+    "cases": 16,
+    "measurements": 160,
+    "passed": 160,
+    "cold_case_means_under_10ms": 16,
+    "cold_runs_under_10ms": 79,
+    "cold_max_ms": 10.7781,
+    "cold_mean_ms": 4.80452,
+    "classification_mean_ms": 0.31739625,
+    "validation_mean_ms": 4.48712375
+  }
+}

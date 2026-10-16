@@ -14,14 +14,112 @@ void Require(bool ok, const std::string &message)
     if (!ok)
         throw std::runtime_error(message);
 }
-std::vector<RecoveredCandidate> Classify(paired::AnalysisContext &context)
+struct Classified
 {
+    RecoveredCandidate candidate;
+    MotherDistanceValidationReport report;
+    ClassificationDiagnostics diagnostics;
+    double classificationMs = 0;
+    unsigned attempts = 0;
+};
+void Accumulate(MotherDistanceValidationReport &sum, const MotherDistanceValidationReport &r)
+{
+    sum.timing.totalMs += r.timing.totalMs;
+    sum.timing.preparation.elapsedMs += r.timing.preparation.elapsedMs;
+    sum.timing.surfaceBounds.elapsedMs += r.timing.surfaceBounds.elapsedMs;
+    sum.timing.subdivision.elapsedMs += r.timing.subdivision.elapsedMs;
+    sum.timing.boundaryChecks.elapsedMs += r.timing.boundaryChecks.elapsedMs;
+    sum.timing.reporting.elapsedMs += r.timing.reporting.elapsedMs;
+    sum.sourceExtractionMs += r.sourceExtractionMs;
+    sum.sourceBoundaryMs += r.sourceBoundaryMs;
+    sum.targetPreparationMs += r.targetPreparationMs;
+    sum.mappingMs += r.mappingMs;
+    sum.sampleMs += r.sampleMs;
+    sum.residualBuildMs += r.residualBuildMs;
+    sum.residualBoundMs += r.residualBoundMs;
+    sum.boundaryPositionMs += r.boundaryPositionMs;
+    sum.boundaryAngleMs += r.boundaryAngleMs;
+    sum.extractionPlanMs += r.extractionPlanMs;
+    sum.sourceContractionMs += r.sourceContractionMs;
+    sum.sourceEnvelopeMs += r.sourceEnvelopeMs;
+    sum.sourceExtractions += r.sourceExtractions;
+    sum.sourceCacheHits += r.sourceCacheHits;
+    sum.surfaceNodes += r.surfaceNodes;
+    sum.boundaryNodes += r.boundaryNodes;
+    sum.mappingAttempts += r.mappingAttempts;
+    sum.extractedCells += r.extractedCells;
+    sum.cachedCellHits += r.cachedCellHits;
+    sum.tightenedCells += r.tightenedCells;
+    sum.boundaryFallbacks += r.boundaryFallbacks;
+    sum.tangentResidualFits += r.tangentResidualFits;
+    sum.tangentResidualSplits += r.tangentResidualSplits;
+}
+Classified ClassifyAndValidate(paired::AnalysisContext &context, std::ostream *attempts = nullptr,
+                              unsigned id = 0, unsigned run = 0)
+{
+    Classified out;
+    MotherDistanceValidationReport sum;
+    auto start = std::chrono::steady_clock::now();
     context.classification.emplace();
-    std::vector<RecoveredCandidate> recovered;
-    ClassifyApproximate(context.samples.source, {}, nullptr, true, &context.samples, &recovered,
-                        &*context.classification);
-    Require(!recovered.empty(), "No recovered candidate");
-    return recovered;
+    auto search = std::make_unique<IsoClassificationSearch>(context.samples, ConversionOptions{}, out.diagnostics);
+    out.classificationMs += std::chrono::duration<double,std::milli>(
+        std::chrono::steady_clock::now()-start).count();
+    for (;;)
+    {
+        start = std::chrono::steady_clock::now();
+        auto candidate = search->Next(*context.classification);
+        out.classificationMs += std::chrono::duration<double,std::milli>(
+            std::chrono::steady_clock::now()-start).count();
+        Require(bool(candidate), "Incremental classifier exhausted all candidates");
+        ++out.attempts;
+        auto r = mother::ValidatePrepared(context,*candidate);
+        if (attempts)
+        {
+            *attempts << id << ',' << run << ',' << out.attempts << ','
+                << PairedValidationStatusName(r.status) << ',' << out.classificationMs << ','
+                << r.timing.totalMs << ',' << r.timing.preparation.elapsedMs << ','
+                << r.timing.surfaceBounds.elapsedMs << ',' << r.timing.subdivision.elapsedMs << ','
+                << r.timing.boundaryChecks.elapsedMs << ',' << r.timing.reporting.elapsedMs << ','
+                << r.sourceCacheHits << ',' << r.motherDistance.upperBound << ','
+                << r.boundaryPosition.upperBound << ',' << r.boundaryJointTangent.upperBound << ','
+                << out.diagnostics.classificationStages << '\n';
+            attempts->flush();
+        }
+        Accumulate(sum,r);
+        if (!r.Passed()) continue;
+        out.candidate = *candidate; out.report = r;
+        // Geometry and certificates belong to the successful attempt; costs
+        // and work counters include every failed attempt in this same context.
+        out.report.timing = sum.timing;
+        out.report.sourceExtractionMs = sum.sourceExtractionMs;
+        out.report.sourceBoundaryMs = sum.sourceBoundaryMs;
+        out.report.targetPreparationMs = sum.targetPreparationMs;
+        out.report.mappingMs = sum.mappingMs;
+        out.report.sampleMs = sum.sampleMs;
+        out.report.residualBuildMs = sum.residualBuildMs;
+        out.report.residualBoundMs = sum.residualBoundMs;
+        out.report.boundaryPositionMs = sum.boundaryPositionMs;
+        out.report.boundaryAngleMs = sum.boundaryAngleMs;
+        out.report.extractionPlanMs = sum.extractionPlanMs;
+        out.report.sourceContractionMs = sum.sourceContractionMs;
+        out.report.sourceEnvelopeMs = sum.sourceEnvelopeMs;
+        out.report.sourceExtractions = sum.sourceExtractions;
+        out.report.sourceCacheHits = sum.sourceCacheHits;
+        out.report.surfaceNodes = sum.surfaceNodes;
+        out.report.boundaryNodes = sum.boundaryNodes;
+        out.report.mappingAttempts = sum.mappingAttempts;
+        out.report.extractedCells = sum.extractedCells;
+        out.report.cachedCellHits = sum.cachedCellHits;
+        out.report.tightenedCells = sum.tightenedCells;
+        out.report.boundaryFallbacks = sum.boundaryFallbacks;
+        out.report.tangentResidualFits = sum.tangentResidualFits;
+        out.report.tangentResidualSplits = sum.tangentResidualSplits;
+        start = std::chrono::steady_clock::now();
+        search.reset();
+        out.classificationMs += std::chrono::duration<double,std::milli>(
+            std::chrono::steady_clock::now()-start).count();
+        return out;
+    }
 }
 struct AuditResult
 {
@@ -199,6 +297,51 @@ void ExportExtraction(const mother::SourceCache &s, const std::filesystem::path 
     o << "]}";
 }
 #endif
+// Exercise continuation after success using the same representative geometry.
+// This is branch coverage, never included in production latency measurements.
+void Coverage(const std::filesystem::path &dir, unsigned id, const std::filesystem::path &file)
+{
+    auto c = ReadDatasetCase(dir / CaseFilename(id));
+    CheckDataset500Contract(c,id);
+    Require(BoundPair(*c.source,*c.input,c.refitted?1e-6:1e-9).passed,"Input certificate failed");
+    paired::AnalysisContext context(*c.input);
+    context.classification.emplace();
+    ClassificationDiagnostics diagnostics;
+    IsoClassificationSearch search(context.samples,{},diagnostics);
+    unsigned count=0,passed=0;
+    std::ofstream csv(file);
+    Require(bool(csv),"Cannot open continuation coverage CSV");
+    csv << "id,attempt,stage,status,fit_passes,geometric_iterations,sampling_refinements\n";
+    while (auto candidate=search.Next(*context.classification))
+    {
+        Require(++count<=512,"Unbounded candidate continuation");
+        Require(candidate->sourceStamp==context.classification->stamp,"Stale sampling version");
+        for (unsigned e=0;e<4;++e)
+        {
+            Require(candidate->trace.paths[e].size()==context.classification->boundaryParameters[e].size(),
+                    "Trace/sample revision mismatch");
+            for (size_t i=0;i<context.classification->boundaryParameters[e].size();++i)
+            {
+                double t=context.classification->boundaryParameters[e][i];
+                double u=e<2?(e==0?c.input->MinParamU():c.input->MaxParamU()):t;
+                double v=e<2?t:(e==2?c.input->MinParamV():c.input->MaxParamV());
+                V direct=Get(c.input->CalcPoint(u,v)),cached=context.classification->boundaries[e][i];
+                Require(Norm(direct-cached)<=512*std::numeric_limits<double>::epsilon()*(1+Norm(direct)),
+                        "Isocurve/surface evaluation disagreement");
+            }
+        }
+        auto report=mother::ValidatePrepared(context,*candidate);
+        if (report.Passed()) { Audit(c,candidate->patch,report); ++passed; }
+        csv << id << ',' << count << ',' << diagnostics.classificationStages << ','
+            << PairedValidationStatusName(report.status) << ',' << diagnostics.fitPasses << ','
+            << diagnostics.geometricIterations << ',' << diagnostics.samplingRefinements << '\n';
+    }
+    Require(passed>0 && diagnostics.classificationStages==6 && diagnostics.geometricIterations>0 &&
+            diagnostics.samplingRefinements>0,"Missing refinement/continuation coverage");
+    std::cout << "continuation " << id << " candidates=" << count << " certified=" << passed
+              << " iterations=" << diagnostics.geometricIterations << " refinements="
+              << diagnostics.samplingRefinements << " PASSED\n";
+}
 void Run(const std::filesystem::path &dir, unsigned id, const std::filesystem::path &file,
          unsigned runs)
 {
@@ -209,9 +352,12 @@ void Run(const std::filesystem::path &dir, unsigned id, const std::filesystem::p
     // Process/SDK and code warmup; each measured cold run still has a fresh cache.
     {
         paired::AnalysisContext ctx(*c.input);
-        auto candidates = Classify(ctx);
-        Audit(c, candidates.front().patch, mother::ValidatePrepared(ctx, candidates.front()));
+        auto classified = ClassifyAndValidate(ctx);
+        Audit(c, classified.candidate.patch, classified.report);
     }
+    std::ofstream attempts(file.string()+".attempts.csv");
+    Require(bool(attempts), "Cannot open candidate attempts CSV");
+    attempts << std::setprecision(17) << "id,run,attempt,status,classification_cumulative_ms,validation_ms,preparation_ms,position_ms,subdivision_ms,boundary_ms,reporting_ms,source_cache_hits,mother_bound,edge_bound,joint_bound_deg,classification_stages\n";
     std::ofstream csv(file);
     Require(bool(csv), "Cannot open selected CSV");
     csv << std::setprecision(17);
@@ -225,28 +371,25 @@ void Run(const std::filesystem::path &dir, unsigned id, const std::filesystem::p
            "boundary_fallbacks,extraction_plan_ms,source_contraction_ms,source_envelope_ms,"
            "extraction_error,audit_position_max,audit_edge_max,audit_tangent_u_max_deg,"
            "audit_tangent_v_max_deg,audit_joint_max_deg,degree_u,degree_v,controls,"
-           "tangent_residual_fits,tangent_residual_splits\n";
+           "tangent_residual_fits,tangent_residual_splits,validation_attempts,class_sampling_ms,class_algebraic_ms,class_geometric_ms,class_scoring_ms,class_recovery_ms,class_other_ms,curve_extractions,curve_point_evaluations,score_point_evaluations,point_cache_hits,fit_passes,geometric_iterations,fast_circle_fits,sampling_refinements,classification_stages,raw_candidates,distance_evaluations,shared_mother_scores,duplicate_candidates,patch_recovery_attempts\n";
     for (unsigned run = 0; run < runs; ++run)
     {
         paired::AnalysisContext ctx(*c.input);
-        auto start = std::chrono::steady_clock::now();
-        auto candidates = Classify(ctx);
-        double classification =
-            std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now() - start)
-                .count();
+        auto classified = ClassifyAndValidate(ctx,&attempts,id,run);
+        double classification = classified.classificationMs;
         for (unsigned warm = 0; warm < 2; ++warm)
         {
-            auto r = mother::ValidatePrepared(ctx, candidates.front());
+            auto r = warm ? mother::ValidatePrepared(ctx, classified.candidate) : classified.report;
             const auto &t = r.timing;
-            const auto audit = Audit(c, candidates.front().patch, r);
+            const auto audit = Audit(c, classified.candidate.patch, r);
 #ifdef BSPLINE_MOTHER_STREAMING
             if (run == 0 && warm == 0)
                 ExportExtraction(*ctx.motherSource, file.string() + ".extraction.json");
 #endif
-            Require(r.sourceCacheHits == warm && r.sourceExtractions == 1 - warm,
+            Require(r.sourceCacheHits == (warm ? 1 : classified.attempts-1) && r.sourceExtractions == 1 - warm,
                     "Unexpected cache mode");
             csv << id << ',' << TypeName(c.truth.type) << ',' << run << ','
-                << (warm ? "warm" : "cold") << ',' << candidates.size() << ','
+                << (warm ? "warm" : "cold") << ',' << classified.attempts << ','
                 << PairedValidationStatusName(r.status) << ',';
             if (!warm)
                 csv << classification;
@@ -276,7 +419,24 @@ void Run(const std::filesystem::path &dir, unsigned id, const std::filesystem::p
                 << audit.tangentV << ',' << audit.joint << ',' << c.input->DegreeU() << ','
                 << c.input->DegreeV() << ','
                 << c.input->ControlPoints().size() * c.input->ControlPoints().front().size() << ','
-                << r.tangentResidualFits << ',' << r.tangentResidualSplits << '\n';
+                << r.tangentResidualFits << ',' << r.tangentResidualSplits << ',' << (warm ? 1 : classified.attempts);
+            if (!warm)
+            {
+                const auto &d=classified.diagnostics;
+                double stages=d.extractionSamplingMs+d.algebraicFitMs+d.geometricFitMs+
+                    d.candidateScoringMs+d.patchRecoveryMs;
+                Require(stages <= classification+1e-9, "Overlapping classification timers");
+                csv << ',' << d.extractionSamplingMs << ',' << d.algebraicFitMs << ','
+                    << d.geometricFitMs << ',' << d.candidateScoringMs << ',' << d.patchRecoveryMs
+                    << ',' << classification-stages << ',' << d.curveExtractions << ','
+                    << d.curvePointEvaluations << ',' << d.sourcePointEvaluations << ','
+                    << d.pointCacheHits << ',' << d.fitPasses << ',' << d.geometricIterations << ','
+                    << d.fastCircleFits << ',' << d.samplingRefinements << ',' << d.classificationStages
+                    << ',' << d.rawCandidateCount << ',' << d.distanceEvaluations << ','
+                    << d.sharedMotherScores << ',' << d.duplicateCandidates << ',' << d.patchRecoveryAttempts;
+            }
+            else for (unsigned i=0;i<20;++i) csv << ',';
+            csv << '\n';
             csv.flush();
         }
     }
@@ -289,9 +449,11 @@ int main(int argc, char **argv)
     int result = 0;
     try
     {
-        Require(argc == 5, "Usage: dataset id csv runs");
-        Run(argv[1], static_cast<unsigned>(std::stoul(argv[2])), argv[3],
-            static_cast<unsigned>(std::stoul(argv[4])));
+        Require(argc == 5, "Usage: dataset id csv runs|coverage");
+        if (std::string(argv[4]) == "coverage")
+            Coverage(argv[1],static_cast<unsigned>(std::stoul(argv[2])),argv[3]);
+        else Run(argv[1], static_cast<unsigned>(std::stoul(argv[2])), argv[3],
+                 static_cast<unsigned>(std::stoul(argv[4])));
     }
     catch (const std::exception &e)
     {

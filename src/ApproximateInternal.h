@@ -14,9 +14,16 @@ struct CurveFits
     BoundaryInfo line, circle;
     bool hasLine = false, hasCircle = false;
 };
+struct IsoCurveFitOptions
+{
+    unsigned subdivisionsPerSpan = 2;
+    double fastTolerance = 2.5e-6;
+    bool forceGeometric = false;
+};
 CurveFits FitApproximateIsoCurve(const sggk::Curve3DPtr &, BoundaryId, double tolerance,
                                 unsigned maxSamples, IsoCurveFitDiagnostic * = nullptr,
-                                const std::function<V(double)> &sample = {});
+                                const std::function<V(double)> &sample = {},
+                                const IsoCurveFitOptions & = {});
 struct Frame3
 {
     V o, x, y, z;
@@ -131,6 +138,21 @@ struct ApproximateSeed
     AnalyticParameters parameters;
     double score = 0;
     bool fromBoundary = false, directionalCone = false;
+};
+// Resumable candidate search. The caller validates one returned candidate and
+// asks for another only after failure. No validator/optimizer is called here.
+class IsoClassificationSearch
+{
+  public:
+    IsoClassificationSearch(SurfaceSampleContext &, const ConversionOptions &,
+                            ClassificationDiagnostics &);
+    ~IsoClassificationSearch();
+    IsoClassificationSearch(const IsoClassificationSearch &) = delete;
+    IsoClassificationSearch &operator=(const IsoClassificationSearch &) = delete;
+    std::optional<RecoveredCandidate> Next(ClassificationSamples &);
+  private:
+    struct Impl;
+    std::unique_ptr<Impl> impl;
 };
 // Retains the legacy best/boundary candidates as fallbacks for new cone seeds.
 std::vector<AnalyticPatch> RecoverRankedCandidates(const ClassificationSamples &,

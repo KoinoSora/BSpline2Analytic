@@ -25,8 +25,10 @@ static sggk::Ucs3D Frame(AnalyticParameters &p, V center, V axis, V x)
     p.xDirection = Direction(x);
     return {p.origin, p.xDirection, p.axis};
 }
-static void Add(std::vector<Candidate> &out, AnalyticParameters p, const sggk::Ucs3D &frame)
+static void Add(std::vector<Candidate> &out, AnalyticParameters p, const sggk::Ucs3D &frame,
+                bool materialize)
 {
+    if (!materialize) { out.push_back({p, {}}); return; }
     sggk::SurfacePtr s;
     switch (p.type)
     {
@@ -75,7 +77,7 @@ double Distance(const AnalyticParameters &p, const sggk::Point3D &point)
 }
 
 std::vector<Candidate> Reconstruct(const std::array<BoundaryInfo, 4> &b,
-                                   const RecognitionOptions &o)
+                                   const RecognitionOptions &o, bool materialize)
 {
     std::vector<Candidate> out;
     double tol = o.distanceTolerance, angle = o.angularTolerance;
@@ -101,7 +103,7 @@ std::vector<Candidate> Reconstruct(const std::array<BoundaryInfo, 4> &b,
         AnalyticParameters p;
         p.type = sggk::SurfaceType::Plane;
         auto frame = Frame(p, origin, n, x);
-        Add(out, p, frame);
+        Add(out, p, frame, materialize);
         return out;
     }
     for (unsigned g = 0; g < 2; ++g)
@@ -138,7 +140,7 @@ std::vector<Candidate> Reconstruct(const std::array<BoundaryInfo, 4> &b,
                 p.type = sggk::SurfaceType::Cylinder;
                 p.radius = (c0.radius + c1.radius) * 0.5;
                 auto f = Frame(p, o0, axis, x);
-                Add(out, p, f);
+                Add(out, p, f, materialize);
             }
         }
         if (!parallelGenerators && std::abs(dr) > Roundoff(std::max(c0.radius, c1.radius)))
@@ -155,7 +157,7 @@ std::vector<Candidate> Reconstruct(const std::array<BoundaryInfo, 4> &b,
                 p.type = sggk::SurfaceType::Cone;
                 p.halfAngle = std::atan(std::abs(slope));
                 auto f = Frame(p, apex, coneAxis, x);
-                Add(out, p, f);
+                Add(out, p, f, materialize);
             }
         }
     }
@@ -195,7 +197,7 @@ std::vector<Candidate> Reconstruct(const std::array<BoundaryInfo, 4> &b,
                     p.type = sggk::SurfaceType::Sphere;
                     p.radius = radius;
                     auto f = Frame(p, center, a, x);
-                    Add(out, p, f);
+                    Add(out, p, f, materialize);
                 }
             }
         }
@@ -227,7 +229,7 @@ std::vector<Candidate> Reconstruct(const std::array<BoundaryInfo, 4> &b,
             p.radius = tube;
             p.majorRadius = major;
             auto f = Frame(p, center, a, x);
-            Add(out, p, f);
+            Add(out, p, f, materialize);
         }
     }
     return out;

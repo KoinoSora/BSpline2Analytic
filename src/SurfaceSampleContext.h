@@ -3,6 +3,7 @@
 #include "ExecutionDeadline.h"
 #include <map>
 #include <tuple>
+#include <functional>
 
 namespace bspline2analytic::detail
 {
@@ -24,6 +25,11 @@ public:
         sggk::DerivType sideU = sggk::DerivType::NONE,
         sggk::DerivType sideV = sggk::DerivType::NONE, bool needDerivatives = true);
     const std::vector<SurfaceSample> &Greville(bool needNormals = true);
+    // Point-only lazy insertion for an already extracted isocurve. Existing
+    // cached values win; derivative evaluation remains the ordinary At path.
+    const SurfaceSample &AtCurvePoint(double u, double v, const std::function<V()> &evaluate,
+                                     bool &inserted);
+    std::vector<std::array<double, 2>> ScoreParameters() const;
     const std::vector<size_t> &Seeds();
     const std::vector<size_t> &Scores();
     const std::vector<size_t> &CoarseScores(unsigned count);

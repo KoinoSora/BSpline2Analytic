@@ -1,0 +1,10 @@
+383 exit=0
+Failed to open log output file.
+Failed to open log output file.
+continuation 383 candidates=74 certified=37 iterations=42 refinements=20 PASSED
+
+
+485 exit=0
+Failed to open log output file.
+Failed to open log output file.
+continuation 485 candidates=33 certified=33 iterations=42 refinements=20 PASSED

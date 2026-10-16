@@ -191,6 +191,9 @@ struct IsoCurveFitDiagnostic
     double circleError = std::numeric_limits<double>::infinity();
     double radius = 0, sweepAngle = 0, sagitta = 0;
     bool hasLine = false, hasCircle = false;
+    unsigned subdivisionsPerSpan = 0, geometricIterations = 0;
+    bool skippedGeometricFit = false;
+    double samplingMs = 0, algebraicMs = 0, geometricMs = 0;
     CircleFitState circleState = CircleFitState::NotAttempted;
 };
 struct ClassificationDiagnostics
@@ -200,6 +203,14 @@ struct ClassificationDiagnostics
     unsigned cachedPointEvaluations = 0, cachedDerivativeEvaluations = 0;
     unsigned rawCandidateCount = 0, directionalConeCandidates = 0;
     unsigned patchRecoveryAttempts = 0;
+    // Exclusive stages of the incremental isoparametric classifier. Validation
+    // is measured by its caller and is never included in these counters.
+    double extractionSamplingMs = 0, algebraicFitMs = 0, geometricFitMs = 0;
+    double candidateScoringMs = 0, patchRecoveryMs = 0;
+    unsigned curveExtractions = 0, curvePointEvaluations = 0, sourcePointEvaluations = 0;
+    unsigned pointCacheHits = 0, fitPasses = 0, geometricIterations = 0;
+    unsigned fastCircleFits = 0, samplingRefinements = 0, classificationStages = 0;
+    unsigned distanceEvaluations = 0, sharedMotherScores = 0, duplicateCandidates = 0;
     // Sampled fitting diagnostics, not continuous geometric certificates.
     std::vector<IsoCurveFitDiagnostic> isoCurveFits;
 };

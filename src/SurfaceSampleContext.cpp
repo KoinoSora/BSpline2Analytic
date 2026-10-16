@@ -75,6 +75,37 @@ const SurfaceSample &SurfaceSampleContext::At(double u, double v,
     if (found!=values.end()) {found->second=x;return found->second;}
     return values.emplace(key, x).first->second;
 }
+const SurfaceSample &SurfaceSampleContext::AtCurvePoint(
+    double u, double v, const std::function<V()> &evaluate, bool &inserted)
+{
+    auto su = u == source.MaxParamU() ? sggk::DerivType::LEFT : sggk::DerivType::RIGHT;
+    auto sv = v == source.MaxParamV() ? sggk::DerivType::LEFT : sggk::DerivType::RIGHT;
+    auto key = std::make_tuple(u, v, int(su), int(sv));
+    auto found = values.find(key);
+    inserted = false;
+    if (found != values.end()) return found->second;
+    if (values.size() >= budget)
+        throw Failure(Status::VerificationFailed, "Shared source sampling budget exhausted");
+    SurfaceSample x;
+    x.u = u; x.v = v; x.point = evaluate();
+    if (!Finite(x.point)) throw Failure(Status::InvalidInput, "Nonfinite isocurve sample");
+    inserted = true;
+    return values.emplace(key, x).first->second;
+}
+std::vector<std::array<double, 2>> SurfaceSampleContext::ScoreParameters() const
+{
+    auto us = GrevilleParameters(source.KnotsU(), source.MultsU(), source.DegreeU(),
+        source.ControlPoints().size(), source.MinParamU(), source.MaxParamU());
+    auto vs = GrevilleParameters(source.KnotsV(), source.MultsV(), source.DegreeV(),
+        source.ControlPoints().front().size(), source.MinParamV(), source.MaxParamV());
+    if (us.size() > budget / vs.size())
+        throw Failure(Status::VerificationFailed, "Greville grid exceeds sample budget");
+    std::vector<std::array<double, 2>> out;
+    for (size_t i = 1; i + 1 < us.size(); ++i)
+        for (size_t j = 1; j + 1 < vs.size(); ++j)
+            if ((i + j) % 2) out.push_back({us[i], vs[j]});
+    return out;
+}
 const std::vector<SurfaceSample> &SurfaceSampleContext::Greville(bool needNormals)
 {
     CheckDeadline("sampling");

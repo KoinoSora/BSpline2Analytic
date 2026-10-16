@@ -1,0 +1,2 @@
+id,run,attempt,status,classification_cumulative_ms,validation_ms,preparation_ms,position_ms,subdivision_ms,boundary_ms,reporting_ms,source_cache_hits,mother_bound,edge_bound,joint_bound_deg,classification_stages
+485,0,1,Passed,0.45430000000000004,8.3721999999999994,1.6478000000000026,4.0581000000000014,0,2.6661000000000001,0.00020000000000000001,0,1.660410762135511e-06,9.0042491218062484e-07,0.00099713991787700701,1

@@ -1,0 +1,20 @@
+{
+  "executable_sha256": "7f44cdd6a7097b8e167cf271ec0387b377491c6cdbe9127ff4d93214b99c44c6",
+  "commands": [
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-iso-two-span-20261016\\build\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "383",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\docs\\testing\\results\\iso-two-span-selected-20261016\\coverage-383.csv",
+      "coverage"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-iso-two-span-20261016\\build\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "485",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\docs\\testing\\results\\iso-two-span-selected-20261016\\coverage-485.csv",
+      "coverage"
+    ]
+  ],
+  "note": "Deliberately continue after success on the same representative inputs; excluded from latency statistics"
+}

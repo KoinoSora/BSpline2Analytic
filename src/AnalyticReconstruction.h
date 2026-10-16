@@ -9,6 +9,6 @@ struct Candidate
     sggk::SurfacePtr surface;
 };
 std::vector<Candidate> Reconstruct(const std::array<BoundaryInfo, 4> &b,
-                                   const RecognitionOptions &o);
+                                   const RecognitionOptions &o, bool materialize = true);
 double Distance(const AnalyticParameters &p, const sggk::Point3D &point);
 } // namespace bspline2analytic::detail
