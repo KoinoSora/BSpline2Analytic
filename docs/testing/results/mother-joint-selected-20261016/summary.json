@@ -1,0 +1,16 @@
+{
+  "cases": 16,
+  "measurements": 160,
+  "passed": 160,
+  "cold_runs_under_10ms": 50,
+  "cold_runs": 80,
+  "cold_case_means_under_10ms": 9,
+  "cold_max_ms": 18.5081,
+  "max_joint_bound_deg": 0.004118165255581373,
+  "max_audit_joint_deg": 0.0036538960633228754,
+  "boundary_fallbacks": 0,
+  "maximum_mapping_attempts": 1,
+  "maximum_surface_nodes": 81,
+  "scope": "classification compute plus first candidate validation; no optimizer run; audits excluded",
+  "historical_comparison": "not a paired performance comparison; older acceptance contracts differ"
+}

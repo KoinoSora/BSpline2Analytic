@@ -1,0 +1,29 @@
+Start testing: Oct 16 14:46 中国标准时间
+----------------------------------------------------------
+1/22 Testing: BSpline2Analytic.MotherDistanceUnit
+1/22 Test: BSpline2Analytic.MotherDistanceUnit
+Command: "D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-mother-joint-tangent-20261016/Release/BSpline2AnalyticMotherDistanceTests.exe" "--unit" "D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/tests/data/dataset500"
+Directory: D:/Projects/CppProjects/SeaGo/SGK1.7.11/SGGK
+"BSpline2Analytic.MotherDistanceUnit" start time: Oct 16 14:46 中国标准时间
+Output:
+----------------------------------------------------------
+Failed to open log output file.
+Failed to open log output file.
+representative 1 preparation_ms=0.1836 position_ms=0.0218 subdivision_ms=0 boundary_ms=0.9725 reporting_ms=0.0002 total_ms=1.1781
+representative 101 preparation_ms=0.3931 position_ms=0.0621 subdivision_ms=0 boundary_ms=1.1035 reporting_ms=0.0001 total_ms=1.5588
+representative 201 preparation_ms=0.3511 position_ms=0.0462 subdivision_ms=0 boundary_ms=0.8316 reporting_ms=0.0003 total_ms=1.2292
+representative 301 preparation_ms=0.9438 position_ms=0.1498 subdivision_ms=0 boundary_ms=1.3184 reporting_ms=0.0002 total_ms=2.4122
+representative 391 preparation_ms=1.6173 position_ms=0.6717 subdivision_ms=0 boundary_ms=3.7875 reporting_ms=0.0002 total_ms=6.0767
+representative 401 preparation_ms=0.5299 position_ms=0.299 subdivision_ms=0 boundary_ms=1.1308 reporting_ms=0.0002 total_ms=1.9599
+representative 489 preparation_ms=1.6309 position_ms=3.6224 subdivision_ms=0 boundary_ms=3.6081 reporting_ms=0.0002 total_ms=8.8616
+representative 497 preparation_ms=1.6485 position_ms=3.5775 subdivision_ms=0 boundary_ms=3.8285 reporting_ms=0.0002 total_ms=9.0547
+Unit checks=1477 PASSED
+<end of output>
+Test time =   1.33 sec
+----------------------------------------------------------
+Test Passed.
+"BSpline2Analytic.MotherDistanceUnit" end time: Oct 16 14:46 中国标准时间
+"BSpline2Analytic.MotherDistanceUnit" time elapsed: 00:00:01
+----------------------------------------------------------
+
+End testing: Oct 16 14:46 中国标准时间
