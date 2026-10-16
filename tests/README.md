@@ -50,6 +50,8 @@ python tests/AuditGeneralRationalMigration.py --data tests/data/general-rational
 
 流式提取的定向性能测试使用 `BSpline2AnalyticMotherDistanceSelectedTests` 与 `BenchmarkMotherStreaming.py`，只选 16 个代表性及历史慢例，分别记录首次验证和源缓存复验。`AuditMotherExtraction.py` 用 80 位 Decimal 独立核对双精度 Bézier 控制点的误差包络；这些审计在计时外执行。改前、改后五模块耗时、测试命令及 10 ms 目标的剩余差距见[流式提取报告](../docs/testing/MOTHER_STREAMING_2026-10-16.md)。
 
+无叉乘残差版本新增 `CompareMotherResidualSelected.py`，对保存的上一版联合预算可执行文件核验哈希，按案例交替执行修改前后版本，各记录五轮首次/缓存复验。新列 `tangent_residual_fits`、`tangent_residual_splits` 统计比例拟合和细分。最终单测 1585 项断言通过；16 例新版本 160 次验证与独立审计通过，五模块及逐例比较见[残差认证报告](../docs/testing/MOTHER_RESIDUAL_SELECTED_2026-10-16.md)。
+
 2026-10-16 最新要求将母面验证器边界角度检查改为 U/V 参数切向联合预算，严格要求同一子区间的 `sin²(U夹角上界)+sin²(V夹角上界) < sin²(0.1°)`，不进行直接法向认证或失败回退，不检查相邻面 G1。新 CSV 分别输出 `tangent_u_bound_deg`、`tangent_v_bound_deg`、`joint_tangent_bound_deg`、`joint_sine_squared_bound`、`joint_tangent_failure`；联合界是各共同子区间联合界的最大值，不能用全边 U/V 各自最大值重新相加替代。第二验证器仍单独输出 `paired_tangent_bound`、`paired_normal_bound`，母面行留空；`boundary_angle_ms` 计入两个方向及联合预算认证。超限见证、无法认证和节点预算耗尽分别用 `JointTangentConditionExceeded`、`JointTangentConditionUnresolved`、`JointTangentBudgetExceeded` 说明，失败不等同于实际法向角超限。联合预算实现时仅编译；随后获准执行的 [16 例定向测试](../docs/testing/MOTHER_JOINT_SELECTED_2026-10-16.md) 已完成，160 次验证与独立审计通过。当前选例运行器为 `RunMotherJointSelected.py`，计时外直接用解析母面导数核对两个切向方向。历史 CSV 保留原合同和原数值，未重跑全 500 例。
 
 2026-10-15 起，旧投影验证器 `ValidateConversion` 废弃，保留代码和历史数据但不再测试、预热或作对照。调用它的 CTest 项已禁用，`RunSpecializedDataset500.py` 已停止执行。正式 `ConvertApproximate` 尚未接入新验证器，其完整流程测试暂缓；以下历史报告中的旧命令不再作为执行入口。

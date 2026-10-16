@@ -1,0 +1,29 @@
+Start testing: Oct 16 15:30 中国标准时间
+----------------------------------------------------------
+1/22 Testing: BSpline2Analytic.MotherDistanceUnit
+1/22 Test: BSpline2Analytic.MotherDistanceUnit
+Command: "D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-mother-residual-20261016/Release/BSpline2AnalyticMotherDistanceTests.exe" "--unit" "D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/tests/data/dataset500"
+Directory: D:/Projects/CppProjects/SeaGo/SGK1.7.11/SGGK
+"BSpline2Analytic.MotherDistanceUnit" start time: Oct 16 15:30 中国标准时间
+Output:
+----------------------------------------------------------
+Failed to open log output file.
+Failed to open log output file.
+representative 1 preparation_ms=0.1882 position_ms=0.0203 subdivision_ms=0 boundary_ms=0.9264 reporting_ms=0.0001 total_ms=1.135
+representative 101 preparation_ms=0.7212 position_ms=0.1069 subdivision_ms=0 boundary_ms=1.4153 reporting_ms=0.0005 total_ms=2.2439
+representative 201 preparation_ms=0.6334 position_ms=0.0929 subdivision_ms=0 boundary_ms=1.113 reporting_ms=0.0003 total_ms=1.8396
+representative 301 preparation_ms=0.6399 position_ms=0.1011 subdivision_ms=0 boundary_ms=0.8969 reporting_ms=0.0001 total_ms=1.638
+representative 391 preparation_ms=1.8265 position_ms=0.7958 subdivision_ms=0 boundary_ms=3.0523 reporting_ms=0.0003 total_ms=5.6749
+representative 401 preparation_ms=0.5869 position_ms=0.3312 subdivision_ms=0 boundary_ms=0.8013 reporting_ms=0.0002 total_ms=1.7196
+representative 489 preparation_ms=1.7381 position_ms=3.7707 subdivision_ms=0 boundary_ms=2.5572 reporting_ms=0.0004 total_ms=8.0664
+representative 497 preparation_ms=1.7495 position_ms=3.7614 subdivision_ms=0 boundary_ms=2.88 reporting_ms=0.0003 total_ms=8.3912
+Unit checks=1585 PASSED
+<end of output>
+Test time =   1.13 sec
+----------------------------------------------------------
+Test Passed.
+"BSpline2Analytic.MotherDistanceUnit" end time: Oct 16 15:30 中国标准时间
+"BSpline2Analytic.MotherDistanceUnit" time elapsed: 00:00:01
+----------------------------------------------------------
+
+End testing: Oct 16 15:30 中国标准时间

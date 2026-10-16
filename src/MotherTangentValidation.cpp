@@ -42,29 +42,114 @@ BV Crop(const BV &p, double begin, double end, I a, I b)
 }
 struct AngleData
 {
-    BPoly dot;
-    BV cross;
+    BV source, target;
 };
 std::pair<AngleData, AngleData> SplitAngle(const AngleData &p)
 {
-    auto d = Split(p.dot, true), x = Split(p.cross.x, true),
-         y = Split(p.cross.y, true), z = Split(p.cross.z, true);
-    return {{std::move(d.first), {std::move(x.first), std::move(y.first), std::move(z.first)}},
-            {std::move(d.second), {std::move(x.second), std::move(y.second), std::move(z.second)}}};
+    auto split = [](const BV &v) {
+        auto x = Split(v.x, true), y = Split(v.y, true), z = Split(v.z, true);
+        return std::make_pair(BV{std::move(x.first), std::move(y.first), std::move(z.first)},
+                              BV{std::move(x.second), std::move(y.second), std::move(z.second)});
+    };
+    auto s = split(p.source), t = split(p.target);
+    return {{std::move(s.first), std::move(t.first)},
+            {std::move(s.second), std::move(t.second)}};
 }
 I LengthSquared(IV v)
 {
     return Sqr(v.x) + Sqr(v.y) + Sqr(v.z);
 }
-// For positive dot, sin^2(angle)=c^2/(dot^2+c^2). This function is
-// increasing in c^2 and decreasing in dot^2; use the corresponding endpoints.
-double SineSquaredUpper(const AngleData &p)
+double Estimate(const BPoly &p, double t)
 {
-    I d = p.dot.range(), c = LengthSquared(Range(p.cross));
-    if (!(d.lo > 0) || !d.finite() || !c.finite())
+    // Heuristic only: neither the fitted scale nor the reference direction
+    // needs to interpolate the exact field. Their certificate is built below.
+    auto midpoint = [](I x) { return x.lo * .5 + x.hi * .5; };
+    if (t == 0) return midpoint(p.c.front());
+    if (t == 1) return midpoint(p.c.back());
+    std::vector<double> values;
+    values.reserve(p.c.size());
+    for (I c : p.c) values.push_back(midpoint(c));
+    for (size_t n = values.size(); n > 1; --n)
+        for (size_t i = 0; i + 1 < n; ++i)
+            values[i] = (1 - t) * values[i] + t * values[i + 1];
+    return values.front();
+}
+V Estimate(const BV &p, double t)
+{
+    return {Estimate(p.x, t), Estimate(p.y, t), Estimate(p.z, t)};
+}
+struct ResidualData
+{
+    BPoly scale;
+    BV residual;
+};
+ResidualData BuildResidual(const AngleData &p, paired::Products &products)
+{
+    // Point values only SELECT an auxiliary positive polynomial. Acceptance
+    // always encloses the complete residual, including all coefficient errors.
+    double ratio[3];
+    for (unsigned i = 0; i < 3; ++i)
+    {
+        V a = Estimate(p.source, .5 * i);
+        V b = Estimate(p.target, .5 * i);
+        ratio[i] = Dot(a, b) / Dot(b, b);
+        if (!(ratio[i] > 0) || !std::isfinite(ratio[i]))
+            return {BPoly(0, 0, I(0)), {}}; // Inconclusive; never an angle witness.
+    }
+    double magnitude = std::max({ratio[0], ratio[1], ratio[2]});
+    BPoly scale(2, 0);
+    scale.c = {I(ratio[0]), I(2 * ratio[1] - .5 * ratio[0] - .5 * ratio[2]), I(ratio[2])};
+    if (std::max(std::abs(ratio[0] - ratio[1]), std::abs(ratio[2] - ratio[1])) <=
+        64 * std::numeric_limits<double>::epsilon() * magnitude || !(scale.range().lo > 0))
+        scale = BPoly(0, 0, I(ratio[1]));
+    else if (std::abs(ratio[1] - .5 * ratio[0] - .5 * ratio[2]) <=
+             64 * std::numeric_limits<double>::epsilon() * magnitude)
+    {
+        scale = BPoly(1, 0);
+        scale.c = {I(ratio[0]), I(ratio[2])};
+    }
+    if (!scale.range().finite())
+        return {BPoly(0, 0, I(0)), {}};
+    return {scale, products.Subtract(p.source, products.Mul(p.target, scale))};
+}
+double SineSquaredUpper(const AngleData &p, const ResidualData &r)
+{
+    if (!(r.scale.range().lo > 0))
         return INFINITY;
-    I q = I(c.hi) / (Sqr(I(d.lo)) + I(c.hi));
-    return q.finite() ? std::min(1., q.hi) : INFINITY;
+    V e = Estimate(p.source, .5);
+    double size = std::max({std::abs(e.x), std::abs(e.y), std::abs(e.z)});
+    if (!(size > 0) || !std::isfinite(size))
+        return INFINITY;
+    e = e * (1 / size); // A fixed reference; it need not have exact unit length.
+    I projection = Dot(p.source, Exact(e)).range();
+    if (!(projection.lo > 0) || !projection.finite())
+        return INFINITY;
+    I length2 = Sqr(I(projection.lo)) / LengthSquared(Exact(e));
+    if (!(length2.lo > 0) || !length2.finite())
+        return INFINITY;
+    const BV &v = r.residual;
+    double error2 = 0;
+    if (v.x.u == v.y.u && v.x.u == v.z.u && v.x.v == v.y.v && v.x.v == v.z.v)
+    {
+        // Convexity of norm: bound vector control coefficients, not a new
+        // squared-norm polynomial. Coefficients include outward-rounding guards.
+        for (size_t i = 0; i < v.x.c.size(); ++i)
+        {
+            I norm2 = LengthSquared({v.x.c[i], v.y.c[i], v.z.c[i]});
+            if (!norm2.finite()) return INFINITY;
+            error2 = std::max(error2, norm2.hi);
+        }
+    }
+    else
+    {
+        I norm2 = LengthSquared(Range(v));
+        if (!norm2.finite()) return INFINITY;
+        error2 = norm2.hi;
+    }
+    I q = I(error2) / I(length2.lo);
+    // ||A-lambda B|| < ||A|| and lambda>0 also prove A.B>0 and B!=0.
+    // A failed residual bound is NOT evidence of a real angle violation.
+    return q.finite() && q.hi < 1 ? std::max(0., q.hi) : INFINITY;
 }
 double Degrees(double sineSquared)
 {
@@ -78,16 +163,21 @@ bool Witness(const std::array<AngleData, 2> &p, I limit)
     I sum(0);
     for (const auto &a : p)
     {
-        I d = Evaluate(a.dot, .5, 0).range();
+        IV s = Range(Evaluate(a.source, .5, 0)), t = Range(Evaluate(a.target, .5, 0));
+        I d = Dot(s, t);
         if (d.hi < 0)
             return true; // Oriented parameter directions disagree.
         if (!(d.lo > 0))
             return false; // Zero/uncertain derivatives cannot certify a violation.
-        I c = LengthSquared(Range(Evaluate(a.cross, .5, 0)));
-        I q = c / (Sqr(d) + c);
+        I denominator = LengthSquared(s) * LengthSquared(t);
+        if (!(denominator.lo > 0) || !denominator.finite())
+            return false;
+        // Only a pointwise, outward-rounded dot/norm identity is used here.
+        // It can prove failure, never certify an entire interval as passing.
+        I q = I(1) - Sqr(d) / denominator;
         if (!q.finite())
             return false;
-        sum = sum + q;
+        sum = sum + I(std::max(0., q.lo), std::max(0., q.hi));
     }
     return sum.lo >= limit.hi;
 }
@@ -182,11 +272,18 @@ bool ValidateJointTangents(const BoundaryTangents &source, const BoundaryTangent
             throw paired::Budget(out.message);
         }
         ++aux.boundaryNodes;
+        std::array<ResidualData, 2> residuals;
+        {
+            Measure time(aux.edgeAlgebraMs);
+            for (unsigned axis = 0; axis < 2; ++axis)
+                residuals[axis] = BuildResidual(p[axis], products);
+            out.tangentResidualFits += 2;
+        }
         double u, v, joint;
         {
             Measure time(aux.edgeBoundsMs);
-            u = SineSquaredUpper(p[0]);
-            v = SineSquaredUpper(p[1]);
+            u = SineSquaredUpper(p[0], residuals[0]);
+            v = SineSquaredUpper(p[1], residuals[1]);
             joint = (I(u) + I(v)).hi;
             if (joint < limit.lo && Degrees(joint) < options.jointTangentToleranceDeg)
             {
@@ -212,7 +309,7 @@ bool ValidateJointTangents(const BoundaryTangents &source, const BoundaryTangent
         if (depth >= budget.maxSubdivisionDepth || !(a < middle && middle < b))
         {
             out.message = "Joint tangent condition not certified within subdivision/parameter "
-                "resolution limit; the joint upper bound or positive nonzero tangent directions "
+                "resolution limit; the positive-scale residual estimate or nonzero tangent directions "
                 "remain unresolved. This is not a proven normal-angle violation; "
                 "no direct normal fallback";
             return false;
@@ -222,6 +319,7 @@ bool ValidateJointTangents(const BoundaryTangents &source, const BoundaryTangent
             Measure time(aux.edgeSubdivisionMs);
             uSplit = SplitAngle(p[0]);
             vSplit = SplitAngle(p[1]);
+            ++out.tangentResidualSplits;
         }
         return visit({uSplit.first, vSplit.first}, depth + 1, edge, a, middle) &&
                visit({uSplit.second, vSplit.second}, depth + 1, edge, middle, b);
@@ -262,12 +360,8 @@ bool ValidateJointTangents(const BoundaryTangents &source, const BoundaryTangent
                     t[axis] = Crop(dst[ti].directions[axis], dst[ti].begin, dst[ti].end, ma, mb);
                 }
             }
-            std::array<AngleData, 2> p;
-            {
-                Measure time(aux.edgeAlgebraMs);
-                for (unsigned axis = 0; axis < 2; ++axis)
-                    p[axis] = {products.Dot(s[axis], t[axis]), products.Cross(s[axis], t[axis])};
-            }
+            std::array<AngleData, 2> p{{{std::move(s[0]), std::move(t[0])},
+                                       {std::move(s[1]), std::move(t[1])}}};
             ++aux.boundarySegments;
             if (!visit(p, 0, edge, a, b))
                 return false;

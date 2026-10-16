@@ -39,6 +39,8 @@ struct MotherDistanceValidationReport
     unsigned surfaceNodes = 0, surfaceDepth = 0, boundaryPositionNodes = 0;
     unsigned boundaryNodes = 0, mappingAttempts = 0, sampleCount = 0;
     unsigned sourceExtractions = 0, sourceCacheHits = 0;
+    // Positive-scale tangent residual fits (two per joint node) and joint splits.
+    unsigned tangentResidualFits = 0, tangentResidualSplits = 0;
     double sourceExtractionMs = 0, sourceBoundaryMs = 0, targetPreparationMs = 0;
     double mappingMs = 0, sampleMs = 0, residualBuildMs = 0, residualBoundMs = 0;
     double boundaryPositionMs = 0, boundaryAngleMs = 0; // Both tangents + joint budget.

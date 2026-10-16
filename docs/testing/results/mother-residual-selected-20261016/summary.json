@@ -1,0 +1,26 @@
+{
+  "baseline": {
+    "cases": 16,
+    "measurements": 160,
+    "passed": 160,
+    "cold_case_means_under_10ms": 12,
+    "cold_runs_under_10ms": 58,
+    "cold_max_ms": 12.9684,
+    "max_joint_bound_deg": 0.004118165255581373,
+    "max_audit_joint_deg": 0.0036538960633228754,
+    "tangent_residual_splits": null,
+    "boundary_fallbacks": 0
+  },
+  "residual": {
+    "cases": 16,
+    "measurements": 160,
+    "passed": 160,
+    "cold_case_means_under_10ms": 12,
+    "cold_runs_under_10ms": 60,
+    "cold_max_ms": 12.8009,
+    "max_joint_bound_deg": 0.030595811205957068,
+    "max_audit_joint_deg": 0.0036538960633228754,
+    "tangent_residual_splits": 0,
+    "boundary_fallbacks": 0
+  }
+}

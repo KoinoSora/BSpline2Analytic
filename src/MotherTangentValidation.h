@@ -15,6 +15,8 @@ using BoundaryTangents = std::array<std::vector<TangentSegment>, 4>;
 // Extract only the outer row and its adjacent row, never a full 2D derivative.
 std::array<BV, 2> BoundaryPartials(const BV &, BoundaryId);
 BoundaryTangents PrepareTargetTangents(const paired::Chart &, paired::Products &);
+// Certify with A-lambda*B, lambda>0, and a source-length lower bound.
+// No spline cross products or normals; inconclusive bounds share one split budget.
 bool ValidateJointTangents(const BoundaryTangents &, const BoundaryTangents &,
                           const MotherDistanceValidationOptions &, PairedValidationReport &,
                           paired::Products &, MotherDistanceValidationReport &);

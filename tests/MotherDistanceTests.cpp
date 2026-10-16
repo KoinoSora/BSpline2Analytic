@@ -137,9 +137,75 @@ void JointTangentUnit()
         unresolved.jointTangentFailure == "JointTangentConditionUnresolved",
         "Degenerate tangent accepted or incorrectly reported as a witnessed violation");
 }
+void ResidualTangentUnit()
+{
+    auto scalar = [](std::initializer_list<double> values) {
+        BPoly p(static_cast<unsigned>(values.size() - 1), 0);
+        size_t i = 0; for (double v : values) p.c[i++] = I(v);
+        return p;
+    };
+    BV unitU{scalar({1}), scalar({0}), scalar({0})};
+    BV unitV{scalar({0}), scalar({0}), scalar({1})}; // Orthogonal to every target direction below.
+    auto check = [&](const BV &a, const BV &b, unsigned depth) {
+        mother::BoundaryTangents source, target;
+        for (unsigned edge = 0; edge < 4; ++edge)
+        {
+            source[edge].push_back({0, 1, {a, unitV}});
+            target[edge].push_back({0, 1, {b, unitV}});
+        }
+        MotherDistanceValidationOptions options;
+        options.boundary.validation.maxSubdivisionDepth = depth;
+        PairedValidationReport aux; aux.uMap = aux.vMap = {{0, 1}, {0, 1}};
+        paired::Products products;
+        MotherDistanceValidationReport out;
+        (void)mother::ValidateJointTangents(source, target, options, aux, products, out);
+        return out;
+    };
+    // Variable speed and direction: A=lambda B must pass without subdivision.
+    paired::Products products;
+    BV varying{scalar({1, 1}), scalar({0, 1}), scalar({0, 0})};
+    auto parallel = check(products.Mul(varying, scalar({2, 3, 7})), varying, 0);
+    Require(parallel.boundaryJointTangent.state == CheckState::Passed &&
+        parallel.boundaryJointTangent.upperBound < 1e-7 && parallel.tangentResidualSplits == 0,
+        "Positive polynomial speed scaling mistaken for angle error");
+    // The optimal scale is rational here. Failure of a quadratic approximation
+    // must be unresolved, NOT a witnessed violation, and refitting must converge.
+    BV varyingSpeed{scalar({1, 3}), scalar({0, 0}), scalar({0, 0})};
+    auto loose = check(unitU, varyingSpeed, 0);
+    Require(loose.boundaryJointTangent.state == CheckState::Unresolved &&
+        !loose.boundaryJointTangent.hasWitness, "Loose speed estimate reported as an angle violation");
+    auto refined = check(unitU, varyingSpeed, 12);
+    Require(refined.boundaryJointTangent.state == CheckState::Passed &&
+        refined.tangentResidualSplits > 0, "Residual scale was not refitted after subdivision");
+    // A defect vanishes at all three scale-fitting nodes (0,1/2,1).
+    BV hidden{scalar({1, 1, 1, 1}), scalar({0, .1 / 6, -.1 / 6, 0}), scalar({0, 0, 0, 0})};
+    auto missedBySamples = check(hidden, unitU, 12);
+    Require(missedBySamples.boundaryJointTangent.state == CheckState::Exceeded &&
+        missedBySamples.boundaryJointTangent.hasWitness, "Fit samples substituted for continuous certification");
+    auto reversed = check(unitU * I(-1), unitU, 4);
+    Require(reversed.boundaryJointTangent.state == CheckState::Exceeded,
+        "Opposite tangent direction accepted by a positive-scale residual");
+    BV uncertain = unitU; uncertain.y.c[0] = I(.001, .003);
+    auto enclosed = check(uncertain, unitU, 0);
+    Require(enclosed.boundaryJointTangent.state == CheckState::Unresolved &&
+        !enclosed.boundaryJointTangent.hasWitness, "Coefficient envelope replaced by its midpoint");
+    // Independent point audit of a nonparallel polynomial direction field.
+    BV tilted = varying; tilted.z = scalar({.0001, .0003});
+    auto accepted = check(products.Mul(tilted, scalar({2, 3, 7})), varying, 12);
+    Require(accepted.boundaryJointTangent.state == CheckState::Passed,
+        "Small variable tangent deviation was not certified");
+    for (unsigned i = 0; i <= 100; ++i)
+    {
+        double t = double(i) / 100;
+        double angle = std::atan2(.0001 + .0002 * t, std::sqrt(1 + t * t)) * 180 / Pi;
+        Require(angle <= accepted.boundaryTangentU.upperBound,
+            "Residual certificate underestimates independently evaluated angle");
+    }
+}
 void Unit(const std::filesystem::path &dir)
 {
     JointTangentUnit();
+    ResidualTangentUnit();
     MotherDistanceValidationOptions affine;
     affine.boundary.enablePiecewiseMapping = false;
     AnalyticPatch plane;

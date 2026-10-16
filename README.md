@@ -42,6 +42,8 @@
 
 第三个独立入口 [`ValidateMotherDistanceConversion`](include/MotherDistanceValidation.h) 用带浮点保护的母面距离界检查整个参数域（包括边界），保留四边区间对应位置检查。2026-10-16 改为同时检查边界上的 U/V 参数切向，以同一子区间上的 `sin²(U夹角上界)+sin²(V夹角上界) < sin²(0.1°)` 联合预算验收；容差为独立的 `jointTangentToleranceDeg`。目标母面的两个参数方向解析正交，交换、反向和分段单调映射保持此性质。分别报告 U/V 上界和联合推导角度上界，不构造源面法向，不进行直接法向认证或失败回退，也不检查相邻面 G1。联合条件超限与无法认证分别报告 `JointTangentConditionExceeded`、`JointTangentConditionUnresolved`，节点预算耗尽报告 `JointTangentBudgetExceeded`；这些状态不能解释为实际法向角已超限。联合预算版本已完成 [16 例定向测试](docs/testing/MOTHER_JOINT_SELECTED_2026-10-16.md)，160 次验证与独立审计全部通过；9/16 例的分类加首次验证均值低于 10 ms，尚未重跑全 500 例。它不提供内部逐参数配对或有限面片双向 Hausdorff 证明。球面/圆环历史测试见[历史报告](docs/testing/MOTHER_DISTANCE_SPHERE_TORUS_2026-10-15.md)。当前仍独立接入测试，未替换正式转换流程。
 
+母面验证器最新采用无样条叉乘的正比例切向残差认证，位置与联合角度容差不变。[16 例复测报告](docs/testing/MOTHER_RESIDUAL_SELECTED_2026-10-16.md)中，新版本 160 次验证与独立审计全部通过；同机比较的球面/圆环角度检查耗时分别下降 37.0%/35.9%。分类加首次验证仍有 4 个大圆环均值超过 10 ms。
+
 该入口现使用逐片双精度 Bézier 提取、误差包络和独立源缓存；代表性慢例的改前/改后测量及高精度包络审计见[流式提取报告](docs/testing/MOTHER_STREAMING_2026-10-16.md)。
 
 2026-10-15 起，等参旧验证器 `ValidateConversion` 已废弃，保留实现和历史证据但不再测试；调用它的完整转换回归暂停。`Build.ps1 -Dataset500Only` / `-SpherePolynomialOnly` 改为新验证器测试，有理输入另外测试精确 `Recognize`。当前命令、五模块计时和未覆盖范围见[测试说明](tests/README.md#等参专用路径计时)。下面涉及近似、平台、Jacobian、圆锥和极端完整转换的旧测试开关已禁用，不能按历史命令重跑。

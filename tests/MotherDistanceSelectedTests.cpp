@@ -224,7 +224,8 @@ void Run(const std::filesystem::path &dir, unsigned id, const std::filesystem::p
            "certificate_bound,source_cells,extracted_cells,cached_cell_hits,tightened_cells,"
            "boundary_fallbacks,extraction_plan_ms,source_contraction_ms,source_envelope_ms,"
            "extraction_error,audit_position_max,audit_edge_max,audit_tangent_u_max_deg,"
-           "audit_tangent_v_max_deg,audit_joint_max_deg,degree_u,degree_v,controls\n";
+           "audit_tangent_v_max_deg,audit_joint_max_deg,degree_u,degree_v,controls,"
+           "tangent_residual_fits,tangent_residual_splits\n";
     for (unsigned run = 0; run < runs; ++run)
     {
         paired::AnalysisContext ctx(*c.input);
@@ -274,7 +275,8 @@ void Run(const std::filesystem::path &dir, unsigned id, const std::filesystem::p
             csv << ',' << audit.position << ',' << audit.edge << ',' << audit.tangentU << ','
                 << audit.tangentV << ',' << audit.joint << ',' << c.input->DegreeU() << ','
                 << c.input->DegreeV() << ','
-                << c.input->ControlPoints().size() * c.input->ControlPoints().front().size() << '\n';
+                << c.input->ControlPoints().size() * c.input->ControlPoints().front().size() << ','
+                << r.tangentResidualFits << ',' << r.tangentResidualSplits << '\n';
             csv.flush();
         }
     }

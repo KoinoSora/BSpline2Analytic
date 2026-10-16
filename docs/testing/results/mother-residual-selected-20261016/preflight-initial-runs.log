@@ -1,0 +1,11 @@
+case 383, exit 0
+Failed to open log output file.
+Failed to open log output file.
+selected 383 runs=1 PASSED
+
+
+case 485, exit 0
+Failed to open log output file.
+Failed to open log output file.
+selected 485 runs=1 PASSED
+
