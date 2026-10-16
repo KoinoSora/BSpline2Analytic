@@ -80,6 +80,10 @@ if(BSPLINE2ANALYTIC_BUILD_TESTS)
     target_link_libraries(BSpline2AnalyticSequentialTests PRIVATE BSpline2AnalyticRationalFixtures)
     target_include_directories(BSpline2AnalyticSequentialTests PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src")
     target_compile_options(BSpline2AnalyticSequentialTests PRIVATE /W4 /utf-8 /fp:strict)
+    add_executable(BSpline2AnalyticIntroductionCases tests/IntroductionCases.cpp tests/Dataset500.cpp tests/PairedSurfaceBounds.cpp)
+    target_link_libraries(BSpline2AnalyticIntroductionCases PRIVATE BSpline2AnalyticRationalFixtures)
+    target_include_directories(BSpline2AnalyticIntroductionCases PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src")
+    target_compile_options(BSpline2AnalyticIntroductionCases PRIVATE /W4 /utf-8 /fp:strict)
     add_test(NAME BSpline2Analytic.SequentialShortCircuit COMMAND BSpline2AnalyticSequentialTests
         "${CMAKE_CURRENT_SOURCE_DIR}/tests/data" iso 0 1 "${CMAKE_CURRENT_BINARY_DIR}/sequential-unit.csv" unit)
     add_test(NAME BSpline2Analytic.SequentialFallback COMMAND BSpline2AnalyticSequentialTests
