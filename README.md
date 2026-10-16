@@ -22,6 +22,19 @@
 
 ## 当前功能
 
+新增统一入口 [`ConvertIsoThenFallback`](include/SequentialConversion.h)：每个输入先尝试等参专用路径，失败后进入一般兜底候选验证与母面参数优化，验收使用当前母面/有理边界验证器。默认等参子预算 20 ms，两分支共享 50 ms 总预算；预算耗尽或真实墙钟超过上限均判失败。`Passed()` 为最终成功判据，`path`、`isoAttempted`、`fallbackAttempted` 和两个预算标志保留执行情况。该入口不调用下文仍保留的旧 `Convert` / `ConvertApproximate` 验证链。测试命令与计时口径见[统一非极端测试](tests/README.md#等参优先失败兜底的统一测试)。
+
+```cpp
+#include "SequentialConversion.h"
+auto result = bspline2analytic::ConvertIsoThenFallback(inputSurface);
+if (result.Passed()) {
+    // iso_exact: result.exact；iso_mother: result.isoPatch / result.mother；
+    // general_rational: result.fallback.patch / result.fallback。
+    // 两条路径的验收合同不同，使用对应报告，不混称同一种全域证书。
+}
+// result.totalMs 包括分类、失败尝试、优化和验证，不包括调用方结果输出。
+```
+
 输入来自平面、圆柱面、圆锥面、球面或圆环面的精确解析转换，四条边界对应解析面参数域的两对等参线。允许节点插入、升阶、U/V 交换及参数反向；识别不依赖来源标签或固定控制点排列。
 
 - `AnalyzeBoundaries`：提取四条边界，恢复直线或圆弧的几何参数和有向范围。

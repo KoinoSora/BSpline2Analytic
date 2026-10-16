@@ -165,6 +165,7 @@ RecognitionResult detail::RecognizeWithSamples(const sggk::BSplineSurface &s,
         result.surface.reset();
         result.domain.reset();
     }
+    catch (const detail::DeadlineExceeded &) { throw; }
     catch (const std::exception &e)
     {
         result.status = Status::InvalidInput;

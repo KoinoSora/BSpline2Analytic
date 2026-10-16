@@ -18,10 +18,10 @@ struct Measure
     }
 };
 bool ValidatePosition(SourceCache &, const AnalyticParameters &,
-                      const RecognitionOptions &, MotherDistanceValidationReport &, ValidationTimer &);
+                      const RecognitionOptions &, MotherDistanceValidationReport &, ValidationTimer &, const ExecutionDeadline * = nullptr);
 bool ValidateEdgePositions(const paired::PreparedSource &, const paired::Chart &,
                            const PairedValidationOptions &, PairedValidationReport &,
-                           paired::Products &, MotherDistanceValidationReport &);
+                           paired::Products &, MotherDistanceValidationReport &, const ExecutionDeadline * = nullptr);
 MotherDistanceValidationReport ValidatePrepared(paired::AnalysisContext &,
     const RecoveredCandidate &, const MotherDistanceValidationOptions & = {});
 } // namespace bspline2analytic::detail::mother

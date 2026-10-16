@@ -943,6 +943,7 @@ struct IsoClassificationSearch::Impl
     {
         while (stage < 6)
         {
+            samples.CheckDeadline("iso_search");
             if (!stageReady)
             {
                 if (!BuildStage()) { ++stage; continue; }

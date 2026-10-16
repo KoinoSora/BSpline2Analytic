@@ -61,5 +61,6 @@ GeneralValidationReport ValidateGeneral(const sggk::BSplineSurface &, const Anal
 GeneralConversionResult ConvertGeneralWithSamples(const sggk::BSplineSurface &,
                                                   const GeneralConversionOptions &,
                                                   SurfaceSampleContext &);
+SampleCache GeneralSamples(SurfaceSampleContext &);
 RefinementProblem MotherRefinementProblem(const SampleCache &, const ConversionOptions &);
 }

@@ -12,6 +12,7 @@ if(NOT WIN32 OR NOT MSVC)
     message(FATAL_ERROR "This SDK integration currently targets Windows x64 with MSVC")
 endif()
 add_library(BSpline2Analytic STATIC
+    src/SequentialConversion.cpp
     src/BSpline2Analytic.cpp src/SurfaceConversion.cpp src/BoundaryAnalysis.cpp src/AnalyticReconstruction.cpp
     src/PatchRecovery.cpp src/RecognitionValidation.cpp src/Numerics.cpp
     src/IntervalBounds.cpp src/ApproximateGeometry.cpp src/ApproximateNumerics.cpp src/IsoCurveAnalysis.cpp
@@ -75,6 +76,17 @@ if(BSPLINE2ANALYTIC_BUILD_TESTS)
     target_include_directories(BSpline2AnalyticRationalFixtures PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src")
     target_compile_options(BSpline2AnalyticRationalFixtures PRIVATE /W4 /utf-8 /fp:strict)
     add_executable(BSpline2AnalyticGeneralRationalDatasetTests tests/GeneralRationalDatasetTests.cpp)
+    add_executable(BSpline2AnalyticSequentialTests tests/SequentialConversionTests.cpp tests/Dataset500.cpp tests/PairedSurfaceBounds.cpp)
+    target_link_libraries(BSpline2AnalyticSequentialTests PRIVATE BSpline2AnalyticRationalFixtures)
+    target_include_directories(BSpline2AnalyticSequentialTests PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src")
+    target_compile_options(BSpline2AnalyticSequentialTests PRIVATE /W4 /utf-8 /fp:strict)
+    add_test(NAME BSpline2Analytic.SequentialShortCircuit COMMAND BSpline2AnalyticSequentialTests
+        "${CMAKE_CURRENT_SOURCE_DIR}/tests/data" iso 0 1 "${CMAKE_CURRENT_BINARY_DIR}/sequential-unit.csv" unit)
+    add_test(NAME BSpline2Analytic.SequentialFallback COMMAND BSpline2AnalyticSequentialTests
+        "${CMAKE_CURRENT_SOURCE_DIR}/tests/data" main 100 1 "${CMAKE_CURRENT_BINARY_DIR}/sequential-unit.csv" unit)
+    set_tests_properties(BSpline2Analytic.SequentialShortCircuit BSpline2Analytic.SequentialFallback PROPERTIES TIMEOUT 30
+        WORKING_DIRECTORY "${SGGK_SDK_DIR}"
+        ENVIRONMENT_MODIFICATION "PATH=path_list_prepend:${SGGK_SDK_DIR}/x64-win/bin${_sgk_config}")
     target_link_libraries(BSpline2AnalyticGeneralRationalDatasetTests PRIVATE BSpline2AnalyticRationalFixtures)
     target_include_directories(BSpline2AnalyticGeneralRationalDatasetTests PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src")
     target_compile_options(BSpline2AnalyticGeneralRationalDatasetTests PRIVATE /W4 /utf-8 /fp:strict)

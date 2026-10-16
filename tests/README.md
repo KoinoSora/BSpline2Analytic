@@ -1,5 +1,23 @@
 # 测试代码与固定输入
 
+## 等参优先、失败兜底的统一测试
+
+本轮结果见 [1,160 例串联测试报告](../docs/testing/SEQUENTIAL_NON_EXTREME_2026-10-16.md)：3,480 次全部实测不超过 50 ms，947 例三次均小于 10 ms；985 个普通正例通过 920 个，183 例预算失败，回归未全部通过。
+
+`SequentialConversion.h::ConvertIsoThenFallback` 对每个输入先运行等参分支（有理输入为精确识别，非有理输入为增量等参分类＋母面验证），失败后运行一般分类、当前有理边界验证，必要时优化母面参数并重新验证。所有候选和两分支共享 50 ms 总预算，等参子预算默认为 20 ms；触及子预算可进入兜底，总预算退出或实测超过 50 ms 均返回失败。两个分支保留各自证书合同，不能将兜底的内部采样解释为连续母面距离证明。
+
+`RunSequentialNonExtreme.py` 串行运行专用 500 例、新版兜底 main 600 例和 extra 60 例，每例三次新缓存测试，不做逐例预热。极端和压力集不运行。每例 `total_ms` 为 API 调用前后的真实墙钟，包含分类、全部失败候选、优化、验收和返回开销，不含输入读取、来源证书、独立输出审计、CSV 或控制台输出。单例是否小于 10 ms 取三次中的最大值。
+
+所有输入使用统一默认配置，不向算法传入母面真值、参数图或测试标签。extra 的已知母面拒绝、非线性边界、内部采样探针、非法选项及节点预算标签，以及专用数据的坍缩边，单列为诊断数据；非法选项/节点预算文件在本次是几何输入覆盖，不冒充原先的定母面/特殊配置测试。正例必须三次成功且输出审计通过；无解负例必须三次非超时拒绝，超时不能算正确拒绝。复现：
+
+```powershell
+cmake -S . -B build-sequential-20261016 -A x64
+cmake --build build-sequential-20261016 --config Release --target BSpline2AnalyticSequentialTests -- /m:1 /nr:false
+python tests/RunSequentialNonExtreme.py --exe build-sequential-20261016/Release/BSpline2AnalyticSequentialTests.exe --sdk ../../../SGGK --data tests/data --output build-sequential-20261016/full --runs 3
+```
+
+`cases.csv` 提供逐例正确性、三次最大耗时和 10/50 ms 判断；`runs.csv` 保留原始测量；`failures.csv`、`over-10ms.csv`、`timeouts.csv`、`over-50ms.csv` 分别列出未通过、10 ms 未达标、预算退出和真实超时。脚本返回 1 表示存在未通过/预算失败，返回 2 表示执行或记录完整性错误。
+
 当前一般兜底数据为 [`data/general-rational-v2/`](data/general-rational-v2/)，共 985 例（600 主集、60 专项、320 极端、5 压力）。正例从母面 **NURBS 参数域直线边界**构造；20 个非线性边界探针继续作为单独的合同探针。旧 `dataset500/general-*.b2a`、`general-extra-*.b2a` 和 `general-extreme320/` 已废弃，仅保留历史证据。专用路径 `case-*.b2a` 不受影响。
 
 985 例两方向次数均为 **3–5**，控制顶点总数 **≤200**，算法几何容差保持 **1e-5**；有意超差的负例/探针不改变验收阈值。生成器、清单发布和运行器均检查表示约束。

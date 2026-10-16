@@ -1,0 +1,39 @@
+Start testing: Oct 16 17:24 中国标准时间
+----------------------------------------------------------
+3/24 Testing: BSpline2Analytic.SequentialShortCircuit
+3/24 Test: BSpline2Analytic.SequentialShortCircuit
+Command: "D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-sequential-20261016/Release/BSpline2AnalyticSequentialTests.exe" "D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/tests/data" "iso" "0" "1" "D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-sequential-20261016/sequential-unit.csv" "unit"
+Directory: D:/Projects/CppProjects/SeaGo/SGK1.7.11/SGGK
+"BSpline2Analytic.SequentialShortCircuit" start time: Oct 16 17:24 中国标准时间
+Output:
+----------------------------------------------------------
+Failed to open log output file.
+Failed to open log output file.
+Sequential unit checks passed: iso:0
+<end of output>
+Test time =   0.08 sec
+----------------------------------------------------------
+Test Passed.
+"BSpline2Analytic.SequentialShortCircuit" end time: Oct 16 17:24 中国标准时间
+"BSpline2Analytic.SequentialShortCircuit" time elapsed: 00:00:00
+----------------------------------------------------------
+
+4/24 Testing: BSpline2Analytic.SequentialFallback
+4/24 Test: BSpline2Analytic.SequentialFallback
+Command: "D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-sequential-20261016/Release/BSpline2AnalyticSequentialTests.exe" "D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/tests/data" "main" "100" "1" "D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-sequential-20261016/sequential-unit.csv" "unit"
+Directory: D:/Projects/CppProjects/SeaGo/SGK1.7.11/SGGK
+"BSpline2Analytic.SequentialFallback" start time: Oct 16 17:24 中国标准时间
+Output:
+----------------------------------------------------------
+Failed to open log output file.
+Failed to open log output file.
+Sequential unit checks passed: main:100
+<end of output>
+Test time =   0.10 sec
+----------------------------------------------------------
+Test Passed.
+"BSpline2Analytic.SequentialFallback" end time: Oct 16 17:24 中国标准时间
+"BSpline2Analytic.SequentialFallback" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Oct 16 17:24 中国标准时间

@@ -61,7 +61,7 @@ Edge Crop(const Edge &edge, I lo, I hi)
 } // namespace
 bool ValidateEdgePositions(const paired::PreparedSource &source, const paired::Chart &chart,
                            const PairedValidationOptions &options, PairedValidationReport &aux,
-                           paired::Products &products, MotherDistanceValidationReport &out)
+                           paired::Products &products, MotherDistanceValidationReport &out, const ExecutionDeadline *deadline)
 {
     Measure time(out.boundaryPositionMs);
     out.boundaryPosition = {};
@@ -76,6 +76,7 @@ bool ValidateEdgePositions(const paired::PreparedSource &source, const paired::C
     double maximum = 0;
     std::function<bool(const BV &, const BPoly &, unsigned)> visit;
     visit = [&](const BV &error, const BPoly &weight, unsigned depth) {
+        if (deadline) deadline->Check("iso_boundary_position");
         if (++aux.certificate.piecesVisited > options.validation.maxValidationPieces)
             throw paired::Budget("Boundary node budget exhausted");
         ++out.boundaryPositionNodes;

@@ -90,7 +90,7 @@ bool Run(paired::AnalysisContext &context, const AnalyticPatch &patch,
         if (!Samples(context, patch.parameters, options.position, out))
             return false;
     }
-    if (!ValidatePosition(source, patch.parameters, options.position, out, timer))
+    if (!ValidatePosition(source, patch.parameters, options.position, out, timer, context.samples.deadline))
         return false;
     {
         Measure time(out.sourceBoundaryMs);
@@ -130,12 +130,12 @@ bool Run(paired::AnalysisContext &context, const AnalyticPatch &patch,
             {
                 ValidationTimer::Scope edges(timer, out.timing.boundaryChecks);
                 positionOK =
-                    ValidateEdgePositions(*source.boundary, chart, boundary, aux, products, out);
+                    ValidateEdgePositions(*source.boundary, chart, boundary, aux, products, out, context.samples.deadline);
                 if (positionOK)
                 {
                     Measure time(out.boundaryAngleMs);
                     angularOK = ValidateJointTangents(source.boundaryTangents, target, options,
-                                                      aux, products, out);
+                                                      aux, products, out, context.samples.deadline);
                 }
             }
             if ((positionOK && angularOK) || boundaryTightened ||
@@ -202,6 +202,7 @@ MotherDistanceValidationReport Validate(paired::AnalysisContext &context,
                          : PairedValidationStatus::NotCertified;
         out.message = e.what();
     }
+    catch (const DeadlineExceeded &) { throw; }
     catch (const std::exception &e)
     {
         out.status = PairedValidationStatus::NumericalFailure;

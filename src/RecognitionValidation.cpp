@@ -72,8 +72,9 @@ static double Bound(const Homogeneous &h, const AnalyticParameters &p, double sc
     return std::numeric_limits<double>::infinity();
 }
 static double ValidatePiece(const Homogeneous &h, const AnalyticParameters &p, double scale,
-                            const RecognitionOptions &o, unsigned depth, unsigned &count)
+                            const RecognitionOptions &o, unsigned depth, unsigned &count, const ExecutionDeadline *deadline)
 {
+    if (deadline) deadline->Check("exact_surface_bound");
     if (++count > o.maxValidationPieces)
         throw Failure(Status::VerificationFailed, "Surface bound subdivision budget exceeded");
     double bound = Bound(h, p, scale);
@@ -83,8 +84,8 @@ static double ValidatePiece(const Homogeneous &h, const AnalyticParameters &p, d
         throw Failure(Status::VerificationFailed,
                       "Unable to establish the requested surface distance bound");
     auto children = Split(h, (depth % 2) == 0);
-    return std::max(ValidatePiece(children.first, p, scale, o, depth + 1, count),
-                    ValidatePiece(children.second, p, scale, o, depth + 1, count));
+    return std::max(ValidatePiece(children.first, p, scale, o, depth + 1, count, deadline),
+                    ValidatePiece(children.second, p, scale, o, depth + 1, count, deadline));
 }
 ValidationReport ValidateCandidate(const sggk::BSplineSurface &s, const Candidate &c,
                                    const std::array<BoundaryInfo, 4> &b,
@@ -135,7 +136,7 @@ ValidationReport ValidateCandidate(const sggk::BSplineSurface &s, const Candidat
     for (const auto &h : SurfacePieces(s, origin, scale))
         report.surfaceDistanceBound =
             std::max(report.surfaceDistanceBound,
-                     ValidatePiece(h, c.parameters, scale, o, 0, report.piecesVisited));
+                     ValidatePiece(h, c.parameters, scale, o, 0, report.piecesVisited, samples.deadline));
     report.level = VerificationLevel::BernsteinBound;
     report.message = "Bernstein bound to analytic mother surface with floating-point guard; not a "
                      "directed-rounding interval certificate or trimmed-patch Hausdorff bound.";

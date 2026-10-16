@@ -241,7 +241,7 @@ BoundaryTangents PrepareTargetTangents(const paired::Chart &chart, paired::Produ
 bool ValidateJointTangents(const BoundaryTangents &source, const BoundaryTangents &target,
                           const MotherDistanceValidationOptions &options,
                           PairedValidationReport &aux, paired::Products &products,
-                          MotherDistanceValidationReport &out)
+                          MotherDistanceValidationReport &out, const ExecutionDeadline *deadline)
 {
     out.boundaryTangentU = {};
     out.boundaryTangentV = {};
@@ -263,6 +263,7 @@ bool ValidateJointTangents(const BoundaryTangents &source, const BoundaryTangent
     };
     std::function<bool(const std::array<AngleData, 2> &, unsigned, unsigned, double, double)> visit;
     visit = [&](const std::array<AngleData, 2> &p, unsigned depth, unsigned edge, double a, double b) {
+        if (deadline) deadline->Check("iso_joint_tangent");
         region(edge, a, b);
         if (++aux.certificate.piecesVisited > budget.maxValidationPieces)
         {

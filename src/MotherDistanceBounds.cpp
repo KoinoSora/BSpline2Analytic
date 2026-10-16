@@ -250,7 +250,7 @@ std::pair<Residual, Residual> Subdivide(const Residual &f, bool along)
 } // namespace
 bool ValidatePosition(SourceCache &source, const AnalyticParameters &p,
                       const RecognitionOptions &options, MotherDistanceValidationReport &out,
-                      ValidationTimer &timer)
+                      ValidationTimer &timer, const ExecutionDeadline *deadline)
 {
     ValidationTimer::Scope stage(timer, out.timing.surfaceBounds);
     Products products;
@@ -266,6 +266,7 @@ bool ValidatePosition(SourceCache &source, const AnalyticParameters &p,
     double maximum = 0;
     std::function<bool(const Residual &, unsigned)> visit;
     visit = [&](const Residual &f, unsigned depth) {
+        if (deadline) deadline->Check("iso_surface_bound");
         if (++out.surfaceNodes > options.maxValidationPieces)
             throw paired::Budget("Mother distance node budget exhausted");
         out.surfaceDepth = std::max(out.surfaceDepth, depth);
@@ -292,6 +293,7 @@ bool ValidatePosition(SourceCache &source, const AnalyticParameters &p,
     // Streaming permits early failure, but Passed requires every cell to pass.
     for (size_t id = 0; id < source.cells.size(); ++id)
     {
+        if (deadline) deadline->Check("iso_source_cell");
         const SourceCell *cell;
         {
             ValidationTimer::Scope preparation(timer, out.timing.preparation);

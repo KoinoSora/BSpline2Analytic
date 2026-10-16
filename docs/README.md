@@ -2,6 +2,7 @@
 
 | 分类 | 文档 | 用途 |
 | --- | --- | --- |
+| 测试 | [等参优先、失败兜底的 1,160 例测试](testing/SEQUENTIAL_NON_EXTREME_2026-10-16.md) | 统一入口、共享 50 ms 预算、三次完整算法耗时、逐例正确性与 10 ms 判断。 |
 | 算法 | [算法说明书（10 页 PDF）](algorithm/BSpline2Analytic-algorithm.pdf) | 当前实现的数学方法、流程图、真实案例及工程边界。 |
 | 算法 | [源文件与编译说明](algorithm/README.md) | LaTeX 源文件、编译入口和测试证据清单。 |
 | 算法 | [精确路径设计](algorithm/IMPLEMENTATION_PLAN.md) | 有理样条识别、解析母面重建及原始设计。 |

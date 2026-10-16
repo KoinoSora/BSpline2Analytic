@@ -78,6 +78,7 @@ const SurfaceSample &SurfaceSampleContext::At(double u, double v,
 const SurfaceSample &SurfaceSampleContext::AtCurvePoint(
     double u, double v, const std::function<V()> &evaluate, bool &inserted)
 {
+    CheckDeadline("iso_sampling");
     auto su = u == source.MaxParamU() ? sggk::DerivType::LEFT : sggk::DerivType::RIGHT;
     auto sv = v == source.MaxParamV() ? sggk::DerivType::LEFT : sggk::DerivType::RIGHT;
     auto key = std::make_tuple(u, v, int(su), int(sv));

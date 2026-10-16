@@ -19,5 +19,5 @@ BoundaryTangents PrepareTargetTangents(const paired::Chart &, paired::Products &
 // No spline cross products or normals; inconclusive bounds share one split budget.
 bool ValidateJointTangents(const BoundaryTangents &, const BoundaryTangents &,
                           const MotherDistanceValidationOptions &, PairedValidationReport &,
-                          paired::Products &, MotherDistanceValidationReport &);
+                          paired::Products &, MotherDistanceValidationReport &, const ExecutionDeadline * = nullptr);
 } // namespace bspline2analytic::detail::mother

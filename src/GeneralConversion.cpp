@@ -37,7 +37,7 @@ static void CheckGeneralInput(const sggk::BSplineSurface &s, const GeneralConver
     for (size_t i = 1; i + 1 < s.MultsV().size(); ++i)
         if (s.MultsV()[i] > s.DegreeV()) throw Failure(Status::Unsupported, "Discontinuous V knot");
 }
-static SampleCache GeneralSamples(SurfaceSampleContext &context)
+SampleCache GeneralSamples(SurfaceSampleContext &context)
 {
     SampleCache samples;
     auto add = [&](const SurfaceSample &x) {
