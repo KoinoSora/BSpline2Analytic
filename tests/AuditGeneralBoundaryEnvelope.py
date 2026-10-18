@@ -1,9 +1,9 @@
-"""Exact rational audit of double error envelopes (no SDK/validator calls).
+# 文件职责：双精度有理边界误差包络的独立精确算术审计。
+# 用有理数运算复算导出系数的误差和导数，不调用 SDK 或生产验证器。
 
-Treat every exported binary double endpoint as exact. Compute independent
-interval Bernstein products with fractions.Fraction and exact binomial ratios.
-This checks coefficients, not only sampled values or double-precision results.
-"""
+"""使用精确有理数审计双精度误差包络，不调用 SDK 或生产验证器。
+把导出的二进制双精度端点视为精确值，通过 fractions.Fraction 与精确二项式系数比独立计算区间 Bernstein 乘积。
+审计对象是系数包络，不只是采样点或双精度结果。"""
 import json
 import math
 import sys

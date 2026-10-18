@@ -1,3 +1,8 @@
+/**
+ * @file BusinessExtremeDataset.cpp
+ * @brief 业务长度尺度、弓高及复杂度矩阵的构造。
+ * 几何规格与实测量分别保存，构造容差不替代算法验收阈值。
+ */
 #include "ExtremeDataset.h"
 #include "ApproximateInternal.h"
 #include <fstream>
@@ -35,7 +40,7 @@ void Sweep(ExtremeSpec &s, double theta)
 { s.theta = theta; s.domain[0] = -theta/2; s.domain[1] = theta/2; }
 bool InRange(double x)
 {
-    // Only rounding allowance for generated length measurements, not algorithm tolerance.
+    // 仅为生成时的长度测量预留舍入余量，不放宽算法容差。
     return std::isfinite(x) && x >= .01 * (1-1e-10) && x <= 1000 * (1+1e-10);
 }
 }
@@ -46,7 +51,7 @@ std::vector<ExtremeSpec> BusinessExtremeSpecs()
         s.pair = static_cast<unsigned>(out.size()); s.group = group; s.label = label;
         out.push_back(s);
     };
-    // 30 pairs: six length scales, five families. Keep all noncollapsed edges in range.
+    // 30 对输入覆盖六个长度尺度和五类母面；所有非坍缩边均须落在规定长度范围。
     for (unsigned type = 0; type < 5; ++type)
         for (double size : {.01, .1, 1., 10., 100., 1000.})
         {
@@ -76,7 +81,7 @@ std::vector<ExtremeSpec> BusinessExtremeSpecs()
             }
             add(s, "scale_regular", "scale_" + std::to_string(size));
         }
-    // 24 pairs: difficulty determined by sagitta / final distance tolerance.
+    // 24 对输入的难度由弓高与最终距离容差之比确定。
     for (unsigned type = 1; type < 5; ++type)
         for (double radius : {100., 1000.})
             for (double chi : {.1, 1., 10.})
@@ -85,7 +90,7 @@ std::vector<ExtremeSpec> BusinessExtremeSpecs()
                 Sweep(s, 4*std::asin(std::sqrt(chi*1e-5/(2*s.rho))));
                 add(s, "short_arc", "radius_"+std::to_string(radius)+"_chi_"+std::to_string(chi));
             }
-    // Eight pairs bracket the former fixed angular gate at a permitted radius.
+    // 八对输入在允许半径下夹住历史固定角阈值，检查阈值两侧行为。
     for (unsigned type = 1; type < 5; ++type)
         for (double factor : {.99, 1.01})
             add(Base(type, 1000, factor*1e-3), "angle_gate", "sweep_"+std::to_string(factor)+"e-3");
@@ -148,7 +153,7 @@ std::vector<ExtremeSpec> BusinessExtremeSpecs()
     for (unsigned type : {1u, 3u, 4u})
     {
         auto s = Base(type,100,.01); s.orientation = 7;
-        // Exercise spatial rotation as well as UV reversal/exchange.
+        // 同时覆盖空间旋转及 UV 反向、交换。
         s.truth.axis = Direction(Unit(V{1,2,3}));
         s.truth.xDirection = Direction(Perpendicular(Unit(V{1,2,3})));
         add(s,"orientation","rotated_reverse_exchange");
@@ -224,7 +229,7 @@ void PadBusinessExtreme(sggk::BSplineSurface &s, unsigned bucket)
     unsigned u0 = static_cast<unsigned>(s.ControlPoints().size());
     unsigned v0 = static_cast<unsigned>(s.ControlPoints()[0].size());
     unsigned bestU = 0, bestV = 0, best = bucket == 4 ? 0 : 201;
-    // Prefer the assigned band; if degree requires more controls, record a larger band.
+    // 优先保持指定控制点数量档；若次数要求更多控制点，则如实记录更大的档位。
     for (unsigned b = bucket; b < 5 && !bestU; ++b)
         for (unsigned u = u0; u <= 25; ++u)
             for (unsigned v = v0; v <= 25; ++v)

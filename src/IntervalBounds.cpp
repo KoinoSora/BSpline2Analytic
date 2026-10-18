@@ -1,3 +1,8 @@
+/**
+ * @file IntervalBounds.cpp
+ * @brief 向外舍入区间运算与 Bernstein 多项式求界。
+ * 提供四则运算、三角函数包络、提取、求导和细分；非有限或含零分母必须保守传播。
+ */
 #include "IntervalBounds.h"
 #include <cfenv>
 #include <xmmintrin.h>
@@ -115,8 +120,7 @@ static I Trig(I x, bool cosine)
         term = -term * zz / I(a * b);
         sum = sum + term;
     }
-    // Reduced |z| <= 2*pi: the order-57 remainder is below 1e-30.
-    // Use a deliberately larger, rigorously safe remainder.
+    // 约化后 |z|<=2*pi，57 阶余项低于 1e-30；实际采用更大的保守余项以保证包络。
     if (z.absMax() > 7)
         return {-1, 1};
     I rem(1);
@@ -454,8 +458,7 @@ std::vector<BezierCell> ExtractCells(const sggk::BSplineSurface &s)
                             cell.p.z.at(i, j) = sum.z;
                             if (s.IsRational()) cell.w.at(i, j) = denominator;
                         }
-                    // SGK may retain an endpoint one ulp inside the reversed knot
-                    // domain. Restrict the polynomial itself, not only its UV labels.
+                    // SGK 反向后可能保留距结点域端点一个 ulp 的裁剪位置；必须限制多项式本身，不能只改 UV 标签。
                     auto crop = [&](bool along, double lo, double hi) {
                         double &start = along ? cell.u0 : cell.v0;
                         double &end = along ? cell.u1 : cell.v1;
@@ -546,9 +549,8 @@ I AngleRange(const BPoly &x, const BPoly &y, double ref)
     BPoly a = x * c + y * s, b = y * c - x * s;
     if (a.range().lo <= 0)
         return I::Whole();
-    // With positive denominator Bernstein coefficients, b(t)/a(t) is a
-    // convex combination of b_i/a_i. Keep shared radial/height dependence:
-    // dividing two independent coordinate ranges was extremely loose on cones.
+    // 分母 Bernstein 系数为正时，b(t)/a(t) 是系数比 b_i/a_i 的凸组合。
+    // 保留径向/高度的共同依赖，避免独立坐标区间相除使圆锥误差界过宽。
     double lo = INFINITY, hi = -INFINITY;
     for (size_t i = 0; i < a.c.size(); ++i)
     {

@@ -1,3 +1,8 @@
+/**
+ * @file ValidationTiming.h
+ * @brief 验证器五阶段互斥计时与统计归并。
+ * 嵌套阶段切换时扣除外层重复时间，返回报告前显式结束计时；输出日志由调用方另计。
+ */
 #pragma once
 #include "ApproximateConversion.h"
 #include <chrono>
@@ -19,8 +24,7 @@ inline void AddValidationTiming(ValidationTiming &out, const ValidationTiming &i
     out.totalMs += in.totalMs;
 }
 
-// Charge each interval between clock reads to exactly one active stage.
-// Scope restores the caller's stage, excluding the nested work from it.
+// 相邻两次读钟之间的时间只归入一个活动阶段；嵌套 Scope 退出后恢复调用方阶段，避免将嵌套工作重复计入外层。
 class ValidationTimer
 {
     using Clock = std::chrono::steady_clock;
@@ -60,7 +64,7 @@ class ValidationTimer
         Scope &operator=(const Scope &) = delete;
         ~Scope() { timer.Switch(*previous, false); }
     };
-    // Explicitly finish before returning/moving the report (independent of NRVO).
+    // 返回或移动报告前显式结束计时，不依赖具名返回值优化 NRVO。
     void Finish()
     {
         const auto now = Clock::now();

@@ -1,4 +1,7 @@
-"""Audit only GeneralExtreme320 membership, dimensions, hashes, and test results."""
+# 文件职责：历史一般极端记录的结构、尺寸与性能汇总。
+# 控制凸包证明与弦长测量分别表述，不重跑归档输入。
+
+"""只审计历史 GeneralExtreme320 成员、尺寸、哈希与测试记录。"""
 import argparse
 import csv
 import hashlib
@@ -62,8 +65,8 @@ def audit_data(data):
         path = data/row["file"]
         assert path.name == f"extreme-{int(row['id']):03}.b2a"
         f = fixture(path)
-        # Positive weights were checked by fixture(): the control hull bounds
-        # the full surface, including its boundary, without sampling.
+        # fixture() 已检查正权重，因此控制凸包直接包围整个曲面，
+        # 包括四边，无需依赖采样推断覆盖。
         assert all(-WORLD_COORDINATE_LIMIT <= lo <= hi <= WORLD_COORDINATE_LIMIT
                    for lo, hi in zip(f["coordinate_min"], f["coordinate_max"])), (row["id"], "world bounds")
         if row["group"] == "world_coordinates":
@@ -83,7 +86,7 @@ def audit_data(data):
             assert all(0 <= p[1] <= 1000 and (p[1] == 0 or .01-1e-12 <= p[1]*math.tan(f["angle"]) <= 1000+1e-10) for p in f["uv"])
         for key in ("length", "width"):
             assert .01-1e-12 <= float(row[key]) <= 1000+1e-10, (row["id"], key)
-        # Edge lengths are measured by 1024/2048 chords, not interval proofs.
+        # 边长采用 1024/2048 段弦长测量，不是区间证明。
         allowance = 2*float(row["edge_measure_change"])+1e-8
         assert float(row["edge_min"]) >= .01-allowance, (row["id"], "short boundary")
         assert float(row["edge_max"]) <= 1000+allowance, (row["id"], "long boundary")

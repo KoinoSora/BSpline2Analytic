@@ -1,4 +1,7 @@
-"""Serial cold-context iso-then-fallback regression. IO/audits are outside total_ms."""
+# 文件职责：当前全部非极端输入的等参优先、失败兜底调度。
+# 单例/多例通过 --cases 选择；完整 API 墙钟用于 <10 ms 和 <=50 ms 判断，超过 50 ms 为失败，IO 与审计另计。
+
+"""串行冷上下文执行等参优先、失败兜底回归；IO 和独立审计不计入 total_ms。"""
 import argparse
 import csv
 import hashlib
@@ -56,6 +59,8 @@ def main():
             category = 'positive' if expectation == 'accept' else 'negative' if expectation == 'reject_infeasible' else 'diagnostic'
             records.append(dict(suite=suite, id=i, expectation=expectation, category=category,
                                 sha256=sha(path), group=r.get('group', r.get('type', ''))))
+    # 单例：--cases iso:0；多例：--cases iso:0 main:100 extra:0。
+    # 未提供 --cases 时遍历全部非极端集合；相同编号在不同 suite 下是不同案例。
     if a.cases:
         selected = set(a.cases)
         records = [r for r in records if f"{r['suite']}:{r['id']}" in selected]
@@ -66,6 +71,7 @@ def main():
                   timing='steady clock around entire API; IO, source certificates and output audits excluded',
                   repetitions='fresh context, no per-case warmup', parallel_processes=1)
     stamp = output/'run.json'
+    # 续跑必须同时匹配二进制哈希、输入哈希和运行配置，防止旧结果混入新版本。
     if stamp.exists():
         assert a.resume and json.loads(stamp.read_text()) == config, 'Use a new output directory'
     stamp.write_text(json.dumps(config, indent=2), encoding='utf-8')
@@ -120,8 +126,12 @@ def main():
         timeout = any(x['time_budget_exceeded'] == '1' for x in rr)
         false_accept = r['category'] == 'negative' and any(x['accepted'] == '1' for x in rr)
         audit_fail = any(x['audit'] == 'failed' for x in rr)
+        # 正例必须成功且独立审计通过；负例不得误接受；诊断探针不虚构正确率。
+        # 超时单列为失败，不能把预算耗尽算成“正确拒绝”。
         correct = not timeout and not audit_fail and (audit if r['category'] == 'positive' else
                   not false_accept if r['category'] == 'negative' else False)
+        # 单例阈值取重复运行中的最大值：<10 ms 为性能目标，<=50 ms 为硬验收上限。
+        # 同时保留最小/均值/最大值，不能用均值掩盖某一次超时。
         cases.append(dict(suite=r['suite'], id=r['id'], category=r['category'], expectation=r['expectation'],
                           group=r['group'], accepted=accepted, audited_success=audit, correct=correct,
                           false_accept=false_accept, audit_failed=audit_fail, timeout=timeout,

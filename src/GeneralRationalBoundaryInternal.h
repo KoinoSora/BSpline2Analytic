@@ -1,3 +1,8 @@
+/**
+ * @file GeneralRationalBoundaryInternal.h
+ * @brief 当前有理边界恢复、输出与连续认证的内部数据契约。
+ * Trim 表示有理参数图候选，Target 保存实际输出；候选恢复、数值过滤和最终证书互不混淆。
+ */
 #pragma once
 #include "GeneralRationalBoundaryValidation.h"
 #include "GeneralHybridInternal.h"
@@ -11,7 +16,7 @@ struct Trim
     AnalyticParameters mother;
     std::array<double,4> domain{};
     paired::Chart chart;
-    GeneralTrim polygon; // Only corners used: these are rational-chart coordinates.
+    GeneralTrim polygon; // 仅使用角点，坐标属于有理参数图。
     std::array<std::vector<std::pair<double,std::array<double,2>>>,4> walks;
     std::array<bool,4> collapsed{};
     std::array<bool,4> refine3D{};
@@ -20,7 +25,7 @@ struct Trim
 struct Target
 {
     GeneralBoundaryPatch patch;
-    std::array<std::vector<BezierCell>,4> edges; // Actual exported curves, centered.
+    std::array<std::vector<BezierCell>,4> edges; // 经过中心化的实际导出曲线。
     double motherBound=0;
 };
 struct CurveError
@@ -28,17 +33,15 @@ struct CurveError
     BV numerator;
     BPoly denominator;
 };
-// One-dimensional homogeneous error, in a COMMON local parameter [0,1].
-// Rebuild after changing the source/target correspondence.
+// 源/目标在同一局部参数 [0,1] 下的一维齐次误差；对应关系改变后必须重新构造。
 class CurveErrors
 {
     std::map<std::pair<unsigned,unsigned>,std::vector<I>> factors;
 public:
     CurveError Build(const BezierCell &source,const BezierCell &target,paired::Products &,bool &fused);
 };
-// Double Bernstein coefficients plus a uniform outward-rounded error radius.
-// Only the current general verifier uses this filter. Inconclusive nodes are
-// recomputed by CurveErrors before subdivision, with the same node budget.
+// 双精度 Bernstein 系数配合统一向外舍入误差半径，仅供当前一般验证器过滤。
+// 无结论的节点在细分前交给 CurveErrors 区间重算，仍共享同一节点预算。
 class CurveEnvelopes
 {
     struct Polynomial
@@ -66,25 +69,25 @@ public:
     bool TangentExceeded(const BV &,const BV &,double sineSquaredLimitUpper);
 };
 BV TangentNumerator(const BezierCell &,paired::Products &);
-// Sufficient same-direction angle bound from E'=T'-S'. INFINITY is inconclusive.
+// 由 E'=T'-S' 得到同向切向夹角的充分上界；INFINITY 表示无法判定。
 double ResidualTangentRatio(const CurveError &,const BezierCell &source,
                             const BV &sourceTangentNumerator,double distanceUpper);
-// Positive auxiliary scale selected from point estimates, never a certificate.
-// All arguments use the SAME local parameter. Rebuild after mapping refinement.
+// 由点值估计选取正辅助比例，本身不是证书。
+// 所有参数必须使用同一局部参数；映射细化后重新构造。
 std::optional<BPoly> ChooseTangentScale(const BV &source,const BV &target);
 BV BuildScaledTangentResidual(const BV &source,const BV &target,const BPoly &scale,paired::Products &);
 V TangentResidualReference(const BV &source);
-// ||A-lambda B||^2 / lower(||A||^2); lambda>0 and a bound <1 also prove A.B>0.
-// INFINITY means inconclusive, not a witnessed angle violation.
+// 采用 ||A-lambda*B||² / lower(||A||²) 求界；lambda>0 且上界小于 1 还可证明 A.B>0。
+// INFINITY 表示无结论，不代表已有夹角超限见证。
 double ScaledTangentSineSquaredUpper(const BV &source,const BV &residual,const BPoly &scale);
-// Test-visible, exact tensor-to-line composition in homogeneous Bernstein form.
+// 供测试访问的齐次 Bernstein 张量曲面与参数直线的精确代数复合。
 BezierCell ComposeLine(const paired::TargetCell &,sggk::Point2D,sggk::Point2D,
                        double,double,paired::Products &);
 std::vector<BezierCell> ComposeEdge(const Trim &,unsigned,paired::Products &);
 Target BuildTarget(const Trim &,double outputTolerance,GeneralRationalBoundaryReport &,
                    const ExecutionDeadline *deadline=nullptr);
-// Optional diagnostic sink. Normal validation does not collect walks or change
-// any recovery decision. Detailed analysis is run outside performance timers.
+// 可选诊断输出；常规验证不收集轨迹，也不因诊断改变恢复决策。
+// 详细分析在性能计时区间之外运行。
 struct RecoveryDiagnostics
 {
     std::string reason="not_started";
@@ -98,11 +101,11 @@ std::vector<AnalyticParameters> RecoveryCharts(SurfaceSampleContext &,const Anal
                                               const GeneralRationalBoundaryOptions &);
 std::array<double,2> Coordinates(const Trim &,V,std::array<double,2> reference);
 V ChartPoint(const Trim &,std::array<double,2>,std::array<V,2> *derivatives=nullptr);
-// Proposal only: bounded, distance-decreasing 3D Gauss-Newton along the same
-// rational-domain straight edge. The exported error spline decides acceptance.
+// 仅提出候选：沿同一有理参数域直线边界执行有界、三维距离下降的 Gauss-Newton 修正。
+// 验收仍由输出误差样条决定。
 double RefineFraction(const Trim &,unsigned,V,double);
 bool ValidRationalPolygon(const std::array<sggk::Point2D,4> &,const std::array<bool,4> &);
-// Full Cartesian distance bound; supports an endpoint paired to a tiny segment.
+// 完整笛卡尔距离界，支持将端点与微小目标段配对。
 std::optional<GeneralBoundaryTangentExemption> MicroSegmentBound(const BezierCell &,
     const std::vector<BezierCell> &,double,double,double,double);
 double Fraction(const Trim &,unsigned,V,double reference);

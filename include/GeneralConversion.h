@@ -1,3 +1,8 @@
+/**
+ * @file GeneralConversion.h
+ * @brief 解析 UV 线性裁剪的历史一般转换接口与共享分类配置。
+ * GeneralAnalyticPatch 包含母面及有限裁剪；它与当前兜底的有理参数域边界输出不是同一种表示。
+ */
 #pragma once
 #include "ApproximateConversion.h"
 #include <memory>
@@ -9,16 +14,14 @@ namespace bspline2analytic
 struct GeneralConversionOptions
 {
     ConversionOptions fitting;
-    // Fixed sample-group budget, including unsuccessful constructions.
+    // 每类曲面的固定采样组尝试预算，构造失败也消耗一次尝试。
     unsigned seedAttemptsPerType = 8;
-    // Preferred candidates per family in each batch; remaining unique mothers
-    // stay available if all candidates in this batch fail conversion.
+    // 每批优先保留的同类候选数量；当前批全部失败后，仍可继续使用候选池中其他已去重母面。
     unsigned candidatesPerType = 3;
     double similarScoreAbsoluteRatio = .1;
     double similarScoreRelativeTolerance = .05;
     unsigned boundarySamplesPerSpan = 8;
-    // Zero selects eager full scoring; otherwise use up to this many held-out
-    // interior points before completing competitive candidates.
+    // 为 0 时直接完整评分；否则先用至多此数量的独立内部评分点粗评，再补评有竞争力的候选。
     unsigned coarseScorePointCount = 16;
 };
 enum class PCurveFailure
@@ -30,19 +33,17 @@ enum class PCurveFailure
 const char *PCurveFailureName(PCurveFailure);
 struct LinearPCurve
 {
-    // Canonical mother UV, with periods unfolded. Source edge order is retained:
-    // Umin/Umax vary with source v; Vmin/Vmax vary with source u.
+    // 展开周期后的母面规范 UV，保留源边顺序：Umin/Umax 沿源 v 变化，Vmin/Vmax 沿源 u 变化。
     sggk::Point2D start, end;
     sggk::Point3D projectedStart, projectedEnd;
     bool collapsed3D = false;
-    // A degree-one bounded curve in the SDK motherSurface's own UV convention.
+    // SDK 母面自身 UV 约定下的有界一次参数曲线。
     sggk::Curve2DPtr sdkCurve;
     sggk::Point2D CalcPoint(double fraction) const;
 };
-// Finite simple UV quadrilateral (a collapsed side may give a triangle) on the
-// analytic mother, bounded by four linear PCurves. It owns no source spline.
-// motherSurface alone does not include these trims. Canonical UV and SDK UV
-// are deliberately exposed separately, as in the existing AnalyticPatch.
+// 解析母面上由四条线性 PCurve 围成的有限简单参数四边形，允许一边坍缩而成为三角形；不持有源样条。
+// motherSurface 自身不含裁剪信息。
+// 与 AnalyticPatch 一致，规范 UV 与 SDK UV 分别存储，不能混用。
 class GeneralAnalyticPatch
 {
 public:
@@ -51,7 +52,7 @@ public:
     const std::array<double, 4> &SourceDomain() const noexcept { return domain; }
     const std::array<LinearPCurve, 4> &PCurves() const noexcept { return pcurves; }
     const std::array<sggk::Point2D, 4> &Corners() const noexcept { return corners; }
-    // Canonical analytic UV, not the source spline parameters.
+    // 输入为规范解析 UV，不是源样条的参数坐标。
     sggk::Point3D CalcPoint(double u, double v) const;
     sggk::Point3D CalcBoundaryPoint(BoundaryId edge, double fraction) const;
     GeneralAnalyticPatch(const AnalyticParameters &, const std::array<double, 4> &,
@@ -69,7 +70,7 @@ struct GeneralCandidateScore
     sggk::SurfaceType type = sggk::SurfaceType::Unknown;
     unsigned degreesOfFreedom = 0;
     double interiorMax = 0, interiorRms = 0, boundaryMax = 0, normalMax = 0;
-    unsigned seedGroup = 0; // Index into classification.seedGroups.
+    unsigned seedGroup = 0; // 对应 classification.seedGroups 中的索引。
 };
 enum class GeneralSeedFailure
 {
@@ -84,32 +85,31 @@ struct GeneralSeedGroupDiagnostic
     bool multiPoint = false;
     GeneralSeedFailure failure = GeneralSeedFailure::None;
     unsigned generated = 0, duplicates = 0, scored = 0, fullyScored = 0, selected = 0;
-    // Relative singular values and algebraic residuals describe construction,
-    // not certified geometric accuracy. A small positive rank is not a failure.
+    // 相对奇异值与代数残差用于描述初值构造的数值状况，不代表已认证的几何精度；较小但仍通过秩判定的数值不直接等于失败。
     double relativeRank = 1, axisSeparation = 0, constructionResidual = 0;
 };
 struct GeneralTorusSeedDiagnostics
 {
-    // Four-normal groups actually constructed; a degenerate group still uses its attempt.
+    // 实际尝试构造的四法线组数量，退化组仍消耗一次尝试。
     unsigned sampleGroups = 0;
     unsigned rankDeficientGroups = 0, degenerateAxisGroups = 0, noRealAxisGroups = 0;
-    // Finite axes passing the algebraic residual check, before meridian circle fitting.
+    // 通过代数残差检查的有限轴线数量，发生在子午圆拟合之前。
     unsigned axisCount = 0, rejectedAxes = 0;
     unsigned circleFitFailures = 0, invalidRadii = 0;
-    // Ring-torus candidates before geometric deduplication and held-out scoring.
+    // 几何去重与独立评分前的常规环形圆环面候选数量。
     unsigned candidateCount = 0, dualCandidateGroups = 0;
 };
 struct GeneralClassificationDiagnostics
 {
-    // Generated mother candidates, before deduplication and batch selection.
+    // 去重与批次筛选之前生成的母面候选总数。
     unsigned rawCandidateCount = 0;
     unsigned duplicateCandidateCount = 0;
-    // Unique candidates entering scoring, including scoring failures.
+    // 进入评分的去重候选数，包括评分失败的候选。
     unsigned scoreEvaluationCount = 0;
     unsigned seedAttemptCount = 0;
     unsigned coarseScoreCount = 0, fullScoreCount = 0;
     unsigned completedScoreCount = 0;
-    unsigned deferredCandidateCount = 0; // Incomplete after the first batch.
+    unsigned deferredCandidateCount = 0; // 首批完成后仍未完成完整评分的候选数。
     unsigned backupCandidateCount = 0, batchCount = 0;
     std::uint64_t interiorPointEvaluations = 0, boundaryPointEvaluations = 0;
     GeneralTorusSeedDiagnostics torus;
@@ -140,7 +140,7 @@ struct GeneralValidationReport
 struct GeneralConversionResult
 {
     ConversionStatus status = ConversionStatus::NoCandidate;
-    // Populated only after independent continuous validation succeeds.
+    // 仅在独立连续验证通过后填充。
     std::optional<GeneralAnalyticPatch> patch;
     GeneralValidationReport validation;
     std::vector<GeneralCandidateScore> candidates;

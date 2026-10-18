@@ -1,4 +1,7 @@
-"""Check the 50 fixed polynomial sphere fixtures and summarize exclusive validation timing."""
+# 文件职责：球面验证细分计时的一致性对照。
+# 计时改动必须保持状态、证书和工作计数不变；本脚本只分析保存的测量记录。
+
+"""检查 50 个固定多项式球面记录，并汇总互斥验证阶段计时。"""
 import argparse
 import collections
 import csv
@@ -84,7 +87,7 @@ def main():
             for step in STEPS:
                 r[step + '_ms'] = sum(r[f'{p}_{step}_ms'] for p in PHASES)
             old = baseline[r['id']]
-            # Timing must not change statuses, certificates, work count or iteration count.
+            # 增加计时不能改变状态、证书、工作量计数或迭代次数。
             for key in ('status', 'geometry_bound', 'tangent_deg', 'normal_deg',
                         'validation_pieces', 'opt_iterations', 'classify_validate_calls',
                         'optimize_validate_calls'):

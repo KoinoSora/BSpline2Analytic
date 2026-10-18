@@ -1,3 +1,8 @@
+/**
+ * @file RecognitionTests.cpp
+ * @brief 精确有理识别的回归与基准入口。
+ * 独立 SGK 投影审计返回母面，并覆盖插结点、升阶、方向变换和不同空间尺度。
+ */
 #include "AnalyticReconstruction.h"
 #include "Numerics.h"
 #include "ReferenceCases.h"
@@ -56,8 +61,7 @@ static void Check(const bspline2analytic::tests::ReferenceCase &reference,
             "U orientation mismatch");
     Require(r.mapping.reversedV == (coordinate(2, dimensionV) < coordinate(0, dimensionV)),
             "V orientation mismatch");
-    // Independent point projection through SGK tests the returned SDK object's frame and
-    // parameters.
+    // 通过 SGK 独立点投影检查返回 SDK 对象的坐标架与参数。
     for (unsigned i = 0; i <= 6; ++i)
         for (unsigned j = 0; j <= 6; ++j)
         {
@@ -86,8 +90,7 @@ static int Run(bool benchmark, const std::string &csvPath)
                     targetV[variant] - static_cast<unsigned>(s->ControlPoints().front().size());
                 for (unsigned k = 1; k <= insertionsU; ++k)
                 {
-                    // Avoid existing analytic-conversion knots (notably the midpoint): SGK
-                    // InsertKnots specifies target multiplicity rather than an increment.
+                    // 避免已有解析转换结点，尤其是中点；SGK InsertKnots 指定目标重数，而不是增加的重数。
                     double fraction = double(k) / (insertionsU + std::sqrt(2.0));
                     s->InsertUKnots(s->MinParamU() + (s->MaxParamU() - s->MinParamU()) * fraction);
                 }
@@ -114,7 +117,7 @@ static int Run(bool benchmark, const std::string &csvPath)
             auto s = std::make_shared<sggk::BSplineSurface>(*data[i % data.size()]);
             double scale = 0.5 + 0.013 * (i % 97);
             auto controls = s->ControlPoints();
-            // Every input has distinct placement and scale; preparation is outside the timed call.
+            // 每个输入具有不同位置和尺度，准备工作在计时调用之外。
             for (unsigned u = 0; u < controls.size(); ++u)
                 for (unsigned v = 0; v < controls[u].size(); ++v)
                 {

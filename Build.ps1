@@ -1,3 +1,6 @@
+# 文件职责：模块构建与受支持回归的 PowerShell 入口。
+# 校验互斥开关和废弃路径，配置本地 SDK、构建目标并检查退出码；许可证和 SDK 仅从本机读取。
+
 param(
     [string]$SdkDirectory = (Join-Path $PSScriptRoot '..\..\..\SGGK'),
     [ValidateSet('Debug','Release','RelWithDebInfo')][string]$Configuration = 'Release',

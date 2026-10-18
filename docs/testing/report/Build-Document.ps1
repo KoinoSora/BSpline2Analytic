@@ -1,4 +1,7 @@
-﻿param([string]$XeLaTeX = 'xelatex')
+﻿# 文件职责：测试报告的 PDF 构建入口。
+# 编译已保存的报告源文件，不重新执行测试或改写实测结果。
+
+param([string]$XeLaTeX = 'xelatex')
 $ErrorActionPreference = 'Stop'
 $documentName = '测试报告'
 $buildDirectory = Join-Path $PSScriptRoot 'build'

@@ -1,9 +1,9 @@
-"""Full CURRENT rational-boundary coverage; never calls a retired validator.
+# 文件职责：当前 V2 一般兜底的完整串行回归调度。
+# 逐例记录执行失败、超时和审计结果，保存可续跑证据；不得调用旧验证器作对照。
 
-Serial per-case processes avoid concurrent benchmark contention. Each performs
-three fresh-context runs; certificates, audits and known-mother diagnostics are
-outside algorithm timers. Interrupted/failed work remains explicit, never zero.
-"""
+"""完整覆盖当前有理边界验证器，不调用任何废弃验证器。
+逐例串行进程避免并发基准争用；每例三次全新上下文运行，来源证书、输出审计与已知母面诊断均在算法计时外。
+中断及失败明确记录，不能填零冒充测量。"""
 import argparse
 import csv
 import hashlib
@@ -138,7 +138,7 @@ def main():
         all_rows.extend(rows)
         all_attempts.extend(read(target.with_name(target.stem + '-attempts.csv')))
         known.extend(read(target.with_name(target.stem + '-known.csv')))
-        # Checkpoint each case, including execution failures and partial timings.
+        # 逐例写入检查点，包括执行失败及部分计时。
         write(output / 'results.csv', all_rows)
         if index % 10 == 0 or index + 1 == len(cases):
             passed = sum(r.get('accepted') == '1' for r in rows)

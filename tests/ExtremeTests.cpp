@@ -1,3 +1,8 @@
+/**
+ * @file ExtremeTests.cpp
+ * @brief 旧等参极端转换链的历史回归驱动，当前禁测。
+ * 保留来源认证、密集审计和模块测量逻辑；当前新验证器测试使用专门入口。
+ */
 #include "ApproximateInternal.h"
 #include "ExtremeDataset.h"
 #include "SurfaceConversion.h"
@@ -122,8 +127,7 @@ Audit AuditOutput(const sggk::BSplineSurface &s, const GeneralAnalyticPatch &p, 
                 V d = Get(p.CalcBoundaryPoint(BoundaryId(e), f)) - source[0];
                 return Dot(d, d);
             };
-            // Bracket nearest fraction independently of the source parameter. The
-            // rational angle map is not affine in the source spline parameter.
+            // 独立于源参数夹逼最近对应比例；有理圆弧角映射并非源样条参数的仿射函数。
             unsigned best = 0;
             double value = sq(0);
             for (unsigned j = 1; j <= 32; ++j)
@@ -163,8 +167,7 @@ Audit AuditOutput(const sggk::BSplineSurface &s, const GeneralAnalyticPatch &p, 
                     f = endpoint;
             V projected = Get(p.CalcBoundaryPoint(BoundaryId(e), f));
             a.distance = std::max(a.distance, Norm(projected - source[0]));
-            // A collapsed point has no boundary tangent or regular surface normal.
-            // Its positional error is still checked above. Other edges remain audited.
+            // 坍缩点没有边界切向或正则曲面法向；上面仍检查位置误差，其他边继续审计。
             bool collapsedEdge = (collapsedMask & (1u<<e)) != 0;
             bool singularCorner = (t == 0 && (collapsedMask & (1u<<(e<2?2:0)))) ||
                                   (t == 1 && (collapsedMask & (1u<<(e<2?3:1))));
@@ -238,8 +241,7 @@ int Run(const std::filesystem::path &dir, const std::filesystem::path &csvPath, 
             {
                 ++qualified;
                 source = AuditSource(c);
-                // Only the surface is supplied. Truth, radii, groups and source
-                // representation labels never reach Convert's candidate logic.
+                // 只向转换器提供曲面；真值、半径、分组与源表示标签都不进入 Convert 候选逻辑。
                 std::cout << "BEGIN_CONVERT " << id << std::endl;
                 auto r = Convert(*c.input);
                 std::cout << "END_CONVERT " << id << std::endl;
@@ -337,7 +339,7 @@ int Modules(const std::filesystem::path &dir, const std::filesystem::path &csvPa
         << "test,type,fixture,initial_worst,final_worst,iterations,analytic_blocks,fallback_blocks,"
            "jacobian_best_relative_error,geometry,tangent,normal,passed,message\n";
     unsigned failed = 0;
-    // Each profile selects five of its own fixed inputs, one per analytic family.
+    // 每种配置从自身固定输入中选择五例，每类解析母面各一例。
     bool business = IsBusinessExtreme(dir);
     auto probeIds = business ? std::vector<unsigned>{5,17,29,41,53} :
                                std::vector<unsigned>{197,159,105,165,171};

@@ -1,3 +1,8 @@
+/**
+ * @file GeneralClassificationBenchmark.cpp
+ * @brief 旧一般分类基线的 C++ 对照驱动。
+ * 历史数据已归档，当前不执行；保留构造与评分计数帮助解释旧报告。
+ */
 #include "GeneralDataset.h"
 #include "GeneralInternal.h"
 #include <Foundation/init.h>
@@ -8,7 +13,7 @@
 
 namespace bspline2analytic::detail
 {
-// The runner extracts and renames the baseline implementation from Git.
+// 运行脚本从 Git 提取基线实现并重命名符号，以便隔离对照。
 std::vector<GeneralSeed> ClassifyGeneralBeforeDedup(SurfaceSampleContext &, const GeneralConversionOptions &);
 }
 using namespace bspline2analytic;
@@ -53,8 +58,7 @@ int main(int argc, char **argv)
         out << std::setprecision(17)
             << "repeat,id,source_type,old_first,before_ms,after_ms,candidates,raw_candidates,duplicate_candidates,score_evaluations,identical\n";
         GeneralConversionOptions options;
-        // Keep the historical budget/mode explicit. The strict comparison also
-        // reports subsequent algorithm changes beyond the old dedup baseline.
+        // 显式保留历史预算和模式；严格对照也会反映旧去重基线之后的算法变化，不能将全部差异归因于单项优化。
         options.seedAttemptsPerType = 64;
         options.coarseScorePointCount = 0;
         for (unsigned repeat = 0; repeat < 3; ++repeat)

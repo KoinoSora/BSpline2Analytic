@@ -1,3 +1,8 @@
+/**
+ * @file GeneralRationalDataset.cpp
+ * @brief 当前 V2 低次有理参数域数据的生成与发布。
+ * 固定端点后拟合内部，限制次数与控制点数量；写盘读回并通过独立证书后才发布。
+ */
 #include "GeneralRationalDataset.h"
 #include "GeneralExtremeDataset.h"
 #include "ApproximateInternal.h"
@@ -90,9 +95,7 @@ struct FitAxis
     }
     std::vector<V> FitSamples(const std::vector<double> &samples,const std::vector<V> &values) const
     {
-        // Fix endpoints exactly, then solve the overdetermined interior fit.
-        // Sampling selects coefficients only; publication still requires the
-        // independent continuous source certificate.
+        // 先精确固定端点，再求解内部超定拟合；采样只用于选择系数，发布仍须独立连续来源认证通过。
         std::vector<std::vector<double>> a;std::vector<V> b;
         for(size_t i=1;i+1<samples.size();++i)
         {
@@ -123,8 +126,7 @@ sggk::BSplineSurfacePtr FitPolynomial(const GeneralFixture &f,unsigned p,unsigne
 BPoly DegreeBounded(const BPoly &poly,unsigned p,unsigned q)
 {
     if(poly.u<=p&&poly.v<=q)return Elevate(poly,p,q);
-    // Local homogeneous degree reduction; the final stored surface must still
-    // pass the independent continuous certificate before it can be published.
+    // 局部齐次降阶；最终存储曲面仍须通过独立连续证书才能发布。
     auto au=Matrix(p),av=Matrix(q);std::vector<std::vector<double>> values(p+1,std::vector<double>(q+1));
     for(unsigned i=0;i<=p;++i)for(unsigned j=0;j<=q;++j)
         values[i][j]=Mid(Evaluate(poly,(1-std::cos(Pi*i/p))*.5,(1-std::cos(Pi*j/q))*.5).range());
@@ -197,7 +199,7 @@ sggk::BSplineSurfacePtr Fit(const GeneralFixture &f,unsigned p,unsigned q,
 }
 void Pad(GeneralFixture &c,unsigned nu,unsigned nv)
 {
-    // Preserve the original complexity floor where the new fit allows it.
+    // 新拟合允许时保留原复杂度下限。
     for(unsigned d=0;d<2;++d)
     {
         unsigned target=d?nv:nu,k=0;
@@ -261,7 +263,7 @@ GeneralFixture RebuildRationalFixture(const GeneralFixture &legacy,bool pressure
     for(auto &p:c.corners)p={(p.X()-c.chartDomain[0])/(c.chartDomain[1]-c.chartDomain[0]),(p.Y()-c.chartDomain[2])/(c.chartDomain[3]-c.chartDomain[2])};
     if(c.group==GeneralFixtureGroup::NonlinearPCurve)
     {
-        // Leave room for the prescribed bend INSIDE the rational chart.
+        // 在有理参数图内部为规定的弯曲幅值预留空间。
         for(auto &p:c.corners)p={.05+.9*p.X(),.05+.85*p.Y()};c.bend=.12;
     }
     unsigned originalType=c.type;if(c.type==5)c.type=0;
@@ -270,7 +272,7 @@ GeneralFixture RebuildRationalFixture(const GeneralFixture &legacy,bool pressure
     if(pressure)p=q=5;
     else if(!c.rational&&c.type!=0)
     {
-        // Only angularly varying source directions need quintic interpolation.
+        // 只有角度变化的源方向需要五次插值。
         for(unsigned axis=0;axis<2;++axis)
         {
             bool curved=false;
@@ -286,16 +288,14 @@ GeneralFixture RebuildRationalFixture(const GeneralFixture &legacy,bool pressure
     if(c.group==GeneralFixtureGroup::Infeasible){nu=nv=10;}
     if(c.group==GeneralFixtureGroup::Tolerance&&c.id==49)
     {
-        // Keep the prescribed interior probe, approximate its source geometry
-        // with a quintic/cubic spline instead of retaining the degree-seven net.
+        // 保留指定内部探针，用五次/三次样条近似其源几何，避免保留原七次控制网。
         breaks[0]={0,.5,1};c.input=FitPolynomial(c,5,3,breaks,legacy.input.get());c.collapsedMask=0;return c;
     }
     RationalSourceCertificate certificate;unsigned deformationAttempt=0;
     auto refine=[&]()
     {
         if(RefineFit(c,ref,p,q,breaks))return true;
-        // Retain tighter tiny-arc tolerances. Ordinary geometry never exceeds
-        // the requested 1e-5; intentional offset probes keep their own labels.
+        // 微小圆弧保留更严格的构造容差；普通几何不超过要求的 1e-5，刻意偏移探针保留独立标签。
         if(c.pairTolerance>=1e-6&&c.pairTolerance<1e-5){c.pairTolerance=1e-5;return true;}
         return false;
     };
@@ -309,8 +309,7 @@ GeneralFixture RebuildRationalFixture(const GeneralFixture &legacy,bool pressure
         }
         if(c.group==GeneralFixtureGroup::Infeasible)
         {
-            // Certify the undeformed base first: negative labels must not rely
-            // on a low-order boundary approximation missing the new contract.
+            // 先认证未变形基面，避免负例标签实际上来自低次边界近似不符合新合同。
             auto base=c;base.group=GeneralFixtureGroup::Feasible;
             auto baseCertificate=CertifyRationalDomain(base,10000,true);
             if(!baseCertificate.passed)
@@ -319,8 +318,7 @@ GeneralFixture RebuildRationalFixture(const GeneralFixture &legacy,bool pressure
                 Require(refine(),"Negative reference cannot meet degree/control/tolerance constraints");
                 continue;
             }
-            // Keep the reference boundary, deform only the interior. Labels
-            // depend on a degree-four exclusion proof, never converter results.
+            // 保持参考边界，只扰动内部；负例标签依赖四次多项式排除证明，不依赖转换器结果。
             const auto cp=c.input->ControlPoints();double amplitude=std::ldexp(1.,int(deformationAttempt++));
             for(unsigned i=1;i+1<cp.size();++i)for(unsigned j=1;j+1<cp[0].size();++j)
             {
@@ -362,7 +360,7 @@ void GenerateRationalDataset(const std::filesystem::path &main,const std::filesy
         if(suite=="extreme"&&specs[id].sag>0)old.pairTolerance=std::min(1e-6,specs[id].sag*.1);
         auto c=RebuildRationalFixture(old,suite=="synthetic");RequireRepresentation(c);
         for(const auto &row:c.input->ControlPoints())for(auto p:row)for(double x:{p.X(),p.Y(),p.Z()})Require(std::isfinite(x)&&std::abs(x)<=1e6,"Input control hull exceeds world range");
-        // Write into a staging name. Only fully re-read, certified files publish.
+        // 先写暂存文件；重新读取且认证完整通过后才发布。
         auto temp=path;temp+=".pending";WriteGeneralFixture(c,temp);auto loaded=ReadGeneralFixture(temp);auto cert=CertifyRationalDomain(loaded);
         Require(cert.passed,"Disk certificate failed: "+cert.message);loaded.storedUpper=loaded.group==GeneralFixtureGroup::Infeasible?-1:cert.upper;loaded.storedTangentDeg=cert.tangentDeg;
         WriteGeneralFixture(loaded,temp);std::filesystem::rename(temp,path);

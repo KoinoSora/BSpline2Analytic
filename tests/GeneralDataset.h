@@ -1,3 +1,8 @@
+/**
+ * @file GeneralDataset.h
+ * @brief 一般测试输入、独立真值与案例预期的共享声明。
+ * V2 角点属于有理参数图；指定母面拒绝与排除所有目标母面的全局负例分别表示。
+ */
 #pragma once
 #include "GeneralConversion.h"
 #include "IntervalBounds.h"
@@ -5,8 +10,8 @@
 
 namespace bspline2analytic::tests
 {
-// Files contain input geometry and an independent oracle; only input reaches
-// ConvertGeneral. Extra cases have their own expectations, never a no-solution label.
+// 文件同时含输入几何和独立参考模型；只有输入传给 ConvertGeneral。
+// 专项案例各有预期，不能统一标成无解。
 enum class GeneralFixtureGroup { Feasible, Infeasible, NonlinearPCurve, Periodic,
     SpherePriority, Tolerance, InvalidOptions, ValidationBudget };
 struct GeneralFixture
@@ -17,11 +22,11 @@ struct GeneralFixture
     GeneralFixtureGroup group = GeneralFixtureGroup::Feasible;
     AnalyticParameters truth;
     std::array<sggk::Point2D, 4> corners;
-    // Optional curved-UV test: v += bend*s*(1-s). The 500 positives use zero.
+    // 可选弯曲 UV 构造：v+=bend*s*(1-s)；原 500 个正例采用零弯曲。
     double bend = 0;
     sggk::BSplineSurfacePtr input;
     double storedUpper = 0, exclusionRadius = 0, storedRankMargin = 0, pairTolerance = 1e-6;
-    // V2: corners belong to a specified rational mother chart, not analytic UV.
+    // V2 的角点位于指定的母面有理参数图，不属于解析 UV。
     bool rationalDomain = false;
     std::array<double,4> chartDomain{};
     double storedTangentDeg = INFINITY;
@@ -39,11 +44,11 @@ std::string GeneralFixtureFilename(unsigned, bool extra = false);
 GeneralFixture ReadGeneralFixture(const std::filesystem::path &);
 void WriteGeneralFixture(const GeneralFixture &, const std::filesystem::path &);
 void GenerateGeneralDataset(const std::filesystem::path &, unsigned first = 0, unsigned last = 660);
-// Canonical analytic formula and chart are test-owned, not production projection code.
+// 规范解析公式与参数图由测试侧独立实现，不使用生产投影代码。
 detail::V FixtureTarget(const GeneralFixture &, double, double);
 FixtureCertificate CertifyAnalyticPair(const GeneralFixture &, double tolerance,
                                       unsigned maxPieces = 20000);
-// Excludes EVERY nonzero polynomial of total degree <= 4, hence all five mothers.
+// 排除所有总次数不超过 4 的非零多项式，因此覆盖五类目标母面。
 FixtureCertificate CertifyNoQuartic(const sggk::BSplineSurface &, double radius);
 unsigned FixtureCollapsedMask(const sggk::BSplineSurface &);
 }

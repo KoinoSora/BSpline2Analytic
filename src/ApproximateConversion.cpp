@@ -1,3 +1,8 @@
+/**
+ * @file ApproximateConversion.cpp
+ * @brief 历史非有理等参近似转换的优化编排。
+ * 组织初值、独立验证、见证采样与渐进变量；仍调用旧 ValidateConversion，完整转换回归已暂停。
+ */
 #include "ApproximateInternal.h"
 #include "StageTimer.h"
 #include "ValidationTiming.h"
@@ -175,8 +180,7 @@ bool RefineAndValidateCandidate(const sggk::BSplineSurface &s, AnalyticPatch &ca
             unsigned added = addWitnesses();
             if (!remaining)
             {
-                // A genuinely new sample set may start a new feedback round;
-                // changing variable levels alone never resets this round's budget.
+                // 真正新增采样集时才可启动新的反馈轮次；仅改变变量层级不会重置当前轮次的迭代预算。
                 retryWithWitnesses = added != 0;
                 reason = RefinementEntryReason::WitnessSamples;
                 forceAttempt = true;
@@ -190,8 +194,7 @@ bool RefineAndValidateCandidate(const sggk::BSplineSurface &s, AnalyticPatch &ca
             if (sampledFeasible && residualCheckFailed && added &&
                 round + 1 < o.refinement.maxRounds)
             {
-                // A new witness can invalidate sampled feasibility. Retry this
-                // level, with a new feedback round and its shared iteration budget.
+                // 新见证点可能使原采样可行性失效，因此在新的反馈轮次中重试当前变量层级，并共享该轮迭代预算。
                 retryWithWitnesses = true;
                 reason = RefinementEntryReason::WitnessSamples;
                 forceAttempt = true;
@@ -202,8 +205,7 @@ bool RefineAndValidateCandidate(const sggk::BSplineSurface &s, AnalyticPatch &ca
                 level = level == ParameterLevel::SizeOrOffset ? ParameterLevel::MotherSurface
                                                               : ParameterLevel::FullPatch;
                 reason = RefinementEntryReason::MoreVariables;
-                // Require an updated best candidate before restoring the
-                // sampled-margin exit. Normals remain acceptance-only.
+                // 只有最佳候选实际更新后，才重新允许按采样裕量退出；法向误差仍仅用于验收。
                 forceAttempt = true;
                 continue;
             }

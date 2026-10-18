@@ -1,3 +1,8 @@
+/**
+ * @file MotherSourcePreparation.cpp
+ * @brief 母面验证专用的流式多项式 Bézier 提取缓存。
+ * 先构造一维提取计划，按需收缩控制网并附舍入包络；源内容改变时失效，疑难单元可区间收紧。
+ */
 #include "MotherDistanceInternal.h"
 
 namespace bspline2analytic::detail::mother
@@ -22,7 +27,7 @@ V Round(V a)
 }
 double DotError(double A, double e, double M, double r, double gamma)
 {
-    // Coefficient uncertainty, input uncertainty, then ordinary dot-product rounding.
+    // 依次计入系数不确定性、输入不确定性及普通点积的舍入误差。
     return ErrorAdd(
         ErrorAdd(ErrorMul(ErrorAdd(A, e), r), ErrorMul(e, M)),
         ErrorAdd(ErrorMul(ErrorMul(gamma, A), M), 64 * std::numeric_limits<double>::denorm_min()));
@@ -81,7 +86,7 @@ std::vector<ExtractionSpan> AxisSpans(const sggk::RealArray &knots, const sggk::
                     s.enclosure[j * n + k] = work[degree * n + k];
             }
         }
-        // Restrict the small matrix, not every 3D cell. Do not snap one-ulp trims.
+        // 限制小型提取矩阵，避免逐个限制三维单元；保留一个 ulp 级的真实裁剪参数，不作吸附。
         if (s.lo != full[a] || s.hi != full[a + 1])
         {
             I l = s.lo == full[a] ? I(0) : (I(s.lo) - I(full[a])) / (I(full[a + 1]) - I(full[a]));
@@ -156,6 +161,7 @@ double ErrorNorm(V a)
         std::sqrt(ErrorAdd(ErrorAdd(ErrorMul(a.x, a.x), ErrorMul(a.y, a.y)), ErrorMul(a.z, a.z))));
 }
 
+// 比较真实源表示而非对象地址；调用方原地修改同一 SDK 曲面后，也必须使旧缓存失效。
 bool SourceCache::Matches(const sggk::BSplineSurface &s) const
 {
     if (cells.empty() || s.IsRational() || p != s.DegreeU() || q != s.DegreeV() ||
@@ -227,6 +233,8 @@ void SourceCache::Initialize(const sggk::BSplineSurface &s, MotherDistanceValida
         throw Failure(Status::InvalidInput, "Empty source domain");
     *this = std::move(next);
 }
+// 按需提取单元：先复用 U 收缩条带，再沿 V 收缩；每步同时传播系数及舍入误差半径。
+// 只缓存源单元，不缓存其相对某个母面的距离证书，因而可供后续候选安全复用。
 const SourceCell &SourceCache::Get(size_t id, MotherDistanceValidationReport &out)
 {
     if (cells.at(id))
@@ -295,6 +303,7 @@ const SourceCell &SourceCache::Get(size_t id, MotherDistanceValidationReport &ou
     cells[id] = std::move(cell);
     return *cells[id];
 }
+// 当快速包络过宽时，针对单元采用更紧的区间提取；不放宽容差，也不重置验证节点预算。
 const SourceCell &SourceCache::Tighten(size_t id, MotherDistanceValidationReport &out)
 {
     Get(id, out);

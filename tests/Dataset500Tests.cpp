@@ -1,3 +1,8 @@
+/**
+ * @file Dataset500Tests.cpp
+ * @brief 原 500 例及分类子集的历史测试驱动。
+ * 完整旧近似路径禁测；当前等参验证入口以 tests/README.md 为准，不能把读取/审计当作转换测试。
+ */
 #include "ApproximateInternal.h"
 #include "Dataset500.h"
 #include "IntervalBounds.h"
@@ -30,8 +35,7 @@ std::string Quote(std::string s)
     }
     return out + '"';
 }
-// Exercise only the representation-appropriate isoparametric API. In
-// particular, no General fallback or additional unified PCurve check runs.
+// 仅调用适合输入表示的等参 API；不运行一般兜底或统一入口追加的 PCurve 检查。
 struct SpecializedResult
 {
     ConversionPath path;
@@ -83,8 +87,7 @@ void ContractProbe(const std::filesystem::path &dir)
     auto plane = ReadDatasetCase(dir / CaseFilename(0));
     CheckDataset500Contract(plane, 0);
     auto high = plane;
-    // Keep both negative examples inside the 50..79 control band, so only
-    // the degree limit can reject them (not an incidental control-count change).
+    // 两个负例均保持在 50～79 个控制点档内，使拒绝原因只来自次数限制，而不是偶然改变了控制点数量。
     high.input = std::make_shared<sggk::BSplineSurface>(*plane.source);
     high.input->UDegreeElevation(6 - high.input->DegreeU());
     PadDatasetSurface(*high.input, 7, 8, plane.variant);

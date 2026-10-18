@@ -1,3 +1,8 @@
+/**
+ * @file SurfaceConversion.cpp
+ * @brief 历史统一 Convert 的分支调度和线性 PCurve 输出。
+ * 保留旧分支诊断与累计计时；当前运行入口应使用 SequentialConversion.cpp 中的限时串联合同。
+ */
 #include "SurfaceConversion.h"
 #include "GeneralInternal.h"
 #include "StageTimer.h"

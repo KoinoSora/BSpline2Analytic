@@ -1,3 +1,8 @@
+/**
+ * @file CandidateRefinement.cpp
+ * @brief 共享的渐进参数、LM 预热与最大误差约束求解器。
+ * 先改善采样目标，再以信赖域约束步和停滞规则推进；采样可行只允许提交候选，不替代独立几何验收。
+ */
 #include "ApproximateInternal.h"
 #include <deque>
 #include <numeric>
@@ -21,6 +26,9 @@ static unsigned Dimension(sggk::SurfaceType t)
         return 11;
     return 10;
 }
+// 将无量纲局部增量映射到几何参数：平移乘模型尺度，转动采用局部 Rodrigues 更新，
+// 半径以 exp 增量保持正值，锥半角经 tan/atan 更新。改变有限域后重新检查正则范围，
+// 越界通过 Failure 拒绝试探步，不原地污染调用方的基准候选。
 AnalyticPatch Increment(const AnalyticPatch &base, const std::vector<double> &d, double scale)
 {
     AnalyticPatch p = base;
@@ -67,6 +75,8 @@ AnalyticPatch Increment(const AnalyticPatch &base, const std::vector<double> &d,
         throw Failure(Status::InvalidInput, "Trial step left the regular chart");
     return p;
 }
+// 从尺寸/偏移到母面自由度再到完整面片逐层开放变量；索引必须与 Increment 完全一致。
+// 一般兜底只用 MotherSurface 层，防止临时参数图端点进入母面拟合。
 ActiveParameters ParametersFor(sggk::SurfaceType type, ParameterLevel level)
 {
     using T = sggk::SurfaceType;
@@ -105,8 +115,7 @@ double SampleScale(const AnalyticPatch &p, const SampleCache &samples)
         scale = std::max(scale, Norm(samples[i].point - origin));
     return scale;
 }
-// Minimum-norm step subject to linearized max-error constraints and a box
-// trust region. Hildreth dual coordinate updates keep multipliers nonnegative.
+// 在线性化最大误差约束及盒形信赖域下求最小范数步；Hildreth 对偶坐标更新保持乘子非负。
 static bool ConstrainedStep(const std::vector<std::vector<double>> &jac,
                             const std::vector<double> &residual, double target, double trust,
                             std::vector<double> &step)
@@ -180,6 +189,9 @@ RefinementResult RefineCandidate(const sggk::BSplineSurface &, AnalyticPatch &p,
     return RefineCandidateLevel(p, samples, o, statistics, ParameterLevel::FullPatch,
                                 o.refinement.maxIterations, false, workspace);
 }
+// 一次变量层级的优化：LM 预热降低平方和，停滞后切换最大归一化误差约束。
+// 信赖域和回溯控制合法步，拒步可复用当前 Jacobian；接受步后必须重新线性化。
+// 返回最佳采样候选及明确停止原因，是否满足连续几何约束仍由调用方独立验证。
 RefinementResult RefineCandidateLevel(AnalyticPatch &p, const SampleCache &samples,
                                       const ConversionOptions &o, ConversionStatistics &statistics,
                                       ParameterLevel level, unsigned iterationBudget,
@@ -209,8 +221,7 @@ RefinementResult RefineCandidateLevel(AnalyticPatch &p, const SampleCache &sampl
     evaluate(p, current);
     best = current;
     AnalyticPatch bestPatch = p;
-    // A failed independent check requires a new returned candidate, not a
-    // permanent ban on the sampled-margin exit for this variable level.
+    // 独立验证失败后，需要返回更新过的候选；不应永久禁用当前变量层级的采样裕量退出条件。
     bool bestUpdated = false;
     auto marginReached = [&]() { return best.worst <= 0.75 && (!forceAttempt || bestUpdated); };
     diagnostic.initialWorst = current.worst;
@@ -222,8 +233,7 @@ RefinementResult RefineCandidateLevel(AnalyticPatch &p, const SampleCache &sampl
         options.maxWarmupIterations ? RefinementPhase::Warmup : RefinementPhase::Constrained;
     unsigned failures = 0, smallChanges = 0;
     double phaseBestCost = current.cost;
-    // A window of m attempts needs m+1 records, including the phase's initial
-    // state.
+    // 包含 m 次尝试的停滞窗口需要 m+1 条记录，其中包括该阶段的初始状态。
     std::deque<std::pair<double, double>> history{{best.worst, phaseBestCost}};
     auto &J = workspace.jacobian;
     auto &C = workspace.constraintJacobian;
@@ -317,8 +327,7 @@ RefinementResult RefineCandidateLevel(AnalyticPatch &p, const SampleCache &sampl
                     ++diagnostic.lineSearchEvaluations;
                     evaluate(trial, next);
                     record.modelChange = ModelChange(current, next);
-                    // An unchanged sampled model cannot improve either acceptance
-                    // objective.
+                    // 采样模型没有变化时，两个步接受目标均无法改善。
                     if (record.modelChange == 0)
                         break;
                     if ((constrained
@@ -379,8 +388,7 @@ RefinementResult RefineCandidateLevel(AnalyticPatch &p, const SampleCache &sampl
         diagnostic.lastStepNorm = record.stepNorm;
         if (options.recordIterationTrace)
             diagnostic.trace.push_back(record);
-        // Every failure path reaches these checks, including a failed constrained
-        // solve.
+        // 所有失败路径都必须进入这些终止检查，包括约束子问题求解失败。
         if (marginReached())
         {
             diagnostic.stopReason = RefinementStopReason::MarginReached;

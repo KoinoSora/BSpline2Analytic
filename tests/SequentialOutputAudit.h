@@ -1,4 +1,9 @@
-// Independent test-only audits, adapted from the current specialized and rational suites.
+/**
+ * @file SequentialOutputAudit.h
+ * @brief 串联输出的测试专用独立几何审计。
+ * 根据实际成功路径选择母面/边界检查，在算法计时外运行，不影响候选选择或验收容差。
+ */
+// 测试专用独立审计，改编自当前等参与有理边界测试套件。
 double Map(const PairedParameterMap &m, double t)
 {
     if (t == m.source.back()) return m.target.back();
@@ -7,9 +12,7 @@ double Map(const PairedParameterMap &m, double t)
     size_t i = size_t(it - m.source.begin() - 1);
     return m.target[i] + (t - m.source[i]) / (m.source[i + 1] - m.source[i]) * (m.target[i + 1] - m.target[i]);
 }
-// Audit in translated coordinates to avoid cancellation in SDK derivatives
-// and world-point subtraction at 1e6/1e9 translations. This does not alter
-// algorithm inputs or its measured candidate/certificates.
+// 在局部平移坐标中审计，避免大坐标平移下导数和点差的相消；不改变算法输入及实测候选/证书。
 sggk::BSplineSurface CenteredAuditSurface(const sggk::BSplineSurface &s, V anchor)
 {
     sggk::BSplineSurface out(s);

@@ -1,3 +1,8 @@
+/**
+ * @file ApproximateGeometry.cpp
+ * @brief 解析母面的规范坐标、投影、有限域及输入检查。
+ * 区分母面最近点与有限面片对应，保留周期方向和 SDK 参数约定之间的转换。
+ */
 #include "ApproximateInternal.h"
 #include <Geometry/3D/Surface/ConeSurface.h>
 #include <Geometry/3D/Surface/CylinderSurface.h>
@@ -222,7 +227,7 @@ std::array<EdgeGeometry, 4> BoundaryMaps(const sggk::BSplineSurface &s, const An
         };
         double a = k < 2 ? s.MinParamV() : s.MinParamU(), b = k < 2 ? s.MaxParamV() : s.MaxParamU();
         e.g0 = EdgeCoordinate(e, point(a), e.start);
-        // Track the input order, rather than selecting a shortest arc at the endpoint.
+        // 跟踪输入遍历顺序，避免仅按端点选择最短圆弧而丢失绕行信息。
         double last = e.g0;
         auto params = SampleParameters(k < 2 ? s.KnotsV() : s.KnotsU(), a, b, 8);
         for (double t : params)
@@ -544,7 +549,7 @@ void CheckApproximateInput(const sggk::BSplineSurface &s, const ValidationOption
     };
     knots(s.KnotsU(), s.MultsU(), s.DegreeU(), s.ControlPoints().size());
     knots(s.KnotsV(), s.MultsV(), s.DegreeV(), s.ControlPoints().front().size());
-    // Bernstein extraction and finite differences need a continuous input surface.
+    // Bernstein 提取和有限差分要求输入曲面连续。
     for (size_t i = 1; i + 1 < s.MultsU().size(); ++i)
         if (s.MultsU()[i] > s.DegreeU())
             throw Failure(Status::Unsupported, "Discontinuous U knot");

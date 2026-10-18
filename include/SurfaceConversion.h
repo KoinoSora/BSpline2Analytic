@@ -1,3 +1,8 @@
+/**
+ * @file SurfaceConversion.h
+ * @brief 保留的历史统一转换入口与分支报告类型。
+ * 历史 Convert 仍连接旧近似验证链；当前共享 50 ms 预算入口为 ConvertIsoThenFallback，不能混用验收合同。
+ */
 #pragma once
 #include "ApproximateConversion.h"
 #include "GeneralConversion.h"
@@ -19,7 +24,7 @@ struct ConversionAttempt
     bool succeeded = false;
     ClassificationFailureReason classificationFailure = ClassificationFailureReason::None;
     std::string message;
-    // Retain specialized fits even when details is replaced by general fallback.
+    // 即使 details 被一般兜底结果替换，仍保留专用分支的拟合诊断。
     std::vector<IsoCurveFitDiagnostic> isoCurveFits;
 };
 struct SurfaceConversionOptions
@@ -28,8 +33,7 @@ struct SurfaceConversionOptions
     ConversionOptions polynomial;
     GeneralConversionOptions general;
 };
-// Stage-specific reports stay in details; patch is the common finite result with
-// explicit linear PCurves, published only on final success.
+// 各分支的报告保留在 details；patch 是含显式线性 PCurve 的统一有限面片结果，仅在最终成功时发布。
 struct SurfaceConversionResult
 {
     ConversionPath path = ConversionPath::RationalRecognition;
@@ -46,8 +50,8 @@ struct SurfaceConversionResult
     const ConversionTiming &Timing() const;
     std::string Message() const;
 };
-// Applicable specialized paths are attempted first; failures continue to general
-// fitting. Sampling views are constructed only when first requested by a path.
+// 历史统一入口先尝试适用的专用分支，失败后转一般拟合；各采样视图在首次请求时才构造。
+// 当前限时串联入口另见 SequentialConversion.h。
 SurfaceConversionResult Convert(const sggk::BSplineSurface &input,
                                 const SurfaceConversionOptions &options = {});
 const char *ConversionPathName(ConversionPath path);

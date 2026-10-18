@@ -1,9 +1,8 @@
-"""Serial paired measurements of two CURRENT general rational verifiers.
+# 文件职责：当前有理边界验证器两个版本的串行配对基准。
+# 逐例交替版本顺序，保持输入和验收合同一致，不运行废弃验证器。
 
-Alternate backend order per case; no retired validator is invoked. Both
-executables run the same existing full-case driver, with certificates and SDK
-audits outside the algorithm timer. Preserve every raw measurement.
-"""
+"""串行配对测量两个当前一般有理边界验证器版本。
+逐例交替后端顺序，不调用废弃验证器；两个程序使用同一整例驱动，来源证书和 SDK 审计均在算法计时之外，保留每次原始测量。"""
 import argparse
 import csv
 import hashlib

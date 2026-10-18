@@ -1,3 +1,8 @@
+/**
+ * @file ConeTests.cpp
+ * @brief 圆锥初值、优化停滞与候选后备的历史专项回归。
+ * 涉及旧近似验证器的完整执行已暂停，不能按历史性能命令重跑。
+ */
 #include "ApproximateCases.h"
 #include "ApproximateInternal.h"
 #include "Dataset500.h"
@@ -57,7 +62,7 @@ void Check249(const std::filesystem::path &directory, std::ofstream &csv)
             "Forced mother solve did not restore the margin exit after its first best update");
     std::cout << "249 legacy: size iterations=" << before
               << " mother iterations=1 worst=" << run.bestWorst << '\n';
-    // Forced calls on already feasible samples must not take a zero-attempt margin exit.
+    // 即使采样已经可行，强制求解调用也不能通过零次尝试的裕量条件退出。
     for (unsigned mode = 0; mode < 3; ++mode)
     {
         auto feasible = p;
@@ -85,7 +90,7 @@ void Check249(const std::filesystem::path &directory, std::ofstream &csv)
                          (d.bestWorst == initial.worst && d.bestCost < initial.cost)),
                     "Forced margin exit returned an unchanged best candidate");
     }
-    // A bad highest-ranked frame must not remove the next valid boundary candidate.
+    // 优先级最高的坐标架失败，不能移除下一项有效边界候选。
     auto cache = BuildClassificationSamples(s);
     auto broken = legacy.front().parameters;
     broken.axis = sggk::Dir3D(0, 0, 1);
@@ -100,7 +105,7 @@ void Check249(const std::filesystem::path &directory, std::ofstream &csv)
                     SameParameters(found.front(), legacy.front()),
                 "Failed preferred frame suppressed a usable fallback");
     }
-    // One warm-up, five measured runs; the production converter never sees fixture truth.
+    // 一次预热、五次计时；生产转换器始终不接收测试真值。
     for (int repeat = -1; repeat < 5; ++repeat)
     {
         auto result = ConvertApproximate(s);

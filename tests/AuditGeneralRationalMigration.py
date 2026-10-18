@@ -1,7 +1,8 @@
-"""Audit V2 file identity, provenance, representation and SOURCE certificates.
+# 文件职责：V2 数据身份、表示和独立来源证书审计。
+# 检查当前有理参数域合同，不运行归档的一般兜底数据或旧验证器。
 
-Only reads files. Does not invoke classification, conversion or a validator.
-"""
+"""审计 V2 文件身份、来源、表示及源数据证书。
+只读取文件，不调用分类、转换或生产验证器。"""
 import argparse
 from collections import Counter
 import csv
@@ -75,7 +76,7 @@ def main():
                       0 <= float(audit['source_tangent_deg']) < .01):
                 raise ValueError('Source bound does not meet construction tolerance')
             scenario = extreme_meta[i]['group'] if suite == 'extreme' else ''
-            # These are inherited SCENARIO names; measured sizes live in audit CSV.
+            # 这些名称沿用历史场景标签；实际测得尺寸以审计 CSV 为准。
             row = dict(suite=suite, id=i, legacy_file=old_path.name, legacy_sha256=old['sha256'],
                        input_sha256=current['sha256'], scenario=scenario, type=current['meta'][2],
                        rational=current['rational'], collapsed_mask=current['meta'][8],

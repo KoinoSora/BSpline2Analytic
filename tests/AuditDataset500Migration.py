@@ -1,8 +1,8 @@
-"""Audit Dataset500 representation migration and record reproducible SHA-256 evidence.
+# 文件职责：Dataset500 表示迁移与文件身份审计。
+# 核对次数、控制点和来源证据，记录 SHA-256 以追溯输入版本。
 
-This checks identity/representation preservation, not geometry. Run the C++ --audit
-command as well for independent continuous source and approximation certificates.
-"""
+"""审计 Dataset500 表示迁移并记录可复现的 SHA-256 证据。
+这里只检查身份和表示保留情况，不证明几何精度；独立连续来源/近似证书由 C++ --audit 检查。"""
 import argparse
 import collections
 import csv

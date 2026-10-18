@@ -1,3 +1,8 @@
+/**
+ * @file GeneralDatasetTests.cpp
+ * @brief 旧解析 UV 一般 600/专项数据的历史回归。
+ * 已禁止运行；保留候选排序、类型后备和来源隔离检查供追溯，不可套用其结果到 V2。
+ */
 #include "GeneralDataset.h"
 #include "GeneralInternal.h"
 #include <Foundation/init.h>
@@ -77,7 +82,7 @@ FixtureCertificate AuditOutput(const GeneralFixture &c,const GeneralConversionRe
     }
     return out;
 }
-// Exact positive tori exercise the direct axis solver independently of fitting.
+// 精确圆环正例独立检查直接轴线求解器，不让拟合误差掩盖初值问题。
 void TorusSeedChecks()
 {
     using namespace detail;
@@ -111,7 +116,7 @@ void TorusSeedChecks()
             for(const auto &a:candidates)
             {
                 double error=0;
-                // Independent, interleaved points; neither seed nor circle-fit support.
+                // 使用交错的独立采样点，不与初值点或圆拟合支撑点重合。
                 for(unsigned i=0;i<4;++i)for(unsigned j=0;j<4;++j)
                 {
                     auto p=sample(.1+span*(i+.37)/4,.4+span*(j+.61)/4).point;
@@ -122,7 +127,7 @@ void TorusSeedChecks()
             Require(best<1e-7*scale,"Direct torus seed lost accuracy under permutation/sign/scale change");
             ++checks;
         }while(std::next_permutation(order.begin(),order.end()));
-        // A degenerate selection from the same valid surface must be reported.
+        // 同一有效曲面上的退化采样组也必须如实报告失败。
         std::array<SurfaceSample,4> repeated{base[0],base[0],base[0],base[0]};
         GeneralTorusSeedDiagnostics d;
         Require(TorusSeeds(repeated,scale,support,d).empty()&&d.rankDeficientGroups==1,
@@ -151,8 +156,7 @@ void CacheChecks(const GeneralFixture &c)
     Require(count==context.Evaluations(),"Repeated boundary view evaluates again");
     Require(!CertifyNoQuartic(*c.input,2e-5).passed,"Negative oracle excluded a certified positive");
 }
-// Exhaust both pools without converting the wrong mothers. This exercises the
-// backup scheduler on positive inputs even when conversion succeeds immediately.
+// 耗尽两个候选池而不转换错误母面；即使正例首次转换就成功，也能覆盖后备调度分支。
 void ScoringChecks(const GeneralFixture &c)
 {
     using namespace detail;
@@ -255,8 +259,7 @@ int Run(const std::filesystem::path &dir,const std::filesystem::path &csvPath,bo
             ++passed;csv<<i<<','<<extra<<','<<GeneralFixtureFilename(i,extra)<<",1,"<<certificate.upper<<','<<certificate.rankMargin<<','<<Quote(certificate.message)<<'\n';
             std::cout<<"Certified "<<i<<' '<<certificate.message<<std::endl;continue;
         }
-        // Rotate all six orders across fixtures; fresh contexts inside each
-        // ConvertGeneral call, with input/output certificates outside timing.
+        // 在案例间轮换六种执行顺序；每次 ConvertGeneral 使用新上下文，输入认证和输出审计均在计时外。
         const unsigned orders[6][3]={{0,1,2},{0,2,1},{1,0,2},{1,2,0},{2,0,1},{2,1,0}};
         for(unsigned run=0;run<(compare?3u:1u);++run)
         {
@@ -270,11 +273,10 @@ int Run(const std::filesystem::path &dir,const std::filesystem::path &csvPath,bo
                 if(i%2)options.fitting.validation.distanceTolerance=-1;else options.fitting.sampling.maxSamples=0;
             }
             if(c.group==GeneralFixtureGroup::ValidationBudget){options.fitting.validation.maxValidationPieces=1;options.fitting.refinement.maxRounds=0;}
-            // Policy probes deliberately broaden 'similar' to exercise the retained
-            // sphere -> torus path; main 600 always use unchanged default options.
+            // 策略探针刻意放宽“相近”判定，覆盖保留的球面到圆环后备路径；主 600 例仍使用不变的默认配置。
             if(c.group==GeneralFixtureGroup::SpherePriority)options.similarScoreAbsoluteRatio=1e6;
             std::cout<<"BEGIN "<<GeneralFixtureFilename(i,extra)<<' '<<FixtureGroupName(c.group)<<' '<<configurationName[configuration]<<std::endl;
-            auto result=ConvertGeneral(*c.input,options); // ONLY conversion entry used by this suite.
+            auto result=ConvertGeneral(*c.input,options); // 本历史套件唯一使用的转换入口。
             bool succeeded=result.status==ConversionStatus::Success;success+=succeeded;
             FixtureCertificate audit;if(succeeded)audit=AuditOutput(c,result);
             bool sphere=false,torus=false,sphereBeforeTorus=false;
@@ -298,8 +300,7 @@ int Run(const std::filesystem::path &dir,const std::filesystem::path &csvPath,bo
                 known=report.Passed()?1:0;
                 if(c.group==GeneralFixtureGroup::NonlinearPCurve)
                 {
-                    // This label concerns the specified mother. Another independently
-                    // certified analytic solution is allowed; it is not a global negative.
+                    // 此标签只针对指定母面；允许其他通过独立认证的解析解，不能视为全局负例。
                     ok=!report.Passed()&&report.pcurveFailure==PCurveFailure::NonlinearPCurve&&(!succeeded||audit.passed);
                 }
                 else ok&=(i<45?report.Passed():!report.Passed());
@@ -333,7 +334,7 @@ void Diagnose(const std::filesystem::path &dir,unsigned id)
         auto known=detail::ValidateGeneral(*c.input,c.truth,options,context);
         std::cout<<"known_mother passed="<<known.Passed()<<" geometry="<<unsigned(known.geometry)<<" boundary="<<unsigned(known.boundaryHausdorff)<<" pcurve="<<unsigned(known.pcurveLinearity)<<" failure="<<PCurveFailureName(known.pcurveFailure)<<" message="<<known.message<<'\n';
     }
-    // Separate black-box call. The known mother above is never supplied to it.
+    // 独立黑盒调用，上述已知母面不会传入该调用。
     {
         detail::SurfaceSampleContext context(*c.input);
         auto seeds=detail::ClassifyGeneral(context,options);

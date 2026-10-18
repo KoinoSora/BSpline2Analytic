@@ -1,3 +1,8 @@
+/**
+ * @file GeneralDatasetCertificate.cpp
+ * @brief 测试来源及四次多项式排除的独立证书实现。
+ * 采用区间余项与秩证明，不由生产转换器的成功/失败决定输入标签。
+ */
 #include "GeneralDataset.h"
 #include <functional>
 #include <sstream>
@@ -8,8 +13,7 @@ using namespace detail;
 namespace
 {
 BPoly ConstantP(I x){return BPoly(0,0,x);}
-// Taylor polynomial with an outward-rounded Lagrange remainder, represented as
-// an interval constant. No SDK analytic evaluation participates in this oracle.
+// 以区间常数包围向外舍入的 Lagrange 余项并叠加 Taylor 多项式；此参考模型不调用 SDK 解析曲面求值。
 BPoly TrigP(const BPoly &angle,bool cosine)
 {
     I range=angle.range();double center=range.lo+(range.hi-range.lo)*.5;
@@ -100,7 +104,7 @@ FixtureCertificate CertifyAnalyticPair(const GeneralFixture &c,double tolerance,
     if(!IntervalEnvironmentSupported() || !(tolerance>0)){out.message="Interval environment/tolerance invalid";return out;}
     const auto &s=*c.input;
     if(s.MinParamU()!=0||s.MaxParamU()!=1||s.MinParamV()!=0||s.MaxParamV()!=1){out.message="Certificate expects complete [0,1]^2";return out;}
-    // For straight-edge fixtures the bilinear chart must keep one orientation.
+    // 直边测试数据的双线性参数图必须始终保持同一定向。
     if(c.bend==0)
     {
         int sign=0;
@@ -152,8 +156,7 @@ FixtureCertificate CertifyNoQuartic(const sggk::BSplineSurface &s,double radius)
         IV p{(points[i].x-I(center[0]))/I(scale[0]),(points[i].y-I(center[1]))/I(scale[1]),(points[i].z-I(center[2]))/I(scale[2])};
         normalized.push_back(p);values[i]=Monomials(p,exponents);
     }
-    // Reorthogonalized QR is ONLY a preconditioner, not a numerical certificate.
-    // The interval Gram matrix below independently proves the final rank bound.
+    // 重正交 QR 只用于预条件处理，不是数值证书；最终秩下界由后续区间 Gram 矩阵独立证明。
     std::vector<std::vector<long double>> q(m,std::vector<long double>(n)),r(n,std::vector<long double>(n));
     for(unsigned j=0;j<n;++j)
     {

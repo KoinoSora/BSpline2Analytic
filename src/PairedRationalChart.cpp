@@ -1,3 +1,8 @@
+/**
+ * @file PairedRationalChart.cpp
+ * @brief 五类解析母面的有限正权有理 Bézier 参数图。
+ * 保留规范轴、交换/反向和接缝分区，坐标变换直接作用于控制系数；有理参数不是解析角度的线性插值。
+ */
 #include "PairedValidationInternal.h"
 
 namespace bspline2analytic::detail::paired
@@ -159,8 +164,7 @@ LocalFrame MakeLocalFrame(const AnalyticParameters &a)
 }
 void Localize(BV &p, const LocalFrame &f)
 {
-    // Affine transforms act directly on Bernstein control coefficients.
-    // A constant translation needs neither degree elevation nor temporaries.
+    // 仿射变换直接作用于 Bernstein 控制系数，常量平移不需要升阶或额外临时多项式。
     for (size_t i = 0; i < p.x.c.size(); ++i)
     {
         IV d = IV{p.x.c[i], p.y.c[i], p.z.c[i]} - f.origin;

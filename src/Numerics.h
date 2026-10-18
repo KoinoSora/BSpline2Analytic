@@ -1,3 +1,8 @@
+/**
+ * @file Numerics.h
+ * @brief 精确识别内部数值类型与辅助函数声明。
+ * 提供向量、失败异常及双精度 Bernstein 表示；此表示本身不等同于区间证书。
+ */
 #pragma once
 #include "BSpline2Analytic.h"
 #include <algorithm>
@@ -87,7 +92,7 @@ struct Failure : std::runtime_error
     Failure(Status s, const std::string &m) : std::runtime_error(m), status(s) {}
 };
 
-// Tensor-product Bernstein polynomial. v is the fastest varying index.
+// 张量积 Bernstein 多项式；存储中 v 为变化最快的索引。
 struct Poly
 {
     unsigned u = 0, v = 0;

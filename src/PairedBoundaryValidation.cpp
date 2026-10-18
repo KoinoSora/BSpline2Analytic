@@ -1,3 +1,8 @@
+/**
+ * @file PairedBoundaryValidation.cpp
+ * @brief 配对验证器的连续边界位置、切向和法向认证。
+ * 在共同参数对应下组合源/目标导数并求区间界；该法向合同与母面验证器的联合切向合同不同。
+ */
 #include "PairedValidationInternal.h"
 #include <chrono>
 #include <functional>

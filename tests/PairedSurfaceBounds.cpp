@@ -1,3 +1,8 @@
+/**
+ * @file PairedSurfaceBounds.cpp
+ * @brief 测试专用同参数曲面距离的独立区间证明。
+ * 直接对原控制网作多仿射提取，避免依赖识别器或忽略 SDK 插结点舍入。
+ */
 #include "PairedSurfaceBounds.h"
 #include "IntervalBounds.h"
 #include <functional>
@@ -19,8 +24,7 @@ std::vector<double> Expand(const sggk::RealArray &k, const sggk::UIntArray &m)
         r.insert(r.end(), m[i], k[i]);
     return r;
 }
-// Interval blossom extraction uses the input control net directly, avoiding an
-// unaccounted floating-point SDK knot-insertion error in the certificate.
+// 区间多仿射提取直接使用输入控制网，避免在证书中遗漏 SDK 浮点插结点误差。
 std::vector<std::vector<I>> Extract(const std::vector<double> &k, unsigned p, unsigned span)
 {
     std::vector<std::vector<I>> e(p + 1, std::vector<I>(p + 1));

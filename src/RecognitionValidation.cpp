@@ -1,3 +1,8 @@
+/**
+ * @file RecognitionValidation.cpp
+ * @brief 精确识别候选的母面与边界误差检查。
+ * 使用采样快速检查及带浮点保护的 Bernstein 残差界，报告实际达到的验证等级。
+ */
 #include "RecognitionValidation.h"
 #include "Numerics.h"
 
@@ -33,7 +38,7 @@ static double Bound(const Homogeneous &h, const AnalyticParameters &p, double sc
         Poly rr = ww * (r * r), f = norm - rr;
         return scale * (f.maxAbs() + Guard(norm.maxAbs() + rr.maxAbs())) / (wm * wm * r);
     }
-    // Projection before squaring avoids catastrophic cancellation for very shallow cones.
+    // 先投影后平方，避免极浅圆锥中的灾难性相消。
     Poly x = h.x - z * a.x, y = h.y - z * a.y, t = h.z - z * a.z;
     Poly radial = x * x + y * y + t * t;
     if (p.type == sggk::SurfaceType::Cylinder)
@@ -60,7 +65,7 @@ static double Bound(const Homogeneous &h, const AnalyticParameters &p, double sc
         double R = p.majorRadius / scale;
         Poly sum = norm + ww * (R * R - r * r), left = sum * sum,
              right = (ww * radial) * (4 * R * R), f = left - right;
-        // F = (q_minus^2-r^2)(q_plus^2-r^2). Bound the other factor away from zero.
+        // 利用 F=(q_minus²-r²)(q_plus²-r²)，对另一个因子建立严格远离零的下界。
         auto sr = SquareRange(rhoMin + R, rhoMax + R), sz = SquareRange(zr.first, zr.second);
         double lo = sr.first + sz.first - r * r, hi = sr.second + sz.second - r * r;
         double factor = lo > 0 ? lo : (hi < 0 ? -hi : 0);

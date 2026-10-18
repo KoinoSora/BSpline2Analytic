@@ -1,3 +1,8 @@
+/**
+ * @file AnalyticReconstruction.cpp
+ * @brief 由四边直线/圆关系重建解析母面候选。
+ * 分别处理平面、圆柱、圆锥、球面和圆环面几何约束；候选还须恢复有限参数范围并独立验证。
+ */
 #include "AnalyticReconstruction.h"
 #include "Numerics.h"
 #include <Geometry/3D/Surface/ConeSurface.h>
@@ -93,7 +98,7 @@ std::vector<Candidate> Reconstruct(const std::array<BoundaryInfo, 4> &b,
         if (Norm(Cross(x, y)) <= angle)
             return out;
         V n = Unit(Cross(x, y)), origin = Get(b[0].curve->CalcPoint(b[0].curve->MinParam()));
-        // SGK plane UV is orthonormal, so a skew parallelogram is not this input class.
+        // SGK 平面的 UV 基是正交归一的，因此斜平行四边形不属于该等参输入类别。
         if (std::abs(Dot(x, y)) > angle)
             return out;
         for (unsigned i = 0; i < 4; ++i)
@@ -125,8 +130,8 @@ std::vector<Candidate> Reconstruct(const std::array<BoundaryInfo, 4> &b,
         bool parallelLines = Parallel(Get(b[l].line.direction), axis, angle) &&
                              Parallel(Get(b[l + 1].line.direction), axis, angle);
         V first = Get(b[c].curve->CalcPoint(b[c].curve->MinParam())), x = first - o0;
-        // A short arc has a less accurately determined radius after knot refinement.
-        // Accept radius agreement at geometric tolerance only together with parallel generators.
+        // 短圆弧经过结点细化后半径估计可能不够稳定。
+        // 只有同时满足母线平行条件，才允许按几何容差判定半径一致。
         const bool parallelGenerators =
             Parallel(Get(b[l].line.direction), Get(b[l + 1].line.direction), angle);
         if (parallelLines && parallelGenerators && std::abs(dr) <= tol)
@@ -163,7 +168,7 @@ std::vector<Candidate> Reconstruct(const std::array<BoundaryInfo, 4> &b,
     }
     if (!allCircles)
         return out;
-    // Try both assignments: meridians vs parallels. Circle-plane normals have arbitrary signs.
+    // 分别尝试经线与纬线的两种指派；圆所在平面的法向符号本身不唯一。
     for (unsigned g = 0; g < 2; ++g)
     {
         unsigned m = 2 * g, v = 2 * (1 - g);

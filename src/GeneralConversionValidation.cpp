@@ -1,3 +1,8 @@
+/**
+ * @file GeneralConversionValidation.cpp
+ * @brief 历史解析 UV 有限裁剪域的投影与边界验证。
+ * 内部位置、边界覆盖和 PCurve 线性约束均属于该历史合同，不可套用到当前有理边界输出。
+ */
 #include "GeneralInternal.h"
 #include <functional>
 namespace bspline2analytic::detail
@@ -66,7 +71,7 @@ static MotherBound BoundMother(const BezierCell &cell, const AnalyticParameters 
     default: return {};
     }
 }
-// Interval geometry for a rational Bezier cell and its normalized-cell derivative.
+// 有理 Bézier 单元及其对单元归一化参数的导数所需的区间几何数据。
 struct Field { IV value, derivative; };
 static IV Divide(IV a, I b) { return a * (I(1)/b); }
 static Field SourceField(const BezierCell &cell, bool alongU, bool midpoint)
@@ -221,8 +226,7 @@ static EdgeParameter MapEdge(Field p, const GeneralTrim &trim, unsigned edge,
     {
         I c=Cos(I(a.halfAngle)),s=Sin(I(a.halfAngle));vd=Sqr(c)*p.derivative.z+s*c*dr;
     }
-    // A constant-U meridian has a regular circle parameter even at a sphere
-    // pole. Use its signed radial coordinate to avoid dividing by rho there.
+    // 固定 U 的经线在球极点处仍有正则的圆参数；使用带符号径向坐标，避免在极点除以 rho。
     if (std::abs(du) < 1e-12 && std::abs(dv) > 1e-12 &&
         a.type != sggk::SurfaceType::Plane && a.type != sggk::SurfaceType::Cylinder)
     {
@@ -285,7 +289,7 @@ static bool ValidateBoundaryCell(const BezierCell &cell, unsigned edge, const Ge
         report.message=std::string(PCurveFailureName(report.pcurveFailure))+": boundary "+std::to_string(edge);
         return false;
     }
-    // Direct interval enclosures provide an alternative at a singular endpoint.
+    // 奇异端点处可改用直接区间包络求界。
     I direct=Hypot(source.value-MotherPoint(trim.parameters,u,v));
     if (direct.finite() && (!distance.finite() || direct.hi<distance.hi)) distance=direct;
     I projectionFallback=distance+BoundMother(cell,trim.parameters).distance;
@@ -294,9 +298,7 @@ static bool ValidateBoundaryCell(const BezierCell &cell, unsigned edge, const Ge
     if (e.collapsed3D && trim.parameters.type==sggk::SurfaceType::Cone)
         deviation=Hypot(source.value)+Hypot(MotherPoint(trim.parameters,u,v));
     bool mapRegular=map.value.finite() && centerMap.value.finite();
-    // If every source/target pair is close, coverage is automatic even if a
-    // tiny edge has an undefined chart coordinate. Otherwise require a regular
-    // continuous coordinate for the intermediate-value coverage argument.
+    // 若任意源/目标点对距离均足够小，则微小边即使参数图坐标无定义也能保证覆盖；否则需正则连续坐标，以介值定理论证覆盖。
     bool allPairs=direct.finite() && direct.hi<tolerance;
     if ((mapRegular || allPairs) && distance.finite() && deviation.finite() &&
         distance.hi<tolerance && deviation.hi<tolerance)
@@ -360,9 +362,8 @@ static double FiniteDistance(const BezierCell &cell, const GeneralTrim &trim, I 
     }
     for (auto &x:scale) x=(I(x)+I(Roundoff(x))).hi;
     double outside=INFINITY;
-    // Each triangle is convex. Bound distance to either triangle over the UV
-    // rectangle, then take the smaller bound to their union. This also supports
-    // a simple concave four-sided trim without treating it as a convex polygon.
+    // 每个三角形均为凸集。
+    // 分别对整个 UV 矩形求到两个三角形的距离界，再取较小值作为到其并集的上界；因此也能处理简单凹四边形，无需误当作凸多边形。
     for (const auto &triangle:TrimTriangles(trim))
     {
         double triangleBound=0;
@@ -472,7 +473,7 @@ static GeneralValidationReport ValidateTrim(const sggk::BSplineSurface &s, const
         const auto &p = samples.At(u, v,sggk::DerivType::NONE,sggk::DerivType::NONE,false);
         double distance = Norm(p.point - ProjectToMother(parameters, p.point));
         report.hasWitness = true; report.witness = {u, v};
-        // Samples locate witnesses; only the outward-rounded bound accepts a cell.
+        // 采样只用于寻找超差见证；单元通过必须依赖向外舍入的连续误差上界。
         if (certified.distance.lo > o.distanceTolerance ||
             distance > o.distanceTolerance * (1 + 1e-8))
         { exceeded = true; return; }
@@ -488,9 +489,7 @@ static GeneralValidationReport ValidateTrim(const sggk::BSplineSurface &s, const
     {
         report.distanceUpperBound = bound;
         report.hasWitness = false;
-        // Each boundary uses a continuous clamped chart coordinate with endpoint
-        // values 0 and 1. Its image covers the entire linear PCurve, so the same
-        // displacement bound controls both directed boundary distances.
+        // 每条边使用端点为 0 和 1 的连续截断参数坐标，其像覆盖整条线性 PCurve；同一位移上界因此同时控制两个方向的边界距离。
         report.message = "Continuous source-to-finite-trim distance and bidirectional boundary Hausdorff bounds; four linear PCurves";
     }
     else report.message = exceeded ? "General geometric constraint exceeded" :

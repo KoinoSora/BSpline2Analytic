@@ -1,3 +1,8 @@
+/**
+ * @file PatchRecovery.cpp
+ * @brief 精确母面候选的有限参数范围与方向恢复。
+ * 从有序边界和角点确定周期范围、U/V 交换及反向，不假定源参数与解析角参数仿射对应。
+ */
 #include "PatchRecovery.h"
 #include "Numerics.h"
 

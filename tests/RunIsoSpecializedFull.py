@@ -1,9 +1,9 @@
-"""Regress all three fixed specialized suites; never call a retired validator.
+# 文件职责：当前等参固定套件的完整串行回归。
+# 增量分类后使用母面验证，有理输入单列 Recognize；不优化、不调用废弃验证链。
 
-Three fresh-context runs per input, serial subprocesses, no per-case warmup.
-The process watchdog includes SDK initialization/source certification and is
-not an algorithm deadline. Geometric failures return 1; execution errors 2.
-"""
+"""回归三个固定等参套件，不调用废弃验证器。
+每例三次全新上下文运行，子进程串行，无逐例预热；进程看门狗包括 SDK 初始化和来源认证，不等于算法截止时间。
+几何失败返回 1，执行错误返回 2。"""
 import argparse
 import csv
 import hashlib
@@ -51,8 +51,8 @@ def means(rows):
     out = {}
     for k in METRICS:
         if k in STAGES + CLASS:
-            # Full-case costs: a polynomial case that never enters validation
-            # contributes zero work. Rational/mixed populations are N/A.
+            # 按整例统计：多项式输入若未进入验证，则该阶段实际工作为零；
+            # 有理输入或混合集合的此模块统计不适用，不能填零冒充通过。
             out[k] = statistics.mean(float(r.get(k) or 0) for r in rows) if rows and all(
                 r['backend'] == 'mother' for r in rows) else ''
         else:

@@ -1,3 +1,8 @@
+/**
+ * @file GeneralPCurve.cpp
+ * @brief 解析 UV 参数图的周期展开和线性裁剪边恢复。
+ * 用有序边界轨迹确定周期分支，奇异角采用邻域极限候选，闭合边环需统一端点和周期平移。
+ */
 #include "GeneralInternal.h"
 #include <Geometry/2D/BSplineCurve2D.h>
 #include <set>
@@ -145,12 +150,9 @@ static bool RecoverChart(SurfaceSampleContext &samples, const GeneralConversionO
             world = std::max(world, Norm(q)); extent = std::max(extent, Norm(q-first));
             bool validU = a.type == sggk::SurfaceType::Plane ||
                 std::hypot(local.x,local.y) > Roundoff(Norm(local));
-            // A fitted pole/apex can miss an exact source corner by a few ulps
-            // or by the fitting residual. Its azimuth is ill-conditioned. Use
-            // the adjacent regular limit as a chart proposal; the continuous
-            // 3D certificate, not this threshold, decides acceptance.
-            // Include samples arbitrarily close to an endpoint (e.g. a knot
-            // one ulp below it), not only parameters exactly equal to lo/hi.
+            // 拟合极点或锥顶可能与源角点相差若干 ulp 或一个拟合残差，导致方位角病态。
+            // 用邻近正则点极限提出参数图候选，最终由连续三维证书验收。
+            // 还须包含任意接近端点的采样（例如距端点一个 ulp 的结点），不能只判断参数恰好等于 lo/hi。
             {
                 double singularTolerance=std::max(Roundoff(world)*4,o.fitting.validation.distanceTolerance*.01);
                 if((a.type==sggk::SurfaceType::Cone && Norm(local)<singularTolerance) ||
@@ -182,8 +184,7 @@ static bool RecoverChart(SurfaceSampleContext &samples, const GeneralConversionO
             if (a.type == sggk::SurfaceType::Torus) walk[j].second[1] = Unwrap(walk[j].second[1], lastV);
             lastV = walk[j].second[1];
         }
-        // At a pole only U is undefined. For a linear UV trajectory extrapolate
-        // U against the defined polar/height coordinate using nearby regular UVs.
+        // 极点处只有 U 无定义；在线性 UV 轨迹假设下，依据附近正则 UV 对已定义的极角/高度坐标外推 U。
         for (size_t endpoint : {size_t(0),walk.size()-1})
             if (!regular[endpoint] && !trim.edges[edge].collapsed3D)
             {
@@ -210,8 +211,7 @@ static bool RecoverChart(SurfaceSampleContext &samples, const GeneralConversionO
     }
     for (bool valid : assigned)
         if (!valid) return fail(PCurveFailure::UnresolvedDegeneratePCurve, 0);
-    // Connect in perimeter order using whole-period translations only. Degenerate
-    // sides use neighbouring limits and the opposite side's winding as a guide.
+    // 按周界顺序连接，只允许整周期平移；退化边参考相邻正则极限和对边的绕行信息。
     constexpr unsigned order[] = {2,1,3,0};
     std::array<std::array<double,2>,4> connected{};
     connected[0] = cornerUV[0];
@@ -317,8 +317,7 @@ static bool RecoverChart(SurfaceSampleContext &samples, const GeneralConversionO
             auto uv = EdgeUV(line,t);
             V point = frame.global(CanonicalPoint(a,uv[0],uv[1]));
             auto native = mother.surface->CalcParam(Point(point));
-            // Singular angle is fixed by an interior chart probe, not arbitrary
-            // CalcParam output at a sphere pole or cone apex.
+            // 用内部参数图探针确定奇异角，不采用 CalcParam 在球极点或锥顶处任意返回的角度。
             V local=frame.local(point);
             if (std::hypot(local.x,local.y)<=std::max(Roundoff(Norm(point))*4,
                     o.fitting.validation.distanceTolerance*.01) &&
@@ -343,9 +342,8 @@ static bool RecoverChart(SurfaceSampleContext &samples, const GeneralConversionO
         line.sdkCurve = std::make_shared<sggk::BSplineCurve2D>(1,
             sggk::Point2DArray{{start[0],start[1]},{end[0],end[1]}}, sggk::RealArray{0,1}, sggk::UIntArray{2,2});
     }
-    // Share SDK-UV vertex records as well as canonical vertices. Translate an
-    // entire PCurve by whole periods before assigning its endpoint, then check
-    // the closing edge; never independently snap unrelated 3D-equal corners.
+    // 规范角点和 SDK UV 角点都要共享。
+    // 先将整条 PCurve 作整周期平移，再赋端点并检查闭合边；不能把空间位置相同但参数含义不同的角点独立吸附。
     std::array<sggk::Point2D,4> nativeCorners;
     nativeCorners[0]=trim.edges[2].sdkCurve->CalcPoint(0);
     for (unsigned k=0;k<4;++k)

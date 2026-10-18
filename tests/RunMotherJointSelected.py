@@ -1,4 +1,7 @@
-"""Measure selected current mother-validator cases serially, with cold/warm caches."""
+# 文件职责：当前母面联合切向验证的定向计时与审计。
+# 串行收集冷/热缓存结果，校验联合条件及阶段计时，失败进程也保留部分证据。
+
+"""串行测量当前母面验证器的指定案例，分别记录冷/热缓存。"""
 import argparse
 import csv
 import hashlib
@@ -110,7 +113,7 @@ def main():
                                     text=True, errors="replace", timeout=args.timeout)
             logs.append(f"case {case}, exit {result.returncode}\n{result.stdout}\n{result.stderr}")
             current = list(csv.DictReader(dest.open(encoding="utf-8", newline=""))) if dest.exists() else []
-            rows.extend(current)  # Preserve partial evidence even on a failed process.
+            rows.extend(current)  # 即使子进程失败，也保留已获得的部分证据。
             if result.returncode:
                 raise RuntimeError(f"Process exited {result.returncode}; see runs.log")
             audit(current, case, args.runs)

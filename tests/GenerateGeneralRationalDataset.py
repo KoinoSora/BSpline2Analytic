@@ -1,4 +1,7 @@
-"""Generate and certify V2 inputs only. Never runs a conversion/validation test."""
+# 文件职责：V2 输入生成、来源认证与可续跑调度。
+# 只生成已认证数据，不执行生产转换或验证测试；续跑校验现有文件身份。
+
+"""仅生成并独立认证 V2 输入，不运行转换或生产验证测试。"""
 import argparse
 import csv
 import hashlib
@@ -38,8 +41,8 @@ def main():
         missing = sorted(set(range(SIZES[suite])) - set(existing))
         if not missing:
             continue
-        # A failed batch publishes only independently certified files; resume
-        # starts at its first missing file and never silently overwrites data.
+        # 批次失败时只发布已独立认证的文件；续跑从首个缺失文件开始，
+        # 不能静默覆盖已有输入数据。
         first = missing[0]
         while first < SIZES[suite]:
             if first in existing:

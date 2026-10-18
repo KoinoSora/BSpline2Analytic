@@ -1,3 +1,8 @@
+/**
+ * @file IsoCurveAnalysis.cpp
+ * @brief 等参曲线拟合、几何门控及可续行候选分类。
+ * 先检查四条外边，再按需加密内部曲线；直线/圆拟合、候选评分和参数恢复只产出待认证候选。
+ */
 #include "ApproximateInternal.h"
 #include <numeric>
 #include <sstream>
@@ -22,8 +27,7 @@ const char *CircleFitStateName(CircleFitState state)
 }
 namespace bspline2analytic::detail
 {
-// Small, contiguous column-pivoted Householder QR. Reuses caller storage and
-// keeps the rank check; normal equations would square the condition number.
+// 小型连续存储的列主元 Householder QR，复用调用方内存并保留秩检查；避免正规方程平方放大条件数。
 static bool SolveCircleQR(std::vector<std::array<double, 6>> &a, std::vector<double> &b,
                           std::array<double, 6> &x, std::vector<double> &v)
 {
@@ -137,6 +141,8 @@ static std::array<V, 3> EigenFrame(double a[3][3], std::array<double, 3> &eigen)
     }
     return out;
 }
+// 对一条等参曲线分别评估直线和圆拟合。先中心化、缩放并检查秩与弓高分辨率，
+// 再作几何拟合；短弧近直线时保留数值诊断，不能将拟合分数解释为连续曲面证书。
 CurveFits FitApproximateIsoCurve(const sggk::Curve3DPtr &curve, BoundaryId id, double tolerance,
                                 unsigned maxSamples, IsoCurveFitDiagnostic *diagnostic,
                                 const std::function<V(double)> &sample, const IsoCurveFitOptions &options)
@@ -184,7 +190,7 @@ CurveFits FitApproximateIsoCurve(const sggk::Curve3DPtr &curve, BoundaryId id, d
     for (size_t i = 1; i < points.size(); ++i)
     {
         double length = Norm(points[i] - points[i - 1]);
-        // Reuse the fitting samples: chord weights require no extra evaluations.
+        // 复用拟合采样，弦长权重无需额外求值。
         weights[i - 1] += length * 0.5;
         weights[i] += length * 0.5;
     }
@@ -196,7 +202,7 @@ CurveFits FitApproximateIsoCurve(const sggk::Curve3DPtr &curve, BoundaryId id, d
         throw Failure(Status::Degenerate, "Collapsed isocurve");
     for (auto &w : weights)
         w /= length;
-    // Accumulate local offsets, avoiding a sum of large world coordinates.
+    // 累加局部偏移，避免直接累加大世界坐标。
     V offset{}, anchor = points.front();
     for (size_t i = 0; i < points.size(); ++i)
         offset = offset + (points[i] - anchor) * weights[i];
@@ -206,7 +212,7 @@ CurveFits FitApproximateIsoCurve(const sggk::Curve3DPtr &curve, BoundaryId id, d
         scale = std::max(scale, Norm(x - center));
     if (!(scale > 0 && std::isfinite(scale)) || !Finite(center))
         throw Failure(Status::IllConditioned, "Unresolved isocurve normalization");
-    // Heuristic numerical-resolution estimate, not a geometric certificate.
+    // 启发式数值分辨率估计，不是几何误差证书。
     diag.numericFloor = 8 * coordinateUlp + 64 * std::numeric_limits<double>::epsilon() * scale;
     std::vector<V> a;
     for (V x : points)
@@ -238,8 +244,7 @@ CurveFits FitApproximateIsoCurve(const sggk::Curve3DPtr &curve, BoundaryId id, d
     diag.lineError = lineError;
     out.hasLine = diag.hasLine = std::isfinite(lineError) && lineError <= tolerance;
     diag.transverseRatio = std::max(0.0, eigen[1]) / std::max(eigen[2], 1e-30);
-    // A small covariance ratio alone does not establish geometric straightness.
-    // Skip circles only when an admissible line is numerically indistinguishable.
+    // 较小的协方差比值不能单独证明几何直线性；只有可接受直线在数值上不可区分时，才跳过圆拟合。
     if (out.hasLine && lineError <= diag.numericFloor)
     {
         diag.circleState = CircleFitState::NumericallyLinear;
@@ -486,7 +491,7 @@ std::vector<AnalyticPatch> RecoverRankedCandidates(const ClassificationSamples &
             if (seeds[i].parameters.type == type && seeds[i].directionalCone == directional &&
                 std::isfinite(seeds[i].score))
                 indices.push_back(i);
-        // Stable ties preserve the original enumeration order.
+        // 相同分数保持原始枚举顺序。
         std::stable_sort(indices.begin(), indices.end(),
                          [&](size_t a, size_t b) { return seeds[a].score < seeds[b].score; });
         Selection chosen{missing, missing};
@@ -524,8 +529,7 @@ std::vector<AnalyticPatch> RecoverRankedCandidates(const ClassificationSamples &
     const bool hasSphere = std::any_of(families.begin(), families.end(), [&](const Family &f) {
         return f.type == sggk::SurfaceType::Sphere && f.score < distanceTolerance;
     });
-    // This margin changes candidate priority only; acceptance still uses the
-    // requested distance tolerance. Preserve ordinary ring-torus priority.
+    // 裕量只改变候选优先级，验收仍用请求的距离容差；保留常规环形圆环面的优先顺序。
     constexpr double nearSphereRadiusFactor = 5.0;
     const double nearSphereRadiusTolerance = nearSphereRadiusFactor * distanceTolerance;
     auto deferTorus = [&](const Family &f) {
@@ -549,8 +553,7 @@ std::vector<AnalyticPatch> RecoverRankedCandidates(const ClassificationSamples &
     for (const auto &family : families)
         for (auto selection : {family.directional, family.legacy})
         {
-            // New directional cone seeds are tried first; both original fallback
-            // roles survive. A failed chart never discards the next ranked seed.
+            // 先试新增方向约束圆锥初值，原来的两类后备候选仍保留；一个参数图失败不能丢弃后续候选。
             if (selection.boundary != missing && selection.boundary != selection.best)
                 append(selection.boundary);
             if (selection.best != missing)
@@ -597,7 +600,7 @@ std::vector<AnalyticPatch> ClassifyApproximate(const sggk::BSplineSurface &s,
                 if (boundary || e.status==Status::InvalidInput || e.status==Status::VerificationFailed) throw;
                 return;
             }
-            // Interior families must never bypass an unsupported outer edge.
+            // 内部等参曲线族不能绕过不受支持的外边界。
             if (boundary && !groups[g][j].hasLine && !groups[g][j].hasCircle)
             {
                 bool numerical = fitDiagnostic.circleState != CircleFitState::ResidualExceeded;
@@ -611,7 +614,7 @@ std::vector<AnalyticPatch> ClassifyApproximate(const sggk::BSplineSurface &s,
             }
         }
     };
-    // Gate all four outside edges before sampling any internal families.
+    // 采样内部曲线族前，先对全部四条外边界执行门控。
     for (unsigned g=0;g<2;++g) {fit(g,0,true);fit(g,n+1,true);}
     for (unsigned g=0;g<2;++g) for (unsigned j=1;j<=n;++j) fit(g,j,false);
     std::vector<ApproximateSeed> seeds;
@@ -673,7 +676,7 @@ std::vector<AnalyticPatch> ClassifyApproximate(const sggk::BSplineSurface &s,
                             }
                             catch (const std::runtime_error &)
                             {
-                                // The legacy seed remains available when the new frame fails.
+                                // 新坐标架构造失败时，仍保留原初值。
                             }
                         }
                     }
@@ -779,8 +782,7 @@ struct IsoClassificationSearch::Impl
         catch (const Failure &e)
         {
             if (e.status == Status::InvalidInput || e.status == Status::VerificationFailed) throw;
-            // Sparse rank/extent failures request further samples, not acceptance
-            // or a permanent rejection of a possibly short circular boundary.
+            // 稀疏采样下的秩或范围恢复失败只触发加密；既不能直接接受，也不能永久拒绝可能很短的圆弧边界。
         }
         c.density = density; c.refined = force;
         ++diag.fitPasses;
@@ -798,7 +800,7 @@ struct IsoClassificationSearch::Impl
             a.radius != b.radius || a.majorRadius != b.majorRadius || a.halfAngle != b.halfAngle)
             return false;
         if (a.type == sggk::SurfaceType::Sphere) return true;
-        // No approximate merges: distinct small errors may decide certification.
+        // 不进行近似合并：细小误差差异仍可能影响最终认证。
         return equal(Get(a.axis),Get(b.axis));
     }
     void Add(const AnalyticParameters &p)
@@ -910,7 +912,7 @@ struct IsoClassificationSearch::Impl
                             if (auto cone=DirectionalCone(edges,candidate.parameters,ro))
                             { Add(*cone); ++diag.directionalConeCandidates; }
                         }
-                        catch (const std::runtime_error &) { /* Preserve the original cone seed. */ }
+                        catch (const std::runtime_error &) { /* 保留原圆锥初值。 */ }
                     }
                 }
         }
@@ -923,7 +925,7 @@ struct IsoClassificationSearch::Impl
     {
         if (cacheDensity == density) return;
         IsoMeasure time(diag.extractionSamplingMs);
-        ClassificationSamples next; // New immutable sampling identity, even for the same source.
+        ClassificationSamples next; // 即使源面相同，新采样也使用新的不可变采样标识。
         const auto &s=samples.source;
         next.sourceDomain={s.MinParamU(),s.MaxParamU(),s.MinParamV(),s.MaxParamV()};
         for (unsigned g=0;g<2;++g) for (unsigned last=0;last<2;++last)
@@ -949,8 +951,7 @@ struct IsoClassificationSearch::Impl
                 if (!BuildStage()) { ++stage; continue; }
                 stageReady=true;
             }
-            // Completing the current smallest lower bound avoids a full score
-            // of candidates that cannot win. Equal maxima keep stable order.
+            // 优先补全当前最小下界对应的评分，避免完整评估已不可能胜出的候选；最大距离相同时保持稳定顺序。
             size_t best=seeds.size();
             bool sphere=false;
             for (const auto &s:seeds)
@@ -982,8 +983,8 @@ struct IsoClassificationSearch::Impl
             if (best==seeds.size()) { ++stage; stageReady=false; continue; }
             auto &seed=seeds[best]; seed.consumed=true;
             tried.push_back({seed.parameters,density});
-            // Scores select seeds only. Every returned candidate must still be
-            // continuously certified; a poor seed can be replaced by the next stage.
+            // 评分只用于选择初值。
+            // 返回的每个候选都必须继续做连续认证；初值不佳时可进入下一搜索阶段。
             if (scores[seed.score].maximum > tolerance) continue;
             BuildBoundaryCache();
             IsoMeasure time(diag.patchRecoveryMs);
@@ -1000,7 +1001,7 @@ struct IsoClassificationSearch::Impl
             {
                 if (e.status==Status::InvalidInput) throw;
             }
-            catch (const std::runtime_error &) { /* Try the next chart. */ }
+            catch (const std::runtime_error &) { /* 继续尝试下一个参数图。 */ }
         }
         return {};
     }
@@ -1009,6 +1010,8 @@ IsoClassificationSearch::IsoClassificationSearch(SurfaceSampleContext &samples,
     const ConversionOptions &options, ClassificationDiagnostics &diagnostics)
     : impl(std::make_unique<Impl>(samples,options,diagnostics)) {}
 IsoClassificationSearch::~IsoClassificationSearch() = default;
+// 可续行接口保留搜索阶段和候选进度；调用方认证失败后再次调用，而非重新从头分类。
+// 空值表示搜索已耗尽；返回候选仅完成几何恢复，尚未通过独立位置/切向验证。
 std::optional<RecoveredCandidate> IsoClassificationSearch::Next(ClassificationSamples &samples)
 {
     return impl->Next(samples);

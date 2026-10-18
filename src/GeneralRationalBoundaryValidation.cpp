@@ -1,3 +1,8 @@
+/**
+ * @file GeneralRationalBoundaryValidation.cpp
+ * @brief 当前一般兜底的完整验证流程。
+ * 内部采样筛查、图恢复、SDK 边界构造及连续位置/切向认证共享预算；未通过或超时不能发布成功输出。
+ */
 #include "GeneralRationalBoundaryInternal.h"
 #include <chrono>
 
@@ -40,13 +45,15 @@ class Certifier
     bool Accept(double bound,double angleRatio,double angleSquared)
     {
         if(!(bound<options.general.fitting.validation.distanceTolerance))return false;
-        // Keep the existing fast criterion intact. Only the new fallback uses
-        // sine squared; inverse trigonometry remains in final report assembly.
+        // 保留原快速判据，只有新的后备残差路径使用正弦平方界；反三角函数留到最终报告组装时计算。
         if(angleRatio<limit)ratio=std::max(ratio,angleRatio);
         else if(angleSquared<sineSquaredLimit.lo)sineSquared=std::max(sineSquared,angleSquared);
         else return false;
         distance=std::max(distance,bound);++report.boundarySegments;return true;
     }
+    // 节点状态：源段 s 的原参数域对应目标 [lo,hi]。先对齐目标接缝，再依次尝试
+    // 双精度保守包络、完整区间位置界、误差导数/正比例切向界；这些路径共享节点预算。
+    // 未获通过时尝试合法微段豁免，否则细分并可修正中点对应。修正后残差必须重建。
     bool Visit(const BezierCell &s,unsigned edge,double lo,double hi,unsigned depth)
     {
         samples.CheckDeadline("boundary_certificate");
@@ -57,9 +64,8 @@ class Certifier
             double cut=s.u0+(s.u1-s.u0)*(part.u1-lo)/(hi-lo);
             if(!(cut>s.u0&&cut<s.u1))
             {
-                // Preserve the entire target seam fragment. Pair it with the
-                // source endpoint under the spatial micro-piece certificate,
-                // then certify the remaining correspondence normally.
+                // 完整保留目标接缝片段。
+                // 先通过空间微小段证书将其与源端点配对，再按普通规则认证剩余对应区间，不能删除接缝附近的覆盖。
                 if(cut<=s.u0&&MergeMicro(paired::Crop(s,s.u0,s.u0,0,1),edge,lo,part.u1))
                     return Visit(s,edge,part.u1,hi,depth);
                 if(cut>=s.u1&&MergeMicro(paired::Crop(s,s.u1,s.u1,0,1),edge,part.u1,hi))
@@ -73,13 +79,10 @@ class Certifier
         for(const auto &p:target.edges[edge])if(p.u0<=lo&&hi<=p.u1){part=&p;break;}
         if(!part)return false;
         auto t=paired::Crop(*part,lo,hi,0,1);
-        // Local to this exact correspondence. Child visits may change mapped
-        // endpoints and must select lambda and rebuild the residual afresh.
+        // 辅助比例只对当前精确对应关系有效；子节点可能改变映射端点，必须重新选择 lambda 并重建残差。
         std::optional<BPoly> tangentScale;
-        // Filter the SAME source/target pair with double coefficients and a
-        // conservative rounding envelope. An inconclusive filter consumes no
-        // extra node and cannot change the correspondence or acceptance limits.
-        // Pure polynomial differences have no rational convolution to save.
+        // 对同一源/目标段先用双精度系数和保守舍入包络过滤。
+        // 无结论不额外消耗节点，也不改变对应关系或验收阈值；纯多项式差没有可节省的有理卷积，因此跳过此过滤。
         bool useEnvelope=envelopeOnEdge[edge]&&(s.w.u||t.w.u);
         bool positionExceeded=false,tangentExceeded=false,fastPositionPassed=false;
         if(useEnvelope)++report.envelopeChecks;
@@ -135,10 +138,9 @@ class Certifier
                 }
             }
             if(Accept(bound,angleRatio,angleSquared))return true;
-            // Some edges need subdivision to tighten tangent hulls, while their
-            // position already passes. If BOTH kernels are inconclusive, stop
-            // paying for two tangent kernels on this edge. Other edges and all
-            // position-witness paths retain the filter. This affects cost only.
+            // 部分边的位置已通过，切向仍需细分收紧。
+            // 若两个切向求界内核均无结论，则关闭该边重复过滤以节省开销；其他边及位置超限见证路径仍保留过滤。
+            // 这只影响成本，不改变验收条件。
             if(fastPositionPassed&&bound<options.general.fitting.validation.distanceTolerance)
                 envelopeOnEdge[edge]=false;
         }
@@ -208,8 +210,7 @@ std::vector<AnalyticParameters> Charts(SurfaceSampleContext &samples,const Analy
         if(Norm(axis)<1e-12||out.size()>=o.maxChartAttempts)return;
         AnalyticParameters p=a;p.axis=Direction(axis);p.xDirection=Direction(Perpendicular(Unit(axis)));out.push_back(p);
     };
-    // Bounded geometric proposals. Do not invoke the old optimizer whose
-    // objective assumes straight lines in ANALYTIC UV.
+    // 仅生成有界数量的几何候选，不调用目标函数假设解析 UV 直线的旧优化器。
     for(const auto &edge:samples.Boundaries())
     {
         if(edge.size()<3)continue;
@@ -222,6 +223,9 @@ std::vector<AnalyticParameters> Charts(SurfaceSampleContext &samples,const Analy
 std::vector<AnalyticParameters> RecoveryCharts(SurfaceSampleContext &samples,const AnalyticParameters &a,
                                               const GeneralRationalBoundaryOptions &o)
 {return Charts(samples,a,o);}
+// 当前合同的总编排：输入与环境检查 -> 内部采样 -> 候选参数图恢复 -> 有限域采样
+// -> 实际 SDK 输出边界 -> 连续边界证书。内部两次采样都不能推出内部连续域已通过。
+// 候选图失败可以换图，输入错误与预算耗尽由外层统一处理；成功时才提交 Target.patch。
 GeneralRationalBoundaryReport Validate(SurfaceSampleContext &samples,const AnalyticParameters &a,
                                       const GeneralRationalBoundaryOptions &o)
 {

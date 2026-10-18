@@ -1,5 +1,9 @@
-// Documentation evidence: three selected cases, always through the sequential API.
-// Source certification, independent output audits and plotting exports are untimed.
+/**
+ * @file IntroductionCases.cpp
+ * @brief 作品介绍三个案例的实际转换证据导出。
+ * 球面、锥顶与退化边案例统一走串联 API；来源检查、输出审计和绘图采样均在计时外。
+ */
+// 文档证据使用三个精选案例，始终经过串联 API；来源认证、独立输出审计和绘图导出都在计时之外。
 #include "SequentialConversion.h"
 #include "Dataset500.h"
 #include "GeneralRationalDataset.h"
@@ -75,8 +79,7 @@ int Run(const std::filesystem::path &data,const std::filesystem::path &output)
         {
             auto c=ReadGeneralFixture(data/"general-rational-v2/main/main-400.b2a");
             c.id=1000;c.rational=true;c.group=GeneralFixtureGroup::Feasible;c.extra=false;c.bend=0;c.collapsedMask=8;
-            // Source order: 00,10,01,11. Vmax collapses to a single vertex.
-            // These angular corners specify the independent fixture generator's chart.
+            // 源角点顺序为 00、10、01、11，Vmax 坍缩为单个顶点；这些角参数角点只用于独立测试生成器的参数图。
             c.corners={sggk::Point2D{.2,.2},sggk::Point2D{1.4,.2},sggk::Point2D{.2,1.1},sggk::Point2D{.2,1.1}};
             c=RebuildRationalFixture(c);
             Require(c.collapsedMask==8,"Torus edge did not collapse");

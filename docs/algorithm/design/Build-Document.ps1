@@ -1,3 +1,6 @@
+# 文件职责：方案设计文件的 PDF 构建入口。
+# 编译当前目录中的 LaTeX 源文件，不参与算法运行或性能测量。
+
 param([string]$XeLaTeX = 'xelatex')
 $ErrorActionPreference = 'Stop'
 $documentName = '面向线性PCurve的一类通用样条面到二次曲面智能转化方案—方案设计文件'

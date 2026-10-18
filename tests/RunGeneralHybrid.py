@@ -1,9 +1,9 @@
-"""Serial, per-fixture watchdog for the standalone sampled/continuous validator.
+# 文件职责：已废弃混合验证器的历史逐例调度器。
+# 主函数主动退出，不得调用 archived_main 绕过禁测。
 
-Real classified candidates only; no oracle parameters enter production code.
-Independent fixture/output certificates, loading and process startup are outside
-the reported classification+validation pipeline timer. No optimizer is invoked.
-"""
+"""旧采样/连续混合验证器的串行逐例看门狗，当前禁用。
+历史实现只用真实分类候选，真值不进入生产代码；来源/输出证书、加载与进程启动均在分类加验证计时外，不调用优化器。
+不得通过 archived_main 绕过禁测。"""
 import argparse
 import csv
 import hashlib
@@ -78,7 +78,7 @@ def archived_main():
         input_hashes[name] = digest(a.data / name)
         target = work / f'{index:03}.csv'
         if target.exists():
-            target.unlink()  # This exact generated per-case output; never reuse stale rows.
+            target.unlink()  # 只处理当前生成的逐例输出，不能复用过期记录。
         command = [str(a.exe), '--case', str(a.data), str(target), str(case_id), str(extra), str(a.runs)]
         try:
             run = subprocess.run(command, cwd=a.sdk, env=env, capture_output=True, text=True,
@@ -94,7 +94,7 @@ def archived_main():
             failures.append({'index': index, 'reason': 'timeout', 'seconds': a.timeout,
                              'last_stage': partial.splitlines()[-1] if partial else 'startup'})
         current = list(csv.DictReader(target.open(encoding='utf-8'))) if target.exists() else []
-        # Partial measurements remain visible but are not counted as a complete case.
+        # 保留部分测量证据，但不能计为完整案例。
         if len(current) == a.runs:
             rows.extend(current)
         elif not any(f['index'] == index for f in failures):

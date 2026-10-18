@@ -1,4 +1,7 @@
-"""Read-only fixture/source inventory. Does not run any geometry algorithm."""
+# 文件职责：测试代码、案例与材料的清单生成器。
+# 读取现有测试证据形成可追溯清单，不以文档统计替代算法回归。
+
+"""只读生成测试输入和源码清单，不运行几何算法。"""
 from pathlib import Path
 import collections
 import csv

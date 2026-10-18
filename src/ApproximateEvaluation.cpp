@@ -1,3 +1,8 @@
+/**
+ * @file ApproximateEvaluation.cpp
+ * @brief 近似优化的采样几何评价与有序边界对应。
+ * 复用有限面片投影和周期展开，向求解器提供点值；最终连续验收由验证器负责。
+ */
 #include "ApproximateInternal.h"
 namespace bspline2analytic::detail
 {
@@ -76,8 +81,7 @@ void EvaluateResiduals(const AnalyticPatch &p, const SampleCache &samples,
         else
         {
             const auto &e = context.edges[s.edge];
-            // Preserve the original fraction-based unwrap branch. The sequential
-            // boundary walk above supplies endpoints, not a new correspondence.
+            // 保留原来基于比例参数的周期展开分支；上面的有序边界遍历只提供端点，不重新定义对应关系。
             double g =
                 e.circle ? Unwrap(w.phase[i], e.g0 + (e.g1 - e.g0) * s.fraction) : w.phase[i];
             auto q = MapBoundaryPointAndTangent(context.frame, e, g);

@@ -1,3 +1,8 @@
+/**
+ * @file GeneralRationalBoundaryTests.cpp
+ * @brief 当前有理边界验证器的单元、数据与性能驱动。
+ * 独立审计导出系数和边界；区分给定母面的验证模式与包含分类的算法模式，旧混合验证器禁用。
+ */
 #include "GeneralRationalBoundaryInternal.h"
 #include "GeneralDataset.h"
 #include "GeneralExtremeDataset.h"
@@ -140,8 +145,7 @@ void ErrorKernelUnit()
         return c[0];
     };
     auto contains=[](I box,long double x){return box.lo<=x&&x<=box.hi;};
-    // Independent de Casteljau evaluation on exact dyadic input coefficients;
-    // exercise unequal degrees and both constant/nonconstant weight paths.
+    // 对精确二进制系数独立作 de Casteljau 求值，覆盖不同次数以及常权重、变权重两条路径。
     for(unsigned p=1;p<=6;++p)for(unsigned q=1;q<=4;++q)for(unsigned mode=0;mode<4;++mode)
     {
         auto cell=[](unsigned n,bool rational,int sign)
@@ -183,7 +187,7 @@ void ErrorKernelUnit()
             "Scaled residual should accept parallel speed mismatch");
     Require(!std::isfinite(ratio(s,line(-1,0,0))),"Opposite direction accepted by residual criterion");
     Require(!std::isfinite(ratio(line(0,0,0),s)),"Zero source speed accepted");
-    // Same straight line in rational quadratic form, with W=1+t.
+    // 用权重 W=1+t 的有理二次形式表示同一直线。
     BezierCell rational;rational.p={BPoly(2,0),BPoly(2,0),BPoly(2,0)};
     rational.p.x.c={I(0),I(.5),I(2)};rational.w=BPoly(2,0);rational.w.c={I(1),I(1.5),I(2)};
     auto tilted=rational;tilted.p.y=rational.p.x*I(1e-5);
@@ -289,7 +293,7 @@ void EnvelopeExport(const std::filesystem::path &path)
         out<<",\"angle_reference\":["<<e.x<<','<<e.y<<','<<e.z<<']';
         out<<",\"angle_sine_squared\":"<<q2<<'}';
     }
-    // Invalid/nonfinite arithmetic must defer to the existing interval path.
+    // 非法或非有限算术结果必须回退到原区间路径，不能视为通过。
     BezierCell invalid;invalid.p.x=BPoly(1,1);
     Require(!envelope.Build(invalid,invalid),"Tensor input accepted by 1D envelope");
     invalid={};invalid.p.x.c[0]=I::Whole();
@@ -405,8 +409,7 @@ void Unit(const std::filesystem::path &data)
         if(id)Require(r.patch->tangentNotApplicable[0]||r.patch->tangentNotApplicable[1]||
             r.patch->tangentNotApplicable[2]||r.patch->tangentNotApplicable[3],"Collapsed source tangent not marked");
     }
-    // Piecewise chart composition across internal knots, checked against a test-
-    // owned inverse circular parameter formula, including a periodic seam.
+    // 检查跨内结点的分段参数图复合，参考测试独立实现的圆参数逆公式，并覆盖周期接缝。
     for(unsigned type:{1u,2u,3u,4u})
     {
         rb::Trim t;t.mother=Mother(type);t.domain={5.8,8.2,.3,2.2};
@@ -526,8 +529,7 @@ void FullCase(const std::filesystem::path &data,const std::filesystem::path &csv
                 <<','<<maxCaseMs<<','<<r.timeBudgetExceeded<<','<<Quote(r.timeoutStage)<<','<<(maxCaseMs<=0||total<=maxCaseMs)<<','<<microMerged<<','<<(passed?r.patch->tangentExemptions.size():0)<<','<<refined3D<<'\n';
             return out.str();
         };
-        // Save measured algorithm time before the independent SDK audit, so
-        // an audit watchdog cannot erase an already completed algorithm result.
+        // 独立 SDK 审计前保存已测算法耗时，避免审计看门狗超时覆盖已经完成的算法结果。
         rows.push_back(line());save();
         for(size_t i=0;i<attempts.size();++i)
         {
@@ -548,7 +550,7 @@ void FullCase(const std::filesystem::path &data,const std::filesystem::path &csv
             rows.back()=line();save();std::cout<<"END_AUDIT "<<run<<std::endl;
         }
     }
-    // Diagnostic oracle only after all measured runs; never feeds the candidate pool.
+    // 真值诊断仅在全部计时运行后执行，不反馈到候选池。
     if(anyFailure&&((suite=="main"&&id<500)||extreme))
     {
         std::cout<<"BEGIN_KNOWN_MOTHER_DIAGNOSTIC"<<std::endl;
@@ -561,8 +563,7 @@ void FullCase(const std::filesystem::path &data,const std::filesystem::path &csv
     }
     if(extra&&id==49)
     {
-        // Re-measure the reconstructed low-degree interior probe. New Greville
-        // points need not preserve the historical sampled-interior blind spot.
+        // 重新测量重建后的低次内部探针；新的 Greville 点未必保留历史采样盲区，不能照搬旧结论。
         SurfaceSampleContext samples(*c.input);double sampled=0,peak=0;
         for(const auto &p:samples.Greville(false))sampled=std::max(sampled,MotherDistance(c.truth,p.point));
         for(unsigned i=0;i<=10000;++i)peak=std::max(peak,MotherDistance(c.truth,Get(c.input->CalcPoint(double(i)/10000,.5))));
@@ -597,7 +598,7 @@ void Case(const std::filesystem::path &data,const std::filesystem::path &csv,uns
             fastAccepted+=r.tangentFastAccepted;fallbacks+=r.tangentFallbacks;
             residualChecks+=r.tangentResidualChecks;residualAccepted+=r.tangentResidualAccepted;residualFallbacks+=r.tangentResidualIntervalFallbacks;
         };
-        if(synthetic)attempt(fixture.truth); // Explicit-chart validator benchmark, not classifier timing.
+        if(synthetic)attempt(fixture.truth); // 这是显式给定参数图的验证器基准，不是分类耗时。
         else
         {
             GeneralClassificationDiagnostics d;auto t=std::chrono::steady_clock::now();auto pool=InitializeGeneralCandidates(samples,options.general,d);classify+=Ms(t);
@@ -633,8 +634,7 @@ int main(int argc,char **argv)
         }
         else
         {
-            // The distinct command and arity make pre-retirement binaries fail
-            // before entering their old/new comparison loop.
+            // 独立命令名与参数数量使废弃前的二进制在进入旧新对照循环之前即失败。
             Require(std::string(argv[1])=="--rational-case"&&argc==8&&std::string(argv[7])=="--rational-v2-only",
                 "Invalid rational-only benchmark arguments");
             Case(argv[2],argv[3],unsigned(std::stoul(argv[4])),unsigned(std::stoul(argv[5])),std::stoi(argv[6])!=0);

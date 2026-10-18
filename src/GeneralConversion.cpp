@@ -1,3 +1,8 @@
+/**
+ * @file GeneralConversion.cpp
+ * @brief 历史解析 UV 一般转换的候选与优化编排。
+ * 复用母面候选池后恢复线性 PCurve；当前有理参数域兜底由 SequentialConversion.cpp 单独编排。
+ */
 #include "GeneralInternal.h"
 #include "StageTimer.h"
 namespace bspline2analytic::detail
@@ -42,7 +47,7 @@ SampleCache GeneralSamples(SurfaceSampleContext &context)
     SampleCache samples;
     auto add = [&](const SurfaceSample &x) {
         Sample s; s.u = x.u; s.v = x.v; s.point = x.point;
-        // No tangent row is generated for projected-image trims.
+        // 投影像裁剪路径不生成切向残差行。
         samples.points.push_back(s);
     };
     for (const auto &x : context.Greville(false)) add(x);
@@ -94,8 +99,7 @@ GeneralConversionResult ConvertGeneralWithSamples(const sggk::BSplineSurface &s,
             ++index;
             AnalyticPatch candidate;
             candidate.parameters = seed.parameters;
-            // Valid scratch chart for reusing the legacy mother parameter update;
-            // it does not define the projected-image patch's trims.
+            // 临时有效参数图仅供复用旧母面参数更新，不定义投影像面片的实际裁剪边界。
             candidate.domain = {0, 1, .25, 1};
             GeneralTrim trim;
             auto validate = [&] {
@@ -148,8 +152,7 @@ GeneralConversionResult ConvertGeneralWithSamples(const sggk::BSplineSurface &s,
                             ++result.statistics.refinementRounds;
                             result.statistics.sampleCount = std::max(result.statistics.sampleCount,
                                 static_cast<unsigned>(samples.size()));
-                            // The same mother and same validation options cannot
-                            // repair a chart failure by repeating the same check.
+                            // 母面和验证选项均未改变时，重复同一次检查无法修复参数图恢复失败。
                             if(!refined.improved) break;
                         }
                         validate();
@@ -181,8 +184,7 @@ GeneralConversionResult ConvertGeneralWithSamples(const sggk::BSplineSurface &s,
                 result.validation.failedBoundary,false,result.message});
             result.attempts.back().seedGroup=seed.score.seedGroup;
             result.attempts.back().optimizationIterations=result.statistics.optimizationIterations-iterationsBefore;
-            // Finish the current ranked batch before drawing from the retained
-            // pool. No new seed groups are generated during backup attempts.
+            // 先完成当前排序批次，再从保留的候选池取后备；后备阶段不重新生成初值采样组。
         }
     }
     catch (const Failure &e)

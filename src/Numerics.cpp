@@ -1,3 +1,8 @@
+/**
+ * @file Numerics.cpp
+ * @brief 精确识别共用的向量、线性求解与 Bernstein 数值工具。
+ * 负责基础几何计算与浮点误差界支持，区别于 IntervalBounds 的向外舍入区间算术。
+ */
 #include "Numerics.h"
 #include <Geometry/3D/Curve/BezierCurve3D.h>
 #include <Geometry/3D/Surface/BezierSurface.h>
@@ -156,7 +161,7 @@ Poly SquaredNorm(const Homogeneous &h)
     return h.x * h.x + h.y * h.y + h.z * h.z;
 }
 
-// Column-pivoted Householder QR, with only three unknowns. Avoids squaring condition numbers.
+// 只有三个未知量的列主元 Householder QR，避免平方放大条件数。
 bool LeastSquares3(std::vector<std::array<double, 3>> a, std::vector<double> b, double tol,
                    std::array<double, 3> &result)
 {

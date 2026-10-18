@@ -1,3 +1,8 @@
+/**
+ * @file PairedValidationTests.cpp
+ * @brief 独立配对验证器的单元与固定数据回归。
+ * 覆盖参数映射、接缝、区间界和源缓存失效；有理精确识别另列，不调用废弃投影验证器。
+ */
 #include "ApproximateCases.h"
 #include "Dataset500.h"
 #include "PairedValidationInternal.h"
@@ -144,7 +149,7 @@ sggk::BSplineSurfacePtr Plane(unsigned mode)
     for (unsigned i = 0; i < 4; ++i)
         for (unsigned j = 0; j < 4; ++j)
         {
-            // mode 4: x=(u+u^2)/2, represented exactly in degree three.
+            // 模式 4：用三次形式精确表示 x=(u+u²)/2。
             double x =
                 mode == 4 ? (double(i) / 6 + double(i * (i ? i - 1 : 0)) / 12) : double(i) / 3;
             if (mode == 5)
@@ -182,7 +187,7 @@ void PositionArithmetic()
                         "Weighted product enclosures do not overlap");
         }
     };
-    // Independent reference: the shared implementation uses successive elevation.
+    // 独立参考实现；共享生产实现采用逐次升阶。
     for (auto degree : {std::make_pair(0u, 0u), {0u, 3u}, {2u, 0u}, {2u, 3u}, {7u, 7u}, {32u, 1u}})
     {
         BPoly p(degree.first, degree.second);
@@ -208,7 +213,7 @@ void PositionArithmetic()
     BPoly quadratic(2, 0);
     quadratic.c = {I(0), I(0), I(1)};
     auto elevated = products.Elevate(quadratic, 4, 0);
-    // Exact Bernstein coefficients of t^2 at degree four.
+    // t² 在四次 Bernstein 基下的精确系数。
     const double expected[] = {0, 0, 1.0 / 6, .5, 1};
     for (unsigned i = 0; i < 5; ++i)
         Require(elevated.c[i].lo <= expected[i] && elevated.c[i].hi >= expected[i],
@@ -222,8 +227,7 @@ void PositionArithmetic()
     Require(!std::isfinite(paired::PositionBoxUpper(e, BPoly(0, 0, I(0)))) &&
                 !std::isfinite(paired::PositionControlUpper(e, BPoly(0, 0, I(-1)), products)),
             "Nonpositive weights were accepted");
-    // Known chart factorization must survive orientation, chart seams and
-    // restriction. Compare against the independent, full tensor product.
+    // 已知参数图因子分解必须在方向变换、接缝和限制区间后仍成立；与独立完整张量积对照。
     using T = sggk::SurfaceType;
     for (auto type : {T::Plane, T::Cylinder, T::Cone, T::Sphere, T::Torus})
         for (unsigned flags = 0; flags < 8; ++flags)
@@ -279,8 +283,7 @@ void Unit()
         auto p = patch;
         p.domain = {0, 1, 0, 1};
         auto s = Plane(4);
-        // Error control vectors point in different directions. The box bound is
-        // above tolerance, while every control vector is strictly below it.
+        // 误差控制向量朝向不同：区间盒上界超容差，而各向量范数均严格低于容差。
         for (unsigned i = 0; i < 4; ++i)
             for (unsigned j = 0; j < 4; ++j)
                 s->SetControlPoint(sggk::Point3D(double(i) / 3 + 8e-6 * (1 - double(i) / 3),
@@ -385,8 +388,7 @@ void Unit()
         Timing(changed);
     }
     {
-        // Identical varying directions require subdivision of their dot-product
-        // hull; endpoint/midpoint samples alone must not be the certificate.
+        // 相同但随参数变化的方向场，其点积凸包仍可能需要细分；端点和中点采样不能替代证书。
         paired::Boundaries edges;
         BV tangent{BPoly(1, 0), BPoly(0, 0, I(.01)), BPoly(0, 0)};
         tangent.x.c = {I(-.9), I(1.1)};
@@ -450,13 +452,12 @@ void Unit()
         Require(r.Passed(), "Reversed/swapped piecewise map failed");
     }
     auto differentEdges = Plane(5);
-    // Retain the incompatible-correspondence regression without invoking the
-    // retired projection validator, including for fixture qualification.
+    // 保留不兼容参数对应回归；包括数据资格认证在内，都不调用已废弃投影验证器。
     auto conservative = ValidatePairedConversion(*differentEdges, patch);
     Timing(conservative);
     Require(!conservative.Passed() && conservative.status == PairedValidationStatus::NotCertified,
             "Incompatible separable map was incorrectly certified");
-    // A second call must use changed geometry/domain, not a stale successful map.
+    // 第二次调用须采用改变后的几何/参数域，不能复用旧的成功映射。
     auto shifted = patch;
     shifted.parameters.origin = sggk::Point3D(0, 0, 1e-3);
     MaterializePatch(shifted);
@@ -569,8 +570,7 @@ void Unit()
     auto roundingResult = ValidatePairedConversion(*warped, patch);
     std::fesetround(rounding);
     Require(!roundingResult.Passed(), "Unsupported rounding mode accepted");
-    // Verify each analytic rational chart against direct analytic evaluation,
-    // including multi-span arcs, swaps/reversals and both angular directions.
+    // 将各解析有理参数图与直接解析求值对照，覆盖多段圆弧、交换/反向及两个角方向。
     for (auto type : {sggk::SurfaceType::Plane, sggk::SurfaceType::Cylinder,
                       sggk::SurfaceType::Cone, sggk::SurfaceType::Sphere, sggk::SurfaceType::Torus})
         for (unsigned flags = 0; flags < 8; ++flags)
@@ -655,8 +655,7 @@ void Unit()
         Require(result.Passed(), "Large translated source lost its certificate");
         Timing(result);
     }
-    // Exercise the entire common-partition certificate across rational chart
-    // seams, including a periodic seam and a swapped/reversed source axis.
+    // 跨有理参数图接缝检查完整公共分区证书，包含周期接缝和交换/反向的源轴。
     AnalyticPatch cylinder;
     cylinder.parameters.type = sggk::SurfaceType::Cylinder;
     cylinder.parameters.radius = 2;
@@ -697,7 +696,7 @@ void SpotCheck(const sggk::BSplineSurface &s, const AnalyticPatch &p,
         return m.target[i] + (m.target[i + 1] - m.target[i]) * (t - m.source[i]) /
                                  (m.source[i + 1] - m.source[i]);
     };
-    // Independent double evaluation checks the certificate, never establishes it.
+    // 独立双精度求值只审计证书，不能建立证书。
     SurfaceSampleContext cache(s);
     for (unsigned i = 0; i <= 8; ++i)
         for (unsigned j = 0; j <= 8; ++j)
@@ -776,8 +775,7 @@ int Dataset(const std::filesystem::path &dir, const std::filesystem::path &file,
         size_t candidates = 0;
         if (c.input->IsRational())
         {
-            // Exact rational recognition is independent of the retired
-            // ValidateConversion. Its timing is not paired-module timing.
+            // 精确有理识别与已废弃的 ValidateConversion 独立，其计时不属于配对验证器模块计时。
             auto start = std::chrono::steady_clock::now();
             exact = Recognize(*c.input);
             exactMs = std::chrono::duration<double, std::milli>(
@@ -817,7 +815,7 @@ int Dataset(const std::filesystem::path &dir, const std::filesystem::path &file,
                 }
                 else
                 {
-                    // First actual recovered candidate; never substitute fixture truth.
+                    // 使用实际恢复的首候选，不以测试真值替换。
                     const auto &p = list.front();
                     if (sphere && !c.collapsedMask)
                         Require(p.parameters.type == sggk::SurfaceType::Sphere,
@@ -912,8 +910,7 @@ int Dataset(const std::filesystem::path &dir, const std::filesystem::path &file,
     std::cout << "New-only paired passed=" << passed << " not_certified=" << notCertified
               << " skipped=" << skipped << " exact_passed=" << exactPassed
               << " exact_degenerate=" << exactDegenerate << " exact_failed=" << exactFailed << std::endl;
-    // Every regular polynomial fixture has an independently certified source.
-    // Guard coverage as well as the correctness of individual successes.
+    // 每个常规多项式输入都必须有独立来源证书；同时检查覆盖率与逐个成功结果的正确性。
     Require(passed == (sphere ? 40u : 280u), "Regular polynomial dataset coverage regressed");
     Require(exactFailed == 0 && (sphere || (exactPassed == 180 && exactDegenerate == 20)),
             "Exact rational dataset coverage regressed");

@@ -1,3 +1,8 @@
+/**
+ * @file ApproximateNumerics.cpp
+ * @brief 近似拟合使用的小规模线性代数与数值辅助函数。
+ * 用于候选和迭代步求解；数值解仍须通过几何约束检查。
+ */
 #include "ApproximateInternal.h"
 #include <numeric>
 namespace bspline2analytic::detail

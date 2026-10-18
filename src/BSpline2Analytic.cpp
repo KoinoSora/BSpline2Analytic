@@ -1,3 +1,8 @@
+/**
+ * @file BSpline2Analytic.cpp
+ * @brief 精确识别的入口编排与状态名称转换。
+ * 校验输入并分析四边；重建候选后验证母面误差，再恢复有限域，返回几何结果及可追溯失败原因。
+ */
 #include "BSpline2Analytic.h"
 #include "AnalyticReconstruction.h"
 #include "Numerics.h"

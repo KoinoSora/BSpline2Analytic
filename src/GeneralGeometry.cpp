@@ -1,3 +1,8 @@
+/**
+ * @file GeneralGeometry.cpp
+ * @brief 一般有限解析面片的几何对象实现。
+ * 关联母面参数、规范角点和 SDK PCurve；母面对象自身不含有限裁剪边界。
+ */
 #include "GeneralInternal.h"
 namespace bspline2analytic::detail
 {

@@ -1,3 +1,8 @@
+/**
+ * @file PlateauTests.cpp
+ * @brief 旧近似优化平台问题的历史回归，当前禁测。
+ * 保留可行性、停滞和缓存一致性反例，停止原因不等于几何认证成功。
+ */
 #include "ApproximateCases.h"
 #include "SpecializedTimingChecks.h"
 #include "ApproximateInternal.h"
@@ -50,7 +55,7 @@ static void Check(const ConversionResult &r, bool fast = true)
                      t.validation.elapsedMs + t.otherMs - t.totalMs) < 1e-6,
             "Stage timing accounting mismatch");
 }
-// Reference path retains the pre-cache projection and boundary mapping helpers.
+// 参考路径保留缓存优化前的投影及边界映射辅助函数。
 static void CheckEvaluation(const AnalyticPatch &p, const SampleCache &samples)
 {
     EvaluationWorkspace w;
@@ -239,7 +244,7 @@ static int Run(const char *path)
                   << " reason=" << RefinementStopReasonName(d.stopReason) << '\n';
     }
     Require(bool(csv), "Cannot write plateau CSV");
-    // A separate diagnostic run does not enter the timed averages above.
+    // 单独诊断运行不计入上述平均耗时。
     ConversionOptions traced;
     traced.refinement.jacobianMode = JacobianMode::FiniteDifference;
     traced.refinement.recordIterationTrace = true;
@@ -270,8 +275,7 @@ static int Run(const char *path)
                 reducedResult.statistics.refinementRuns.front().jacobianEvaluations > 0,
             "Radius/offset variable selection did not reach the generic solver");
     CheckCachesAndFallbacks(*surface, RecoverApproxPatch(*surface, exact.parameters));
-    // Same plateau, deliberately restricted solves: a stopping reason must never
-    // imply success.
+    // 同一平台输入刻意限制求解预算；任何终止原因都不能直接等同于成功。
     ConversionOptions disabled;
     disabled.refinement.maxIterations = 0;
     auto unoptimized = ConvertApproximate(*surface, disabled);
@@ -293,8 +297,7 @@ static int Run(const char *path)
                 limited.statistics.refinementRuns.front().stopReason ==
                     RefinementStopReason::TrustTooSmall,
             "Trust-limited plateau was accepted or ignored the step range stop");
-    // The same plateau at its known feasible midpoint has an unattainable 0.72 target.
-    // This exercises constrained-phase stagnation and Jacobian reuse after rejected steps.
+    // 同一平台在已知可行中点仍无法达到 0.72 目标，用于覆盖约束阶段停滞及拒步后的 Jacobian 复用。
     auto cache = SampleSurface(*surface, {});
     ConversionOptions constrained;
     constrained.refinement.jacobianMode = JacobianMode::FiniteDifference;
@@ -310,7 +313,7 @@ static int Run(const char *path)
                     RefinementStopReason::SampleFeasibleStagnation &&
                 ValidateConversion(*surface, midpoint).Passed(),
             "Feasible plateau midpoint did not stop after three rejected constrained steps");
-    // Unlike the zero-attempt check above, this reaches the shared post-failure range guard.
+    // 与上面的零次尝试检查不同，此处会执行共享的失败后范围保护。
     constrained.refinement.minTrustRadius = .05;
     midpoint = feasible;
     ConversionStatistics shrinking;

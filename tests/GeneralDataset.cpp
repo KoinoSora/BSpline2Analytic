@@ -1,3 +1,8 @@
+/**
+ * @file GeneralDataset.cpp
+ * @brief 历史一般数据与当前复用的文件格式、参考工具。
+ * 原解析 UV 数据禁测；共享读取功能与 V2 的 rationalDomain 标记须按调用方合同区分。
+ */
 #include "GeneralDataset.h"
 #include "ApproximateInternal.h"
 #include <fstream>
@@ -150,7 +155,7 @@ GeneralFixture Positive(unsigned id)
     double u=.2+3*r(9), v=.5+.9*r(10), du=.18+.1*r(11), dv=.18+.1*r(12);
     if(c.type==0) {u=-.4;v=-.5;du=.6+1.8*r(11);dv=.7+1.2*r(12);}
     if(c.type==1 || c.type==3) {v=.6+.6*r(10);dv=.5+.8*r(12);}
-    // Type order is plane, cylinder, sphere, cone, torus.
+    // 类型顺序：平面、圆柱、球面、圆锥、圆环面。
     if(c.variant>=8 && (c.type==1 || c.type==4)) u=2*Pi-du*.5;
     if(c.variant>=8 && c.type==4) v=2*Pi-dv*.5;
     if(c.variant>=8 && c.type==2) v=c.variant==8 ? 0 : Pi-dv;
@@ -162,7 +167,7 @@ GeneralFixture Positive(unsigned id)
         c.corners[2]={u+du*(.12+.13*r(14)),v+dv};
         c.corners[3]={u+du*(1.05+.18*r(15)),v+dv*(1.08+.14*r(16))};
     }
-    // Orient the chart before fitting so the oracle includes the same mapping.
+    // 拟合前先调整参数图方向，使独立参考模型包含相同映射。
     if(c.seed&1) {std::swap(c.corners[0],c.corners[1]);std::swap(c.corners[2],c.corners[3]);}
     if(c.seed&2) {std::swap(c.corners[0],c.corners[2]);std::swap(c.corners[1],c.corners[3]);}
     if(c.seed&4) std::swap(c.corners[1],c.corners[2]);
@@ -212,9 +217,8 @@ GeneralFixture Negative(unsigned index, unsigned attempt)
 }
 void MakeSamplingBlindSpot(GeneralFixture &c)
 {
-    // An interior Bernstein bump peaks between the degree-seven Greville nodes.
-    // Its amplitude straddles epsilon: cached samples pass, a separate witness
-    // exceeds epsilon. This is a known-plane rejection, not a global negative.
+    // 内部 Bernstein 凸起的峰值位于七次 Greville 结点之间，幅值跨越 epsilon：缓存采样通过，独立见证却超差。
+    // 这只排除指定平面，不构成排除所有解析解的全局负例。
     const unsigned p=7,q=2;
     auto height=[](double u){return Bernstein(7,2,u)-.35*Bernstein(7,4,u);};
     double sampled=std::abs(height(.5)),peak=0;
@@ -356,7 +360,7 @@ void GenerateGeneralDataset(const std::filesystem::path &dir,unsigned first,unsi
         Require(recheck.passed,"Reloaded certificate failed: "+path.string());
         std::cout<<"Generated "<<i+1<<"/660 "<<FixtureGroupName(c.group)<<" certificate="<<(c.group==GeneralFixtureGroup::Infeasible?recheck.rankMargin:recheck.upper)<<std::endl;
     }
-    // Each manifest has its own membership. Historical manifest.csv stays untouched.
+    // 每份清单有独立成员集合，历史 manifest.csv 保持不变。
     for(bool extra:{false,true})
     {
         bool complete=true;unsigned count=extra?60:600;

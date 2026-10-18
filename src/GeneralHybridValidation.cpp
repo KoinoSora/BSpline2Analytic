@@ -1,3 +1,8 @@
+/**
+ * @file GeneralHybridValidation.cpp
+ * @brief 已废弃的解析 UV 混合验证器与共享一维提取实现。
+ * 完整验证接口禁测；ExtractHybridBoundaries 等提取辅助函数仍可被当前有理边界验证器复用。
+ */
 #include "GeneralHybridInternal.h"
 #include "PairedValidationInternal.h"
 #include <chrono>
@@ -22,8 +27,7 @@ std::vector<double> Expand(const sggk::RealArray &k,const sggk::UIntArray &m)
     for(size_t i=0;i<k.size();++i)out.insert(out.end(),m[i],k[i]);
     return out;
 }
-// Blossom coefficients at degree arguments (all t for evaluation, endpoint
-// repetitions for Bezier extraction). All arithmetic is outward rounded.
+// 在次数个参数处计算多仿射形式（blossom）：参数全为 t 时求值，重复端点时提取 Bézier 系数；所有运算向外舍入。
 std::vector<I> Coefficients(const std::vector<double> &k,unsigned p,unsigned span,
                             double lo,double hi,unsigned left)
 {
@@ -52,8 +56,7 @@ struct HybridThresholds
         tangentRatioLimit=(Sin(angle)/Cos(angle)).lo;
     }
 };
-// A recovered chart owns its frame and PCurves. Never share this context across
-// chart attempts: spherical recovery can change the frame and edge directions.
+// 恢复得到的参数图独占坐标架和 PCurve，不能跨尝试共享该上下文，因为球面恢复可能改变坐标架和边方向。
 struct TargetBoundaryContext
 {
     struct Edge {I u,v,du,dv;};
@@ -76,9 +79,7 @@ struct TargetBoundaryContext
         }
     }
 };
-// Ten-term Taylor enclosure, including a uniform tenth-order remainder.
-// Tangents below use independently enclosed analytic derivatives, never the
-// derivative of this interval-valued positional approximation.
+// 采用含一致十阶余项界的十项 Taylor 包络；后续切向使用独立包络的解析导数，不能对该区间位置近似直接求导代替。
 struct TrigPair {BPoly sin,cos;};
 TrigPair EncloseSinCos(const BPoly &angle,paired::Products &products)
 {
@@ -90,7 +91,7 @@ TrigPair EncloseSinCos(const BPoly &angle,paired::Products &products)
     const std::array<I,4> derivatives{sn,cs,-sn,-cs};
     for(unsigned k=0;k<10;++k)
     {
-        // Share the angle powers, but retain separate enclosures for sin/cos.
+        // 复用角度幂，但分别保留 sin/cos 的误差包络。
         out.sin=out.sin+power*(derivatives[k%4]/factorial);
         out.cos=out.cos+power*(derivatives[(k+1)%4]/factorial);
         if(k<9)power=products.Mul(power,d);
@@ -139,7 +140,7 @@ Target TargetBoundary(const TargetBoundaryContext &a,unsigned edge,double lo,dou
     const auto &f=a.frame;
     auto rotate=[&](const BV &q){return BV{q.x*f.x.x+q.y*f.y.x+q.z*f.z.x,
         q.x*f.x.y+q.y*f.y.y+q.z*f.z.y,q.x*f.x.z+q.y*f.y.z+q.z*f.z.z};};
-    return {rotate(p),rotate(t)}; // source is centered at the same origin
+    return {rotate(p),rotate(t)}; // 源几何也以同一个原点中心化。
 }
 double LineFraction(const GeneralTrim &trim,unsigned edge,V world,double reference)
 {
@@ -155,8 +156,7 @@ double LineFraction(const GeneralTrim &trim,unsigned edge,V world,double referen
     if(!(length>0))return reference;
     return ((uv[0]-line.start.X())*scale[0]*dx+(uv[1]-line.start.Y())*scale[1]*dy)/length;
 }
-// The finite point used here is a distance upper witness, not a claim that
-// weighted UV clamping solves the exact closest-point problem.
+// 此处构造的有限面片点只提供距离上界见证，不声称加权 UV 截断能解出精确最近点。
 double FiniteSampleDistance(const GeneralTrim &trim,V p)
 {
     const auto &a=trim.parameters;auto frame=FrameOf(a);
@@ -167,9 +167,8 @@ double FiniteSampleDistance(const GeneralTrim &trim,V p)
         if((d==0&&a.type!=sggk::SurfaceType::Plane)||(d==1&&a.type==sggk::SurfaceType::Torus))
             uv[d]+=2*Pi*std::round((center[d]-uv[d])/(2*Pi));
     if(InsideTrim(trim,uv,0))return Norm(p-projected);
-    // A point on an internal triangulation diagonal can fail both strict
-    // floating sign tests. Construct an actual point in each closed triangle
-    // instead of incorrectly measuring its distance to the OUTER boundary.
+    // 内部三角剖分对角线上的点可能同时未通过两个严格浮点符号测试。
+    // 应在两个闭三角形内分别构造实际点，避免错误地改求到外边界的距离。
     double best=INFINITY;
     for(const auto &triangle:TrimTriangles(trim))
     {
@@ -279,7 +278,7 @@ public:
             }
         }
         out.collapsedEdges=collapsedCount;out.boundaryDistanceUpperBound=maxDistance;
-        // atan is monotone; only reporting needs degrees, not the acceptance test.
+        // atan 单调，验收不需要换算为度；仅组装报告时转换角度单位。
         out.boundaryTangentUpperBoundDeg=(Atan(I(maxTangentRatio))*I(180)/IPi()).hi;
         out.boundaryPosition=out.boundaryTangent=CheckState::Passed;return true;
     }
@@ -320,8 +319,7 @@ std::array<std::vector<BezierCell>,4> ExtractHybridBoundaries(const sggk::BSplin
                 {sum=sum+p[k-vp+i]*coefficients[i];weight=weight+w[k-vp+i]*coefficients[i];}
                 cell.p.x.c[j]=sum.x;cell.p.y.c[j]=sum.y;cell.p.z.c[j]=sum.z;cell.w.c[j]=weight;
             }
-            // Partition of unity is exact for polynomial sources. Retaining a
-            // degree-vp representation of 1 needlessly doubles product degrees.
+            // 多项式源面的基函数精确满足单位分解；保留 v 次的常数 1 表示会无谓地使乘积次数翻倍。
             if(!s.IsRational())cell.w=Constant(I(1));
             if(cell.u0<lo||cell.u1>hi)cell=paired::Crop(cell,std::max(lo,cell.u0),std::min(hi,cell.u1),0,1);
             result[edge].push_back(std::move(cell));

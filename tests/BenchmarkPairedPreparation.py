@@ -1,9 +1,9 @@
-"""Compare a saved paired validator with the current cold and cached validator.
+# 文件职责：配对验证器准备阶段的隔离基线对照。
+# 校验共享几何依赖，比较冷缓存及复用缓存的成本，避免把其他算法变化归因于准备优化。
 
-The baseline keeps its numerical code; only its private namespace/public symbols
-are renamed and missing preparation sub-timers added. Generated files stay in build/.
-Build the current Release library first. No repository checkout or reset is used.
-"""
+"""比较保存的配对验证器与当前冷缓存、复用缓存模式。
+基线数值代码保持原样，只重命名私有命名空间/公共符号并补齐准备阶段子计时。
+生成文件保留在 build/；需先构建当前 Release 库，不执行仓库检出或重置。"""
 import argparse
 import csv
 import hashlib
@@ -36,13 +36,13 @@ def main():
 
     sha = subprocess.check_output(git + ["rev-parse", args.baseline + "^{commit}"],
                                   cwd=root, env=env, text=True).strip()
-    # A shared dependency must not silently invalidate the old/new comparison.
+    # 共享依赖变化不能静默破坏新旧实现对照的有效性。
     for name in ("src/IntervalBounds.cpp", "src/IntervalBounds.h", "src/Numerics.cpp", "src/Numerics.h",
                  "src/SurfaceSampleContext.cpp", "src/SurfaceSampleContext.h"):
         if read_git(f"{sha}:{name}").replace("\r\n", "\n") != (root / name).read_text(encoding="utf-8"):
             raise ValueError(f"Baseline shared dependency differs: {name}")
-    # Recovery now optionally retains a trace. Guard every geometry helper used
-    # by the isolated baseline, rather than rejecting that unrelated API change.
+    # 恢复接口现在可选保留轨迹；对隔离基线实际使用的几何辅助函数逐项校验，
+    # 避免仅因无关的接口扩展拒绝对照。
     def function(text, marker):
         start = text.index(marker)
         brace = text.index("{", start)
@@ -85,8 +85,8 @@ def main():
                 code = code.replace(old, "        auto localStart = Clock::now();\n" + old +
                                     "\n        out.localTransformMs += Milliseconds(localStart);")
             if "struct PairedValidationContext::Impl" in code:
-                # Only the cold baseline is exercised. Avoid duplicate public
-                # context symbols; keep its original cold helper and numerics.
+                # 仅运行冷缓存基线；避免产生重复的公共上下文符号，
+                # 同时保留原有冷启动辅助函数和数值实现。
                 code = code[:code.index("struct PairedValidationContext::Impl")] + '''
 PairedValidationReport ValidatePairedConversionBaseline(const sggk::BSplineSurface &s,
  const AnalyticPatch &p, const PairedValidationOptions &o) { return ValidatePaired(s,p,o,nullptr); }
@@ -119,7 +119,7 @@ target_link_libraries(PairedPreparationComparison PRIVATE "${LIBRARY}" SGGK_Foun
     if "PairedPositionBounds.cpp" in files:
         cmake += '\ntarget_sources(PairedPreparationComparison PRIVATE PairedPositionBounds.cpp)\n'
     (work / "CMakeLists.txt").write_text(cmake, encoding="utf-8")
-    # Read the SDK selected by this library build, rather than assume its location.
+    # 读取本次库构建实际选用的 SDK 路径，不假设固定安装位置。
     cache = (build / "CMakeCache.txt").read_text(encoding="utf-8")
     sdk = Path(next(line.split("=", 1)[1] for line in cache.splitlines()
                     if line.startswith("SGGK_SDK_DIR:PATH="))).resolve()

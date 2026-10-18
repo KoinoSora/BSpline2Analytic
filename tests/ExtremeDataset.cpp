@@ -1,3 +1,8 @@
+/**
+ * @file ExtremeDataset.cpp
+ * @brief 等参极端固定输入的构造与测量。
+ * 覆盖尺度、短边和退化边，独立计算参考几何；测量弧长与严格来源证书分别记录。
+ */
 #include "ExtremeDataset.h"
 #include "ApproximateInternal.h"
 #include <fstream>
@@ -42,8 +47,7 @@ ExtremeSpec Base(unsigned type, double rho, double theta)
 }
 std::array<double, 4> EdgeLengths(const sggk::BSplineSurface &s, unsigned n)
 {
-    // Composite Simpson per NONZERO knot span. This is a measured length,
-    // not a rigorous arclength enclosure; n and 2n are both reported.
+    // 逐非零结点区间采用复合 Simpson 积分；这是弧长测量，不是严格弧长包络，同时报告 n 与 2n 两种分辨率。
     std::array<double, 4> out{};
     for (unsigned e = 0; e < 4; ++e)
     {
@@ -220,7 +224,7 @@ std::string ExtremeFilename(unsigned id)
 }
 double ExtremeMotherDistance(const AnalyticParameters &p, V world)
 {
-    // Axis and origin operations are explicit; no calls to production projection.
+    // 轴线与原点运算显式实现，不调用生产投影代码。
     V z = Unit(Get(p.axis)), d = world - Get(p.origin);
     double height = Dot(d, z), rho = Norm(d - z * height);
     switch (p.type)
@@ -294,7 +298,7 @@ ExtremeQualification QualifyExtreme(const DatasetCase &c, bool business)
         double length = q.lengths[e];
         if (business && (c.collapsedMask & (1u << e)))
         {
-            // Require exactly coincident controls, not a numerically short edge.
+            // 要求控制点精确重合，不能把数值很短的边当作点退化边。
             auto first = cp[e == 1 ? cp.size()-1 : 0][e == 3 ? cp[0].size()-1 : 0];
             for (size_t j = 0; j < (e < 2 ? cp[0].size() : cp.size()); ++j)
             {
@@ -374,7 +378,7 @@ void GenerateExtremeDataset(const std::filesystem::path &dir, bool business)
                         unsigned qdegree = c.type >= 3 ? degree : 3;
                         c.input = FitDatasetPolynomial(*c.source, degree, qdegree);
                         snap(*c.input);
-                        // Prefer the lowest degree attaining the continuous bound.
+                        // 优先选择能通过连续上界认证的最低次数。
                         if (BoundPair(*c.source, *c.input, 7e-7).passed)
                         {
                             auto angles = business && !spec.collapsed ?

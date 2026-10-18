@@ -1,8 +1,8 @@
-"""Validate the complete extreme batch and write reproducible grouped timings.
+# 文件职责：历史等参极端记录的完整性校验和分组计时。
+# 核对数据成员与测量记录，不将部分结果当作完整批次。
 
-Exit zero means the CSVs are structurally valid, not that all conversions pass.
-No SDK, conversion, or old dataset is invoked by this script.
-"""
+"""验证完整极端批次记录并写出可复现的分组计时。
+返回零只代表 CSV 结构有效，不代表全部转换成功；本脚本不调用 SDK、转换器或旧数据测试。"""
 import argparse
 import csv
 import hashlib

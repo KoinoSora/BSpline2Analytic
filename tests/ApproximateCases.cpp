@@ -1,3 +1,8 @@
+/**
+ * @file ApproximateCases.cpp
+ * @brief 近似拟合、平台与扰动测试的几何构造工具。
+ * 独立构造多项式输入和已知参考面，不将参考真值注入生产分类器。
+ */
 #include "ApproximateCases.h"
 #include "ApproximateInternal.h"
 namespace bspline2analytic::tests
@@ -29,8 +34,7 @@ PerturbationCase CurvedPlateauFixture(const ReferenceCase &reference)
     if (exact.parameters.type != sggk::SurfaceType::Plane)
     {
         const auto cp = fixture.spline->ControlPoints();
-        // Positive B-spline basis coefficients make a broad plateau with a
-        // transition zone. Four untouched outer rows preserve boundary jets.
+        // 利用非负 B 样条基函数系数构造带过渡区的宽平台；保持外侧四行不变，以保留边界位置及导数信息。
         for (unsigned i = 4; i + 4 < cp.size(); ++i)
             for (unsigned j = 4; j + 4 < cp[i].size(); ++j)
             {
@@ -55,8 +59,7 @@ PerturbationCase CurvedPlateauFixture(const ReferenceCase &reference)
     else
         a.radius += 8e-6;
     MaterializePatch(fixture.feasible);
-    // Feasibility is intentionally asserted by the independent validator in
-    // tests, not assumed from the control-point displacement magnitude.
+    // 可行性由测试中的独立验证器判断，不能仅凭控制点位移幅值假定。
     return fixture;
 }
 sggk::BSplineSurfacePtr RefitPolynomial(const sggk::BSplineSurface &source, unsigned count)
@@ -80,9 +83,7 @@ sggk::BSplineSurfacePtr RefitPolynomial(const sggk::BSplineSurface &source, unsi
     };
     auto us = grid(source.KnotsU(), source.MinParamU(), source.MaxParamU()),
          vs = grid(source.KnotsV(), source.MinParamV(), source.MaxParamV());
-    // Tensor bicubic interpolation of actual rational source points.
-    // Using values avoids importing the wrong one-sided derivative at a
-    // rational span junction. No source weights are copied or deleted.
+    // 用实际有理源面点值进行张量双三次插值，避免在有理分段接头引入错误的单侧导数；不复制或删除源权重来伪造多项式面。
     auto coefficients = [](std::array<V, 4> f) {
         return std::array<V, 4>{f[0], f[1] * 3 - f[2] * 1.5 - f[0] * (5.0 / 6) + f[3] / 3,
                                 f[2] * 3 - f[1] * 1.5 + f[0] / 3 - f[3] * (5.0 / 6), f[3]};

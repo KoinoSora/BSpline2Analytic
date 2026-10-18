@@ -1,9 +1,8 @@
-"""Run specialized Dataset500 cases with a per-case watchdog and no warm-up.
+# 文件职责：旧专用 Dataset500 运行脚本，已禁用。
+# 通过 ConvertApproximate 调用了废弃验证器，因此主函数主动退出；当前入口见 RunIsoSpecializedFull.py。
 
-The watchdog includes loading/certification; measured stages come only from the
-C++ timers. Missing measurements remain empty, never zero. Every selected case
-is retained, including collapsed inputs and failures.
-"""
+"""历史专用 Dataset500 的无预热逐例看门狗，因旧验证链而禁用。
+看门狗包括加载和来源认证，算法阶段取自 C++ 计时；缺失测量保持为空，不填零，坍缩输入和失败记录也必须保留。"""
 import argparse
 import collections
 import csv

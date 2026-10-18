@@ -1,3 +1,8 @@
+/**
+ * @file MotherDistanceDatasetTests.cpp
+ * @brief 当前等参固定数据的母面验证回归驱动。
+ * 使用真实候选和冷上下文，有理输入单列精确识别；独立审计与文件输出不进入算法计时。
+ */
 #include "Dataset500.h"
 #include "ExtremeDataset.h"
 #include "MotherDistanceInternal.h"
@@ -59,9 +64,7 @@ double Map(const PairedParameterMap &m, double t)
     size_t i = size_t(it - m.source.begin() - 1);
     return m.target[i] + (t - m.source[i]) / (m.source[i + 1] - m.source[i]) * (m.target[i + 1] - m.target[i]);
 }
-// Audit in translated coordinates to avoid cancellation in SDK derivatives
-// and world-point subtraction at 1e6/1e9 translations. This does not alter
-// algorithm inputs or its measured candidate/certificates.
+// 在平移后的局部坐标中审计，避免 1e6/1e9 平移下 SDK 导数及世界坐标相减的相消；不改变算法输入、实测候选或证书。
 sggk::BSplineSurface CenteredAuditSurface(const sggk::BSplineSurface &s, V anchor)
 {
     sggk::BSplineSurface out(s);
@@ -327,7 +330,7 @@ Row Measure(const DatasetCase &c, double sourceBound, unsigned run, bool strictT
         part = std::chrono::steady_clock::now();
         search.reset();
         compute += Ms(part);
-        Set(row, "api_wall_ms", Ms(start)); // Includes test logging; not the algorithm timer.
+        Set(row, "api_wall_ms", Ms(start)); // 包含测试日志耗时，不是算法计时。
         Set(row, "candidates", calls);
         Set(row, "classification_validation_calls", calls);
         validation = sum.timing.totalMs;
@@ -384,7 +387,7 @@ Row Measure(const DatasetCase &c, double sourceBound, unsigned run, bool strictT
     Set(row, "classification_compute_ms", compute); Set(row, "classification_validation_ms", validation);
     Set(row, "classification_ms", compute + validation); Set(row, "algorithm_ms", compute + validation);
     Set(row, "accepted", accepted);
-    // All fixture truth and independent audits are outside the timed algorithm.
+    // 所有测试真值读取与独立审计均位于算法计时外。
     if (accepted)
     {
         try
@@ -454,7 +457,7 @@ int Run(const std::filesystem::path &dir, unsigned id, const std::filesystem::pa
         for (size_t i = 0; i < Columns.size(); ++i) *stream << (i ? "," : "") << Columns[i];
         *stream << '\n'; stream->flush();
     }
-    // No per-case warmup: report all three fresh-context runs, including the first.
+    // 不做逐案例预热；报告三次全新上下文的运行，包括第一次。
     unsigned unexpected = 0;
     for (unsigned run = 0; run < runs; ++run)
     {

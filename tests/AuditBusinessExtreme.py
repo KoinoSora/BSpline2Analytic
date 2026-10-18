@@ -1,9 +1,9 @@
-"""Independently audit the saved business matrix structure, sizes and quotas.
+# 文件职责：业务极端矩阵的数据结构、尺寸及配额审计。
+# 读取保存的输入和清单，验证数据构造合同，不运行转换器。
 
-This does not call Convert, regenerate data, or replace the SDK-side continuous
-pair-distance check. Stored certificate and sampled-angle fields remain evidence
-of their stated kind. Optional output contains every fixture SHA-256.
-"""
+"""独立审计已保存业务矩阵的结构、尺寸与配额。
+不调用 Convert、不重新生成数据，也不替代 SDK 侧连续配对距离检查。
+保存的证书与采样角度仍按各自保证范围解释；可选输出包含每个输入的 SHA-256。"""
 import argparse
 import csv
 import hashlib

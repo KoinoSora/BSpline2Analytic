@@ -1,3 +1,8 @@
+/**
+ * @file PairedPreparationBenchmark.cpp
+ * @brief 配对验证准备成本的隔离 C++ 基准。
+ * 对同一实际初始候选比较不同准备与缓存模式，由 Python 脚本组织版本对照。
+ */
 #include "Dataset500.h"
 #include "PairedValidationInternal.h"
 #include <Foundation/init.h>
@@ -8,7 +13,7 @@
 
 namespace bspline2analytic
 {
-// Linked only by BenchmarkPairedPreparation.py's isolated comparison build.
+// 仅由 BenchmarkPairedPreparation.py 的隔离对照构建链接。
 PairedValidationReport ValidatePairedConversionBaseline(const sggk::BSplineSurface &,
                                                         const AnalyticPatch &,
                                                         const PairedValidationOptions &);
@@ -100,7 +105,7 @@ int main(int argc, char **argv)
                 csv << ',' << name << '_' << field;
         csv << '\n';
         unsigned cases = 0;
-        // Each row compares all four modes on the same actual initial candidate.
+        // 每行在同一个实际初始候选上对照四种模式。
         for (unsigned id = 301; id < 400; id += 2)
         {
             auto c = ReadDatasetCase(std::filesystem::path(argv[1]) / CaseFilename(id));

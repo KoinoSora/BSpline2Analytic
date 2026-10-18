@@ -1,11 +1,15 @@
+/**
+ * @file GeneralBoundaryEnvelope.cpp
+ * @brief 一般兜底边界误差的双精度保守包络过滤。
+ * 用系数中值和统一误差半径降低区间卷积开销；无法形成有效包络时由完整区间路径继续认证。
+ */
 #include "GeneralRationalBoundaryInternal.h"
 
 namespace bspline2analytic::detail::rational_boundary
 {
 namespace
 {
-// Same positive-error arithmetic as MotherSourcePreparation. Keep this local:
-// the general verifier also supports rational sources and has its own cache.
+// 使用与 MotherSourcePreparation 相同的非负误差算术，但实现独立保留：一般验证器还支持有理源面，缓存合同不同。
 double Add(double a, double b)
 {
     return a == 0 ? b : b == 0 ? a : std::nextafter(a + b, INFINITY);
@@ -62,8 +66,7 @@ const CurveEnvelopes::Plan &CurveEnvelopes::Weights(unsigned p, unsigned q)
         }
     plan.norm = *std::max_element(norm.begin(), norm.end());
     plan.error = *std::max_element(error.begin(), error.end());
-    // Two multiplies and one summation per term. 3m covers every rounding
-    // path, including the final accumulation; no FMA is required.
+    // 每项有两次乘法和一次累加；3m 覆盖包括最终累加在内的舍入路径，不依赖融合乘加 FMA。
     plan.gamma = Gamma(3 * (std::min(p, q) + 1));
     return plans.emplace(key, std::move(plan)).first->second;
 }
@@ -100,15 +103,12 @@ CurveEnvelopes::Polynomial CurveEnvelopes::Mul(const Polynomial &a, const Polyno
             throw Unavailable{};
         out.magnitude = std::max(out.magnitude, std::abs(x));
     }
-    // Exact input coefficients lie within (a,b) radii. The exact Bernstein
-    // product has positive weights summing to one for EACH output coefficient.
-    // Use the cached row norm and its uncertainty instead of that identity so
-    // coefficient construction roundoff is covered independently.
+    // 精确输入系数分别被 a、b 的误差半径包围。
+    // 每个输出 Bernstein 乘积系数的精确权重均为正且和为 1；这里仍使用缓存的行范数及其不确定性，独立覆盖权重构造的舍入误差。
     double amplitude = ErrorMul(a.magnitude, b.magnitude);
     double input = Add(Add(ErrorMul(a.magnitude, b.radius), ErrorMul(b.magnitude, a.radius)),
                        ErrorMul(a.radius, b.radius));
-    // Underflow in a*b is multiplied by f. The following additive allowance
-    // covers those terms, f multiplication, and all additions (gradual underflow).
+    // a*b 的下溢误差还会乘以权重 f；附加保护项覆盖这些项、与 f 的乘法以及所有加法，按渐进下溢处理。
     double tiny = ErrorMul(8. * (std::min(p, q) + 1), std::numeric_limits<double>::denorm_min());
     out.radius =
         Add(Add(ErrorMul(Add(plan.norm, plan.error), input), ErrorMul(plan.error, amplitude)),
@@ -200,7 +200,7 @@ std::optional<BV> CurveEnvelopes::TangentResidual(const BV &s,const BV &t,const 
             Polynomial scaled;
             if(lambda.c.size()==1)
             {
-                // A constant auxiliary scale needs no Bernstein convolution.
+                // 辅助比例为常数时，无需进行 Bernstein 卷积。
                 scaled.c.reserve(target.c.size());
                 for(double x:target.c)
                 {
@@ -237,9 +237,7 @@ bool CurveEnvelopes::PositionExceeded(const CurveError &e, double tolerance)
 {
     try
     {
-        // A midpoint witness can prove that neither coefficient position bound
-        // can accept this SAME correspondence. It only skips redundant interval
-        // products; the existing subdivision/mapping refinement still runs.
+        // 中点见证可以证明同一对应关系下的两个系数位置上界都不能通过；只跳过冗余区间乘积，仍保留原来的细分与映射修正。
         I w = e.denominator.range();
         if (!w.finite() || w.lo <= 0)
             return false;
@@ -267,8 +265,7 @@ bool CurveEnvelopes::TangentExceeded(const BV &s, const BV &t, double sineSquare
             return true;
         if(!(dot.lo>0))return false;
         I denominator=a2*b2;if(!denominator.finite()||!(denominator.lo>0))return false;
-        // A cancellation-prone point identity is used only to prove failure.
-        // Inconclusive point bounds never accept an interval or skip subdivision.
+        // 容易产生相消的点值恒等式只用于证明失败；点值界无结论时，不能接受整个区间，也不能跳过细分。
         I q=I(1)-Sqr(dot)/denominator;
         return q.finite()&&q.lo>=sineSquaredLimitUpper;
     }

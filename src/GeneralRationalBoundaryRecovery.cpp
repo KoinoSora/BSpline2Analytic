@@ -1,3 +1,8 @@
+/**
+ * @file GeneralRationalBoundaryRecovery.cpp
+ * @brief 当前一般兜底的母面有理参数图与四边恢复。
+ * 处理周期、极点、锥顶和参数角点退化；线性门控位于有理参数域，不沿用旧解析 UV 门控。
+ */
 #include "GeneralRationalBoundaryInternal.h"
 #include <set>
 #include <sstream>
@@ -46,8 +51,7 @@ bool ValidRationalPolygon(const std::array<sggk::Point2D,4> &corners,const std::
                       (I(q.Y())-I(p.Y()))*(I(r.X())-I(q.X()));
         return determinant.lo>0?1:determinant.hi<0?-1:0;
     };
-    // Exact duplicate adjacent vertices only. A spatial pole with distinct
-    // parameter vertices still takes the ordinary quadrilateral path.
+    // 只合并完全相同的相邻参数角点；空间极点处若参数角点不同，仍按普通参数四边形处理。
     if(count==3&&zeroEdges==1)return turn(unique[0],unique[1],unique[2])!=0;
     if(count!=4||zeroEdges)return false;
     constexpr unsigned loop[]={0,1,3,2};int orientation=0;
@@ -59,6 +63,9 @@ bool ValidRationalPolygon(const std::array<sggk::Point2D,4> &corners,const std::
     }
     return true;
 }
+// 先从源边界的有序投影恢复连续周期分支，再转换到母面的有理参数图坐标。
+// 对四角及线性边界执行拓扑/单调性检查；极点附近的外推仅提出候选，最终由三维证书验收。
+// diagnostics 只收集失败位置与轨迹，不参与决策，生产运行可不提供。
 bool Recover(SurfaceSampleContext &samples,const AnalyticParameters &a,
              const GeneralRationalBoundaryOptions &options,Trim &out,RecoveryDiagnostics *diagnostics)
 {
@@ -69,8 +76,7 @@ bool Recover(SurfaceSampleContext &samples,const AnalyticParameters &a,
             diagnostics->parameter=parameter;diagnostics->value=value;diagnostics->limit=limit;}
         return false;
     };
-    // Reuse the established periodic-walk proposals, but never its analytic-UV
-    // linearity gate or native PCurve construction. Acceptance is rational-domain.
+    // 复用已有周期遍历候选，但不复用解析 UV 线性门控或原生 PCurve 构造；此处验收约束定义在有理参数域。
     GeneralTrim trim;const auto &o=options.general;
     trim = {}; trim.parameters = a;
     auto frame = FrameOf(a);
@@ -108,12 +114,9 @@ bool Recover(SurfaceSampleContext &samples,const AnalyticParameters &a,
             world = std::max(world, Norm(q)); extent = std::max(extent, Norm(q-first));
             bool validU = a.type == sggk::SurfaceType::Plane ||
                 std::hypot(local.x,local.y) > Roundoff(Norm(local));
-            // A fitted pole/apex can miss an exact source corner by a few ulps
-            // or by the fitting residual. Its azimuth is ill-conditioned. Use
-            // the adjacent regular limit as a chart proposal; the continuous
-            // 3D certificate, not this threshold, decides acceptance.
-            // Include samples arbitrarily close to an endpoint (e.g. a knot
-            // one ulp below it), not only parameters exactly equal to lo/hi.
+            // 拟合极点或锥顶可能与源角点相差若干 ulp 或拟合残差，方位角因此病态。
+            // 用相邻正则极限提出参数图候选，最终由连续三维证书验收。
+            // 距端点任意近的采样也须处理，包括相差一个 ulp 的结点。
             {
                 double singularTolerance=std::max(Roundoff(world)*4,o.fitting.validation.distanceTolerance*.01);
                 if((a.type==sggk::SurfaceType::Cone && Norm(local)<singularTolerance) ||
@@ -145,9 +148,8 @@ bool Recover(SurfaceSampleContext &samples,const AnalyticParameters &a,
             if (a.type == sggk::SurfaceType::Torus) walk[j].second[1] = Unwrap(walk[j].second[1], lastV);
             lastV = walk[j].second[1];
         }
-        // At a pole only U is undefined. Extrapolate a LIMIT PROPOSAL using
-        // nearby regular values; it does not assert analytic-UV linearity.
-        // The rational-domain gate and exported-curve certificate decide acceptance.
+        // 极点处仅 U 无定义，依据邻近正则值外推极限候选，不声称解析 UV 轨迹线性。
+        // 最终由有理参数域门控及输出曲线证书验收。
         for (size_t endpoint : {size_t(0),walk.size()-1})
             if (!regular[endpoint] && !trim.edges[edge].collapsed3D)
             {
@@ -174,8 +176,7 @@ bool Recover(SurfaceSampleContext &samples,const AnalyticParameters &a,
     }
     for (bool valid : assigned)
         if (!valid) return fail(PCurveFailure::UnresolvedDegeneratePCurve, 0);
-    // Connect in perimeter order using whole-period translations only. Degenerate
-    // sides use neighbouring limits and the opposite side's winding as a guide.
+    // 按周界顺序连接，只作整周期平移；退化边参考邻边极限和对边绕行方向。
     constexpr unsigned order[] = {2,1,3,0};
     std::array<std::array<double,2>,4> connected{};
     connected[0] = cornerUV[0];
@@ -246,13 +247,11 @@ bool Recover(SurfaceSampleContext &samples,const AnalyticParameters &a,
     if(a.type==sggk::SurfaceType::Sphere&&(out.domain[2]<0||out.domain[3]>Pi))return reject("SphereLatitudeOutOfRange");
     if(a.type==sggk::SurfaceType::Cone&&out.domain[2]<0)return reject("NegativeConeHeight");
     AnalyticPatch patch;patch.parameters=a;patch.domain=out.domain;
-    // This validator certifies boundary position/tangent, not surface normals.
-    // Omit unused normal coefficients and their subsequent frame transforms.
+    // 本验证器只认证边界位置与切向，不认证曲面法向；不构造无用的法向系数或执行其坐标变换。
     out.chart=paired::BuildChart(patch,false);paired::PlaceChart(out.chart,a,Get(a.origin));
     auto map=[&](std::array<double,2> uv)
     {
-        // Extrapolation/clamping is only a recovery proposal. Gross violations
-        // must not disappear into RationalCoordinate's endpoint clamps.
+        // 外推和截断只用于恢复候选；明显的越界不能被 RationalCoordinate 的端点截断掩盖。
         for(unsigned d=0;d<2;++d)
             if(uv[d]<out.domain[2*d]-1e-12||uv[d]>out.domain[2*d+1]+1e-12)
             {

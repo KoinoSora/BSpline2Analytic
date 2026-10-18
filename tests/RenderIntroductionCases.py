@@ -1,9 +1,9 @@
-"""Render actual sequential conversion evidence; never synthesize CAD geometry.
+# 文件职责：将实测转换导出数据渲染为文档插图。
+# 源/目标保持相同相机和比例，不合成或替换 CAD 几何；文件身份用于关联真实案例。
 
-Input grids and exported boundary samples come from IntroductionCases.cpp.
-Target grids evaluate the recovered mother/chart/polygon, not a BRep face.
-Heat maps show sampled mother distance, not a continuous-domain certificate.
-"""
+"""渲染真实串联转换证据，不合成替代 CAD 几何。
+输入网格及输出边界采样来自 IntroductionCases.cpp；目标网格由恢复的母面、参数图和多边形求值，不是 BRep 面对象。
+热力图表示采样母面距离，不是连续域误差证书。"""
 import argparse
 import csv
 import hashlib
@@ -84,7 +84,7 @@ def main():
             normal = -normal
         elev = min(75, float(np.degrees(np.arcsin(normal[2]))) + 10)
         azim = float(np.degrees(np.arctan2(normal[1], normal[0]))) + 12
-        # Same orthographic camera and equal geometric scale for source and target.
+        # 源面和目标面使用同一正交相机及相同几何比例。
         for k, grid in enumerate((source_grid, target_grid)):
             ax = fig.add_subplot(gs[0, k], projection='3d', proj_type='ortho', computed_zorder=False)
             ax.plot_surface(grid[:, :, 0], grid[:, :, 1], grid[:, :, 2],

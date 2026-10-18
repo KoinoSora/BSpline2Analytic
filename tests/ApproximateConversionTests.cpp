@@ -1,3 +1,8 @@
+/**
+ * @file ApproximateConversionTests.cpp
+ * @brief 旧近似转换链的历史回归，当前禁测。
+ * 覆盖平台、优化与法向验收的旧合同，不应与当前母面或有理边界验收混称。
+ */
 #include "ApproximateCases.h"
 #include "SpecializedTimingChecks.h"
 #include "ApproximateInternal.h"
@@ -100,7 +105,7 @@ static void OptimizerNormalExclusionTests()
     plane.domain = {0, .001, 0, 1};
     MakeNative(plane);
 
-    // Distance and tangents already fit; only the boundary surface normal fails.
+    // 位置与切向已合格，只有边界曲面法向不合格。
     auto normalOnly = PlaneFixture(1);
     auto samples = SampleSurface(*normalOnly, {});
     ConversionStatistics stats;
@@ -113,8 +118,7 @@ static void OptimizerNormalExclusionTests()
     Require(report.boundaryNormal.state == CheckState::Exceeded && !report.Passed(),
             "Normal acceptance check was removed with the solver constraint");
 
-    // Exercise actual iterations: changing cached normals and their tolerance
-    // must not change the distance/tangent solve, including least-squares warm-up.
+    // 实际执行优化迭代：改变缓存法向及其容差，不应改变距离/切向求解结果，最小二乘预热阶段也须满足此条件。
     auto flat = PlaneFixture(0);
     auto a = SampleSurface(*flat, {});
     auto b = a;
@@ -173,8 +177,7 @@ static void IntervalTests()
                 auto q = Range(Evaluate(cell.p, u, v));
                 auto actual = Get(s.CalcPoint(cell.u0 + (cell.u1 - cell.u0) * u,
                                               cell.v0 + (cell.v1 - cell.v0) * v));
-                // SDK evaluation and parameter interpolation also round; this allowance
-                // is for the independent comparison, never for the certificate.
+                // SDK 求值和参数插值也存在舍入；此余量只用于独立比对，不改变算法证书容差。
                 auto close = [](I a, double x) {
                     double slack =
                         32 * std::numeric_limits<double>::epsilon() * std::max(1.0, std::abs(x));
@@ -270,7 +273,7 @@ int main()
             Require(r.patch->parameters.type == cases[k].analytic->SurfaceType(),
                     "Extended chart type mismatch");
         }
-        // Known feasible plane at half the interior plateau height.
+        // 已知可行平面位于内部平台高度的一半处。
 
         auto bump = tests::PlateauFixture(*cases[0].spline);
         auto exact = Recognize(*cases[0].spline);

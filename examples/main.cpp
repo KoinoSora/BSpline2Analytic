@@ -1,3 +1,8 @@
+/**
+ * @file main.cpp
+ * @brief SGK 初始化与精确解析识别的最小示例。
+ * 构造输入后调用识别接口并展示结果；当前等参优先、失败兜底入口参见 SequentialConversion.h。
+ */
 #include "SurfaceConversion.h"
 #include <Foundation/init.h>
 #include <Geometry/3D/Surface/TorusSurface.h>
@@ -30,7 +35,7 @@ static void Print(const bspline2analytic::SurfaceConversionResult &result)
 
 static int Run()
 {
-    // Concentric parallel boundary circles must still be recognized as a torus.
+    // 两条边界圆即使同轴且所在平面平行，仍应识别为圆环面。
     sggk::TorusSurface source(sggk::Ucs3D(), 3, 1);
     auto spline = source.ToBSpline(
         sggk::UVRange(sggk::Interval(0.2, 1.1), sggk::Interval(0, 3.141592653589793)));

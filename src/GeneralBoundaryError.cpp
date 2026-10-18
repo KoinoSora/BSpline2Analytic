@@ -1,3 +1,8 @@
+/**
+ * @file GeneralBoundaryError.cpp
+ * @brief 有理边界位置误差与正比例切向残差的区间代数。
+ * 源/目标统一到相同局部参数后构造误差；微小段豁免仍需完整覆盖、双侧直径和严格位置证书。
+ */
 #include "GeneralRationalBoundaryInternal.h"
 
 namespace bspline2analytic::detail::rational_boundary
@@ -42,11 +47,13 @@ V Estimate(const BV &p,double t)
 double Magnitude(V p){return std::max({std::abs(p.x),std::abs(p.y),std::abs(p.z)});}
 I LengthSquared(IV p){return Sqr(p.x)+Sqr(p.y)+Sqr(p.z);}
 }
+// 源 S=Ps/Ws、目标 T=Pt/Wt 时，位置误差 T-S=(Pt*Ws-Ps*Wt)/(Ws*Wt)。
+// 只有源/目标已限制到同一局部参数后才能相减。融合卷积一次累加三维分子和分母，
+// 复用二项式权重；常权重或不匹配的齐次次数交回通用乘积路径。
 CurveError CurveErrors::Build(const BezierCell &s,const BezierCell &t,paired::Products &products,bool &fused)
 {
     fused=false;
-    // Retain constant-weight paths: elevating a polynomial weight just to fuse
-    // products would add work and widen its denominator unnecessarily.
+    // 保留常权重路径；仅为合并乘积而将多项式权重升阶，会增加运算量并无谓放宽分母区间。
     if(!s.w.u||!t.w.u||!Homogeneous1D(s)||!Homogeneous1D(t))
         return {products.Subtract(products.MulShared(t.p,s.w),products.MulShared(s.p,t.w)),
                 products.Mul(t.w,s.w)};
@@ -71,6 +78,9 @@ CurveError CurveErrors::Build(const BezierCell &s,const BezierCell &t,paired::Pr
     }
     fused=true;return out;
 }
+// 微小段合并不是删除短边：要求完整覆盖 [lo,hi]，源与目标各自空间直径均 <= 阈值，
+// 且两包围盒任意点对的距离严格小于位置容差。只有切向检查被豁免，并返回具体区间。
+// 目标跨接缝时逐段取并集包围盒，任何覆盖缺口都导致无法豁免。
 std::optional<GeneralBoundaryTangentExemption> MicroSegmentBound(const BezierCell &source,
     const std::vector<BezierCell> &target,double lo,double hi,double diameterTolerance,double distanceTolerance)
 {
@@ -91,7 +101,7 @@ std::optional<GeneralBoundaryTangentExemption> MicroSegmentBound(const BezierCel
     {
         double first=std::max(lo,part.u0),last=std::min(hi,part.u1);
         if(first>last)continue;
-        if(first>covered)return {}; // A tiny piece may not hide a gap in coverage.
+        if(first>covered)return {}; // 微小分段也不能掩盖参数覆盖缺口。
         auto b=box(paired::Crop(part,first,last,0,1));if(!b)return {};
         if(t)t=IV{hull(t->x,b->x),hull(t->y,b->y),hull(t->z,b->z)};else t=b;
         covered=std::max(covered,last);
@@ -115,15 +125,14 @@ double ResidualTangentRatio(const CurveError &e,const BezierCell &s,const BV &st
     I h=e.denominator.range(),w=s.w.range();
     if(!h.finite()||h.lo<=0||!w.finite()||w.lo<=0||
        !std::isfinite(distanceUpper)||distanceUpper<0)return INFINITY;
-    // E'=G'/H-E H'/H. Use the already certified position bound for ||E||.
+    // 由 E'=G'/H-E*H'/H 求误差导数，并复用已认证的位置上界控制 ||E||。
     I g1=Length({DerivativeRange(e.numerator.x),DerivativeRange(e.numerator.y),DerivativeRange(e.numerator.z)});
     I h1=DerivativeRange(e.denominator);
     I upper=(I(g1.hi)+I(distanceUpper)*I(h1.absMax()))/I(h.lo);
-    // A coefficient BOX gives a lower bound on the source speed. A box
-    // containing zero is inconclusive, even when the curve is regular.
+    // 系数区间盒提供源切向速度的下界；区间盒含零只能说明无法判定，不能推出曲线不正则。
     I speed=Length(Range(st))/Sqr(I(w.hi));
     if(!upper.finite()||!speed.finite()||!(upper.hi<speed.lo))return INFINITY;
-    // T'=S'+E': dot(S',T')>0 and tan(theta)<=M/(m-M).
+    // 利用 T'=S'+E'，在源速度下界 m 大于误差导数上界 M 时，有 dot(S',T')>0 且 tan(theta)<=M/(m-M)。
     return (I(upper.hi)/(I(speed.lo)-I(upper.hi))).hi;
 }
 std::optional<BPoly> ChooseTangentScale(const BV &source,const BV &target)
@@ -138,8 +147,7 @@ std::optional<BPoly> ChooseTangentScale(const BV &source,const BV &target)
         ratio[i]=(ma/mb)*(Dot(a,b)/Dot(b,b));
         if(!(ratio[i]>0)||!std::isfinite(ratio[i]))return {};
     }
-    // The stored doubles DEFINE lambda exactly. Rounding in this heuristic
-    // cannot invalidate the proof; the complete residual is enclosed below.
+    // 存储的双精度值精确定义辅助比例 lambda；启发式选值的舍入不影响证明，因为后续对完整残差另行包络。
     double tolerance=64*std::numeric_limits<double>::epsilon()*std::max({ratio[0],ratio[1],ratio[2]});
     BPoly scale(2,0);scale.c={I(ratio[0]),I(2*ratio[1]-.5*ratio[0]-.5*ratio[2]),I(ratio[2])};
     if(std::max(std::abs(ratio[0]-ratio[1]),std::abs(ratio[2]-ratio[1]))<=tolerance||
@@ -155,7 +163,7 @@ V TangentResidualReference(const BV &source)
 {
     V e=Estimate(source,.5);double size=Magnitude(e);
     if(!Finite(e)||!(size>0))return {};
-    // Division by the largest component avoids overflow of 1/size for tiny e.
+    // 按最大分量相除，避免 e 很小时先计算 1/size 引发溢出。
     return {e.x/size,e.y/size,e.z/size};
 }
 double ScaledTangentSineSquaredUpper(const BV &source,const BV &residual,const BPoly &scale)
@@ -171,7 +179,7 @@ double ScaledTangentSineSquaredUpper(const BV &source,const BV &residual,const B
     if(residual.x.u==residual.y.u&&residual.x.u==residual.z.u&&
        residual.x.v==residual.y.v&&residual.x.v==residual.z.v)
     {
-        // Convexity bounds the vector itself: no squared-norm spline products.
+        // 利用范数的凸性直接对向量控制系数求界，不构造范数平方样条乘积。
         for(size_t i=0;i<residual.x.c.size();++i)
         {
             I norm2=LengthSquared({residual.x.c[i],residual.y.c[i],residual.z.c[i]});
@@ -183,7 +191,7 @@ double ScaledTangentSineSquaredUpper(const BV &source,const BV &residual,const B
         I norm2=LengthSquared(Range(residual));if(!norm2.finite())return INFINITY;error2=norm2.hi;
     }
     I q=I(error2)/I(length2.lo);
-    // E<||A|| and lambda>0 prove B!=0 and A.B>0, ruling out antiparallel fields.
+    // 残差上界 E<||A|| 且 lambda>0，可证明 B 非零且 A.B>0，排除反向平行切向场。
     return q.finite()&&q.hi<1?std::max(0.,q.hi):INFINITY;
 }
 }

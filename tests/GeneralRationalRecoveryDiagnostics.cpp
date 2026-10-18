@@ -1,3 +1,8 @@
+/**
+ * @file GeneralRationalRecoveryDiagnostics.cpp
+ * @brief 当前有理边界恢复失败的定向诊断。
+ * 区分数值搜索上界见证与严格排除证书；只对固定母面/参数图得出的结论不能扩大到所有可能解。
+ */
 #include "GeneralRationalBoundaryInternal.h"
 #include "GeneralDataset.h"
 #include "GeneralRationalDataset.h"
@@ -57,7 +62,7 @@ Exclusion Exclude(const std::vector<BezierCell> &edge,IV point,double tolerance)
     }
     out.proved=true;out.lower=lower;return out;
 }
-// Numerical search supplies an upper witness, never an exclusion certificate.
+// 数值搜索只提供距离上界见证，不构成排除证书。
 std::pair<double,double> Nearby(const std::vector<BezierCell> &edge,IV point)
 {
     double best=INFINITY,parameter=0;
@@ -140,15 +145,13 @@ struct Diagnostic
             }
             auto near=Nearby(edge,p);Exclusion proof;
             double tolerance=options.general.fitting.validation.distanceTolerance;
-            // Include the full export-to-ideal budget used by BuildTarget. An
-            // exclusion also survives any export perturbation within that bound.
+            // 计入 BuildTarget 使用的完整“输出到理想曲线”误差预算，使排除结论对预算内的输出扰动仍成立。
             double proofTolerance=(I(tolerance)+I(tolerance*.1)).hi;
             if(near.first>=proofTolerance)proof=Exclude(edge,p,proofTolerance);
             double width=std::max({p.x.hi-p.x.lo,p.y.hi-p.y.lo,p.z.hi-p.z.lo});
             witnesses<<fixture.id<<','<<mode<<','<<candidate<<','<<TypeName(trim.mother.type)<<','<<chart<<','<<e<<','<<choice.fraction<<','
                 <<choice.distance<<','<<near.first<<','<<near.second<<','<<proof.proved<<','<<proof.lower<<','<<proofTolerance<<','<<proof.nodes<<','<<width<<'\n';
-            // One rigorously excluded source point is sufficient to refute this
-            // fixed chart's ideal straight edge, for ANY monotone correspondence.
+            // 只需严格排除一个源点，即可否定固定参数图的理想直线边在任意单调对应下满足约束。
             if(proof.proved)break;
         }
     }
@@ -211,7 +214,7 @@ struct Diagnostic
             if(passed)break;
         }
         options.chartDomain=fixture.chartDomain;
-        auto known=Analyze("known_mother",0,fixture.truth); // V2 supplied reference chart, outside benchmark.
+        auto known=Analyze("known_mother",0,fixture.truth); // V2 数据提供的参考参数图只用于计时之外的诊断。
         options.chartDomain.reset();
         if(firstMatching&&fixture.truth.type==sggk::SurfaceType::Sphere)
         {

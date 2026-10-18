@@ -1,3 +1,8 @@
+/**
+ * @file SpecializedTimingChecks.h
+ * @brief 专用路径阶段计时一致性断言。
+ * 检查实际转换报告，覆盖失败和零迭代路径，防止对子阶段重复求和。
+ */
 #pragma once
 #include "ApproximateConversion.h"
 #include <algorithm>
@@ -35,7 +40,7 @@ inline void CheckValidationTimings(const ConversionResult &r)
         r.validation.timing.totalMs > initial.totalMs + refined.totalMs + 1e-8)
         throw std::runtime_error("Validation step aggregation mismatch");
 }
-// Check real converter timings, including failed/zero-iteration paths.
+// 检查真实转换器计时，覆盖失败和零迭代路径。
 inline void CheckSpecializedTiming(const ConversionTiming &t)
 {
     const auto close = [](double a, double b) {

@@ -1,3 +1,8 @@
+/**
+ * @file MotherSourcePreparation.h
+ * @brief 流式源面准备与误差包络的内部缓存类型。
+ * 存储不可变源描述、提取计划及已访问单元，避免把候选相关证书混入源缓存。
+ */
 #pragma once
 #include "MotherDistanceValidation.h"
 #include "PairedValidationInternal.h"
@@ -5,7 +10,7 @@
 
 namespace bspline2analytic::detail::mother
 {
-// Positive scalar error arithmetic. Coordinates themselves use ordinary doubles.
+// 非负标量误差算术；几何坐标本身仍用普通双精度计算。
 double ErrorAdd(double, double);
 double ErrorMul(double, double);
 double Gamma(unsigned);

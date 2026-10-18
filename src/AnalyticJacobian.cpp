@@ -1,5 +1,9 @@
-// First-order forward chain rule, seeded in Increment's local coordinates.
-// No perturbation size or numerical subtraction is used on regular branches.
+/**
+ * @file AnalyticJacobian.cpp
+ * @brief 局部增量坐标中的解析 Jacobian 与非光滑分支差分后备。
+ * 链式传播位置和切向残差导数；投影分支切换时按样本块回退，不能把试探几何当作当前线性化点。
+ */
+// 在 Increment 的局部增量坐标中播种一阶前向链式求导；光滑分支无需扰动步长，也不通过数值相减求导。
 #include "ApproximateInternal.h"
 #include <chrono>
 namespace bspline2analytic::detail
@@ -180,7 +184,7 @@ template <size_t N> struct Model
         omega.y = seed(0, i++, 1);
         if (type == sggk::SurfaceType::Plane)
             omega.z = seed(0, i++, 1);
-        // Exact first derivative of Rodrigues at the zero local increment.
+        // Rodrigues 旋转公式在局部增量为零处的一阶精确导数。
         W globalOmega = W(f.x) * omega.x + W(f.y) * omega.y + W(f.z) * omega.z;
         o = W(f.o) + W(f.x) * shift.x + W(f.y) * shift.y + W(f.z) * shift.z;
         x = W(f.x) + CrossJ(globalOmega, W(f.x));
@@ -338,7 +342,7 @@ template <size_t N> struct Model
             if (type == sggk::SurfaceType::Torus)
                 v = Unwrapped(v, (domain[2].v + domain[3].v) * .5);
         }
-        // Projection changes branch on the finite patch boundary.
+        // 有限面片边界处的投影可能切换分支，不能直接沿用光滑分支导数。
         for (unsigned j = 0; j < 4; ++j)
             if (std::abs((j < 2 ? u.v : v.v) - domain[j].v) < 1e-10)
                 throw BranchFailure{};
@@ -391,7 +395,7 @@ template <size_t N> struct Model
     }
 };
 
-// A block contains one distance row and, on a boundary, one tangent row.
+// 每个采样块含一行距离残差；位于边界时另含一行切向残差。
 static std::vector<size_t> BlockRows(const SampleCache &samples)
 {
     std::vector<size_t> rows(samples.size());
@@ -515,9 +519,8 @@ std::vector<bool> Analytic(const AnalyticPatch &p, const SampleCache &samples,
     }
     return fallback;
 }
-// For these size-only levels the chosen finite-patch point scales or
-// translates exactly, and every boundary tangent is unchanged. Recover Q
-// from the current distance residual; trial geometry is never consulted.
+// 对于只改变尺寸的变量层级，选定的有限面片点只作精确缩放或平移，边界切向保持不变。
+// 由当前距离残差恢复 Q，不读取工作区内可变的试探几何。
 static bool SimpleSizeJacobian(const AnalyticPatch &p, const SampleCache &samples,
                                const ConversionOptions &o, const ActiveParameters &active,
                                double scale, EvaluationWorkspace &w, RefinementDiagnostics &diag)
@@ -567,7 +570,7 @@ static bool Differences(const AnalyticPatch &p, const SampleCache &samples,
     bool full = o.refinement.jacobianMode == JacobianMode::FiniteDifference;
     SampleCache subset;
     std::vector<size_t> original;
-    // Keep the complete ordered boundary walks: endpoints alone lose winding.
+    // 保留完整有序边界轨迹，仅使用端点会丢失周期绕行信息。
     for (size_t i = 0; i < samples.size(); ++i)
         if (!full && (fallback[i] || samples[i].edge >= 0))
         {
@@ -669,7 +672,7 @@ bool BuildJacobian(const AnalyticPatch &p, const SampleCache &samples, const Con
     if (o.refinement.jacobianMode == JacobianMode::AnalyticWithFallback &&
         !SimpleSizeJacobian(p, samples, o, active, scale, w, diag))
     {
-        // Specialize the frequent one/two-variable levels to avoid unused lanes.
+        // 为常见的一维、二维变量层级提供专门实现，避免计算未使用的导数分量。
         if (active.indices.size() == 1)
             fallback = Analytic<1>(p, samples, o, active, scale, w, diag);
         else if (active.indices.size() == 2)

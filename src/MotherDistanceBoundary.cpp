@@ -1,3 +1,8 @@
+/**
+ * @file MotherDistanceBoundary.cpp
+ * @brief 母面验证器的四边区间对应位置检查。
+ * 源段与目标有理段按共同参数映射限制和细分；与 U/V 联合切向共享验收流程但分别报告误差。
+ */
 #include "MotherDistanceInternal.h"
 #include <functional>
 

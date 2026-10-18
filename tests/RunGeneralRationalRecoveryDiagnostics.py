@@ -1,8 +1,8 @@
-"""Diagnose failures from a newly measured V2 main-suite baseline; CURRENT validator only.
+# 文件职责：基于新测 V2 失败记录的恢复诊断调度。
+# 只使用当前验证器和匹配的输入/二进制，诊断成本不混入原性能测量。
 
-Run after the uninstrumented three-run benchmark. No diagnostic timing is
-reported as production performance. Oracle/frame swaps never feed candidates.
-"""
+"""基于新测 V2 主套件基线诊断恢复失败，只调用当前验证器。
+在无诊断插桩的三次基准之后运行；诊断耗时不能作为生产性能，参考真值及坐标架替换不能反馈候选生成。"""
 import argparse
 import collections
 import csv

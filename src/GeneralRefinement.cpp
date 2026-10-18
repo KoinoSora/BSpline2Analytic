@@ -1,3 +1,8 @@
+/**
+ * @file GeneralRefinement.cpp
+ * @brief 将通用优化器适配为仅优化解析母面参数。
+ * 生成母面距离残差与差分 Jacobian，不把临时参数图端点加入优化目标或输出裁剪。
+ */
 #include "GeneralInternal.h"
 namespace bspline2analytic::detail
 {
@@ -25,8 +30,7 @@ RefinementProblem MotherRefinementProblem(const SampleCache &samples, const Conv
             throw Failure(Status::VerificationFailed, "Nonfinite general residual");
     };
     problem.increment = [](const AnalyticPatch &p, const std::vector<double> &d, double scale) {
-        // The scratch chart never contributes residuals or output trims. Only
-        // MotherSurface indices are active, so chart endpoints stay fixed.
+        // 临时参数图不参与残差，也不定义输出裁剪；只激活 MotherSurface 参数索引，因此参数图端点保持不变。
         auto next = Increment(p, d, scale);
         if (next.parameters.type == sggk::SurfaceType::Torus &&
             !(next.parameters.majorRadius > next.parameters.radius))
@@ -66,8 +70,7 @@ RefinementProblem MotherRefinementProblem(const SampleCache &samples, const Conv
             }
             for (size_t row = 0; row < w.constraintJacobian.size(); ++row)
             {
-                // Zero distance uses a zero subgradient for its inactive constraint;
-                // the three vector residual derivatives remain available to LM.
+                // 距离为零时，对非活动距离约束使用零次梯度；三个向量残差导数仍可供 LM 使用。
                 double value = w.current.constraints[row] < 1e-8 ? 0 :
                     (a.constraints[row] - b.constraints[row]) / denominator;
                 w.constraintJacobian[row][j] = value; ok &= std::isfinite(value);

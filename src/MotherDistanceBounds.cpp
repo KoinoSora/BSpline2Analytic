@@ -1,3 +1,8 @@
+/**
+ * @file MotherDistanceBounds.cpp
+ * @brief 多项式源面到解析母面的全域距离上界。
+ * 构造按母面类型分解的 Bernstein 残差，补入提取误差并流式细分；必须覆盖全部闭参数域。
+ */
 #include "MotherDistanceInternal.h"
 #include <functional>
 
@@ -16,8 +21,7 @@ double Choose(unsigned n, unsigned k)
         x *= double(n + 1 - i) / i;
     return x;
 }
-// Candidate-local cached convolution factors; constant weights never become
-// dense polynomials. Subdivision operates on residuals already constructed.
+// 卷积系数只在当前候选内缓存，常权重不扩成稠密多项式；细分直接作用于已构造的残差。
 class Products
 {
     std::map<std::pair<unsigned, unsigned>, std::vector<double>> cache;
@@ -49,8 +53,7 @@ class Products
     }
     Poly Elevate(Poly a, unsigned u, unsigned v)
     {
-        // Repeated one-degree elevation is linear in coefficient count and
-        // avoids multiplication by a dense polynomial representing one.
+        // 逐次升一阶对系数数量为线性复杂度，避免与稠密的常数 1 多项式相乘。
         while (a.u < u || a.v < v)
         {
             bool along = a.u < u;
@@ -93,9 +96,8 @@ struct Projection
             }
             return;
         }
-        // Parameter-only interval work, once per candidate. Never rotate a
-        // source coordinate interval. Two transverse projections give rho^2
-        // with two squares, cheaper than three Cartesian perpendicular squares.
+        // 每个候选只做一次参数相关区间运算，不直接旋转源坐标区间。
+        // 两个横向投影仅需两个平方即可得到 rho²，比三个笛卡尔垂向分量平方更省。
         auto f = paired::MakeLocalFrame(p);
         std::array<IV, 3> basis{f.x, f.y, f.z};
         for (unsigned d = 0; d < 3; ++d)
@@ -136,8 +138,7 @@ Residual Build(const SourceCell &cell, const Projection &frame, const AnalyticPa
         y.c[k] = mid[1];
         z.c[k] = mid[2];
     }
-    // Uniform coefficient envelopes also enclose every point by partition of
-    // unity. Scalar upward rounding is only needed here, not in the 3D loops.
+    // 由基函数单位分解，统一系数误差包络也包围每个曲面点；标量向上舍入仅在此处理，无需进入三维循环。
     double M = std::max({maxInput.x, maxInput.y, maxInput.z});
     double r = std::max({ErrorAdd(cell.error.x, frame.offsetError.x),
                          ErrorAdd(cell.error.y, frame.offsetError.y),
@@ -218,7 +219,7 @@ double Bound(const Residual &f, const AnalyticParameters &p, double scale)
         {
             double R = p.majorRadius / scale;
             double zmin = zlo <= 0 && zhi >= 0 ? 0 : std::min(zlo * zlo, zhi * zhi);
-            // For supported ring tori R>r the other factor is positive.
+            // 对支持的常规环形圆环面 R>r，另一个因子保持为正。
             double positive = (rho + R) * (rho + R) + zmin;
             denominator = (positive - r * r - Guard(positive + r * r)) * r;
         }
@@ -226,8 +227,8 @@ double Bound(const Residual &f, const AnalyticParameters &p, double scale)
     denominator -= Guard(std::abs(denominator));
     if (!(denominator > 0))
         return INFINITY;
-    // Distance to a closed set is 1-Lipschitz. Keep the source coefficient
-    // enclosure lost by midpoint conversion; convex hull bounds it everywhere.
+    // 到闭集的距离是 1-Lipschitz 函数。
+    // 必须补回系数取中点时丢失的源面包络，利用凸包性质控制全域位置扰动。
     double value = scale * ((f.f.maxAbs() + f.error) / denominator + f.enclosure);
     return value + Guard(std::abs(value));
 }
@@ -255,8 +256,7 @@ bool ValidatePosition(SourceCache &source, const AnalyticParameters &p,
     ValidationTimer::Scope stage(timer, out.timing.surfaceBounds);
     Products products;
     const Projection frame(source.origin, p);
-    // A scale need not be a tight radius. The input control box is available
-    // before extraction and avoids visiting all cell coefficients twice.
+    // 尺度只需足够保守，无需是紧半径；提取前已有输入控制盒，可避免两次遍历全部单元系数。
     double scale = std::max({std::abs(p.radius), std::abs(p.majorRadius),
                              source.magnitude.x + std::abs(frame.offset.x),
                              source.magnitude.y + std::abs(frame.offset.y),
@@ -289,8 +289,8 @@ bool ValidatePosition(SourceCache &source, const AnalyticParameters &p,
         }
         return visit(children.first, depth + 1) && visit(children.second, depth + 1);
     };
-    // All active cells cover the closed source domain, including its four edges.
-    // Streaming permits early failure, but Passed requires every cell to pass.
+    // 全部活动单元覆盖源面闭参数域及四边。
+    // 流式处理允许提前失败，但只有所有单元都通过才能返回 Passed。
     for (size_t id = 0; id < source.cells.size(); ++id)
     {
         if (deadline) deadline->Check("iso_source_cell");

@@ -1,3 +1,8 @@
+/**
+ * @file GeneralPairedBounds.cpp
+ * @brief 历史一般面片的双线性参数对应充分界。
+ * 用三角分解与连续复合求界，UV 坍缩与三维极点须分别处理；不替代当前兜底验收合同。
+ */
 #include "GeneralInternal.h"
 #include <functional>
 namespace bspline2analytic::detail
@@ -5,8 +10,7 @@ namespace bspline2analytic::detail
 namespace
 {
 BPoly Constant(I x) { return BPoly(0,0,x); }
-// Product-to-sum formulas keep the degree bounded when both angles vary.
-// The interval constant encloses the eighth-order Lagrange remainder.
+// 两个角参数同时变化时，用积化和差公式控制多项式次数；区间常数包含八阶 Lagrange 余项。
 BPoly Trig(const BPoly &angle, bool cosine)
 {
     I range=angle.range();
@@ -77,7 +81,7 @@ bool CollapsedSideTriangle(const GeneralTrim &trim)
     auto equal=[&](unsigned a,unsigned b) {
         return corners[a].X()==corners[b].X() && corners[a].Y()==corners[b].Y();
     };
-    // Count UV collapses, not 3D poles or short edges. Never snap nearby UVs.
+    // 统计的是 UV 坍缩，不是空间极点或短边；不能将接近的 UV 强行吸附。
     constexpr unsigned ends[4][2]={{0,2},{1,3},{0,1},{2,3}};
     unsigned collapsed=0;
     for(const auto &edge:ends) collapsed+=equal(edge[0],edge[1]);
@@ -97,16 +101,15 @@ bool CollapsedSideTriangle(const GeneralTrim &trim)
     I ax=I(b.X())-I(a.X()),ay=I(b.Y())-I(a.Y());
     I bx=I(c.X())-I(a.X()),by=I(c.Y())-I(a.Y());
     I det=ax*by-ay*bx;
-    // Up to corner orientation, the bilinear Jacobian is det times s, 1-s,
-    // t or 1-t: nonzero in the interior, zero only on the collapsed side.
+    // 忽略角点定向符号后，双线性映射的 Jacobian 为 det 乘 s、1-s、t 或 1-t；内部非零，只在坍缩边上为零。
     return det.lo>0 || det.hi<0;
 }
 }
 bool TryPairedTrimBound(const sggk::BSplineSurface &s,const std::vector<BezierCell> &cells,
                        const GeneralTrim &trim,const ValidationOptions &options,GeneralValidationReport &report)
 {
-    // Sufficient certificate only: a general source reparameterization may fail
-    // this test and still pass the projection-based validator.
+    // 这只是充分认证条件；一般源面重参数化可能不通过该检查，却能通过历史投影验证器。
+    // 此说明不授权重新运行已废弃测试。
     if(cells.empty() || (!RegularQuad(trim) && !CollapsedSideTriangle(trim))) return false;
     double upper=0;
     unsigned visited=0;
@@ -117,7 +120,7 @@ bool TryPairedTrimBound(const sggk::BSplineSurface &s,const std::vector<BezierCe
         if(weight.lo<=0) return false;
         IV error=Range(cell.p-Reference(s,cell,trim)*cell.w);
         I bound=Sqrt(Sqr(error.x)+Sqr(error.y)+Sqr(error.z))/weight;
-        // Distance from the nearest mother projection to the PCurve is <=2d.
+        // 到最近母面投影对应 PCurve 的距离上界为 2d。
         if(bound.finite() && (I(2)*bound).hi<options.distanceTolerance)
         {upper=std::max(upper,bound.hi);return true;}
         if(depth>=std::min(8u,options.maxSubdivisionDepth)) return false;

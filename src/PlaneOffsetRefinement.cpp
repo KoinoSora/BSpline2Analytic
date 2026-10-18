@@ -1,3 +1,8 @@
+/**
+ * @file PlaneOffsetRefinement.cpp
+ * @brief 平面单自由度偏移的有界极小极大求解。
+ * 固定法向时只优化偏移，利用采样距离包络选择候选；可行采样中点仍要经过独立验证。
+ */
 #include "ApproximateInternal.h"
 namespace bspline2analytic::detail
 {
@@ -44,7 +49,7 @@ RefinementResult RefinePlaneOffset(AnalyticPatch &p, const SampleCache &samples,
         V error = samples[i].point - workspace.mappedPoints[i];
         double h = Dot(error, frame.z);
         height[i] = h;
-        // Avoid subtracting nearly equal squared lengths.
+        // 避免两个接近的平方长度相减而产生灾难性相消。
         lateral[i] = Norm(error - frame.z * h);
         hmin = std::min(hmin, h);
         hmax = std::max(hmax, h);
@@ -77,8 +82,7 @@ RefinementResult RefinePlaneOffset(AnalyticPatch &p, const SampleCache &samples,
     };
     const double precision =
         o.validation.distanceTolerance * o.refinement.scalarDistanceToleranceRatio;
-    // A sampled feasible midpoint goes directly to independent validation.
-    // Otherwise solve the bounded convex scalar minimax problem.
+    // 采样可行的中点直接送独立验证；否则求解有界凸标量极小极大问题。
     while (upper >= o.validation.distanceTolerance && upper - lower > precision &&
            d.scalarIterations < o.refinement.maxScalarIterations)
     {

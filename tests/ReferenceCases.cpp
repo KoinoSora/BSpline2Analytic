@@ -1,3 +1,8 @@
+/**
+ * @file ReferenceCases.cpp
+ * @brief 精确识别测试的五类解析参考曲面构造。
+ * 只由测试侧持有真值，转换器从实际 NURBS 输入恢复几何。
+ */
 #include "ReferenceCases.h"
 #include <Geometry/3D/Surface/BezierSurface.h>
 #include <Geometry/3D/Surface/ConeSurface.h>

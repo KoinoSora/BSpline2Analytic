@@ -1,3 +1,8 @@
+/**
+ * @file MotherDistanceSelectedTests.cpp
+ * @brief 当前母面验证器代表例和历史慢例的定向驱动。
+ * 累计失败候选的工作量，独立检查 U/V 联合条件，并区分冷启动与缓存复用。
+ */
 #include "Dataset500.h"
 #include "MotherDistanceInternal.h"
 #include <Foundation/init.h>
@@ -88,8 +93,7 @@ Classified ClassifyAndValidate(paired::AnalysisContext &context, std::ostream *a
         Accumulate(sum,r);
         if (!r.Passed()) continue;
         out.candidate = *candidate; out.report = r;
-        // Geometry and certificates belong to the successful attempt; costs
-        // and work counters include every failed attempt in this same context.
+        // 几何与证书来自成功尝试，成本和工作计数包含同一上下文中所有失败尝试。
         out.report.timing = sum.timing;
         out.report.sourceExtractionMs = sum.sourceExtractionMs;
         out.report.sourceBoundaryMs = sum.sourceBoundaryMs;
@@ -158,8 +162,7 @@ AuditResult Audit(const DatasetCase &c, const AnalyticPatch &p, const MotherDist
                     "Independent point audit exceeds bound");
             out.position = std::max(out.position, d);
         }
-    // Independent analytic directions at the returned mapped points, rather
-    // than reusing the validator's rational derivative numerators or products.
+    // 在返回映射点处独立计算解析方向，不复用验证器的有理导数分子或乘积。
     const auto chart = paired::BuildChart(p, false);
     const auto frame = FrameOf(p.parameters);
     const auto &s = *c.input;
@@ -297,8 +300,7 @@ void ExportExtraction(const mother::SourceCache &s, const std::filesystem::path 
     o << "]}";
 }
 #endif
-// Exercise continuation after success using the same representative geometry.
-// This is branch coverage, never included in production latency measurements.
+// 对同一代表几何覆盖成功后继续搜索的分支；只用于分支覆盖，不纳入生产延迟测量。
 void Coverage(const std::filesystem::path &dir, unsigned id, const std::filesystem::path &file)
 {
     auto c = ReadDatasetCase(dir / CaseFilename(id));
@@ -349,7 +351,7 @@ void Run(const std::filesystem::path &dir, unsigned id, const std::filesystem::p
     CheckDataset500Contract(c, id);
     auto certificate = BoundPair(*c.source, *c.input, c.refitted ? 1e-6 : 1e-9);
     Require(certificate.passed, "Input source certificate failed");
-    // Process/SDK and code warmup; each measured cold run still has a fresh cache.
+    // 预热进程、SDK 和代码；每次计时冷运行仍使用全新缓存。
     {
         paired::AnalysisContext ctx(*c.input);
         auto classified = ClassifyAndValidate(ctx);

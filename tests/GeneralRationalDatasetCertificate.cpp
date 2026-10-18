@@ -1,3 +1,8 @@
+/**
+ * @file GeneralRationalDatasetCertificate.cpp
+ * @brief V2 来源的连续位置与边界切向独立认证。
+ * 基于实际存储控制点提取区间系数，分开处理二维位置和一维边界，不依赖生产转换结果。
+ */
 #include "GeneralRationalDataset.h"
 #include <functional>
 #include <sstream>
@@ -13,8 +18,7 @@ double LowerNorm(IV p)
     auto lower=[](I a){return a.lo>0?a.lo:a.hi<0?-a.hi:0.;};
     return Sqrt(Sqr(I(lower(p.x)))+Sqr(I(lower(p.y)))+Sqr(I(lower(p.z)))).lo;
 }
-// Restrict AFTER differentiating. Tiny seam overlaps must not turn into
-// ill-conditioned tiny-speed tangent comparisons.
+// 先求导再限制参数区间，避免接缝微小重叠导致切向速度过小而病态。
 BPoly RestrictAxis(const BPoly &p,bool u,I a,I b)
 {
     if(a.lo<=0&&b.hi>=1)return p;
@@ -92,7 +96,7 @@ bool ValidMapping(const GeneralFixture &c)
         if(!current)++zero;else if(sign&&sign!=current)return false;else sign=current;
     }
     if(!sign)return false;if(!zero)return true;
-    // Only a genuine triangle with exactly one collapsed parameter side.
+    // 只允许恰好一条参数边坍缩的真实三角形。
     unsigned collapsed=0;const unsigned ends[][2]={{0,2},{1,3},{0,1},{2,3}};
     for(auto &e:ends)collapsed+=c.corners[e[0]].X()==c.corners[e[1]].X()&&c.corners[e[0]].Y()==c.corners[e[1]].Y();
     return zero==2&&collapsed==1;
@@ -119,7 +123,7 @@ RationalSourceCertificate CertifyRationalDomain(const GeneralFixture &c,unsigned
     else shifted=std::make_shared<sggk::BSplineSurface>(s.DegreeU(),s.DegreeV(),cp,s.KnotsU(),s.KnotsV(),s.MultsU(),s.MultsV());
     auto reference=c;if(reference.type==5)reference.type=0;
     RationalReference ref(reference);out.upper=0;double maxRatio=0;
-    // Interval extraction from the ACTUAL stored controls, including recentering.
+    // 直接从实际存储控制点作区间提取，包含中心化误差。
     auto cells=ExtractCells(*shifted);
     for(auto &cell:cells)
     {
@@ -137,7 +141,7 @@ RationalSourceCertificate CertifyRationalDomain(const GeneralFixture &c,unsigned
         auto halves=Split(cell,u);return visit(halves.first,depth+1)&&visit(halves.second,depth+1);
     };
     if(!negative&&!boundariesOnly)for(const auto &cell:cells)if(!visit(cell,0))return out;
-    // Separate 1D proof avoids evaluating boundary derivatives on 2D interiors.
+    // 单独进行一维证明，避免在二维内部区域求边界导数。
     for(unsigned edge=0;edge<4;++edge)
     {
         if(c.collapsedMask&(1u<<edge))continue;bool fixedU=edge<2,high=edge%2;

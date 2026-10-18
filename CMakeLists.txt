@@ -1,3 +1,6 @@
+# 文件职责：静态库、示例及当前测试目标的构建定义。
+# 区间认证源文件使用 /fp:strict；保留历史源文件不表示允许运行其测试，测试开关以仓库约定为准。
+
 cmake_minimum_required(VERSION 3.22)
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
     project(BSpline2AnalyticProject LANGUAGES CXX)
@@ -108,8 +111,7 @@ if(BSPLINE2ANALYTIC_BUILD_TESTS)
     set_tests_properties(BSpline2Analytic.GeneralRationalBoundaryUnit PROPERTIES TIMEOUT 120
         WORKING_DIRECTORY "${SGGK_SDK_DIR}"
         ENVIRONMENT_MODIFICATION "PATH=path_list_prepend:${SGGK_SDK_DIR}/x64-win/bin${_sgk_config}")
-    # ValidateGeneralHybrid is retired: preserve its implementation/shared helpers
-    # and historical test source, but do not build or register its tests.
+    # ValidateGeneralHybrid 已废弃：保留实现、共享工具及历史测试源码，但不构建或注册其测试。
     add_executable(BSpline2AnalyticPairedValidationTests tests/PairedValidationTests.cpp
         tests/Dataset500.cpp tests/PairedSurfaceBounds.cpp tests/ApproximateCases.cpp)
     target_link_libraries(BSpline2AnalyticPairedValidationTests PRIVATE BSpline2Analytic)
@@ -150,8 +152,8 @@ if(BSPLINE2ANALYTIC_BUILD_TESTS)
         --output "${CMAKE_CURRENT_BINARY_DIR}/business-extreme200-$<CONFIG>.csv" --timeout 300)
     add_test(NAME BSpline2Analytic.ExtremeModules COMMAND BSpline2AnalyticExtremeTests --modules
         "${CMAKE_CURRENT_SOURCE_DIR}/tests/data/business-extreme200" "${CMAKE_CURRENT_BINARY_DIR}/business-extreme-modules-$<CONFIG>.csv")
-    # The batch has its own 300-second per-case watchdog. Do not let CTest's
-    # default 1500-second suite timeout discard a partially completed batch.
+    # 批次有自己的逐例 300 秒进程看门狗；避免 CTest 默认套件超时丢弃部分结果。
+    # 进程看门狗覆盖 SDK/审计等工作，与算法内部 50 ms 成功验收预算不是同一个口径。
     set_tests_properties(BSpline2Analytic.Extreme200 PROPERTIES TIMEOUT 61200)
     set_tests_properties(BSpline2Analytic.ExtremeModules PROPERTIES TIMEOUT 60)
     set_tests_properties(BSpline2Analytic.Extreme200 BSpline2Analytic.ExtremeModules PROPERTIES
@@ -230,15 +232,14 @@ if(BSPLINE2ANALYTIC_BUILD_TESTS)
     set_tests_properties(BSpline2Analytic.Regression PROPERTIES
         WORKING_DIRECTORY "${SGGK_SDK_DIR}"
         ENVIRONMENT_MODIFICATION "PATH=path_list_prepend:${SGGK_SDK_DIR}/x64-win/bin${_sgk_config}")
-    # White-box regression helpers use private implementation headers.
+    # 白盒回归需要访问私有实现头文件，但这些路径不向库的公共使用者开放。
     foreach(_test_target IN ITEMS
         BSpline2AnalyticDataset500Tests BSpline2AnalyticConeTests BSpline2AnalyticTests
         BSpline2AnalyticApproximateTests BSpline2AnalyticApproximateBenchmark
         BSpline2AnalyticPlateauTests BSpline2AnalyticJacobianTests)
         target_include_directories(${_test_target} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src")
     endforeach()
-    # Preserve legacy implementations and test sources, but never execute the
-    # retired projection validator, directly or through ConvertApproximate.
+    # 保留历史实现及测试源码，但不得直接或通过 ConvertApproximate 执行废弃投影验证器。
     set_tests_properties(
         BSpline2Analytic.ClassificationGate BSpline2Analytic.Extreme200
         BSpline2Analytic.ExtremeModules BSpline2Analytic.Dataset500
@@ -248,7 +249,7 @@ if(BSPLINE2ANALYTIC_BUILD_TESTS)
         PROPERTIES DISABLED TRUE)
 endif()
 
-# Retired analytic-UV fallback datasets: preserved only as historical evidence.
+# 已归档的解析 UV 兜底数据仅作历史证据，禁止运行这些测试。
 if(BSPLINE2ANALYTIC_BUILD_TESTS)
     set_tests_properties(BSpline2Analytic.General600 BSpline2Analytic.GeneralPositive500 BSpline2Analytic.GeneralExtra60 PROPERTIES DISABLED TRUE)
 endif()

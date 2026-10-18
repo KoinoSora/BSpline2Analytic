@@ -1,3 +1,8 @@
+/**
+ * @file SurfaceSampling.cpp
+ * @brief 优化基础采样和见证反馈点管理。
+ * 不可变基础点与新增反馈点分离，按参数、边号及单侧导数去重，保留边界遍历顺序和版本号。
+ */
 #include "ApproximateInternal.h"
 #include <set>
 #include <tuple>
@@ -163,7 +168,7 @@ unsigned AddWitnessSamples(const sggk::BSplineSurface &s, const ConversionValida
         SampleKey key{u, v, edge, int(du), int(dv)};
         if (cache.keys.count(key))
             return;
-        // Evaluate only after deduplication. One-sided boundary records stay distinct.
+        // 先去重再求值；边界两侧的单侧记录保持独立。
         auto sample = At(s, u, v, edge, du, dv,shared);
         cache.points.push_back(sample);
         cache.keys.insert(key);
@@ -197,8 +202,7 @@ unsigned AddWitnessSamples(const sggk::BSplineSurface &s, const ConversionValida
         if (u < s.MinParamU() || u > s.MaxParamU() || v < s.MinParamV() || v > s.MaxParamV())
             return;
         insert(u, v, edge);
-        // Include immediate neighbours: a witness should influence a region,
-        // rather than just interpolate one troublesome point.
+        // 同时加入紧邻点，使见证点影响一个区域，而不只是插值单个困难点。
         double du = (c.parameterRegion[1] - c.parameterRegion[0]) * 0.25,
                dv = (c.parameterRegion[3] - c.parameterRegion[2]) * 0.25;
         insert(u - du, v - dv, edge);

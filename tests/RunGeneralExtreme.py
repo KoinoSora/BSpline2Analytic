@@ -1,4 +1,7 @@
-"""Run only the 320 general extreme inputs, one bounded SDK process per input."""
+# 文件职责：归档一般极端数据的历史运行入口，已禁用。
+# 主函数主动拒绝旧数据，当前一般测试必须使用 V2 工具。
+
+"""历史一般极端 320 例的逐例受限 SDK 进程调度；原输入已归档，主函数禁止运行。"""
 import argparse
 import csv
 import hashlib
@@ -63,7 +66,7 @@ def main():
         for fixture in selected[len(existing):]:
             index = int(fixture["id"])
             output = parts / f"case-{index:03}.csv"
-            output.unlink(missing_ok=True)  # Only this runner's own output.
+            output.unlink(missing_ok=True)  # 仅处理本脚本自身输出。
             log = output.with_suffix(".log")
             start = time.perf_counter()
             timeout = False

@@ -1,3 +1,8 @@
+/**
+ * @file PairedConversionValidation.cpp
+ * @brief 有限解析面片的配对验证与公共缓存入口。
+ * 建立分段单调映射及公共分区，认证位置和边界；任何未访问区域都不能用局部成功上界代替。
+ */
 #include "PairedValidationInternal.h"
 #include "StageTimer.h"
 #include "ValidationTiming.h"
@@ -62,8 +67,7 @@ void AddChartBreaks(PairedParameterMap &m, const Chart &chart, bool u)
         if (it == m.target.begin() || it == m.target.end())
             throw Failure(Status::VerificationFailed, "Chart break outside mapping");
         size_t i = static_cast<size_t>(it - m.target.begin() - 1);
-        // These doubles DEFINE the new map; no approximate inverse is treated
-        // as an exact certificate. Subsequent interval composition uses it.
+        // 这些双精度值精确定义新映射，不把近似逆映射本身当作证书；后续区间复合基于这个明确的映射计算。
         double t = m.source[i] + (m.source[i + 1] - m.source[i]) * (q - m.target[i]) /
                                      (m.target[i + 1] - m.target[i]);
         m.source.insert(m.source.begin() + i + 1, t);
@@ -188,7 +192,7 @@ TargetCell Compose(const TargetCell &target, const PairedParameterMap &u,
     auto axis = [&](bool along, double l, double r, double a, double b,
                     const PairedParameterMap &m) {
         I x = (MapValue(m, l) - I(a)) / (I(b) - I(a)), y = (MapValue(m, r) - I(a)) / (I(b) - I(a));
-        // Preserve exact chart endpoints and avoid unnecessary interval growth.
+        // 保留精确参数图端点，避免无谓扩张区间。
         if (MapValue(m, l).lo == a && MapValue(m, l).hi == a)
             x = I(0);
         if (MapValue(m, r).lo == b && MapValue(m, r).hi == b)
@@ -374,7 +378,7 @@ class Validator
         report.geometry.state = geometryOK         ? CheckState::Passed
                                 : geometryExceeded ? CheckState::Exceeded
                                                    : CheckState::Unresolved;
-        // Early exit means unvisited cells are not bounded by the partial maximum.
+        // 提前退出时，局部最大值不能约束尚未访问的单元。
         report.geometry.upperBound = geometryOK && edgesOK ? distanceUpper : INFINITY;
         if (geometryOK && edgesOK)
         {
@@ -564,7 +568,7 @@ static PairedValidationReport ValidatePaired(const sggk::BSplineSurface &s, cons
     if (out.status != PairedValidationStatus::Passed)
     {
         out.certificate.correspondence = CheckState::Unresolved;
-        // No partial domain may masquerade as a complete bound after early exit.
+        // 提前退出后，部分参数域的上界不能冒充全域上界。
         out.certificate.geometry.upperBound = out.certificate.boundaryTangent.upperBound =
             out.certificate.boundaryNormal.upperBound = INFINITY;
     }

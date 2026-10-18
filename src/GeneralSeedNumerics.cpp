@@ -1,3 +1,8 @@
+/**
+ * @file GeneralSeedNumerics.cpp
+ * @brief 一般初值的小矩阵 QR、Jacobi 与几何拟合数值工具。
+ * 中心化和尺度处理改善大坐标、短弧条件数；秩与残差用于筛选初值，不构成几何认证。
+ */
 #include "GeneralInternal.h"
 namespace bspline2analytic
 {
@@ -30,11 +35,10 @@ void Reject(GeneralSeedGroupDiagnostic &d, GeneralSeedFailure why)
 }
 struct SVD3
 {
-    std::array<double,3> singular{}; // Descending.
+    std::array<double,3> singular{}; // 按降序排列。
     std::array<V,3> right{};
 };
-// One-sided Jacobi directly on the n x 3 matrix. Never form A^T A: doing so
-// would square the conditioning of the short-arc direction/normal plane fit.
+// 直接对 n×3 矩阵作单边 Jacobi 分解，避免构造 A^T*A，使短弧方向或法向平面拟合的条件数不被平方放大。
 bool Decompose(Rows a,SVD3 &out)
 {
     if(a.size()<3) return false;
@@ -121,7 +125,7 @@ AnalyticParameters ConditionedGeneralSeed(sggk::SurfaceType type,
     d.sampleCount=static_cast<unsigned>(points.size());
     if(points.size()<4) Reject(d,GeneralSeedFailure::InsufficientPoints);
     if(!(scale>0) || !std::isfinite(scale)) Reject(d,GeneralSeedFailure::NonFinite);
-    // Subtract a nearby anchor before averaging, including for large world coordinates.
+    // 先减去邻近锚点再求平均，避免大世界坐标累加造成精度损失。
     V anchor=points.front().point,mean{};
     for(const auto &p:points)
     {

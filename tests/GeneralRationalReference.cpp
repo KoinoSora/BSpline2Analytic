@@ -1,3 +1,8 @@
+/**
+ * @file GeneralRationalReference.cpp
+ * @brief V2 测试独立的有理母面和参数直线参考构造。
+ * 直接构造齐次圆弧与张量复合，接缝拉回允许微小重叠但不能漏域。
+ */
 #include "GeneralRationalDataset.h"
 #include <algorithm>
 
@@ -49,7 +54,7 @@ Axis AxisReference(double a,double b,bool angular,bool u)
     if(!angular){BPoly t(u?1:0,u?0:1);t.c={I(a),I(b)};return {C(I(0)),C(I(0)),C(I(1)),t};}
     I mid=(I(a)+I(b))/I(2),half=(I(b)-I(a))/I(2);
     BPoly c(u?2:0,u?0:2),s=c,w=c;
-    // Homogeneous quadratic circular arc; no inverse mapping or fitted controls.
+    // 齐次二次圆弧构造，不使用逆映射或拟合控制点。
     c.c={Cos(I(a)),Cos(mid),Cos(I(b))};s.c={Sin(I(a)),Sin(mid),Sin(I(b))};w.c={I(1),Cos(half),I(1)};
     if(w.range().lo<=0)throw std::runtime_error("Reference arc weight is not positive");
     return {c,s,w,C(I(0))};
@@ -133,8 +138,7 @@ std::vector<RationalReferencePiece> RationalReference::Cover(const BezierCell &s
         std::array<double,4> domain{source.u0,source.u1,source.v0,source.v1};bool empty=false;
         for(unsigned d=0;d<2;++d)
         {
-            // Tensor-aligned seams can be pulled back exactly with an outward
-            // rounded affine division. Keep a small OVERLAP, never a seam gap.
+            // 与张量轴对齐的接缝可用向外舍入的仿射除法拉回源域；保留微小重叠，绝不能留下接缝缺口。
             if(d&&spec.bend)continue;
             double a[4];for(unsigned k=0;k<4;++k)a[k]=d?spec.corners[k].Y():spec.corners[k].X();
             bool uOnly=a[0]==a[2]&&a[1]==a[3],vOnly=a[0]==a[1]&&a[2]==a[3];

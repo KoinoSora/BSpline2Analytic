@@ -1,3 +1,8 @@
+/**
+ * @file ApproximateBenchmark.cpp
+ * @brief 历史近似转换性能基准，因调用旧验证器已暂停运行。
+ * 保留预热及计时方法供追溯；当前非极端串联测试使用 RunSequentialNonExtreme.py。
+ */
 #include "ApproximateCases.h"
 #include <Foundation/init.h>
 #include <algorithm>
@@ -47,7 +52,7 @@ static int Run(const char *path)
     std::cout << std::fixed << std::setprecision(4);
     for (const auto &c : cases)
     {
-        // SDK startup, fixture generation, warm-up, console/CSV I/O are outside timers.
+        // SDK 启动、用例构造、预热及控制台/CSV 输出都在计时区间之外。
         auto warm = ConvertApproximate(*c.surface, c.options);
         if ((warm.status == ConversionStatus::Success) != c.success)
             throw std::runtime_error(c.name + " warm-up status mismatch");

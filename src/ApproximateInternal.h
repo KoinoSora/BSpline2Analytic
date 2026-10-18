@@ -1,3 +1,8 @@
+/**
+ * @file ApproximateInternal.h
+ * @brief 近似分类、恢复、采样与优化共用的内部契约。
+ * 将候选生成、残差求解和独立认证分离，缓存所有权与反馈样本版本由各类型明确管理。
+ */
 #pragma once
 #include "AnalyticReconstruction.h"
 #include "ApproximateConversion.h"
@@ -116,7 +121,7 @@ struct SourceSampleCache
 };
 struct SampleCache : SourceSampleCache
 {
-    // Immutable base is shared across candidates; points owns feedback only.
+    // 不可变基础采样由各候选共享；points 只持有反馈新增点。
     std::shared_ptr<const SourceSampleCache> base;
     unsigned version = 0;
     SampleCache() = default;
@@ -139,8 +144,8 @@ struct ApproximateSeed
     double score = 0;
     bool fromBoundary = false, directionalCone = false;
 };
-// Resumable candidate search. The caller validates one returned candidate and
-// asks for another only after failure. No validator/optimizer is called here.
+// 可续行的候选搜索：调用方先验证返回的单个候选，失败后再请求下一个。
+// 搜索器内部不调用验证器或优化器。
 class IsoClassificationSearch
 {
   public:
@@ -154,7 +159,7 @@ class IsoClassificationSearch
     struct Impl;
     std::unique_ptr<Impl> impl;
 };
-// Retains the legacy best/boundary candidates as fallbacks for new cone seeds.
+// 保留原来的最佳候选和边界候选，作为新增圆锥初值的后备。
 std::vector<AnalyticPatch> RecoverRankedCandidates(const ClassificationSamples &,
                                                    const std::vector<ApproximateSeed> &,
                                                    double distanceTolerance,
@@ -162,7 +167,7 @@ std::vector<AnalyticPatch> RecoverRankedCandidates(const ClassificationSamples &
                                                    std::vector<RecoveredCandidate> * = nullptr);
 struct ResidualBuffer
 {
-    // Distance and boundary tangent only. Normal errors are acceptance-only.
+    // 优化残差仅含距离与边界切向；法向误差只参与验收。
     std::vector<double> leastSquares, constraints;
     double cost = 0, worst = 0;
 };
@@ -187,8 +192,7 @@ struct ActiveParameters
 {
     std::vector<unsigned> indices;
 };
-// Geometry adapters supply residuals, derivatives and parameter updates; the
-// iteration/acceptance/stagnation algorithm remains shared with the legacy path.
+// 几何适配器提供残差、导数和参数更新；迭代推进、步接受与停滞判定复用历史求解框架。
 struct RefinementProblem
 {
     std::function<void(const AnalyticPatch &, EvaluationWorkspace &, ResidualBuffer &)> evaluate;
@@ -198,8 +202,7 @@ struct RefinementProblem
     std::function<void(AnalyticPatch &)> materialize;
 };
 ActiveParameters ParametersFor(sggk::SurfaceType, ParameterLevel);
-// Linearizes at p, independently of mutable trial geometry in the workspace.
-// Returns false if neither side of a required difference can be evaluated.
+// 在 p 处线性化，不依赖工作区中的可变试探几何；所需差分两侧均不能求值时返回 false。
 bool BuildJacobian(const AnalyticPatch &, const SampleCache &, const ConversionOptions &,
                    const ActiveParameters &, double scale, EvaluationWorkspace &,
                    RefinementDiagnostics &);

@@ -1,3 +1,8 @@
+/**
+ * @file GeneralRationalBoundaryCurves.cpp
+ * @brief 将有理参数域直线复合为可导出的三维 NURBS 边界。
+ * 按参数图接缝分段并保持 C0 端点一致；从 SDK 读回真实输出系数后认证导出误差。
+ */
 #include "GeneralRationalBoundaryInternal.h"
 
 namespace bspline2analytic::detail::rational_boundary
@@ -40,6 +45,8 @@ const paired::TargetCell &CellAt(const paired::Chart &chart,std::array<double,2>
     throw Failure(Status::VerificationFailed,"Point outside rational chart");
 }
 }
+// 将参数直线 u(t)、v(t) 代入张量积齐次 Bernstein 形式，分别复合三维分子和权重。
+// 必须在同一参数图单元内处理；若跨接缝，ComposeEdge 会先分割再调用，避免跨公式混算。
 BezierCell ComposeLine(const paired::TargetCell &cell,sggk::Point2D a,sggk::Point2D b,
                        double lo,double hi,paired::Products &products)
 {
@@ -76,9 +83,8 @@ std::vector<BezierCell> ComposeEdge(const Trim &t,unsigned edge,paired::Products
     {
         double f=breaks[i]+(breaks[i+1]-breaks[i])*.5;
         auto &cell=CellAt(t.chart,{a.X()+(b.X()-a.X())*f,a.Y()+(b.Y()-a.Y())*f});
-        // Rounded cut values DEFINE the exported partition. At a chart seam a
-        // formula can extend by a few ulps; it remains a rational mother trace.
-        // Each endpoint and the subsequent C0 joins are included in export bounds.
+        // 舍入后的分割参数精确定义输出分段。
+        // 接缝附近公式可能延伸若干 ulp，但仍为母面上的有理轨迹；所有端点及后续 C0 拼接误差均计入输出误差界。
         out.push_back(ComposeLine(cell,a,b,breaks[i],breaks[i+1],products));
     }
     return out;
@@ -87,8 +93,7 @@ V ChartPoint(const Trim &t,std::array<double,2> uv,std::array<V,2> *derivatives)
 {
     const auto &s=CellAt(t.chart,uv).surface;
     double u=(uv[0]-s.u0)/(s.u1-s.u0),v=(uv[1]-s.v0)/(s.v1-s.v0);
-    // This is only a sample/proposal evaluation, never a continuous bound.
-    // Exported coefficients and all boundary predicates are certified separately.
+    // 这里只做采样和候选求值，不构成连续上界；输出系数及边界判据另行认证。
     auto value=[&](const BPoly &p,unsigned derivative=0)
     {
         if(p.u>2||p.v>2)throw Failure(Status::Unsupported,"Unexpected rational chart degree");
@@ -124,8 +129,8 @@ double RefineFraction(const Trim &t,unsigned edge,V point,double initial)
     auto a=t.polygon.corners[Ends[edge][0]],b=t.polygon.corners[Ends[edge][1]];
     double dx=b.X()-a.X(),dy=b.Y()-a.Y(),f=std::clamp(initial,0.,1.);
     if(!std::isfinite(f))return initial;
-    // Only a proposal. Six steps and at most four trial evaluations per step bound
-    // recovery cost; no SDK nearest-point search or unconstrained root solver.
+    // 这里只提出恢复候选；最多六步、每步最多四次试探求值以限制开销。
+    // 不调用 SDK 最近点搜索或无约束求根器。
     for(unsigned iteration=0;iteration<6;++iteration)
     {
         std::array<V,2> derivative;
@@ -144,6 +149,8 @@ double RefineFraction(const Trim &t,unsigned edge,V point,double initial)
     }
     return f;
 }
+// 构造理想有理轨迹后导出 SDK 曲线，再读回其真实控制点、权重和结点进行认证。
+// 端点统一和 C0 拼接可能引入舍入扰动，必须纳入 outputTolerance，而不能仅验证导出前系数。
 Target BuildTarget(const Trim &t,double outputTolerance,GeneralRationalBoundaryReport &report,
                    const ExecutionDeadline *deadline)
 {
@@ -192,8 +199,7 @@ Target BuildTarget(const Trim &t,double outputTolerance,GeneralRationalBoundaryR
             knots.push_back(c.u1);mults.push_back(k+1==ideal.size()?degree+1:degree);
         }
         patch.boundaries[e]=std::make_shared<sggk::BSplineCurve3D>(degree,cp,weights,knots,mults);
-        // Read coefficients BACK from the SDK before certification. In
-        // particular, the SDK can canonicalize equal weights to polynomial.
+        // 认证前必须从 SDK 对象读回实际系数；尤其要处理 SDK 将等权有理曲线规范化为多项式曲线的情况。
         const auto &curve=*patch.boundaries[e];
         if(curve.Degree()!=degree||curve.ControlPoints().size()!=cp.size()||curve.Knots()!=knots||curve.Mults()!=mults)
             throw Failure(Status::VerificationFailed,"SDK changed exported rational curve");

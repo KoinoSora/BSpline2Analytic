@@ -1,4 +1,7 @@
-"""Compare the current residual certificate with the saved joint-budget executable."""
+# 文件职责：母面联合切向残差实现的定向前后对照。
+# 与保存的同合同联合预算版本比较，区分算法成本与独立验证工作。
+
+"""比较当前切向残差证书与保存的联合预算版本程序。"""
 import argparse
 import csv
 from datetime import datetime, timezone

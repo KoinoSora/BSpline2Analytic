@@ -1,3 +1,8 @@
+/**
+ * @file MotherDistanceInternal.h
+ * @brief 母面距离验证器的模块间接口。
+ * 连接全域距离、边界位置、源缓存和 U/V 联合切向，复用配对参数图而不复用其法向验收。
+ */
 #pragma once
 #include "MotherDistanceValidation.h"
 #include "PairedValidationInternal.h"

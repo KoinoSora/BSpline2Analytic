@@ -1,4 +1,7 @@
-"""Recalculate report statistics from committed records; never run geometry."""
+# 文件职责：测试报告的证据汇总工具。
+# 从既有数据与记录提取统计和引用，保留测试类别及计时口径的区别。
+
+"""从已提交记录重算测试报告统计，不运行几何算法。"""
 from pathlib import Path
 import collections
 import csv

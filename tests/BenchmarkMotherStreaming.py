@@ -1,4 +1,7 @@
-"""Run only selected mother-distance fixtures, then audit extraction envelopes."""
+# 文件职责：母面流式提取的定向基准与独立包络审计。
+# 只运行指定输入，测量与高精度审计分离，保留二进制身份记录。
+
+"""只运行选定的母面距离案例，随后独立审计提取包络。"""
 import argparse
 import csv
 from decimal import localcontext

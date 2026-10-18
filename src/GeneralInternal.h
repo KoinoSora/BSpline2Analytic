@@ -1,3 +1,8 @@
+/**
+ * @file GeneralInternal.h
+ * @brief 一般母面候选池、参数图与优化适配的内部声明。
+ * 区分候选评分、参数边界恢复及最终验证，不以初值分数作为误差证书。
+ */
 #pragma once
 #include "GeneralConversion.h"
 #include "ApproximateInternal.h"
@@ -5,7 +10,7 @@
 namespace bspline2analytic::detail
 {
 V ProjectToMother(const AnalyticParameters &, V);
-// Local, small-matrix seed construction; does not change legacy fitting numerics.
+// 局部小矩阵初值构造，不改变历史拟合模块的数值实现。
 AnalyticParameters ConditionedGeneralSeed(sggk::SurfaceType,
     const std::vector<SurfaceSample> &, double, GeneralSeedGroupDiagnostic &);
 std::vector<AnalyticParameters> TorusSeeds(const std::array<SurfaceSample, 4> &, double,
@@ -37,7 +42,7 @@ struct GeneralTrim
     AnalyticParameters parameters;
     std::array<sggk::Point2D, 4> corners; // 00,10,01,11
     std::array<LinearPCurve, 4> edges;
-    // Ordered projected UV samples fix the periodic branch for each source edge.
+    // 有序投影 UV 采样确定每条源边的连续周期分支。
     std::array<std::vector<std::pair<double, std::array<double, 2>>>, 4> walks;
 };
 bool TryPairedTrimBound(const sggk::BSplineSurface &, const std::vector<BezierCell> &,

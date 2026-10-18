@@ -1,3 +1,8 @@
+/**
+ * @file PairedSourcePreparation.cpp
+ * @brief 配对验证器的源面区间提取及边界缓存。
+ * 按 U/V 分离提取复用矩阵和条带，源内容精确匹配才可复用，保留端点微小裁剪。
+ */
 #include "PairedValidationInternal.h"
 #include <chrono>
 
@@ -32,8 +37,7 @@ std::vector<Span> AxisSpans(const sggk::RealArray &knots, const sggk::UIntArray 
         }
         else
         {
-            // The same interval blossom recurrence as the shared extractor,
-            // computed once per active one-dimensional span.
+            // 与共享提取器相同的区间多仿射递推，每个活动一维结点区间只计算一次。
             std::vector<I> work(n * n);
             for (unsigned j = 0; j < n; ++j)
             {
@@ -75,7 +79,7 @@ static std::vector<BezierCell> ExtractPrepared(const sggk::BSplineSurface &s,
                                                PairedValidationReport &report, V origin,
                                                Boundaries *boundaries)
 {
-    // Caller validates dimensions, continuity, degree and cell budgets first.
+    // 调用方必须先验证维数、连续性、次数和单元预算。
     if (s.IsRational())
         throw Failure(Status::Unsupported, "Paired source extraction requires polynomial input");
     const auto &cp = s.ControlPoints();
@@ -97,7 +101,7 @@ static std::vector<BezierCell> ExtractPrepared(const sggk::BSplineSurface &s,
     report.vExtractionMatrices += static_cast<unsigned>(vs.size());
     std::vector<BezierCell> out;
     out.reserve(us.size() * vs.size());
-    // Transform every source column along U once and reuse it for all V spans.
+    // 每列源控制点沿 U 只变换一次，结果复用于全部 V 结点区间。
     const size_t columns = cp.front().size();
     std::vector<IV> alongU((p + 1) * columns);
     for (const auto &u : us)
@@ -131,7 +135,7 @@ static std::vector<BezierCell> ExtractPrepared(const sggk::BSplineSurface &s,
                     cell.p.y.at(i, j) = sum.y;
                     cell.p.z.at(i, j) = sum.z;
                 }
-            // Preserve partial end spans, including SDK reversal's one-ulp trims.
+            // 保留端部不完整结点区间，包括 SDK 反向操作产生的一个 ulp 级裁剪。
             if (u.lo < s.MinParamU() || u.hi > s.MaxParamU() || v.lo < s.MinParamV() ||
                 v.hi > s.MaxParamV())
                 cell = Crop(cell, std::max(u.lo, s.MinParamU()), std::min(u.hi, s.MaxParamU()),
@@ -144,8 +148,7 @@ static std::vector<BezierCell> ExtractPrepared(const sggk::BSplineSurface &s,
     {
         start = Clock::now();
         Products products;
-        // The surface certificate already needs the tensor extraction. Reuse
-        // its outer control rows: no second contraction and no 2D derivative.
+        // 曲面认证已需要张量提取，因此复用最外层控制行；不重复张量收缩，也不构造二维导数。
         for (unsigned edge = 0; edge < 4; ++edge)
             for (const auto &cell : out)
             {
@@ -191,8 +194,7 @@ static std::vector<BezierCell> ExtractPrepared(const sggk::BSplineSurface &s,
                     }
                     else
                     {
-                        // Preserve the SDK's one-ulp endpoint offsets as exact
-                        // parameters, not as a reason to snap the boundary.
+                        // SDK 的一个 ulp 级端点偏移按精确参数保留，不能以此为由吸附边界。
                         std::vector<IV> row(fixedDegree + 1), differences(fixedDegree);
                         for (unsigned i = 0; i <= fixedDegree; ++i)
                             row[i] = get(i, j);

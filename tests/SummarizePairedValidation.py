@@ -1,4 +1,7 @@
-"""Audit standalone paired-validator CSVs and compare the unchanged production path."""
+# 文件职责：配对验证状态、误差和模块耗时汇总。
+# 以实际 CSV 的验证合同和完整测量为准，保留无法认证及数值失败的区别。
+
+"""审计独立配对验证器 CSV，并与保存的原生产路径记录比较。"""
 import argparse
 import collections
 import csv

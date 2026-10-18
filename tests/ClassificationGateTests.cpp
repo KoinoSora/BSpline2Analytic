@@ -1,3 +1,8 @@
+/**
+ * @file ClassificationGateTests.cpp
+ * @brief 历史统一入口的等参分类门控回归，当前禁测。
+ * 涵盖短弧、采样预算与失败兜底，因完整路径仍连接旧验证器而仅保留源码。
+ */
 #include "ApproximateInternal.h"
 #include "SurfaceConversion.h"
 #include "Dataset500.h"
@@ -13,8 +18,7 @@ static void Require(bool condition, const std::string &message)
     ++checks;
     if (!condition) throw std::runtime_error(message);
 }
-// x in [-a,a], y=h*x*x/(a*a). For h=R*theta^2/8 this is a
-// polynomial approximation of a circle, without using the production fitter.
+// 独立构造 x∈[-a,a]、y=h*x²/a²；取 h=R*theta²/8 时为圆弧的多项式近似，不调用生产拟合器。
 static sggk::BSplineCurve3DPtr Parabola(double a, double h)
 {
     return std::make_shared<sggk::BSplineCurve3D>(2,
@@ -97,7 +101,7 @@ static void StatesAndFallback()
             "General fallback erased specialized fit diagnostics");
     Require(r.attempts[1].isoCurveFits.back().circleState==CircleFitState::ResidualExceeded,
             "Wrong specialized rejection reason retained");
-    // A real sampling-budget failure also must reach the general branch.
+    // 真实采样预算耗尽也必须触发一般兜底分支。
     options.polynomial.sampling.maxSamples=1;
     auto budget=Convert(*Extrude(0),options);
     Require(budget.status!=SurfaceConversionStatus::InvalidInput && GeneralAttempted(budget),

@@ -1,8 +1,8 @@
-"""Independent 80-digit blossom audit of exported binary64 source envelopes.
+# 文件职责：源 Bézier 提取包络的独立高精度审计。
+# 采用不同收缩顺序和直接裁剪域提取核对双精度误差包络，不以生产实现自身作参考答案。
 
-This is a numerical regression audit, not a replacement for the analytic error
-bound. Decimal inputs are the exact values of the exported binary64 numbers.
-"""
+"""以 80 位精度独立审计导出的 binary64 源面提取包络。
+这是数值回归审计，不替代解析误差上界；Decimal 输入精确表示导出的二进制双精度数。"""
 import argparse
 from decimal import Decimal, localcontext
 import json
@@ -15,8 +15,8 @@ def axis(knots, mults, degree, first, lo, hi):
     full = [exact(k) for k, m in zip(knots, mults) for _ in range(m)]
     a, n = first + degree, degree + 1
     result = []
-    # Blossom directly on the actual (possibly trimmed) domain, rather than
-    # reproduce the implementation's full-span matrix followed by restriction.
+    # 在实际参数域（可含裁剪）上直接进行多仿射提取，
+    # 避免复刻生产实现先构造整区间矩阵再限制的计算路径。
     for j in range(n):
         work = [[Decimal(int(i == k)) for k in range(n)] for i in range(n)]
         for r in range(1, n):
@@ -38,7 +38,7 @@ def audit(path):
         fu, fv = cell['first_u'], cell['first_v']
         u = axis(data['knots_u'], data['mults_u'], p, fu, u0, u1)
         v = axis(data['knots_v'], data['mults_v'], q, fv, v0, v1)
-        # Contract V first; production contracts U first and reuses strips.
+        # 审计先沿 V 收缩；生产实现先沿 U 收缩并复用条带，以保持实现独立性。
         strip = [[[sum(v[j][l]*controls[fu+k][fv+l][d] for l in range(q+1))
                    for d in range(3)] for j in range(q+1)] for k in range(p+1)]
         for i in range(p+1):

@@ -1,3 +1,8 @@
+/**
+ * @file Dataset500.cpp
+ * @brief 等参固定数据的生成、读取与表示合同工具。
+ * 用独立参考与连续距离证书保证来源；读取器被多个测试复用，不代表重启历史转换链。
+ */
 #include "Dataset500.h"
 #include "ApproximateInternal.h"
 #include <Geometry/3D/Surface/ConeSurface.h>
@@ -275,8 +280,7 @@ struct CollocationAxis
             mults.push_back(mult);
             full.insert(full.end(), mult, t);
         }
-        // Greville interpolation on a clamped spline space. Extra accuracy comes
-        // from simple internal knots, never from increasing the degree.
+        // 在端部夹持样条空间进行 Greville 插值；通过增加简单内结点提高精度，不依靠提高次数。
         for (unsigned i = 0; i < n; ++i)
         {
             double t = 0;
@@ -360,8 +364,7 @@ sggk::BSplineSurfacePtr FitSpline(const sggk::BSplineSurface &s, unsigned p, uns
 }
 sggk::BSplineSurfacePtr TryFitLowDegree(const DatasetCase &c, unsigned targetU, unsigned targetV)
 {
-    // The stored source may already have exchanged UV. Detect linear directions
-    // from that source instead of assuming that V is the cylinder/cone axis.
+    // 存储源面可能已交换 UV，应从实际源面识别线性方向，不能假定 V 总为圆柱/圆锥轴向。
     unsigned p = c.source->DegreeU() == 1 ? 3 : 5;
     unsigned q = c.source->DegreeV() == 1 ? 3 : 5;
     const unsigned maxU = p == 3 ? p + 1 : targetU, maxV = q == 3 ? q + 1 : targetV;
@@ -375,8 +378,7 @@ sggk::BSplineSurfacePtr TryFitLowDegree(const DatasetCase &c, unsigned targetU, 
                 continue;
             auto poly = FitSpline(*c.source, p, q, nu, static_cast<unsigned>(nvValue));
             Snap(*poly, c.collapsedMask, *c.source);
-            // Sampling only rejects poor trials. Acceptance always requires the
-            // independent continuous interval certificate after padding/snapping.
+            // 采样只用于拒绝差的试探结果；补足控制网和端点修正后，仍须通过独立连续区间证书才能接受。
             double sampled = 0;
             for (unsigned i = 0; i <= 24; ++i)
                 for (unsigned j = 0; j <= 24; ++j)
@@ -396,8 +398,7 @@ sggk::BSplineSurfacePtr FitLowDegree(const DatasetCase &c, unsigned targetU, uns
 {
     if (auto fit = TryFitLowDegree(c, targetU, targetV))
         return fit;
-    // Keep the original grid whenever possible. If it is insufficient, allocate
-    // more controls within the SAME workload band, preferring smaller products.
+    // 尽量保留原控制网；不足时只在同一规模档内增加控制点，优先选择控制点乘积较小的组合。
     const unsigned hi[] = {79, 109, 139, 169, 199};
     unsigned minU = c.source->DegreeU() == 1 ? 4 : 6;
     unsigned minV = c.source->DegreeV() == 1 ? 4 : 6;
@@ -527,7 +528,7 @@ DatasetCase Reference(unsigned type, unsigned bucket, unsigned variant)
     c.analyticDomain = {u0, u1, v0, v1};
     c.source = Normalize(
         *surface->ToBSpline(sggk::UVRange(sggk::Interval(u0, u1), sggk::Interval(v0, v1))));
-    // Snap only mathematically collapsed analytic boundaries (roundoff at sin(pi)).
+    // 仅修正数学上确实坍缩的解析边界，例如 sin(pi) 舍入产生的伪偏移。
     if ((type == 2 || type == 3) && variant >= 8)
     {
         unsigned j = type == 3 && variant == 9
@@ -699,7 +700,7 @@ void RebuildLowDegreeDataset500(const std::filesystem::path &inputDir,
             }
             else
             {
-                // Rebuild an exact representation from the already oriented source.
+                // 从已经完成方向调整的源面重建精确表示。
                 c.input = std::make_shared<sggk::BSplineSurface>(*c.source);
                 Require(old->DegreeU() <= 5 && old->DegreeV() <= 5 &&
                             old->DegreeU() >= c.source->DegreeU() &&
@@ -735,7 +736,7 @@ void RebuildLowDegreeDataset500(const std::filesystem::path &inputDir,
     Require(bool(manifest) && bool(changes), "Migration evidence write failed");
     manifest.close();
     changes.close();
-    // Read every file back and independently certify the complete batch before use.
+    // 使用前逐文件重新读取，并对整批数据进行独立认证。
     AuditDataset500(outputDir);
 }
 void GenerateDataset500(const std::filesystem::path &dir)
@@ -776,7 +777,7 @@ void GenerateDataset500(const std::filesystem::path &dir)
                     c.source = std::make_shared<sggk::BSplineSurface>(*base.source);
                     Orient(*c.source, variant);
                     Orient(*c.input, variant);
-                    // Rebuild the clamped [0,1] representation to remove SDK endpoint ulps.
+                    // 重建端部夹持的 [0,1] 表示，消除 SDK 端点的 ulp 偏移。
                     c.source = Normalize(*c.source);
                     c.input = Normalize(*c.input);
                     c.collapsedMask = CollapsedMask(*c.source);

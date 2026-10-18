@@ -1,3 +1,8 @@
+/**
+ * @file GeneralHybridTests.cpp
+ * @brief 已废弃 ValidateGeneralHybrid 的历史单测。
+ * 保留采样盲区等合同反例，不运行或用作新验证器的性能对照。
+ */
 #include "GeneralHybridInternal.h"
 #include "GeneralDataset.h"
 #include <Foundation/init.h>
@@ -34,7 +39,7 @@ void CheckExtraction(const sggk::BSplineSurface &s,V origin)
         V expected=Get(s.CalcPoint(e<2?(e==0?s.MinParamU():s.MaxParamU()):f,
                                   e<2?f:(e==2?s.MinParamV():s.MaxParamV())))-origin;
         I x=p.x/w,y=p.y/w,z=p.z/w;
-        // SDK point evaluation rounds independently; compare to a small ulp allowance.
+        // SDK 点值计算会独立舍入，比对时只给少量 ulp 余量。
         double slack=1e-10*std::max(1.,Norm(expected));
         Require(x.lo-slack<=expected.x&&expected.x<=x.hi+slack&&y.lo-slack<=expected.y&&expected.y<=y.hi+slack&&
                 z.lo-slack<=expected.z&&expected.z<=z.hi+slack,"1D homogeneous extraction disagrees with SDK");
@@ -42,7 +47,7 @@ void CheckExtraction(const sggk::BSplineSurface &s,V origin)
 }
 sggk::BSplineSurfacePtr PolynomialPatch(double boundaryBump,double interiorBump)
 {
-    // z = boundaryBump*v*(1-v) + interiorBump*u*(1-u)*v*(1-v), degree elevated to 3x3.
+    // 构造 z=boundaryBump*v*(1-v)+interiorBump*u*(1-u)*v*(1-v)，再升阶到双三次。
     sggk::Point3DMatrix cp(4,std::vector<sggk::Point3D>(4));
     const double b[]={0,1./3,1./3,0};
     for(unsigned i=0;i<4;++i)for(unsigned j=0;j<4;++j)
@@ -73,19 +78,17 @@ void Unit(const std::filesystem::path &dir)
     Require(budget.status==HybridValidationStatus::BudgetExceeded,"Boundary budget ignored");
     options={};options.general.fitting.validation.distanceTolerance=-1;
     Require(ValidateGeneralHybrid(*flat,a,options).status==HybridValidationStatus::InvalidInput,"Invalid tolerance accepted");
-    // Existing augmented Greville includes the center and catches this classic
-    // pure-Greville counterexample. It still does not certify the continuum.
+    // 增强 Greville 采样包含中心，可捕获该经典纯 Greville 漏检反例；但这仍不构成连续域认证。
     Require(!ValidateGeneralHybrid(*PolynomialPatch(0,19e-5),a).Passed(),"Interior peak missed by augmented grid");
-    // Tiny position error but tangent much larger than an explicitly tight tolerance.
+    // 位置误差很小，但切向误差远大于显式设置的严格角容差。
     options={};options.general.fitting.validation.boundaryTangentToleranceDeg=.00001;
     Require(!ValidateGeneralHybrid(*PolynomialPatch(1e-6,0),a,options).Passed(),"Tangent violation accepted");
     auto warped=PolynomialPatch(0,0);
-    const double x[]={0,1./15,.4,1}; // x(u)=.2u+.8u^2, strictly increasing.
+    const double x[]={0,1./15,.4,1}; // 构造严格递增的 x(u)=0.2u+0.8u²。
     for(unsigned i=0;i<4;++i)for(unsigned j=0;j<4;++j)warped->SetControlPoint({x[i],j/3.,0},i,j);
     auto mapped=ValidateGeneralHybrid(*warped,a);CheckReport(mapped);
     Require(mapped.Passed()&&mapped.mappingRefinements>0,"Nonlinear boundary parameter correspondence failed");
-    // A deliberately accepted sampling blind spot documents the API contract:
-    // all augmented Greville samples pass, but the actual interior peak does not.
+    // 刻意接受的采样盲区用于说明历史 API 合同：全部增强 Greville 点通过，而实际内部峰值超差。
     auto blind=PolynomialPatch(0,0);const double h[]={0,1./15,.4,0},b[]={0,1./3,1./3,0};
     for(unsigned i=0;i<4;++i)for(unsigned j=0;j<4;++j)
         blind->SetControlPoint({i/3.,j/3.,20.75e-5*h[i]*b[j]},i,j);

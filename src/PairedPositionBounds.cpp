@@ -1,3 +1,8 @@
+/**
+ * @file PairedPositionBounds.cpp
+ * @brief 配对位置残差的快速与紧致连续上界。
+ * 先用系数包围盒筛查，必要时升阶对齐并采用控制向量界；缓存只优化运算量，不改变容差。
+ */
 #include "PairedValidationInternal.h"
 
 namespace bspline2analytic::detail::paired
@@ -51,7 +56,7 @@ BPoly Products::Elevate(const BPoly &p, unsigned u, unsigned v)
         BPoly next(along ? target : current.u, along ? current.v : target);
         if (n == 0)
         {
-            // Partition of unity: an axis-constant coefficient is copied exactly.
+            // 利用单位分解，某方向上为常数的系数可精确复制。
             for (unsigned j = 0; j <= lines; ++j)
                 for (unsigned i = 0; i <= target; ++i)
                     (along ? next.at(i, j) : next.at(j, i)) =
@@ -59,8 +64,7 @@ BPoly Products::Elevate(const BPoly &p, unsigned u, unsigned v)
         }
         else
         {
-            // Multiplication by the degree-delta representation of 1 is direct
-            // elevation. Cache the outward-rounded binomial ratios by degree.
+            // 与表示常数 1 的次数差多项式相乘等价于直接升阶；按次数缓存向外舍入的二项式系数比。
             const auto &w = Weights(n, delta);
             for (unsigned j = 0; j <= lines; ++j)
                 for (unsigned i = 0; i <= n; ++i)
@@ -105,8 +109,8 @@ double PositionBoxUpper(const BV &error, const BPoly &weight)
     IV box = Range(error);
     if (!w.finite() || w.lo <= 0 || !box.x.finite() || !box.y.finite() || !box.z.finite())
         return INFINITY;
-    // Each polynomial lies in its coefficient hull, even at different degrees.
-    // A failed upper bound is inconclusive; only strict success can short-circuit.
+    // 即使次数不同，各多项式也分别位于自身系数凸包中。
+    // 上界未通过只能说明无结论；只有严格通过才可提前返回。
     return (Length(box) / I(w.lo)).hi;
 }
 double PositionControlUpper(const BV &error, const BPoly &weight, Products &products)

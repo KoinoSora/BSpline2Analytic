@@ -1,3 +1,8 @@
+/**
+ * @file GeneralExtremeTests.cpp
+ * @brief 旧一般极端数据的历史回归驱动，当前禁测。
+ * 包含折叠和退化负例；不得与 V2 同编号数据或其耗时直接比较。
+ */
 #include "GeneralExtremeDataset.h"
 #include "GeneralInternal.h"
 #include <Foundation/init.h>
@@ -111,7 +116,7 @@ void CertificateChecks(const std::filesystem::path &dir)
 }
 void SphereTriangleChecks(const std::filesystem::path &dir)
 {
-    // Only inputs from the sphere_triangle group participate in these checks.
+    // 仅 sphere_triangle 分组输入参与这些检查。
     for(unsigned id:{128u,144u,160u})
     {
         auto c=ReadGeneralFixture(dir/GeneralExtremeFilename(id));
@@ -124,11 +129,11 @@ void SphereTriangleChecks(const std::filesystem::path &dir)
         using UV=sggk::Point2D;
         const double tiny=std::ldexp(1.0,-40);
         const std::array<UV,4> invalid[]={
-            {UV{0,0},UV{0,0},UV{0,0},UV{0,0}}, // Entire domain is a point.
-            {UV{0,0},UV{1,1},UV{2,2},UV{2,2}}, // Collapsed side, collinear vertices.
-            {UV{0,0},UV{1,0},UV{1,1},UV{0,1}}, // Folded quadrilateral.
-            {UV{0,0},UV{1,0},UV{0,1},UV{0,0}}, // Nonadjacent duplicate corners.
-            {UV{0,0},UV{1,0},UV{tiny,1},UV{0,1}} // Near collapse, with a fold.
+            {UV{0,0},UV{0,0},UV{0,0},UV{0,0}}, // 整个参数域退化为点。
+            {UV{0,0},UV{1,1},UV{2,2},UV{2,2}}, // 一边坍缩且角点共线。
+            {UV{0,0},UV{1,0},UV{1,1},UV{0,1}}, // 折叠的参数四边形。
+            {UV{0,0},UV{1,0},UV{0,1},UV{0,0}}, // 非相邻角点重复。
+            {UV{0,0},UV{1,0},UV{tiny,1},UV{0,1}} // 接近坍缩且存在折叠。
         };
         for(const auto &corners:invalid)
         {
@@ -162,7 +167,7 @@ void RadiusArcChecks(const std::filesystem::path &dir)
             if(flip) for(auto &p:points) p.normal=p.normal*-1;
             GeneralSeedGroupDiagnostic d;
             auto seed=ConditionedGeneralSeed(c.truth.type,points,scale,d);
-            // Held-out positions, including ends: never used in constructing this seed.
+            // 独立检查点包含端点，从未用于构造该初值。
             for(double u:{0.,.25,.75,1.}) for(double v:{0.,.25,.75,1.})
             {
                 double a=0,b=0;double w[]={(1-u)*(1-v),u*(1-v),(1-u)*v,u*v};

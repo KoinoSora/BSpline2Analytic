@@ -1,3 +1,8 @@
+/**
+ * @file GeneralRationalDatasetTests.cpp
+ * @brief V2 数据生成的命令行入口。
+ * 初始化 SDK 后调用低次输入生成与资格认证，数据生成不等于算法转换回归。
+ */
 #include "GeneralRationalDataset.h"
 #include <Foundation/init.h>
 #include <iostream>

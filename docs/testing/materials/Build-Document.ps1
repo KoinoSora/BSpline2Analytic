@@ -1,4 +1,7 @@
-﻿param([string]$XeLaTeX = 'xelatex')
+﻿# 文件职责：测试材料说明的 PDF 构建入口。
+# 文档编译与算法测试分离，输出结果以编译器退出状态为准。
+
+param([string]$XeLaTeX = 'xelatex')
 $ErrorActionPreference = 'Stop'
 $documentName = '测试材料说明'
 $buildDirectory = Join-Path $PSScriptRoot 'build'

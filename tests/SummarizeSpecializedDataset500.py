@@ -1,4 +1,7 @@
-"""Validate and summarize the disjoint specialized-v2 timing partition."""
+# 文件职责：历史专用转换阶段计时的汇总工具。
+# 校验细分阶段与总计关系，不对已废弃运行入口进行调用。
+
+"""校验并汇总 specialized-v2 互斥阶段计时划分。"""
 import argparse
 import collections
 import csv

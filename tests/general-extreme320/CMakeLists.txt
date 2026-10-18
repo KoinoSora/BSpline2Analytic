@@ -1,7 +1,10 @@
+# 文件职责：已归档的一般极端测试构建入口。
+# 保留路径供历史追溯；原解析 UV 极端数据禁测，当前使用 general-rational-v2。
+
 cmake_minimum_required(VERSION 3.22)
 project(GeneralExtreme320 LANGUAGES CXX)
 enable_testing()
-# An isolated entry: no existing test target or dataset is executed here.
+# 隔离构建入口，不执行宿主已有测试；本历史套件自身也已在末尾禁用。
 set(BSPLINE2ANALYTIC_BUILD_TESTS OFF CACHE BOOL "Build the existing suites" FORCE)
 add_subdirectory(../.. library)
 add_executable(BSpline2AnalyticGeneralExtremeTests
@@ -20,7 +23,7 @@ add_test(NAME BSpline2Analytic.GeneralExtreme320 COMMAND "${Python3_EXECUTABLE}"
     --configuration "$<CONFIG>"
     --data "${CMAKE_CURRENT_SOURCE_DIR}/../data/general-extreme320"
     --output "${CMAKE_CURRENT_BINARY_DIR}/results.csv")
-# Let the per-input watchdog finish the matrix and retain every result row.
+# 历史逐例看门狗配置用于保留完整结果；套件禁用状态不因此改变。
 set_tests_properties(BSpline2Analytic.GeneralExtreme320 PROPERTIES TIMEOUT 11000)
 
 set_tests_properties(BSpline2Analytic.GeneralExtreme320 PROPERTIES DISABLED TRUE)

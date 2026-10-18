@@ -1,8 +1,8 @@
-"""Compare local Release binaries on 12 fixed fixtures, without a full dataset run.
+# 文件职责：旧混合验证器的历史定向对照脚本，已禁用。
+# 主函数主动退出，禁止通过 archived_main 绕过禁测约束。
 
-The first --variant is the baseline. Each executable retains its independent
-input/output certificates. Timing excludes these audits, as in RunGeneralHybrid.
-"""
+"""历史 12 个固定案例的本地 Release 二进制定向对照，当前已禁用。
+首个 --variant 为基线，各程序独立保留输入/输出证书，计时排除这些审计；不得绕过主函数的禁测门控。"""
 import argparse
 import csv
 import hashlib
@@ -49,7 +49,7 @@ def archived_main():
     for index, (extra, case_id) in enumerate(CASES):
         filename = f'general-{case_id:03}.b2a' if not extra else f'general-extra-{case_id:03}.b2a'
         inputs[filename] = sha(data / filename)
-        # Rotate variant order between cases to reduce systematic order bias.
+        # 不同案例轮换实现执行顺序，以降低固定顺序造成的系统偏差。
         offset = index % len(variants)
         for name, exe in variants[offset:] + variants[:offset]:
             target = work / f'{index:02}-{variants.index((name, exe))}.csv'

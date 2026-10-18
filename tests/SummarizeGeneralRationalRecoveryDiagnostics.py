@@ -1,4 +1,7 @@
-"""Validate and summarize the current-validator V2 diagnostic evidence."""
+# 文件职责：当前 V2 恢复诊断记录的归类汇总。
+# 关联基线失败和固定参数图诊断，区别已证排除与数值搜索未找到解。
+
+"""校验并汇总当前验证器的 V2 诊断证据。"""
 import argparse
 import collections
 import csv

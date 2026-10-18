@@ -1,4 +1,7 @@
-"""Serial comparison on the 16 representative isoparametric cases only."""
+# 文件职责：等参增量分类的代表例串行版本对照。
+# 检查证书与候选尝试统计，完整保留来源和输出审计，区别冷上下文与共享源缓存。
+
+"""只在 16 个代表等参案例上串行比较版本。"""
 import argparse
 import csv
 from datetime import datetime, timezone
@@ -27,8 +30,8 @@ def save(path, rows):
 
 
 def check_incremental(rows, attempts, case, runs):
-    # Retain all existing certificate, source-contract, timing and dense-audit checks.
-    # Only the cold cache-hit count changes: failed candidates share the source.
+    # 保留原有证书、源数据合同、计时与密集审计检查。
+    # 只调整冷缓存命中次数的预期：同一调用中的失败候选也共享源面准备。
     normalized = [dict(r) for r in rows]
     for r in normalized:
         if r["cache"] == "cold": r["source_cache_hits"] = "0"
@@ -64,7 +67,7 @@ def main():
     files=sorted(list((args.source/"src").glob("*.cpp"))+list((args.source/"src").glob("*.h"))+list((args.source/"include").glob("*.h")))
     files += [args.source/p for p in ["CMakeLists.txt", "tests/MotherDistanceSelectedTests.cpp", "tests/Dataset500.cpp", "tests/PairedSurfaceBounds.cpp"]]
     hashes={p.relative_to(args.source).as_posix():sha(p) for p in files}
-    # All actual continuous-certificate implementation files match the saved baseline.
+    # 所有实际连续认证实现文件必须与保存的基线一致。
     for key,value in hashes.items():
         if key.startswith(("src/Mother", "src/Paired", "include/Mother", "include/Paired", "src/Interval")):
             assert value==base["source_sha256"][key], "Validator changed: "+key

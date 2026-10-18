@@ -1,4 +1,7 @@
-"""Audit and summarize paired/third-validator sphere-torus measurements (stdlib only)."""
+# 文件职责：母面/配对验证记录的分组统计。
+# 识别历史与当前角度合同，不能将联合切向报告当成直接法向证书。
+
+"""仅用标准库审计并汇总配对/母面验证器的球面和圆环面测量。"""
 import argparse
 import csv
 import json
@@ -50,8 +53,8 @@ def main():
             assert not r["joint_tangent_failure"]
         else:
             assert float(r["paired_tangent_bound"] if "paired_tangent_bound" in r else r["tangent_bound"]) < .1
-        # Old CSVs retain their original normal certificate. Current mother
-        # rows have no normal constraint; the paired backend still checks it.
+        # 历史 CSV 保留其原有法向证书；当前母面验证记录没有直接法向约束，
+        # 配对验证器后端仍保留其法向检查，不能混用两个合同。
         if "normal_bound" in r:
             assert float(r["normal_bound"]) < .1
         elif r["backend"] == "paired":

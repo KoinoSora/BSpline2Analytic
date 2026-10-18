@@ -1,3 +1,8 @@
+/**
+ * @file ConversionValidation.cpp
+ * @brief 已废弃的等参投影验证器实现。
+ * 仅保留历史算法与接口，不运行其测试、预热或性能对照；当前配对及母面验证器分别独立实现。
+ */
 #include "ApproximateInternal.h"
 #include "ValidationTiming.h"
 #include <functional>
@@ -119,9 +124,8 @@ static double Reference(double mid, double lo, double hi, bool periodic)
 {
     if (periodic)
         mid = Unwrap(mid, (lo + hi) * 0.5);
-    // When both ends are close, use the nearer one: the stable cross-coordinate
-    // formula is tight near its zero. Always selecting lo made the upper edge
-    // require excessive refinement on narrow tube-angle intervals.
+    // 两个端点都接近时选更近者，使稳定的横向坐标公式在其零点附近更紧。
+    // 固定选择下端点会使狭窄管截面角区间的上边界过度细分。
     if (std::abs(mid - lo) < Pi / 4 && std::abs(mid - lo) <= std::abs(mid - hi))
         return lo;
     if (std::abs(mid - hi) < Pi / 4)
@@ -140,10 +144,8 @@ static I TubeAngle(const BPoly &radial, const BPoly &z, I rho, I major, double r
     I forward = (rho - major) * c + z.range() * s;
     if (forward.lo <= 0)
         return I::Whole();
-    // Rotated cross coordinate: b = z*cos(ref) + R*sin(ref) - rho*sin(ref).
-    // Squaring only the numerator retains the correlation between z and rho^2
-    // near a tube-angle boundary. Interval rotation of an independent (rho,z)
-    // box loses this correlation and needs prohibitively fine subdivision.
+    // 旋转后的横向坐标为 b=z*cos(ref)+R*sin(ref)-rho*sin(ref)。
+    // 仅对分子平方可保留管截面角边界附近 z 与 rho² 的相关性；直接旋转独立的 (rho,z) 区间盒会丢失相关性，导致过度细分。
     BPoly line = z * c + Constant(z, major * s);
     I denominator = line.range() + rho * s;
     I cross;
@@ -274,16 +276,14 @@ static EdgeBounds BoundEdge(const BV &p, const BV &t, const BV &normal, const Ce
         return result;
     if (e.nominal.circle)
     {
-        // A unique lift relative to a continuous reference prevents a hidden
-        // 2*pi jump between adjacent certified boundary intervals.
+        // 相对连续参考角选择唯一的周期提升，避免相邻已认证边界区间之间隐藏 2*pi 跳变。
         I reference = I(e.nominal.g0) + I(e.nominal.g1 - e.nominal.g0) *
                                             I(fraction - halfFraction, fraction + halfFraction);
         if ((g - reference).absMax() >= IPi().lo)
             return result;
     }
     I ratio = (I(e.nominal.end) - I(e.nominal.start)) / extent;
-    // Algebraically equivalent to phi(g)-g, arranged to preserve a small
-    // endpoint correction instead of subtracting two large phase intervals.
+    // 与 phi(g)-g 代数等价，但保留小的端点修正量，避免两个大相位区间相减。
     I delta = (I(e.nominal.start) - e.g0) + (ratio - I(1)) * (g - e.g0);
     BPoly derivative;
     BV targetT, targetN;
@@ -382,8 +382,7 @@ static void CheckPatch(const AnalyticPatch &p)
             throw Failure(Status::Unsupported, "Invalid or multiple-turn torus chart");
         if ((I(a.majorRadius) + I(a.radius) * Cos(I(p.domain[2], p.domain[3]))).lo <= 0)
         {
-            // Trigonometric interval extension can be too wide over a long arc.
-            // A positive R-r suffices for a regular ring torus.
+            // 长圆弧上的三角函数区间可能过宽；对常规环形圆环面，R-r>0 已足以证明相应正则性。
             if (!(a.majorRadius > a.radius))
                 throw Failure(Status::Unsupported, "Torus chart not certified regular");
         }
@@ -537,7 +536,7 @@ ConversionValidationReport ValidateConversion(const sggk::BSplineSurface &s,
             ++report.piecesVisited;
             BV p = Local(c.p, patch.parameters), du = Derivative(p, true),
                dv = Derivative(p, false);
-            // Differentiate before restricting to the edge, preserving the cross-edge derivative.
+            // 先求导再限制到边界，保留横跨边界方向的偏导信息。
             BV curve = Boundary(p, static_cast<BoundaryId>(edge));
             BV tangent = Boundary(edge < 2 ? dv : du, static_cast<BoundaryId>(edge));
             BV normal = Cross(Boundary(du, static_cast<BoundaryId>(edge)),

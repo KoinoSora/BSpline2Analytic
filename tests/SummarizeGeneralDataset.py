@@ -1,4 +1,7 @@
-"""Validate membership and summarize direct ConvertGeneral runs (stdlib only)."""
+# 文件职责：历史一般 ConvertGeneral 记录的统计工具。
+# 检查清单身份和候选计数；旧数据结果不能直接代表当前 V2 合同。
+
+"""仅用标准库检查成员集合并汇总历史 ConvertGeneral 运行记录。"""
 import argparse
 import csv
 import math

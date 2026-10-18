@@ -1,3 +1,8 @@
+/**
+ * @file GeneralExtremeDataset.cpp
+ * @brief 历史一般极端数据构造及共享参考工具。
+ * 原 general-extreme320 输入仅保留证据，当前一般数据位于 general-rational-v2。
+ */
 #include "GeneralExtremeDataset.h"
 #include "ApproximateInternal.h"
 #include <fstream>
@@ -13,7 +18,7 @@ void Require(bool ok,const std::string &message){if(!ok)throw std::runtime_error
 void RequireWorldBounds(const GeneralFixture &c)
 {
     const std::string label="Extreme fixture "+std::to_string(c.id);
-    // Positive weights put the entire finite patch inside its control hull.
+    // 正权重保证整个有限面片位于控制凸包内。
     for(const auto &row:c.input->Weights())for(double weight:row)
         Require(std::isfinite(weight)&&weight>0,label+" has a nonpositive or nonfinite weight");
     for(const auto &row:c.input->ControlPoints())for(const auto &point:row)
@@ -137,7 +142,7 @@ void Pad(GeneralFixture &c)
         double t=std::fmod(++i*.6180339887498949,1.);
         if(alongU)c.input->InsertUKnots(t,1);else c.input->InsertVKnots(t,1);
     }
-    // A nonuniform representation of the same geometry, within the fixed budget.
+    // 在固定规模预算内，用非均匀参数表示相同几何。
     size_t nu=c.input->ControlPoints().size(),nv=c.input->ControlPoints()[0].size();
     if(c.seed%3==0&&(nu+1)*nv<=200)c.input->InsertUKnots(1e-6,1);
     if(c.seed%3==1&&nu*(nv+1)<=200)c.input->InsertVKnots(.017,1);
@@ -243,8 +248,7 @@ std::vector<GeneralExtremeSpec> GeneralExtremeSpecs()
         if(kind==0){base=Base(0,"world_coordinates");Quad(base,0,0,1000,.01);base.length=1000;base.width=.01;Directions(base,300);}
         else {unsigned from=std::array<unsigned,5>{40,55,66,96,123}[kind-1];base=geometry[from];}
         base.group="world_coordinates";base.variant="geometry_"+std::to_string(kind);
-        // Leave room for the local patch; check the actual translated hull below.
-        // Alternate the near-limit sign to cover both sides of the world cube.
+        // 为局部面片预留空间，再检查实际平移后的控制凸包；交替使用接近世界坐标上限的正负平移，覆盖立方体两侧。
         const double nearLimit=(kind%2?-1.:1.)*(GeneralExtremeWorldLimit-2000.);
         for(double d:{0.,1e3,1e5,nearLimit})
         {

@@ -1,4 +1,7 @@
-"""Summarize full current-validator coverage, timings and every unresolved case."""
+# 文件职责：当前一般有理边界全量记录的汇总与一致性检查。
+# 按成功、失败及超时分类，保留来源和审计信息，不将采样内部误差称为连续上界。
+
+"""汇总当前验证器的完整覆盖、耗时及每个未认证案例。"""
 import argparse
 from collections import Counter, defaultdict
 import json

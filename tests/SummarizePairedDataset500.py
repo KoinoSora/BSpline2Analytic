@@ -1,9 +1,8 @@
-"""Audit all 500 new-only cases and aggregate exclusive validator modules.
+# 文件职责：配对验证 Dataset500 记录的分组统计。
+# 精确有理与非有理配对成本分开；异常路径留下的无效零计时不计为性能通过。
 
-The paired validator currently accepts polynomial input only. Rational cases
-exercise Recognize separately; neither uncalled modules nor missing candidates
-are averaged in as zero-cost successful validation.
-"""
+"""审计 500 个新配对验证案例并汇总互斥模块成本。
+配对验证器仅支持多项式输入；有理输入单列 Recognize，未调用模块或缺失候选不能按零成本成功验证计入平均。"""
 import argparse
 import collections
 import csv
@@ -43,8 +42,8 @@ def paired_group(rows):
                              "percent": 100 * value / total if total else None}
                         for k, value in totals.items()},
             "validation": distribution([float(r["validation_total_ms"]) for r in measured]),
-            # The historical driver does not finish this external stopwatch
-            # when classification throws. Do not treat those zeros as timings.
+            # 历史驱动在分类抛异常时未结束外部秒表，
+            # 因此这些零值不能当作有效耗时。
             "classification_compute": distribution([float(r["classify_ms"]) for r in rows
                                                        if r["new_status"] != "ClassificationFailed"]),
             "classification_compute_unrecorded": sum(r["new_status"] == "ClassificationFailed" for r in rows),

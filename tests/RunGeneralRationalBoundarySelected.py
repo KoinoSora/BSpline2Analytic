@@ -1,8 +1,8 @@
-"""Rational-only validation: prior slow fixtures and five 200-control fixtures.
+# 文件职责：当前有理边界验证器的定向慢例调度。
+# 区分显式参数图验证基准与分类总耗时，单独保存结果和进程日志。
 
-ValidateGeneralHybrid is retired and must not run. Synthetic cases benchmark a
-supplied mother and fixed chart; rebuilt V2 fixtures use classified candidates.
-"""
+"""仅运行当前有理边界验证：历史慢例及五个 200 控制点案例。
+ValidateGeneralHybrid 已废弃，不得运行；合成案例测给定母面/固定参数图，重建后的 V2 输入使用实际分类候选。"""
 import argparse
 import csv
 import hashlib

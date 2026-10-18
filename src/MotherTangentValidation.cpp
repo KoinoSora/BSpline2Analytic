@@ -1,3 +1,8 @@
+/**
+ * @file MotherTangentValidation.cpp
+ * @brief 同一边界子区间上的 U/V 参数切向联合认证。
+ * 用正比例残差给出两方向正弦平方上界并相加；无结论则同步细分，有见证才报告条件超限。
+ */
 #include "MotherDistanceInternal.h"
 #include <functional>
 
@@ -61,8 +66,7 @@ I LengthSquared(IV v)
 }
 double Estimate(const BPoly &p, double t)
 {
-    // Heuristic only: neither the fitted scale nor the reference direction
-    // needs to interpolate the exact field. Their certificate is built below.
+    // 这里只作启发式估计；拟合比例和参考方向无需精确插值原向量场，后续独立构造完整证书。
     auto midpoint = [](I x) { return x.lo * .5 + x.hi * .5; };
     if (t == 0) return midpoint(p.c.front());
     if (t == 1) return midpoint(p.c.back());
@@ -83,10 +87,12 @@ struct ResidualData
     BPoly scale;
     BV residual;
 };
+// 在端点和中点选择 lambda 的二次 Bernstein 候选；近常数或近线性时降低次数。
+// 必须证明 lambda 在整段严格为正；正性无保证时改用正的中点常数。
+// 最终以区间运算构造 A-lambda*B，三点拟合残差小本身不构成连续角度证书。
 ResidualData BuildResidual(const AngleData &p, paired::Products &products)
 {
-    // Point values only SELECT an auxiliary positive polynomial. Acceptance
-    // always encloses the complete residual, including all coefficient errors.
+    // 点值只用于选择辅助正多项式；验收始终包围完整残差，包括全部系数误差。
     double ratio[3];
     for (unsigned i = 0; i < 3; ++i)
     {
@@ -94,7 +100,7 @@ ResidualData BuildResidual(const AngleData &p, paired::Products &products)
         V b = Estimate(p.target, .5 * i);
         ratio[i] = Dot(a, b) / Dot(b, b);
         if (!(ratio[i] > 0) || !std::isfinite(ratio[i]))
-            return {BPoly(0, 0, I(0)), {}}; // Inconclusive; never an angle witness.
+            return {BPoly(0, 0, I(0)), {}}; // 无法判定，不是角度超限见证。
     }
     double magnitude = std::max({ratio[0], ratio[1], ratio[2]});
     BPoly scale(2, 0);
@@ -112,6 +118,9 @@ ResidualData BuildResidual(const AngleData &p, paired::Products &products)
         return {BPoly(0, 0, I(0)), {}};
     return {scale, products.Subtract(p.source, products.Mul(p.target, scale))};
 }
+// 用固定参考方向 e 的正投影下界得到 ||A||² >= lower(A·e)² / ||e||²。
+// 再利用 sin²(theta) <= ||A-lambda*B||² / ||A||² 得到保守上界。
+// 比值严格小于 1 才同时保证目标非零且同向；退化或过宽区间返回无穷，交给细分处理。
 double SineSquaredUpper(const AngleData &p, const ResidualData &r)
 {
     if (!(r.scale.range().lo > 0))
@@ -120,7 +129,7 @@ double SineSquaredUpper(const AngleData &p, const ResidualData &r)
     double size = std::max({std::abs(e.x), std::abs(e.y), std::abs(e.z)});
     if (!(size > 0) || !std::isfinite(size))
         return INFINITY;
-    e = e * (1 / size); // A fixed reference; it need not have exact unit length.
+    e = e * (1 / size); // 固定参考方向，无需精确单位长度。
     I projection = Dot(p.source, Exact(e)).range();
     if (!(projection.lo > 0) || !projection.finite())
         return INFINITY;
@@ -131,8 +140,7 @@ double SineSquaredUpper(const AngleData &p, const ResidualData &r)
     double error2 = 0;
     if (v.x.u == v.y.u && v.x.u == v.z.u && v.x.v == v.y.v && v.x.v == v.z.v)
     {
-        // Convexity of norm: bound vector control coefficients, not a new
-        // squared-norm polynomial. Coefficients include outward-rounding guards.
+        // 利用范数凸性直接对向量控制系数求界，不新增范数平方多项式；系数已包含向外舍入保护。
         for (size_t i = 0; i < v.x.c.size(); ++i)
         {
             I norm2 = LengthSquared({v.x.c[i], v.y.c[i], v.z.c[i]});
@@ -147,15 +155,15 @@ double SineSquaredUpper(const AngleData &p, const ResidualData &r)
         error2 = norm2.hi;
     }
     I q = I(error2) / I(length2.lo);
-    // ||A-lambda B|| < ||A|| and lambda>0 also prove A.B>0 and B!=0.
-    // A failed residual bound is NOT evidence of a real angle violation.
+    // 当 ||A-lambda*B||<||A|| 且 lambda>0 时，还可证明 A.B>0 及 B 非零。
+    // 残差上界未通过不等于真实夹角超限。
     return q.finite() && q.hi < 1 ? std::max(0., q.hi) : INFINITY;
 }
 double Degrees(double sineSquared)
 {
     if (!(sineSquared >= 0 && sineSquared < 1))
         return INFINITY;
-    // asin(sqrt(q)), expressed with existing outward-rounded operations.
+    // 用已有向外舍入运算表示 asin(sqrt(q))，保持报告角度的保守性。
     return (Atan(Sqrt(I(sineSquared) / (I(1) - I(sineSquared)))) * I(180) / IPi()).hi;
 }
 bool Witness(const std::array<AngleData, 2> &p, I limit)
@@ -166,14 +174,13 @@ bool Witness(const std::array<AngleData, 2> &p, I limit)
         IV s = Range(Evaluate(a.source, .5, 0)), t = Range(Evaluate(a.target, .5, 0));
         I d = Dot(s, t);
         if (d.hi < 0)
-            return true; // Oriented parameter directions disagree.
+            return true; // 有向参数切向不一致。
         if (!(d.lo > 0))
-            return false; // Zero/uncertain derivatives cannot certify a violation.
+            return false; // 零导数或不确定导数不足以证明条件超限。
         I denominator = LengthSquared(s) * LengthSquared(t);
         if (!(denominator.lo > 0) || !denominator.finite())
             return false;
-        // Only a pointwise, outward-rounded dot/norm identity is used here.
-        // It can prove failure, never certify an entire interval as passing.
+        // 这里只使用点值处向外舍入的点积/范数恒等式；可证明失败，不能据此认证整个区间通过。
         I q = I(1) - Sqr(d) / denominator;
         if (!q.finite())
             return false;
@@ -203,9 +210,7 @@ std::array<BV, 2> BoundaryPartials(const BV &p, BoundaryId id)
 BoundaryTangents PrepareTargetTangents(const paired::Chart &chart, paired::Products &products)
 {
     BoundaryTangents out;
-    // BuildChart supplies orthogonal canonical parameter directions for the five
-    // supported mothers. Separate monotone axis maps, swaps and reversals keep
-    // them orthogonal. Do not infer orthogonality from a floating-point dot test.
+    // BuildChart 为五类支持母面构造解析正交的规范参数方向；分离的单调轴映射、U/V 交换和反向保持该正交性，不用浮点点积近似测试来推断。
     for (const auto &cell : chart.cells)
         for (unsigned edge = 0; edge < 4; ++edge)
         {
@@ -223,8 +228,7 @@ BoundaryTangents PrepareTargetTangents(const paired::Chart &chart, paired::Produ
             for (unsigned axis = 0; axis < 2; ++axis)
                 derivatives[axis] = products.Subtract(products.Mul(derivatives[axis], w),
                     products.Mul(h, Partial(s.w, id, axis == 0)));
-            // H_axis*W-H*W_axis has the direction of Q_axis. The omitted W^2
-            // and chart span are positive; no normal or co-normal is needed.
+            // H_axis*W-H*W_axis 与 Q_axis 同向；省略的 W² 与参数图跨度均为正，无需构造法向或余法向。
             out[edge].push_back({edge < 2 ? s.v0 : s.u0, edge < 2 ? s.v1 : s.u1,
                                  std::move(derivatives)});
         }
@@ -262,6 +266,8 @@ bool ValidateJointTangents(const BoundaryTangents &source, const BoundaryTangent
             std::array<double, 4>{fixed, fixed, a, b} : std::array<double, 4>{a, b, fixed, fixed};
     };
     std::function<bool(const std::array<AngleData, 2> &, unsigned, unsigned, double, double)> visit;
+    // 两方向始终在同一个 [a,b] 上联合验收和细分，不能把不同区间的独立最大角相加。
+    // 上界未通过先检查独立超限见证；没有见证时只能细分或报告无法认证。
     visit = [&](const std::array<AngleData, 2> &p, unsigned depth, unsigned edge, double a, double b) {
         if (deadline) deadline->Check("iso_joint_tangent");
         region(edge, a, b);
@@ -368,6 +374,7 @@ bool ValidateJointTangents(const BoundaryTangents &source, const BoundaryTangent
                 return false;
         }
     }
+    // 只有四边所有公共子区间均通过，才能发布全边界上界；部分遍历的最大值不够。
     out.boundaryTangentU.state = out.boundaryTangentV.state =
         out.boundaryJointTangent.state = CheckState::Passed;
     out.boundaryTangentU.upperBound = Degrees(maxU);

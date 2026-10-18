@@ -1,4 +1,7 @@
-"""Summarize all 500 fixtures, cones, or polynomial spheres; Python standard library only."""
+# 文件职责：历史 Dataset500 测量的分组汇总。
+# 只处理现有 CSV，区分全体、圆锥及多项式球面；汇总不授权重跑废弃测试。
+
+"""仅用 Python 标准库汇总历史 500 例、圆锥子集或多项式球面子集。"""
 import argparse
 import csv
 import math
@@ -7,7 +10,7 @@ from collections import Counter, defaultdict
 
 
 def classify_optimize_ms(row):
-    """Sum stages for one case before taking a group maximum."""
+    """先对单例阶段求和，再取分组最大值。"""
     return float(row["classify_ms"]) + float(row["optimize_ms"])
 
 
@@ -51,7 +54,7 @@ def summarize(path, cone_only=False, sphere_polynomial_only=False):
                      for k in ("classify_ms", "optimize_ms", "validate_ms", "total_ms")]
             values = sorted(float(r["total_ms"]) for r in group)
             p95 = values[math.ceil(.95 * len(values)) - 1]
-            # Resolve equal maxima by case id so CSV row order cannot change the report.
+            # 最大值相同时按案例编号决定顺序，避免 CSV 行顺序影响报告。
             slowest = max(group, key=lambda r: (classify_optimize_ms(r), -int(r["id"])))
             print(f"| {key} | {len(group)} | " + " | ".join(
                 f"{v:.4f}" for v in [*means, p95, classify_optimize_ms(slowest)])

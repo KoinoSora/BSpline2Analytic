@@ -1,3 +1,8 @@
+/**
+ * @file BoundaryAnalysis.cpp
+ * @brief 四条源边的直线、圆弧及退化分类。
+ * 使用正权重控制凸包和误差界检查几何，有序遍历处理周期接缝，不仅依据端点判断圆弧。
+ */
 #include "BoundaryAnalysis.h"
 #include "Numerics.h"
 
@@ -13,7 +18,7 @@ static double BoundPiece(const Homogeneous &h, const BoundaryInfo &info, double 
     {
         if (info.kind == BoundaryKind::Line)
         {
-            // All positive rational Bernstein weights: the control hull bounds line distance.
+            // 有理 Bernstein 权重全为正时，控制凸包可给出到直线的距离上界。
             bound = 0;
             V d = Get(info.line.direction);
             for (std::size_t i = 0; i < h.w.c.size(); ++i)
@@ -27,7 +32,7 @@ static double BoundPiece(const Homogeneous &h, const BoundaryInfo &info, double 
         {
             Poly z = DotNumerator(h, Get(info.circle.normal));
             Poly norm2 = SquaredNorm(h), ww = h.w * h.w;
-            // Project onto the circle plane before estimating radial distance.
+            // 先投影至圆平面，再估计径向距离误差。
             Poly radial = norm2 - z * z - ww;
             double normalError = (z.maxAbs() + Roundoff(z.maxAbs())) / wm;
             double radialError =
@@ -133,7 +138,7 @@ BoundaryInfo AnalyzeCurve(const sggk::Curve3DPtr &original, BoundaryId id,
     }
     V center = out.kind == BoundaryKind::Line ? Get(out.line.origin) : Get(out.circle.center);
     double boundScale = out.kind == BoundaryKind::Line ? scale : out.circle.radius;
-    // Quickly reject a noncircular conic before attempting recursive error bounds.
+    // 递归求界前，先快速拒绝不满足圆几何的圆锥曲线。
     for (double t : SampleParameters(*curve, o.samplesPerSpan))
     {
         V delta = Get(curve->CalcPoint(t)) - center;
@@ -155,8 +160,7 @@ BoundaryInfo AnalyzeCurve(const sggk::Curve3DPtr &original, BoundaryId id,
     for (const auto &h : CurvePieces(*curve, center, boundScale))
         out.errorBound = std::max(out.errorBound, BoundPiece(h, out, boundScale, o, 0, visited));
 
-    // Follow source traversal, including knots and seams; do not infer the arc from endpoints
-    // alone.
+    // 沿源曲线依次遍历结点与接缝，不仅凭端点推断圆弧范围。
     const auto parameters = SampleParameters(*curve, std::max(8u, o.samplesPerSpan));
     double first = 0, last = 0, sign = 0;
     for (std::size_t i = 0; i < parameters.size(); ++i)

@@ -1,9 +1,14 @@
+/**
+ * @file StageTimer.h
+ * @brief 转换层互斥阶段的 RAII 计时工具。
+ * 用于分类、优化和额外验证阶段，不放入逐点循环，不重复累加嵌套细分明细。
+ */
 #pragma once
 #include "ApproximateConversion.h"
 #include <chrono>
 namespace bspline2analytic::detail
 {
-// Use only at disjoint orchestration boundaries, never in point loops.
+// 只在互斥的流程阶段边界使用，避免在逐点循环内引入计时开销。
 class StageTimer
 {
     using Clock = std::chrono::steady_clock;

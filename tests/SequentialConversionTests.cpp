@@ -1,3 +1,8 @@
+/**
+ * @file SequentialConversionTests.cpp
+ * @brief 统一串联入口的分支、限时与逐例结果驱动。
+ * 先认证输入，计时仅包围完整 API，随后独立审计输出；预算无效、等参失败和真实返回超时分别检查。
+ */
 #include "SequentialConversion.h"
 #include "Dataset500.h"
 #include "GeneralRationalDataset.h"
@@ -70,7 +75,7 @@ int Run(const std::filesystem::path &root,const std::string &suite,unsigned id,
     out<<std::setprecision(17);
     for(unsigned run=0;run<runs;++run)
     {
-        // Absolutely no logging, file IO, truth inspection or output audit in this interval.
+        // 该区间严禁日志、文件读写、真值检查或输出审计，只测完整算法调用。
         const auto start=std::chrono::steady_clock::now();
         auto r=ConvertIsoThenFallback(*input);
         const double elapsed=Ms(start);
@@ -88,7 +93,7 @@ int Run(const std::filesystem::path &root,const std::string &suite,unsigned id,
                     Require(r.fallback.Passed(),"Missing fallback certificate");
                     outputType=TypeName(r.fallback.patch->mother.type);
                     AuditGeneral(*input,r.fallback,1e-6);
-                    // Supplemental samples; not a continuous interior claim.
+                    // 补充采样审计，不声称内部连续域已认证。
                     AuditPosition(*input,r.fallback.patch->mother,1e-5,values);
                 }
                 else if(r.path=="iso_mother")
@@ -116,7 +121,7 @@ int Run(const std::filesystem::path &root,const std::string &suite,unsigned id,
            <<r.isoCandidates<<','<<r.fallbackCandidates<<','<<r.optimizationIterations<<','<<audit<<','<<Quote(r.isoMessage)<<','<<Quote(r.message+"; "+auditMessage)<<','<<r.isoTimeBudgetExceeded<<'\n';
         out.flush();
     }
-    return 0; // The Python harness evaluates all expectations, including negative controls.
+    return 0; // Python 调度器负责检查全部预期，包括负例对照。
 }
 }
 int main(int argc,char **argv)

@@ -1,3 +1,8 @@
+/**
+ * @file GeneralSphereChart.cpp
+ * @brief 历史球面线性裁剪参数图的方向搜索。
+ * 在固定母面上尝试不同球轴和参数图，处理周期及奇异性；当前有理边界路径采用自身恢复策略。
+ */
 #include "GeneralInternal.h"
 namespace bspline2analytic::detail
 {
@@ -79,7 +84,7 @@ std::vector<AnalyticParameters> RefinedSphereCharts(SurfaceSampleContext &contex
         scores.push_back(Score(b,points));
     };
     for(const auto &b:starts) add(b);
-    // Deterministic coverage avoids relying on circles/iso-parametric edges.
+    // 通过确定性的方向覆盖搜索，避免依赖边界必须是圆或等参线。
     for(unsigned i=0;i<32;++i)
     {
         double z=1-2*(i+.5)/32,angle=i*2.399963229728653;

@@ -1,4 +1,7 @@
-"""Shared version gate: retired analytic-UV inputs must never enter current runs."""
+# 文件职责：当前一般测试数据的版本与表示门控。
+# 强制校验 V2 文件身份、次数和控制点合同，防止旧解析 UV 输入进入当前测试。
+
+"""共享数据版本门控：禁止已归档的解析 UV 输入进入当前运行。"""
 import json
 import hashlib
 from pathlib import Path
@@ -14,8 +17,8 @@ def require_representation(content):
         raise ValueError('V2 representation must use degrees 3-5 and at most 200 controls')
     meta = list(map(int, lines[1].split()))
     tolerance = float(lines[11].split()[4])
-    # Deliberately out-of-tolerance probes describe their construction distance;
-    # they never relax the algorithm's 1e-5 acceptance threshold.
+    # 刻意超差探针记录自身构造距离，
+    # 绝不放宽算法的 1e-5 验收阈值。
     if not (meta[7] and meta[1] == 5 and 40 <= meta[0] <= 49) and not 0 < tolerance <= 1e-5:
         raise ValueError('Positive V2 construction tolerance exceeds 1e-5')
     return p, q, nu*nv

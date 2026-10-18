@@ -1,10 +1,15 @@
+/**
+ * @file GeneralHybridValidation.h
+ * @brief 历史混合验证器及当前复用的共享状态类型。
+ * ValidateGeneralHybrid 已废弃，禁止作为回归或性能对照；当前边界验证见 GeneralRationalBoundaryValidation.h。
+ */
 #pragma once
 #include "GeneralConversion.h"
 
 namespace bspline2analytic
 {
-// Standalone experimental validator. Interior acceptance is sampled evidence,
-// NOT a continuous surface certificate. No optimizer or legacy validator runs.
+// 历史独立实验验证器：内部采用采样验收，不提供全曲面的连续证书；自身不运行优化器或更早的验证器。
+// 当前调用状态以本文件末尾的废弃说明为准。
 enum class HybridValidationStatus { Passed, NotCertified, InvalidInput, Unsupported, BudgetExceeded };
 struct GeneralHybridOptions
 {
@@ -19,10 +24,9 @@ struct GeneralHybridReport
     CheckState interiorSamples = CheckState::NotChecked;
     CheckState boundaryPosition = CheckState::NotChecked;
     CheckState boundaryTangent = CheckState::NotChecked;
-    // On successful validation, true marks an exactly point-collapsed SOURCE
-    // boundary. Its tangent is undefined and exempt, not certified as zero error.
+    // 成功验证时，true 表示源边界精确坍缩为一点；其切向无定义，因此豁免切向检查，不能解释为已认证零角误差。
     std::array<bool,4> tangentNotApplicable{};
-    // Deliberately not named distanceUpperBound: no interior continuum claim.
+    // 特意避免命名为 distanceUpperBound，因为该值不对内部连续域作出保证。
     double interiorSampleMaxDistance = 0;
     double interiorSampleMaxFiniteDistance = 0;
     double boundaryDistanceUpperBound = INFINITY;
@@ -40,8 +44,9 @@ struct GeneralHybridReport
                boundaryTangent == CheckState::Passed;
     }
 };
-// Retired on 2026-10-15. Preserve code; do not run tests or use as a benchmark.
-// Current validator: ValidateGeneralRationalBoundaries. Shared status stays usable.
+// 已于 2026-10-15 废弃。
+// 保留实现，不运行测试或性能基准。
+// 当前验证器为 ValidateGeneralRationalBoundaries；共享状态类型仍可使用。
 GeneralHybridReport ValidateGeneralHybrid(const sggk::BSplineSurface &, const AnalyticParameters &,
                                          const GeneralHybridOptions & = {});
 const char *HybridValidationStatusName(HybridValidationStatus) noexcept;

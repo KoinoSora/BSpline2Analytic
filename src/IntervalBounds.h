@@ -1,8 +1,13 @@
+/**
+ * @file IntervalBounds.h
+ * @brief 区间标量、向量及齐次 Bézier 单元的数据结构。
+ * 系数按 U 外层、V 内层存储；有理面为 p/w，所有接受判据须使用保守区间端点。
+ */
 #pragma once
 #include "Numerics.h"
 namespace bspline2analytic::detail
 {
-// Outward-rounded elementary operations; compile this module with /fp:strict.
+// 基础运算采用向外舍入；本模块须使用 /fp:strict 编译，保留浮点求界语义。
 struct I
 {
     double lo = 0, hi = 0;
@@ -89,13 +94,13 @@ struct BezierCell
 {
     BV p;
     double u0 = 0, u1 = 1, v0 = 0, v1 = 1;
-    // For rational input p is the homogeneous numerator; polynomial input has w=1.
+    // 有理输入中 p 为齐次分子；多项式输入的权重 w=1。
     BPoly w{0, 0, I(1)};
 };
 std::vector<BezierCell> ExtractCells(const sggk::BSplineSurface &);
 std::pair<BezierCell, BezierCell> Split(const BezierCell &, bool);
 BV Boundary(const BV &, BoundaryId);
-// Unlike Boundary's packed 1D result, preserve the source U/V axes and domain.
+// 与 Boundary 压成一维的返回值不同，此处保留源 U/V 轴及其参数域。
 BezierCell BoundaryCell(const BezierCell &, BoundaryId);
 I AngleRange(const BPoly &x, const BPoly &y, double reference);
 } // namespace bspline2analytic::detail

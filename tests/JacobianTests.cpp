@@ -1,3 +1,8 @@
+/**
+ * @file JacobianTests.cpp
+ * @brief 解析 Jacobian 与有限差分的历史专项回归。
+ * 包含完整旧转换链的执行已暂停；保留多步长差分及试探缓存独立性检查。
+ */
 #include "ApproximateCases.h"
 #include "SpecializedTimingChecks.h"
 #include "ApproximateInternal.h"
@@ -41,8 +46,7 @@ static void Derivatives(const tests::ReferenceCase &reference, bool transformed,
     for (size_t j = 0; j < perturb.size(); ++j)
         perturb[j] = .002 * std::sin(.83 * (j + 1));
     p = Increment(p, perturb, scale);
-    // Include stable finite-edge and finite-corner projections, in addition to
-    // the interior and boundary correspondence blocks from the source cache.
+    // 除源缓存中的内部及边界对应采样块外，还检查稳定的有限边和有限角点投影。
     auto f = FrameOf(p.parameters);
     for (auto uv :
          {std::array<double, 2>{p.domain[0] - .13, p.domain[2] + .37 * (p.domain[3] - p.domain[2])},
@@ -62,8 +66,7 @@ static void Derivatives(const tests::ReferenceCase &reference, bool transformed,
     Require(diagnostic.analyticSampleBlocks > 0 && diagnostic.fallbackSampleBlocks == 0,
             "Regular case unexpectedly fell back");
     double worstJ = 0, worstC = 0;
-    // Multi-step central differences, independently evaluating the existing
-    // value path (not the derivative formulas).
+    // 采用多个步长的中心差分，独立调用点值路径，而不复用被测导数公式。
     for (double h : {2e-6, 4e-7, 8e-8})
     {
         double ej = 0, ec = 0;
@@ -120,7 +123,7 @@ static void Derivatives(const tests::ReferenceCase &reference, bool transformed,
             Require(error < previous * .30, "Directional Taylor remainder not quadratic");
         previous = error;
     }
-    // Trial evaluations must not poison the current linearization geometry.
+    // 试探求值不能污染当前线性化几何。
     auto saved = w.jacobian;
     EvaluateResiduals(Increment(p, perturb, scale), samples, o.validation, w, w.trial);
     Require(BuildJacobian(p, samples, o, full, scale, w, diagnostic),
@@ -197,7 +200,7 @@ static void OneSided(const tests::ReferenceCase &reference)
         f.global(CanonicalPoint(p.parameters, p.domain[0], (p.domain[2] + p.domain[3]) * .5));
     samples.points.push_back(point);
     samples.RebuildIndices();
-    ActiveParameters active{{6}}; // Cylinder umax: the positive step exceeds one turn.
+    ActiveParameters active{{6}}; // 圆柱 umax 的正向扰动会超过一个整周。
     ConversionOptions o;
     EvaluationWorkspace w;
     RefinementDiagnostics d;
@@ -238,8 +241,7 @@ static void Perturbations(const std::vector<tests::ReferenceCase> &references, c
         {
             ConversionOptions o;
             o.refinement.jacobianMode = mode;
-            // Exercise Jacobians on the plane too; the default direct solver is
-            // separately covered by the Plateau regression.
+            // 平面也检查 Jacobian；默认直接标量求解器由平台回归另行覆盖。
             o.refinement.enablePlaneOffsetSolver = false;
             for (int run = -1; run < 3; ++run)
             {

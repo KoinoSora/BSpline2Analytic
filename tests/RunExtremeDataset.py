@@ -1,8 +1,8 @@
-"""Run only Extreme200, isolating each SDK call in a bounded child process.
+# 文件职责：旧 Extreme200 的历史逐例隔离运行脚本。
+# 其转换路径涉及废弃验证器，当前禁止运行；源码保留进程看门狗和输出管理方法。
 
-Timeout/crash rows contain NaN (unknown) stage timings, never invented zeros.
---resume preserves completed rows from this same batch; CTest starts a fresh run.
-"""
+"""历史 Extreme200 逐例进程隔离驱动，当前转换链禁测。
+超时/崩溃行将未知阶段耗时记为 NaN，不伪造零值；--resume 保留同批已完成记录，历史 CTest 配置从新批次开始。"""
 import argparse
 import csv
 import math
@@ -58,7 +58,7 @@ def main():
         for fixture in manifest[len(existing):]:
             index = int(fixture["id"])
             part = partdir / f"case-{index:03}.csv"
-            # Remove only this runner's old per-case output, never input geometry.
+            # 只删除本脚本旧的逐例输出，不能删除输入几何。
             part.unlink(missing_ok=True)
             part.with_name(part.stem + "-fits.csv").unlink(missing_ok=True)
             log = part.with_suffix(".log")

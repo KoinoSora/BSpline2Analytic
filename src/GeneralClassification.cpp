@@ -1,3 +1,8 @@
+/**
+ * @file GeneralClassification.cpp
+ * @brief 一般母面候选的初值构造、去重与分批评分。
+ * 生成点与评分点分离；粗评最大距离提供筛选下界，保留未尝试候选供失败后续行，评分不等于验收。
+ */
 #include "GeneralInternal.h"
 #include <random>
 namespace bspline2analytic::detail
@@ -29,9 +34,8 @@ static AnalyticParameters PlaneSeed(const std::array<SurfaceSample, 4> &p, doubl
         throw Failure(Status::IllConditioned, "Collinear plane seed");
     return Frame(Type::Plane, p[0].point, Cross(a, b));
 }
-using LineCoordinates = std::array<double, 6>; // direction, moment = position x direction
-// Column-pivoted Householder QR of A^T (6 x 4). The last two columns
-// of the orthogonal factor span null(A), without forming normal equations.
+using LineCoordinates = std::array<double, 6>; // 轴线以方向和矩表示，moment=position×direction。
+// 对 A^T（6×4）执行列主元 Householder QR，正交因子的最后两列张成 null(A)，避免构造正规方程。
 static bool AxisPencil(const std::array<V, 4> &points, const std::array<SurfaceSample, 4> &p,
                        LineCoordinates &u, LineCoordinates &v)
 {
@@ -88,8 +92,8 @@ static std::vector<TorusAxis> TorusAxes(const std::array<V, 4> &points,
     LineCoordinates u, v;
     if (!AxisPencil(points, p, u, v)) { ++diagnostics.rankDeficientGroups; return {}; }
     V ud = LinePart(u, 0), um = LinePart(u, 3), vd = LinePart(v, 0), vm = LinePart(v, 3);
-    // A line must satisfy direction . moment = 0. On the nullspace pencil
-    // s*u+t*v this is C*s^2+B*s*t+A*t^2=0, including roots with s=0.
+    // 直线的 Plücker 坐标满足 direction·moment=0。
+    // 在零空间线束 s*u+t*v 上转化为 C*s²+B*s*t+A*t²=0，必须包含 s=0 的齐次根。
     double a = Dot(vd, vm), b = Dot(ud, vm) + Dot(vd, um), c = Dot(ud, um);
     double magnitude = std::max({std::abs(a), std::abs(b), std::abs(c)});
     constexpr double eps = std::numeric_limits<double>::epsilon();
@@ -100,7 +104,7 @@ static std::vector<TorusAxis> TorusAxes(const std::array<V, 4> &points,
     if (discriminant < -roundoff) { ++diagnostics.noRealAxisGroups; return {}; }
     discriminant = std::max(0.0, discriminant);
     double root = -.5 * (b + std::copysign(std::sqrt(discriminant), b));
-    // Homogeneous stable quadratic formula also handles linear and double roots.
+    // 采用齐次形式的稳定二次求根公式，同时处理线性退化和重根。
     std::array<std::array<double, 2>, 2> roots{{{a, root}, {root, c}}};
     std::vector<TorusAxis> axes;
     for (const auto &st : roots)
@@ -130,8 +134,7 @@ static std::vector<TorusAxis> TorusAxes(const std::array<V, 4> &points,
     diagnostics.axisCount += static_cast<unsigned>(axes.size());
     return axes;
 }
-// Algebraic four-normal axis enumeration, followed by a conditioned meridian
-// circle fit. Supplemental points come only from the generation partition.
+// 先通过四条法线的代数关系枚举轴线，再对经过数值预处理的子午圆进行拟合；补充点只能来自初值生成分区。
 std::vector<AnalyticParameters> TorusSeeds(const std::array<SurfaceSample, 4> &p, double scale,
     const std::vector<SurfaceSample> &support, GeneralTorusSeedDiagnostics &diagnostics)
 {
@@ -217,9 +220,8 @@ static void ScoreInterior(GeneralScoringCandidate &candidate, SurfaceSampleConte
             case Type::Cone: {
                 V radial = f.vector({local.x, local.y, 0});
                 double length = Norm(radial);
-                // Projection onto the apex has no unique mother normal. Keep
-                // its valid distance and report the worst unsigned angle;
-                // normal diagnostics must not reject a geometrically valid seed.
+                // 投影到锥顶时母面法向不唯一。
+                // 保留有效距离，并记录最保守的无向夹角诊断；不能仅凭此法向诊断拒绝几何上有效的初值。
                 if (!(length > 0)) { score.normalMax = Pi / 2; continue; }
                 n = radial / length * std::cos(a.halfAngle) - f.z * std::sin(a.halfAngle); break;
             }
@@ -234,8 +236,7 @@ static void ScoreInterior(GeneralScoringCandidate &candidate, SurfaceSampleConte
     }
     if (!std::isfinite(candidate.weightedSquaredSum) || !std::isfinite(candidate.weightSum))
         throw Failure(Status::IllConditioned, "Nonfinite score accumulation");
-    // A coarse subset may have zero area; the remaining points can still make
-    // the full score regular. Such a subset must not reject the candidate.
+    // 粗评分子集可能面积为零，但剩余点仍可使完整评分有效，不能据此直接拒绝候选。
     score.interiorRms = candidate.weightSum > 0 ?
         std::sqrt(candidate.weightedSquaredSum / candidate.weightSum) : std::numeric_limits<double>::infinity();
 }
@@ -271,8 +272,7 @@ static bool Similar(double a, double b, const GeneralConversionOptions &o)
     return std::abs(a - b) <= o.similarScoreAbsoluteRatio * o.fitting.validation.distanceTolerance +
         o.similarScoreRelativeTolerance * std::max(a, b);
 }
-// Spread a small, deterministic support set over the generation partition.
-// This neither samples the source again nor consumes the random attempt budget.
+// 在初值生成分区内确定性地分散选取少量支撑点；不重新调用源面求值，也不消耗随机尝试预算。
 static std::vector<SurfaceSample> SeedSupport(const std::vector<SurfaceSample> &points,
                                               const std::vector<size_t> &indices)
 {
@@ -300,6 +300,9 @@ static std::vector<SurfaceSample> SeedSupport(const std::vector<SurfaceSample> &
     }
     return support;
 }
+// 在固定尝试预算内按曲面自由度构造母面初值，失败也消耗尝试；生成集和独立评分集分离。
+// 先按几何去重再评分，候选池保留未被首批选中的母面，以便认证失败后续行。
+// 初值预算和采样评分不提供搜索完备性，也不证明连续几何误差满足容差。
 GeneralCandidatePool InitializeGeneralCandidates(SurfaceSampleContext &context, const GeneralConversionOptions &o,
                                                  GeneralClassificationDiagnostics &diagnostics)
 {
@@ -395,8 +398,7 @@ GeneralCandidatePool InitializeGeneralCandidates(SurfaceSampleContext &context, 
                                 std::abs(a.halfAngle - existing.halfAngle) < 1e-6 &&
                                 (type == Type::Sphere || Parallel(Get(a.axis), Get(existing.axis), 1e-6));
                         }
-                        // Deduplication is geometric, before point scoring. It
-                        // does not consume extra sample groups to fill a quota.
+                        // 先按几何去重，再进行点评分；不会为补足候选数量额外抽取采样组。
                         if (duplicate)
                         {
                             ++diagnostics.duplicateCandidateCount;
@@ -408,7 +410,7 @@ GeneralCandidatePool InitializeGeneralCandidates(SurfaceSampleContext &context, 
                         candidate.seed.score.type = type;
                         candidate.seed.score.degreesOfFreedom = Dof(type);
                         candidate.seed.score.seedGroup = groupIndex;
-                        // Undefined until CompleteScore evaluates the boundary.
+                        // CompleteScore 完成边界求值前，该量尚无定义。
                         candidate.seed.score.boundaryMax = std::numeric_limits<double>::infinity();
                         family.push_back(std::move(candidate));
                     }
@@ -419,9 +421,8 @@ GeneralCandidatePool InitializeGeneralCandidates(SurfaceSampleContext &context, 
             {if(group.failure==GeneralSeedFailure::None) group.failure=GeneralSeedFailure::ConstructionFailed;}
         }
     }
-    // Build the same deduplicated mother pool in both modes before scoring.
-    // Otherwise a representative failing only during full scoring can suppress
-    // different near-duplicates depending on when that failure is discovered.
+    // 两种评分模式均先生成同一个去重母面池。
+    // 否则，某代表候选仅在完整评分时失败，会因失败发现时机不同而抑制不同的近重复候选。
     for (auto &family : pool.families)
         for (auto &candidate : family)
         {
@@ -442,6 +443,8 @@ GeneralCandidatePool InitializeGeneralCandidates(SurfaceSampleContext &context, 
     return pool;
 }
 static double PrimaryScore(const GeneralCandidateScore &s) { return std::max(s.interiorMax, s.boundaryMax); }
+// 从既有池取下一批候选，不重新抽样补足初值。粗评最大距离是完整最大距离的下界，
+// 只延后已不具竞争力的补评；边界评分完成后再排序，并保留后备候选。
 std::vector<GeneralSeed> NextGeneralCandidateBatch(GeneralCandidatePool &pool, SurfaceSampleContext &context,
     const GeneralConversionOptions &o, GeneralClassificationDiagnostics &diagnostics)
 {
@@ -465,13 +468,13 @@ std::vector<GeneralSeed> NextGeneralCandidateBatch(GeneralCandidatePool &pool, S
             const auto &x = family[a].seed.score, &y = family[b].seed.score;
             if (PrimaryScore(x) != PrimaryScore(y)) return PrimaryScore(x) < PrimaryScore(y);
             if (x.interiorRms != y.interiorRms) return x.interiorRms < y.interiorRms;
-            return a < b; // Original generation order on exact ties.
+            return a < b; // 分数完全相同时保留原始生成顺序。
         };
         for (size_t i : pending)
         {
             context.CheckDeadline("classification_scores");
-            // Only the maximum distance is a lower bound. A coarse RMS is NOT
-            // a lower bound on the full weighted RMS. Equal maxima must finish.
+            // 只有子集最大距离是完整最大距离的下界；粗评均方根不是完整加权均方根的下界。
+            // 最大距离相等的候选必须继续补评。
             if (best.size() == o.candidatesPerType && lower(i) > PrimaryScore(family[best.back()].seed.score)) break;
             auto &c = family[i];
             if (c.stage == GeneralScoreStage::Coarse) CompleteScore(c, context, pool.remainingScoreIndices, diagnostics);
@@ -493,15 +496,14 @@ std::vector<GeneralSeed> NextGeneralCandidateBatch(GeneralCandidatePool &pool, S
     else diagnostics.backupCandidateCount += static_cast<unsigned>(candidates.size());
     if (!candidates.empty()) { ++pool.batches; ++diagnostics.batchCount; }
     std::stable_sort(candidates.begin(), candidates.end(), [](const GeneralSeed &a, const GeneralSeed &b) {
-        // Boundary error participates in priority, but never in final acceptance.
+        // 此处采样边界误差只决定候选优先级；最终是否接受仍由独立验证器决定。
         double x = std::max(a.score.interiorMax, a.score.boundaryMax);
         double y = std::max(b.score.interiorMax, b.score.boundaryMax);
         if (x != y) return x < y;
         if (a.score.interiorRms != b.score.interiorRms) return a.score.interiorRms < b.score.interiorRms;
         return a.score.degreesOfFreedom < b.score.degreesOfFreedom;
     });
-    // Apply preference after a strict sort: an approximate comparator would not
-    // be transitive and would violate std::sort's ordering requirements.
+    // 先按严格顺序排序，再施加类型偏好；近似比较器不满足传递性，会违反 std::sort 的严格弱序要求。
     for (size_t i = 0; i < candidates.size(); ++i)
         if (candidates[i].parameters.type == Type::Torus)
             for (size_t j = i + 1; j < candidates.size(); ++j)

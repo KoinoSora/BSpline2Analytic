@@ -1,9 +1,9 @@
-"""Compare two revisions of the CURRENT NURBS boundary validator only.
+# 文件职责：当前有理边界验证器的定向版本比较。
+# 使用独立命令隔离旧二进制，固定输入并区分分类、验证与审计开销。
 
-The rational-only command rejects retired hybrid-comparison executables. Five
-rounds alternate process order; source certificates and SDK output audits remain
-outside algorithm timers. This is a selected regression, not a dataset sweep.
-"""
+"""只比较当前 NURBS 边界验证器的两个版本。
+专用 rational-only 命令拒绝旧混合对照程序；五轮交替进程顺序，来源证书和 SDK 输出审计位于算法计时外。
+这是定向回归，不是全数据集遍历。"""
 import argparse
 import csv
 import hashlib

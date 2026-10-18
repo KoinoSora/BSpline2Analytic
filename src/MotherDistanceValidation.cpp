@@ -1,3 +1,8 @@
+/**
+ * @file MotherDistanceValidation.cpp
+ * @brief 母面距离与边界联合切向验证的流程控制。
+ * 先查全域位置，再准备对应边界并认证位置/联合切向；映射改变时清除旧界，异常与预算耗尽明确区分。
+ */
 #include "MotherDistanceInternal.h"
 
 namespace bspline2analytic::detail::mother
@@ -53,8 +58,7 @@ bool Run(paired::AnalysisContext &context, const AnalyticPatch &patch,
     boundary.validation.distanceTolerance = options.position.distanceTolerance;
     if (!(options.jointTangentToleranceDeg > 0 && options.jointTangentToleranceDeg < 90))
         throw Failure(Status::InvalidInput, "Joint tangent tolerance must be finite and in (0,90) degrees");
-    // CheckApproximateInput validates this legacy field. Only the independent
-    // joint budget controls the third validator's actual angle acceptance.
+    // CheckApproximateInput 会检查这个历史字段；第三验证器实际角度验收只由独立的 U/V 联合预算控制。
     boundary.validation.boundaryTangentToleranceDeg = options.jointTangentToleranceDeg;
     ValidateOptions(options.position);
     CheckApproximateInput(s, boundary.validation, false);
@@ -110,8 +114,7 @@ bool Run(paired::AnalysisContext &context, const AnalyticPatch &patch,
     bool boundaryTightened = false;
     for (unsigned attempt = 0; attempt < (boundary.enablePiecewiseMapping ? 2u : 1u); ++attempt)
     {
-        // A failed refinement can partially change a map. Never attach a bound
-        // from the previous correspondence to the maps returned after failure.
+        // 失败的映射细化也可能已修改部分映射；不能将旧对应关系的上界附到失败后返回的新映射上。
         out.boundaryPosition = {};
         out.boundaryTangentU = {};
         out.boundaryTangentV = {};
@@ -142,8 +145,7 @@ bool Run(paired::AnalysisContext &context, const AnalyticPatch &patch,
                 out.boundaryPosition.state == CheckState::Exceeded ||
                 out.boundaryJointTangent.state == CheckState::Exceeded)
                 break;
-            // Only unresolved interval checks warrant a tighter local source.
-            // Keep the same correspondence and share the existing node budget.
+            // 只有尚未判定的区间检查才值得收紧局部源面包络；保持同一对应关系，并共享原节点预算。
             Measure time(out.sourceBoundaryMs);
             source.PrepareBoundary(out, true);
             boundaryTightened = true;
@@ -215,7 +217,7 @@ MotherDistanceValidationReport Validate(paired::AnalysisContext &context,
     out.vMap = std::move(aux.vMap);
     if (out.status != PairedValidationStatus::Passed)
         out.correspondence = CheckState::Unresolved;
-    // Only completed individual checks retain finite bounds after an early exit.
+    // 提前退出后，仅已完整完成的独立检查可保留有限上界。
     for (auto *check : {&out.motherDistance, &out.boundaryPosition, &out.boundaryTangentU,
                         &out.boundaryTangentV, &out.boundaryJointTangent})
         if (check->state != CheckState::Passed)

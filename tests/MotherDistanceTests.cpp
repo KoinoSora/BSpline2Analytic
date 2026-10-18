@@ -1,3 +1,8 @@
+/**
+ * @file MotherDistanceTests.cpp
+ * @brief 母面距离及 U/V 正比例残差认证的单元测试。
+ * 覆盖通过、超限见证、无结论与细分；联合充分条件失败不能误报真实法向角超限。
+ */
 #include "Dataset500.h"
 #include "MotherDistanceInternal.h"
 #include <Foundation/init.h>
@@ -105,8 +110,7 @@ void JointTangentUnit()
     auto shared = check(.06, .06);
     Require(shared.boundaryJointTangent.state == CheckState::Passed &&
         shared.boundaryJointTangent.upperBound > .08, "Joint budget underestimates combined error");
-    // Both parameter directions rotate within the SAME plane. The actual normal
-    // does not change, but the chosen sufficient joint condition must reject.
+    // 两个参数方向在同一平面内旋转，真实法向不变，但选用的联合充分条件仍应拒绝；用于区分充分条件与真实法向误差。
     auto failed = check(.08, .08);
     Require(failed.boundaryJointTangent.state == CheckState::Exceeded &&
         failed.boundaryJointTangent.hasWitness &&
@@ -145,7 +149,7 @@ void ResidualTangentUnit()
         return p;
     };
     BV unitU{scalar({1}), scalar({0}), scalar({0})};
-    BV unitV{scalar({0}), scalar({0}), scalar({1})}; // Orthogonal to every target direction below.
+    BV unitV{scalar({0}), scalar({0}), scalar({1})}; // 与下方所有目标方向正交。
     auto check = [&](const BV &a, const BV &b, unsigned depth) {
         mother::BoundaryTangents source, target;
         for (unsigned edge = 0; edge < 4; ++edge)
@@ -161,15 +165,14 @@ void ResidualTangentUnit()
         (void)mother::ValidateJointTangents(source, target, options, aux, products, out);
         return out;
     };
-    // Variable speed and direction: A=lambda B must pass without subdivision.
+    // 速度和方向均可变化；A=lambda*B 应无需细分即可通过。
     paired::Products products;
     BV varying{scalar({1, 1}), scalar({0, 1}), scalar({0, 0})};
     auto parallel = check(products.Mul(varying, scalar({2, 3, 7})), varying, 0);
     Require(parallel.boundaryJointTangent.state == CheckState::Passed &&
         parallel.boundaryJointTangent.upperBound < 1e-7 && parallel.tangentResidualSplits == 0,
         "Positive polynomial speed scaling mistaken for angle error");
-    // The optimal scale is rational here. Failure of a quadratic approximation
-    // must be unresolved, NOT a witnessed violation, and refitting must converge.
+    // 最优比例为有理函数；二次近似未通过时应报告无法判定，不能误报已有超限见证，且细分后重新拟合应收敛。
     BV varyingSpeed{scalar({1, 3}), scalar({0, 0}), scalar({0, 0})};
     auto loose = check(unitU, varyingSpeed, 0);
     Require(loose.boundaryJointTangent.state == CheckState::Unresolved &&
@@ -177,7 +180,7 @@ void ResidualTangentUnit()
     auto refined = check(unitU, varyingSpeed, 12);
     Require(refined.boundaryJointTangent.state == CheckState::Passed &&
         refined.tangentResidualSplits > 0, "Residual scale was not refitted after subdivision");
-    // A defect vanishes at all three scale-fitting nodes (0,1/2,1).
+    // 构造在三个比例拟合节点 0、1/2、1 上都消失的缺陷，检查点值通过不能替代连续认证。
     BV hidden{scalar({1, 1, 1, 1}), scalar({0, .1 / 6, -.1 / 6, 0}), scalar({0, 0, 0, 0})};
     auto missedBySamples = check(hidden, unitU, 12);
     Require(missedBySamples.boundaryJointTangent.state == CheckState::Exceeded &&
@@ -189,7 +192,7 @@ void ResidualTangentUnit()
     auto enclosed = check(uncertain, unitU, 0);
     Require(enclosed.boundaryJointTangent.state == CheckState::Unresolved &&
         !enclosed.boundaryJointTangent.hasWitness, "Coefficient envelope replaced by its midpoint");
-    // Independent point audit of a nonparallel polynomial direction field.
+    // 对非平行多项式方向场作独立点值审计。
     BV tilted = varying; tilted.z = scalar({.0001, .0003});
     auto accepted = check(products.Mul(tilted, scalar({2, 3, 7})), varying, 12);
     Require(accepted.boundaryJointTangent.state == CheckState::Passed,
@@ -264,9 +267,8 @@ void Unit(const std::filesystem::path &dir)
             "Large translation lost source enclosure or certificate");
     }
     {
-        // Coefficients exceed tolerance, but the entire cubic is below it:
-        // z(t)=4.5e-5*t*(1-t)*(1-2*t). A root-only bound must fail, whereas
-        // residual subdivision can prove the bound without rebuilding products.
+        // 控制系数超容差，但整个三次函数 z(t)=4.5e-5*t*(1-t)*(1-2*t) 均在容差内。
+        // 根节点上界应失败，残差细分则能在不重建乘积的情况下证明通过。
         auto s = Plane(0);
         for (unsigned i = 0; i < 4; ++i)
             for (unsigned j = 0; j < 4; ++j)
@@ -365,8 +367,7 @@ void Batch(const std::filesystem::path &dir, const std::filesystem::path &file)
         "surface_depth,mapping_attempts,source_cache_hits,mother_or_paired_bound,boundary_position_bound,"
         "paired_tangent_bound,paired_normal_bound,tangent_u_bound_deg,tangent_v_bound_deg,"
         "joint_tangent_bound_deg,joint_sine_squared_bound,joint_tangent_failure,source_certificate_bound,message\n";
-    // Both current validators get independent cold source caches and the same
-    // real first candidate. Alternate their order to reduce systematic bias.
+    // 两个当前验证器使用独立冷缓存和同一个实际首候选；交替执行顺序以降低系统偏差。
     for (unsigned warm : {301u, 401u})
     {
         auto c = ReadDatasetCase(dir / CaseFilename(warm));

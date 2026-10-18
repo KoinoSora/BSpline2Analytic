@@ -1,3 +1,8 @@
+/**
+ * @file GeneralExtremeCertificate.cpp
+ * @brief 历史一般极端输入的独立来源认证工具。
+ * 包含三角参数图与区间包络，源码保留不代表允许重跑归档数据。
+ */
 #include "GeneralExtremeDataset.h"
 #include <functional>
 #include <sstream>
@@ -8,8 +13,7 @@ using namespace detail;
 namespace
 {
 BPoly ConstantP(I x){return BPoly(0,0,x);}
-// Taylor polynomial with an outward-rounded Lagrange remainder, represented as
-// an interval constant. No SDK analytic evaluation participates in this oracle.
+// Taylor 多项式加向外舍入 Lagrange 余项，余项以区间常数表示；参考模型不调用 SDK 解析求值。
 BPoly TrigP(const BPoly &angle,bool cosine)
 {
     I range=angle.range();double center=range.lo+(range.hi-range.lo)*.5;
@@ -66,8 +70,7 @@ bool ValidChart(const GeneralFixture &c)
     }
     if(collapsed==1&&unique.size()==3)
     {
-        // Exactly one consecutive pair is equal. The bilinear determinant is
-        // a nonzero triangle determinant times s, 1-s, t or 1-t.
+        // 恰有一对相邻参数角点相等；双线性行列式为非零三角形行列式乘 s、1-s、t 或 1-t。
         I ax=I(unique[1].X())-I(unique[0].X()),ay=I(unique[1].Y())-I(unique[0].Y());
         I bx=I(unique[2].X())-I(unique[0].X()),by=I(unique[2].Y())-I(unique[0].Y());
         I det=ax*by-ay*bx;return det.lo>0||det.hi<0;

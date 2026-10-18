@@ -1,4 +1,7 @@
-"""Compare a Git baseline with the built Release library on the 500 positives."""
+# 文件职责：旧一般分类数据集的历史性能对照入口，已禁用。
+# 主函数主动拒绝运行；保留 Git 基线提取方法供历史追溯。
+
+"""历史 500 正例的 Git 基线与 Release 库比较入口；旧数据已归档，主函数禁止执行。"""
 import argparse
 import os
 from pathlib import Path
