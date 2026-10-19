@@ -13,6 +13,23 @@ namespace
 constexpr unsigned N = 14;
 using Row = std::array<double,N>;
 using IRow = std::array<I,N>;
+constexpr unsigned Power(unsigned a,unsigned n)
+{ unsigned value=1;for(unsigned i=0;i<n;++i)value*=a;return value; }
+constexpr auto QuarterBasis()
+{
+    std::array<std::array<std::array<double,6>,5>,6> basis{};
+    for(unsigned n=0;n<=5;++n)for(unsigned t=0;t<=4;++t)
+    {
+        unsigned choose=1;
+        for(unsigned k=0;k<=n;++k)
+        {
+            // 分子为 <=4^n 的整数，分母为 4^n；n<=5 时结果在 binary64 中精确。
+            basis[n][t][k]=double(choose*Power(t,k)*Power(4-t,n-k))/double(1u<<(2*n));
+            if(k<n)choose=choose*(n-k)/(k+1);
+        }
+    }
+    return basis;
+}
 struct LocalLimit {};
 struct ClockGuard
 {
@@ -128,19 +145,24 @@ void Compute(const sggk::BSplineSurface &s,double tolerance,AnalyticExclusionRep
     std::vector<IRow> a;a.reserve(cells.size()*25);
     double box=0;
     for(const auto &cell:cells)
-        for(unsigned u=0;u<=4;++u)for(unsigned v=0;v<=4;++v)
+    {
+        clock.Check();
+        const auto x=ExclusionQuarterGrid(cell.p.x),y=ExclusionQuarterGrid(cell.p.y),
+                   z=ExclusionQuarterGrid(cell.p.z),wGrid=ExclusionQuarterGrid(cell.w);
+        for(unsigned point=0;point<25;++point)
         {
             clock.Check();
-            I w=Evaluate(cell.w,u*.25,v*.25).c[0];
+            I w=wGrid[point];
             if(!w.finite()||w.lo<=0){report.message="Uncertified rational denominator";return;}
-            IV p{(Evaluate(cell.p.x,u*.25,v*.25).c[0]/w-I(center[0]))/I(scale),
-                 (Evaluate(cell.p.y,u*.25,v*.25).c[0]/w-I(center[1]))/I(scale),
-                 (Evaluate(cell.p.z,u*.25,v*.25).c[0]/w-I(center[2]))/I(scale)};
+            IV p{(x[point]/w-I(center[0]))/I(scale),
+                 (y[point]/w-I(center[1]))/I(scale),
+                 (z[point]/w-I(center[2]))/I(scale)};
             auto row=Features(p);
             for(I value:row)if(!value.finite()){report.message="Nonfinite feature interval";return;}
             box=std::max({box,p.x.absMax(),p.y.absMax(),p.z.absMax()});
             a.push_back(row);
         }
+    }
     report.witnesses=static_cast<unsigned>(a.size());
     std::vector<Row> b;
     if(a.size()<N||!LeftInverse(a,b,clock))
@@ -174,6 +196,27 @@ void Compute(const sggk::BSplineSurface &s,double tolerance,AnalyticExclusionRep
     {report.status=AnalyticExclusionStatus::CertifiedExcluded;report.message="All five analytic mother types excluded by certified distance lower bound";}
     else report.message="Certified distance lower bound does not exceed tolerance";
 }
+}
+std::array<I,25> ExclusionQuarterGrid(const BPoly &p)
+{
+    if(p.u>5||p.v>5)throw std::invalid_argument("Exclusion grid degree exceeds five");
+    static constexpr auto basis=QuarterBasis();
+    std::array<std::array<I,5>,6> rows{};
+    std::array<I,25> grid{};
+    // 同一 V 样本的行收缩供全部 U 样本复用，避免 25 次通用 de Casteljau 和临时 vector 分配。
+    for(unsigned i=0;i<=p.u;++i)
+    {
+        rows[i][0]=p.at(i,0);rows[i][4]=p.at(i,p.v);
+        for(unsigned v=1;v<4;++v)
+            for(unsigned j=0;j<=p.v;++j)rows[i][v]=rows[i][v]+p.at(i,j)*I(basis[p.v][v][j]);
+    }
+    for(unsigned v=0;v<5;++v)
+    {
+        grid[v]=rows[0][v];grid[20+v]=rows[p.u][v];
+        for(unsigned u=1;u<4;++u)
+            for(unsigned i=0;i<=p.u;++i)grid[u*5+v]=grid[u*5+v]+rows[i][v]*I(basis[p.u][u][i]);
+    }
+    return grid;
 }
 void CertifyAnalyticExclusion(const sggk::BSplineSurface &s,double tolerance,const ExecutionDeadline &deadline,
                              AnalyticExclusionReport &report,double localBudgetMs)

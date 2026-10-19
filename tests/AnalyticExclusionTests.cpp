@@ -6,6 +6,7 @@
 #include "ReferenceCases.h"
 #include <Foundation/init.h>
 #include <cfenv>
+#include <cstdint>
 #include <iostream>
 using namespace bspline2analytic;
 using namespace bspline2analytic::detail;
@@ -39,6 +40,37 @@ sggk::BSplineSurfacePtr Bump(double scale,double translation)
 }
 void Run()
 {
+    // 独立整数 de Casteljau 给出精确点值；统一系数半径按分割统一性原样传播。
+    // 覆盖 0..5 次的全部 36 种张量次数，含常量分母，检查 900 个区间确实包围精确范围。
+    unsigned random=789;
+    for(unsigned degreeU=0;degreeU<=5;++degreeU)for(unsigned degreeV=0;degreeV<=5;++degreeV)
+    {
+        BPoly polynomial(degreeU,degreeV);std::array<std::array<int64_t,6>,6> coefficients{};
+        constexpr double radius=1./1024;
+        for(unsigned i=0;i<=degreeU;++i)for(unsigned j=0;j<=degreeV;++j)
+        {
+            random=1664525u*random+1013904223u;
+            coefficients[i][j]=int64_t(random%1000001)-500000;
+            polynomial.at(i,j)=I(double(coefficients[i][j])-radius,double(coefficients[i][j])+radius);
+        }
+        auto grid=ExclusionQuarterGrid(polynomial);
+        for(unsigned u=0;u<5;++u)for(unsigned v=0;v<5;++v)
+        {
+            std::array<int64_t,6> rows{};
+            for(unsigned i=0;i<=degreeU;++i)
+            {
+                auto values=coefficients[i];
+                for(unsigned n=degreeV;n>0;--n)for(unsigned j=0;j<n;++j)
+                    values[j]=int64_t(4-v)*values[j]+int64_t(v)*values[j+1];
+                rows[i]=values[0];
+            }
+            for(unsigned n=degreeU;n>0;--n)for(unsigned i=0;i<n;++i)
+                rows[i]=int64_t(4-u)*rows[i]+int64_t(u)*rows[i+1];
+            const double exact=double(rows[0])/double(uint64_t(1)<<(2*(degreeU+degreeV)));
+            const I enclosed=grid[u*5+v];
+            Require(enclosed.lo<=exact-radius&&enclosed.hi>=exact+radius,"Quarter grid failed exact integer interval oracle");
+        }
+    }
     auto cases=tests::MakeCases();
     for(const auto &c:cases)
     {
