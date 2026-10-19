@@ -6,6 +6,7 @@
 #pragma once
 #include "MotherDistanceValidation.h"
 #include "GeneralRationalBoundaryValidation.h"
+#include "AnalyticExclusion.h"
 
 namespace bspline2analytic
 {
@@ -33,6 +34,8 @@ struct SequentialConversionResult
     // 单位均为 ms；totalMs 包含失败尝试、调度与异常清理，不包括调用方日志/文件输出。
     double totalMs = 0, isoMs = 0, fallbackMs = 0;
     unsigned isoCandidates = 0, fallbackCandidates = 0, optimizationIterations = 0;
+    // 首次准备进入母面优化时至多尝试一次；仅证书严格超容差时提前完成几何拒绝。
+    AnalyticExclusionReport exclusion;
     RecognitionResult exact;
     std::optional<AnalyticPatch> isoPatch;
     MotherDistanceValidationReport mother;

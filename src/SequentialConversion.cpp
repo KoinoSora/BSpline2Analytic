@@ -6,6 +6,7 @@
 #include "SequentialConversion.h"
 #include "MotherDistanceInternal.h"
 #include "GeneralRationalBoundaryInternal.h"
+#include "AnalyticExclusionInternal.h"
 
 namespace bspline2analytic
 {
@@ -102,6 +103,11 @@ void Fallback(const sggk::BSplineSurface &s, const SequentialConversionOptions &
             if (!r.fallback.Passed() && fit.refinement.maxRounds && fit.refinement.maxIterations)
             {
                 deadline.Check("fallback_optimization");
+                if (!r.exclusion.attempts)
+                {
+                    CertifyAnalyticExclusion(s,fit.validation.distanceTolerance,deadline,r.exclusion);
+                    if (r.exclusion.Excluded()) { r.message=r.exclusion.message; return; }
+                }
                 if (!base) base = GeneralSamples(samples);
                 EvaluationWorkspace workspace;
                 auto problem = MotherRefinementProblem(*base,fit);
