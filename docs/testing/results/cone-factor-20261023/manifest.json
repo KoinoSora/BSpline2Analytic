@@ -1,0 +1,988 @@
+{
+  "started_utc": "2026-10-23T05:55:27.910338+00:00",
+  "cases": [
+    1,
+    101,
+    201,
+    203,
+    205,
+    207,
+    209,
+    211,
+    213,
+    215,
+    221,
+    223,
+    225,
+    227,
+    229,
+    231,
+    233,
+    235,
+    241,
+    243,
+    245,
+    247,
+    249,
+    251,
+    253,
+    255,
+    261,
+    263,
+    265,
+    267,
+    269,
+    271,
+    273,
+    275,
+    281,
+    283,
+    285,
+    287,
+    289,
+    291,
+    293,
+    295,
+    301,
+    351,
+    381,
+    383,
+    391,
+    395,
+    401,
+    451,
+    481,
+    485,
+    489,
+    491,
+    497
+  ],
+  "runs": 5,
+  "baseline_commit": "195b8fd1e7fbe2a36f1e468afb2a7c26a079bbd3",
+  "baseline_sha256": "b4da4aef7fa84f58c262193b0e8ce5b2fcfb8d2ad331aad6013063c83db38c1d",
+  "exe_sha256": "aaaccc45a148e48a1efa7514ccb9b4224c44c2b91b35489570a857ae11950d0d",
+  "probe_sha256": "431ed820c1de60897b4b2f2dee615b5f3190a4bd99cb19411b9325e935d43424",
+  "source_sha256": {
+    "CMakeLists.txt": "ee9bfe15c0700348152da3178e6b8c50a9e6ad68dc5e0282f31687d05e6e88df",
+    "tests\\BenchmarkMotherConeFactor.py": "e8a7e8d95b293fd2e16a2c85ccabee774618833f662300941185f2175cf67640",
+    "src\\AnalyticExclusion.cpp": "61577e751bee66f53482efe054cc57771b8d5801cfeaa3b04d283a93e44d17dd",
+    "src\\AnalyticExclusionInternal.h": "d427ca4876e39aa2d0def72f25fca552fa2525c5a824a44fa0c715cd7d0c02c6",
+    "src\\AnalyticJacobian.cpp": "949ec866c96ad37cf88cc33a8ebba3fc2ad83b4062bf9c601bf092acc65572b2",
+    "src\\AnalyticReconstruction.cpp": "be3ac07886c0b9c46b4a52d43e442c6bc9a223815d5eb75b77984918ea189957",
+    "src\\AnalyticReconstruction.h": "ea2cc1613863f5b05fd819d05f41efddc3ff0238786b543aa383c6b634307714",
+    "src\\ApproximateConversion.cpp": "f7fe3cab8def51945a6ec944565719f7065619a24d6ded0e4432f71c2b582cd7",
+    "src\\ApproximateEvaluation.cpp": "296c2b52935f1de693e51138b397fbab383a3ee5a79fabd3abfdba9f1d1d585a",
+    "src\\ApproximateGeometry.cpp": "457f03675eadc51a65fb17a8858b6969cfd9abcdae970310329087c92a6e2294",
+    "src\\ApproximateInternal.h": "244b73a16856a93b009ef3766259aa2879b16eed5812d31ac3f433cd0e7cb722",
+    "src\\ApproximateNumerics.cpp": "94c317ad1b79e7ec9cae80c30bebbe50c8ee9de5b16e696d78349e50de6e25d0",
+    "src\\BoundaryAnalysis.cpp": "09698b10ad5d546f60c65a03a18820bf2feb11f513529cfcd49fa571d29bc721",
+    "src\\BoundaryAnalysis.h": "bdd3b1a3851d369c025b21652bae1904eab4e1ec23cd854db46c653903b6da4c",
+    "src\\BSpline2Analytic.cpp": "0b585aaa291006ebc5679e972e2da21948bce47c91a2d8fdada17cce80f1422e",
+    "src\\CandidateRefinement.cpp": "d3330bf538217aa29d71d51a50f5ca64a303729e5054b38c62f6672c4018f717",
+    "src\\ConversionValidation.cpp": "1844aee21776751d6145cc37f4f04fb61182d588dad175cf7fa07826639fbda3",
+    "src\\ExecutionDeadline.h": "2dc2a6710d3cf3b85acbf25d1955d39610889753f9b7ae3c8494ab72d6463f6b",
+    "src\\GeneralBoundaryEnvelope.cpp": "b4e0bbf01b1f9f0335009a6fa5a280c6969f7d02ee016af94f4ce6e6dff09491",
+    "src\\GeneralBoundaryError.cpp": "135d88dc76ee19ba20c680d1c803d3289d448467447ad11a28593b8fc822b830",
+    "src\\GeneralClassification.cpp": "e16f1a7b285f24d2b5d2b91807a468e297986eaa1f54d8dd9edc37dd6a688653",
+    "src\\GeneralConversion.cpp": "4c4bc209a5cd36f6c9eeecde1bcd09e4eb847fdef40b38bee3903d95292a44ba",
+    "src\\GeneralConversionValidation.cpp": "ecad58cff8169d00b083d43f48a5f50fb601501d95d6021af99254376372458e",
+    "src\\GeneralGeometry.cpp": "1f8a42c04e97fa902da81fda4aa60dd25257833d44d59716cc65c3fb72455abb",
+    "src\\GeneralHybridInternal.h": "d571e8d7e5b432ff0f1f11451926f562fda7720760059215f6bf1435bae8f0b5",
+    "src\\GeneralHybridValidation.cpp": "4935cb0a923b6c1cc26230ffb8f90df45c46f4b5587bb892dc4aabc434307160",
+    "src\\GeneralInternal.h": "412b5eb5b172c6fcb17b258309be0822d05c7231d5bb48684c35aefe145954ef",
+    "src\\GeneralPairedBounds.cpp": "1446d93b57c23d9f20221afb5924db2f17ae1c4a5f48848f307f95d342dbc43e",
+    "src\\GeneralPCurve.cpp": "5d3caa20fee44368b8ee14a168d5a560ac357e23005d1e7f31ed1906bd9b19b4",
+    "src\\GeneralRationalBoundaryCurves.cpp": "63c7e1923832b787078e8c8f681257df3c2a7839499c0068e3e02adf1ea9f1d8",
+    "src\\GeneralRationalBoundaryInternal.h": "3df0244d3d0ec78f144c3f3844b98c08a8d78ca938bab6a27e371175a9c7f20b",
+    "src\\GeneralRationalBoundaryRecovery.cpp": "01afbc4d9d3c4e32fd6f44b5cbe730e0aedad81b3054738b9b4012a79497229f",
+    "src\\GeneralRationalBoundaryValidation.cpp": "c2963ae54aa6801cd35e854d8390200bd9157561aa64b0c83059cd83d2c95fb4",
+    "src\\GeneralRefinement.cpp": "aca774cd3ee11ad1e33a1ac94343d7f96683d0c1b19fcbd822badd21afb57d83",
+    "src\\GeneralSeedNumerics.cpp": "669e5e650d611882fdf641a509da2abd1e3bcc545e408bffb4a2696d87926572",
+    "src\\GeneralSphereChart.cpp": "01136d82c3e73d2e88569ae1052730177c44aa2e76c62156f15375cdd9ca185d",
+    "src\\IntervalBounds.cpp": "b76d2060f327ab3f7d3df28d688de4abab4df5f304cf827a665e2bd8dfcfca81",
+    "src\\IntervalBounds.h": "671d3551cf7db83835677f3527634ade8bc3ca3f7d8665153085567036b45a2c",
+    "src\\IsoCurveAnalysis.cpp": "9ce65d3c4c3485eeab4a504e7ca99c8c2e2da0991eec9c748bdf703124215db1",
+    "src\\MotherConeFactor.cpp": "5f649918d81c410336881480ca8c1f82cd0742100e38c8cb9afbb70c7d07ee64",
+    "src\\MotherConeFactor.h": "f5a25a014bf56b7a14649916a167966587600f44643ae190d90d676847e3159e",
+    "src\\MotherDistanceBoundary.cpp": "eb1145418ebe3729e7e8ae5a26da2bedbb6d1e51040c114f0c2a002a51e0a981",
+    "src\\MotherDistanceBounds.cpp": "552cbc2a7e013830c9871b9edaa0575830cdd8e95b35fd8e1b3f269cd68d40ce",
+    "src\\MotherDistanceInternal.h": "dbeb0a0e9920e42d1b03c1c10bfd3468ebcef1e14651f6eb0a5515abe497480b",
+    "src\\MotherDistanceValidation.cpp": "684892617672043ad087cf1febfe9215c3c2399e3530dc2a8f4f5eacc74a3d15",
+    "src\\MotherSourcePreparation.cpp": "6cc9a0fb8cb7e2278d1a8fe62da298ca2f9c3400730b462785f24d8e2e92b98f",
+    "src\\MotherSourcePreparation.h": "380ef8ace0ca0a8140c347c2b253e466efa751224eff37205479e1481ff30eaa",
+    "src\\MotherTangentValidation.cpp": "bdccd28eaff81c69d3719548533f37d94a03e9871d06faf1abe98cf5ff292ae0",
+    "src\\MotherTangentValidation.h": "0bdeb108ea5255139f5d9ab446555c60148ed03d709944158d9d867794abbaca",
+    "src\\Numerics.cpp": "37f9d4f5628d6da66f281690bea4a3c1ab70b8d594ec10576c60cfda3ef393c4",
+    "src\\Numerics.h": "cacafd3e14cb9bb2d863901947da5a5babae208543c33c6864dfc2042af48df8",
+    "src\\PairedBoundaryValidation.cpp": "3295a3f9e83d8ac2f63b6865a1984d51cdd86ea68c199fa74b5a3717dfe026ed",
+    "src\\PairedConversionValidation.cpp": "551b9e2e6e5033e8cda2f5d6493fd429fb455856fc42d2c6d25e0bb7d93c67d2",
+    "src\\PairedPositionBounds.cpp": "ca1f8e53590dd9ccbf540c26c293e42c65a62410024fc5db18d244eede313c30",
+    "src\\PairedRationalChart.cpp": "0fbd259240be3f11639457f7ca6414e3e522549e5bde4142ad7586e37e0ba6fe",
+    "src\\PairedSourcePreparation.cpp": "c96b1b913b4d2f6aaad9ce5bb19ab5ab58abec4bdfb32c51b04dd1b26085e210",
+    "src\\PairedValidationInternal.h": "a65c5dd357f99f9483bad629ee2e32ce418d5d28dc586aa1be49ae268b921287",
+    "src\\PatchRecovery.cpp": "5d0a49faa375bc00f3bf3a61360618db6503f352d2825a596dcf51a416f66441",
+    "src\\PatchRecovery.h": "b30b5d740fab857adeef625cbc8c520e73a581b5c4a54e9b4357edbd351f3a4e",
+    "src\\PlaneOffsetRefinement.cpp": "b52ed0a5aa0967a54faf045022c17aae6da214469e25733f1c57dd949fe5afeb",
+    "src\\RecognitionValidation.cpp": "4d9f393b938108eab608d4ef4ec8f4fc92ff0c21570b879f09393298f1bf66e9",
+    "src\\RecognitionValidation.h": "d9fa12689095e6ac472d034aa2ae9f84cc64a739e9f58aa44bba0792d5fbb178",
+    "src\\SequentialConversion.cpp": "1679908b4a245b5d5754c54631192c1e7dd7bd8592f9ceb8a338e611ca2291b1",
+    "src\\StageTimer.h": "8a852149b21389bb5d6ab5f8825d5eb8f2fea746194f7db05507ba25b9f881ea",
+    "src\\SurfaceConversion.cpp": "5f9fff4cdd666cb24e9c22e5bb0111da179399e2a873d7592d45d0fddb7d603f",
+    "src\\SurfaceSampleContext.cpp": "eed4a5eae3bf86f5b052b5cff8c9b21a95484c45be256de8aeb86dc24b0fe995",
+    "src\\SurfaceSampleContext.h": "58635ea4d28d3e65c96f5271217c44ca3c8263e0ae2d3ae18c7ac8168d62d553",
+    "src\\SurfaceSampling.cpp": "f7e41e939914c52b7bdf560662c431724a5a7c3f94018d1d9a3f7aed85d38175",
+    "src\\ValidationTiming.h": "9b6083ad8382a44a3c465397949ec7bee76f58d88378fee9b7e207da1aad0d1a",
+    "include\\AnalyticExclusion.h": "fda77fc0250f5deed51ae23b3bf2abad6c257dbcc7bbdd9d3f3971957b9e34d6",
+    "include\\ApproximateConversion.h": "de7a661c1aedd33687a315e9d37d121142d60a4a0ec4c71cede0474ee09b9675",
+    "include\\BSpline2Analytic.h": "3bac3c23b1db740ee55598b664be37c7241c237f69109c45561befbef66122aa",
+    "include\\GeneralConversion.h": "255c33af5ed3a594c4ba8849655d4bb2690682ddf7a0af16e30acc4a2605a67a",
+    "include\\GeneralHybridValidation.h": "c79ed6b781659950b3cb92ac4bdbfe48f0f4fe593d66f88a15d333b43bcd4f47",
+    "include\\GeneralRationalBoundaryValidation.h": "f104b733675a1d1ec045adec0be421811b2e5d4c93262b87fe3e0f664866defa",
+    "include\\MotherDistanceValidation.h": "49a8affff56ba5b21213e59806b54eb3ce79e936dabd6eff9e93381e3c22d576",
+    "include\\PairedConversionValidation.h": "1829319b393747120a4835ca6786d21f00da4dc3cb501424c1a304ff94748589",
+    "include\\SequentialConversion.h": "4fd599ffd737a35d9740a41b262981568872fa9542fe720f1dceaa1ce121dce2",
+    "include\\SurfaceConversion.h": "123367b67f11d0a421eca3e1bdc5d048157064a03b95eef9cdca3d1fb231e528",
+    "tests\\MotherConeFactorTests.cpp": "1a6ec9b881c9ae02e2877026efe1325042eb94089f04a8989fd2ed5705b5d86f",
+    "tests\\MotherDistanceSelectedTests.cpp": "4c5f27363aaa2c83f13690a686fc9e1d8197a33fc84e44ec57936b1d330dcc9c"
+  },
+  "input_sha256": {
+    "1": "42f4a28942e76d2f7e6e61ec7be945fcbd50a99ee9814e9b01467b448a994132",
+    "101": "0aed8f93ea7ef53ac43ff8fb84c3f7941135f4895ce686365b087c867609812e",
+    "201": "86fadbd8ceeb1821dcab060232e0470925dfeb4ea12168e5f1cb6aeed9fe1a2a",
+    "203": "0a39ddfa366e51e7463291e722e6e19395b7daf5c8ecd006487e45f17b290552",
+    "205": "923a6364ff14230a23adfc0adab93e0e5decd13e01d7b734efb4c4ef14f08e44",
+    "207": "0f45c3426f1c1cb6c3da7a70391adf07e7e8d9a450b79b96341eabc16d1d7107",
+    "209": "d678df018f94154e88ebd522feb384f631fe57051895517be2b2167d3c848a45",
+    "211": "79b2026c1e4b10de8377c61dd99906bf46f641ba5db70c6d6ea55a1609958fe3",
+    "213": "32ef75699c8a164eefd862afdff26d92d694d36a4c00b38937ccd43a7253ba18",
+    "215": "2407cfa9a327a400e8603c24d4b63d3dad9a44fb390f1e7f312445f30f4b9100",
+    "221": "28b5cfeea845b2c8c9eb4167c48da6a1b6ef79a7720700e46b3f7befecf1ebc9",
+    "223": "bc2f613de0ae3bed4981be6b3704877c3bcafc980b1e974e2bce2f5c60db23af",
+    "225": "f7fe875031b4b5829353489e79dcedf7438f8210203c3f9ea3bd23e8c740c02e",
+    "227": "68c7416299dbd8b1ed2796cacb5d47163d8f84edb4476b54bc67ed1e63efa5f3",
+    "229": "2b6dc3a7bc34d2e2a5cf3b02c85ec4e6a29cfb6936605492412bddcb6a3e4994",
+    "231": "ff66e845d61280c9196c3816546116c327334974ab7a6673fd945c62fe8ab37a",
+    "233": "bf4b50f7d71b2ad6c7a8fc7546147ccbffe0ffb94d07eaa10983eb91c3ff1c1d",
+    "235": "70f0f135abdd1e65069a38c58f4df8fbdc399a639f390ecdea764af049b9fa3b",
+    "241": "8c033ec59bd911c2f76a7d96fe931b0e33bbfdcaff9f3feefde21a6b935781e9",
+    "243": "db43f42d537c5db25035b40f750aedd9b474b6a5f76eec5c1b27ef2d44df2b3a",
+    "245": "1fcfb549dcf36d69c239cd94ff4c183fd94333ceef03b3ae62fe04459de65a48",
+    "247": "7b5947c1992ba87b25af516e077f487c28dfdf136a3dbe8a3e8e7e5f3fb83949",
+    "249": "b1ff5b0c6b1509c18d740f1e7c95a65050b50d43d8034c31497ec0e412697ecb",
+    "251": "8c8bb4d34efb0bd3759e291beef20685fd0159d00a2eeae2900ffceb4cfa17fd",
+    "253": "f65b5c45f65d53ba41cde8ce20ce654426e26fc15b86524674bd426ccd0987d1",
+    "255": "46c7d001bcd61a59fd7ed14d30e690c123102b4ee360301d076e740654c09e3b",
+    "261": "faecd149d5149b401e64f8fcd065e22f8ccce3378cb8dec99689fb30b4343846",
+    "263": "a2736664498695f9564bfb83c26b26ffba10c146af6157e69c53736313c2681c",
+    "265": "7bda66afe98bf07820469de337dd96dedbf66b0c26425c82782780de7cabfb07",
+    "267": "49ffa6cb1b66c7a03bfe5794031f70af8f4d783f238c26a9bcf035323c9e5436",
+    "269": "16963134c3f2b2a58b601c1522deb30f40a9917fba5a863fc1f217b7c98df363",
+    "271": "e524c05ab5e8bae0fe6b324b9ff887dd88cfa8d06d2a66619ccd3bad49f181fc",
+    "273": "47bc2da2d1c0c40e264635e79cc3e080b26c05a92fbde2a2b8185303374aa972",
+    "275": "f43972766478e141846ff01e517b1d094c68edc63c873a0f09a9b798554fc003",
+    "281": "6633f5ea495a0b9fa016693f7ab6ee52e6f135cf3dc581c343a9cdff7da68ac8",
+    "283": "02270074003adafe3131129c3d61f7b3d3d86229ace449a76ed2b4d7f28d12b5",
+    "285": "5f218ae72140733706a82ac66e553835afa1482a6dcb069ce95b03dd837452dd",
+    "287": "3c5e0a7ec74cc5eeb48c912986ecf24afcf5d5d8c1ed4c429400b330e74831a5",
+    "289": "138370d477c40470581aff8114a1df62fe4cbb896961f831fa48dd61fee8cb18",
+    "291": "405ea04ed5591cffe98bcbe6fc3db92e7ccbe6007999336272b68e37a9b57c71",
+    "293": "156592b596c457875cdd8eb58de2da15ff5af7db0b8daa799cb18a65e03f1db4",
+    "295": "e21b3300def0dfc01bbcd319634befd79eac00682cf664fc5e3834d8d367d12f",
+    "301": "b22b5c5328489f56e06446497d92a4eebc4dec8a6a7d11ca7f41196fab90ee20",
+    "351": "709bf01d84fc8c1f9e6855bb51766f30927a489fd65f55d65ff17471fcf9f592",
+    "381": "edb706bc9c8e445d4527beebacc1afee72e5c7a5a9c86809f27483cbbb63fdf4",
+    "383": "492812d9ab90a884777b4858adc0839657e06b8105fe259f2000dc2342f0547d",
+    "391": "962440aff8942761441deac5889f7802fa26f507e040a4365194e8168c47c243",
+    "395": "09ad542e29bc7a26dec8dd6d64c9f6ee230321d2ff3ed1415cd755d1cf9c2d18",
+    "401": "d1c1a70522a7051628c21fd725ff1ceedc7079ab513ff4eed3926a21070f3839",
+    "451": "5d7bdbdd71a2ebdbebc08d39991e6339b4a1a87ca6e4689ecc6c86ebc41cd45d",
+    "481": "3118b45ab1d670dc8c1564dc71848d09a3e49112dd6a7cf12f6c067065939760",
+    "485": "7d3ff85db964b62456680f91ed950497d7cd4fb779631e1beea2f0e5acb18985",
+    "489": "6aaeb0105a78ab2376283615b86cd00dc2f9c9938a8606d2da167df661a15d03",
+    "491": "b0633cd66ae6c3975ebb48f2c8edcc9325ea7a145a90e46d3692cbfc73ddf664",
+    "497": "1e33b9ae5ae1b236b295530bcdaae8e0b91c011064dea617bf781662bd024f05"
+  },
+  "commands": [
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\baseline\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "1",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\baseline-1.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "1",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\factor-1.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "101",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\factor-101.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\baseline\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "101",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\baseline-101.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\baseline\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "201",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\baseline-201.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "201",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\factor-201.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "203",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\factor-203.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\baseline\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "203",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\baseline-203.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\baseline\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "205",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\baseline-205.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "205",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\factor-205.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "207",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\factor-207.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\baseline\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "207",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\baseline-207.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\baseline\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "209",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\baseline-209.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "209",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\factor-209.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "211",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\factor-211.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\baseline\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "211",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\baseline-211.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\baseline\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "213",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\baseline-213.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "213",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\factor-213.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "215",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\factor-215.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\baseline\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "215",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\baseline-215.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\baseline\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "221",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\baseline-221.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "221",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\factor-221.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "223",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\factor-223.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\baseline\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "223",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\baseline-223.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\baseline\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "225",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\baseline-225.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "225",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\factor-225.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "227",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\factor-227.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\baseline\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "227",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\baseline-227.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\baseline\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "229",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\baseline-229.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "229",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\factor-229.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "231",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\factor-231.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\baseline\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "231",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\baseline-231.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\baseline\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "233",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\baseline-233.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "233",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\factor-233.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "235",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\factor-235.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\baseline\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "235",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\baseline-235.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\baseline\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "241",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\baseline-241.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "241",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\factor-241.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "243",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\factor-243.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\baseline\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "243",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\baseline-243.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\baseline\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "245",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\baseline-245.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "245",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\factor-245.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "247",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\factor-247.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\baseline\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "247",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\baseline-247.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\baseline\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "249",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\baseline-249.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "249",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\factor-249.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "251",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\factor-251.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\baseline\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "251",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\baseline-251.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\baseline\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "253",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\baseline-253.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "253",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\factor-253.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "255",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\factor-255.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\baseline\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "255",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\baseline-255.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\baseline\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "261",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\baseline-261.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "261",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\factor-261.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "263",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\factor-263.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\baseline\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "263",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\baseline-263.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\baseline\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "265",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\baseline-265.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "265",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\factor-265.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "267",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\factor-267.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\baseline\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "267",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\baseline-267.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\baseline\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "269",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\baseline-269.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "269",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\factor-269.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "271",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\factor-271.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\baseline\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "271",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\baseline-271.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\baseline\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "273",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\baseline-273.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "273",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\factor-273.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "275",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\factor-275.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\baseline\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "275",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\baseline-275.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\baseline\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "281",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\baseline-281.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "281",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\factor-281.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "283",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\factor-283.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\baseline\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "283",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\baseline-283.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\baseline\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "285",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\baseline-285.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "285",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\factor-285.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "287",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\factor-287.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\baseline\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "287",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\baseline-287.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\baseline\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "289",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\baseline-289.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "289",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\factor-289.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "291",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\factor-291.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\baseline\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "291",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\baseline-291.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\baseline\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "293",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\baseline-293.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "293",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\factor-293.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "295",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\factor-295.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\baseline\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "295",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\baseline-295.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\baseline\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "301",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\baseline-301.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "301",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\factor-301.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "351",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\factor-351.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\baseline\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "351",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\baseline-351.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\baseline\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "381",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\baseline-381.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "381",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\factor-381.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "383",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\factor-383.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\baseline\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "383",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\baseline-383.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\baseline\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "391",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\baseline-391.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "391",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\factor-391.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "395",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\factor-395.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\baseline\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "395",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\baseline-395.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\baseline\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "401",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\baseline-401.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "401",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\factor-401.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "451",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\factor-451.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\baseline\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "451",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\baseline-451.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\baseline\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "481",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\baseline-481.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "481",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\factor-481.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "485",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\factor-485.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\baseline\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "485",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\baseline-485.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\baseline\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "489",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\baseline-489.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "489",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\factor-489.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "491",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\factor-491.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\baseline\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "491",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\baseline-491.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\baseline\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "497",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\baseline-497.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\Release\\BSpline2AnalyticMotherDistanceSelectedTests.exe",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\tests\\data\\dataset500",
+      "497",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\measurement-1\\factor-497.csv",
+      "5"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\Release\\BSpline2AnalyticMotherConeFactorTests.exe"
+    ],
+    [
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\build-cone-factor\\Release\\BSpline2AnalyticMotherConeFactorTests.exe",
+      "--benchmark",
+      "D:\\Projects\\CppProjects\\SeaGo\\SGK1.7.11\\samples\\src\\BSpline2Analytic\\docs\\testing\\results\\cone-factor-20261023\\position-probes.csv"
+    ]
+  ],
+  "failures": [],
+  "scope": "55 fixed cases: classification + initial validation, cold/warm separated; synthetic probes: prepared-source position only",
+  "completed_utc": "2026-10-23T05:55:58.178396+00:00"
+}

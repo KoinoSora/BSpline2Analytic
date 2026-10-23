@@ -2,6 +2,8 @@
 
 ## 当前测试材料导航
 
+[圆锥近锥顶端点因子测试](../docs/testing/MOTHER_CONE_FACTOR_2026-10-23.md)使用 `BSpline2AnalyticMotherConeFactorTests`：位置模块覆盖因子、扰动、细分、预算及负例，另保留完整母面验证器检查。`BenchmarkMotherConeFactor.py` 对照保存的修改前程序，普通固定案例与合成位置探针分别统计；不调用退休验证器。
+
 [测试报告（实验报告）](../docs/testing/report/README.md)按命题 PDF 说明实测结果、误差分析与验收边界，明确区分历史批次和当前源码版本。
 
 完整的构造方式、设计思路、C++ 接口及单例／多例命令见 [测试材料说明](../docs/testing/materials/README.md)。材料提供全部固定输入与测试源文件索引，区分当前串联、模块诊断及已停用的历史入口。下文历史段落不能覆盖 `AGENTS.md` 的禁测约束。

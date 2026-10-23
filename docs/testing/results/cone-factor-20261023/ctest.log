@@ -1,0 +1,83 @@
+Start testing: Oct 23 14:09 中国标准时间
+----------------------------------------------------------
+2/26 Testing: BSpline2Analytic.MotherConeFactor
+2/26 Test: BSpline2Analytic.MotherConeFactor
+Command: "D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-cone-factor/Release/BSpline2AnalyticMotherConeFactorTests.exe"
+Directory: D:/Projects/CppProjects/SeaGo/SGK1.7.11/SGGK
+"BSpline2Analytic.MotherConeFactor" start time: Oct 23 14:09 中国标准时间
+Output:
+----------------------------------------------------------
+Failed to open log output file.
+Failed to open log output file.
+Cone factor checks=28600 PASSED
+<end of output>
+Test time =   0.23 sec
+----------------------------------------------------------
+Test Passed.
+"BSpline2Analytic.MotherConeFactor" end time: Oct 23 14:09 中国标准时间
+"BSpline2Analytic.MotherConeFactor" time elapsed: 00:00:00
+----------------------------------------------------------
+
+3/26 Testing: BSpline2Analytic.MotherDistanceUnit
+3/26 Test: BSpline2Analytic.MotherDistanceUnit
+Command: "D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-cone-factor/Release/BSpline2AnalyticMotherDistanceTests.exe" "--unit" "D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/tests/data/dataset500"
+Directory: D:/Projects/CppProjects/SeaGo/SGK1.7.11/SGGK
+"BSpline2Analytic.MotherDistanceUnit" start time: Oct 23 14:09 中国标准时间
+Output:
+----------------------------------------------------------
+Failed to open log output file.
+Failed to open log output file.
+representative 1 preparation_ms=0.2616 position_ms=0.0309 subdivision_ms=0 boundary_ms=1.1615 reporting_ms=0.0001 total_ms=1.4541
+representative 101 preparation_ms=0.7591 position_ms=0.1272 subdivision_ms=0 boundary_ms=1.0368 reporting_ms=0.0002 total_ms=1.9233
+representative 201 preparation_ms=0.4387 position_ms=0.0679 subdivision_ms=0 boundary_ms=1.0249 reporting_ms=0.0001 total_ms=1.5316
+representative 301 preparation_ms=0.7704 position_ms=0.1132 subdivision_ms=0 boundary_ms=1.128 reporting_ms=0.0002 total_ms=2.0118
+representative 391 preparation_ms=2.8763 position_ms=0.9184 subdivision_ms=0 boundary_ms=3.544 reporting_ms=0.0003 total_ms=7.339
+representative 401 preparation_ms=0.6971 position_ms=0.3818 subdivision_ms=0 boundary_ms=0.9434 reporting_ms=0.0003 total_ms=2.0226
+representative 489 preparation_ms=2.1691 position_ms=5.3576 subdivision_ms=0 boundary_ms=4.5904 reporting_ms=0.0004 total_ms=12.1175
+representative 497 preparation_ms=2.2192 position_ms=4.841 subdivision_ms=0 boundary_ms=3.453 reporting_ms=0.0003 total_ms=10.5135
+Unit checks=1585 PASSED
+<end of output>
+Test time =   1.44 sec
+----------------------------------------------------------
+Test Passed.
+"BSpline2Analytic.MotherDistanceUnit" end time: Oct 23 14:09 中国标准时间
+"BSpline2Analytic.MotherDistanceUnit" time elapsed: 00:00:01
+----------------------------------------------------------
+
+5/26 Testing: BSpline2Analytic.SequentialShortCircuit
+5/26 Test: BSpline2Analytic.SequentialShortCircuit
+Command: "D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-cone-factor/Release/BSpline2AnalyticSequentialTests.exe" "D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/tests/data" "iso" "0" "1" "D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-cone-factor/sequential-unit.csv" "unit"
+Directory: D:/Projects/CppProjects/SeaGo/SGK1.7.11/SGGK
+"BSpline2Analytic.SequentialShortCircuit" start time: Oct 23 14:09 中国标准时间
+Output:
+----------------------------------------------------------
+Failed to open log output file.
+Failed to open log output file.
+Sequential unit checks passed: iso:0
+<end of output>
+Test time =   0.25 sec
+----------------------------------------------------------
+Test Passed.
+"BSpline2Analytic.SequentialShortCircuit" end time: Oct 23 14:09 中国标准时间
+"BSpline2Analytic.SequentialShortCircuit" time elapsed: 00:00:00
+----------------------------------------------------------
+
+6/26 Testing: BSpline2Analytic.SequentialFallback
+6/26 Test: BSpline2Analytic.SequentialFallback
+Command: "D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-cone-factor/Release/BSpline2AnalyticSequentialTests.exe" "D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/tests/data" "main" "100" "1" "D:/Projects/CppProjects/SeaGo/SGK1.7.11/samples/src/BSpline2Analytic/build-cone-factor/sequential-unit.csv" "unit"
+Directory: D:/Projects/CppProjects/SeaGo/SGK1.7.11/SGGK
+"BSpline2Analytic.SequentialFallback" start time: Oct 23 14:09 中国标准时间
+Output:
+----------------------------------------------------------
+Failed to open log output file.
+Failed to open log output file.
+Sequential unit checks passed: main:100
+<end of output>
+Test time =   0.13 sec
+----------------------------------------------------------
+Test Passed.
+"BSpline2Analytic.SequentialFallback" end time: Oct 23 14:09 中国标准时间
+"BSpline2Analytic.SequentialFallback" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Oct 23 14:09 中国标准时间

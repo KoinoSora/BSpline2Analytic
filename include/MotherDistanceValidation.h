@@ -41,6 +41,11 @@ struct MotherDistanceValidationReport
     unsigned sourceExtractions = 0, sourceCacheHits = 0;
     // 正比例切向残差拟合次数（每个联合节点两次）与联合细分次数。
     unsigned tangentResidualFits = 0, tangentResidualSplits = 0;
+    // 仅在原位置界未通过的圆锥单元触发；每个原单元至多两个因子候选。
+    unsigned coneFactorAttempts = 0, coneFactorCells = 0, coneFactorRemainderSkips = 0;
+    unsigned coneFactorAcceptedNodes = 0;
+    // 构建耗时属于 residualBuildMs；扰动为源包络与重构残差的世界坐标长度上界。
+    double coneFactorBuildMs = 0, coneFactorPerturbation = 0;
     double sourceExtractionMs = 0, sourceBoundaryMs = 0, targetPreparationMs = 0;
     double mappingMs = 0, sampleMs = 0, residualBuildMs = 0, residualBoundMs = 0;
     double boundaryPositionMs = 0, boundaryAngleMs = 0; // 包含两个参数切向及联合预算的检查耗时。

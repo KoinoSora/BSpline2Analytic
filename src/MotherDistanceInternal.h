@@ -23,7 +23,8 @@ struct Measure
     }
 };
 bool ValidatePosition(SourceCache &, const AnalyticParameters &,
-                      const RecognitionOptions &, MotherDistanceValidationReport &, ValidationTimer &, const ExecutionDeadline * = nullptr);
+                      const RecognitionOptions &, MotherDistanceValidationReport &, ValidationTimer &,
+                      const ExecutionDeadline * = nullptr, bool enableConeFactor = true);
 bool ValidateEdgePositions(const paired::PreparedSource &, const paired::Chart &,
                            const PairedValidationOptions &, PairedValidationReport &,
                            paired::Products &, MotherDistanceValidationReport &, const ExecutionDeadline * = nullptr);

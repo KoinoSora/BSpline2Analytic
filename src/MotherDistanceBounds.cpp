@@ -4,6 +4,7 @@
  * 构造按母面类型分解的 Bernstein 残差，补入提取误差并流式细分；必须覆盖全部闭参数域。
  */
 #include "MotherDistanceInternal.h"
+#include "MotherConeFactor.h"
 #include <functional>
 
 namespace bspline2analytic::detail::mother
@@ -113,7 +114,7 @@ struct Projection
     }
 };
 Residual Build(const SourceCell &cell, const Projection &frame, const AnalyticParameters &p,
-               double scale, Products &products)
+               double scale, Products &products, std::array<Poly, 3> *coneCoordinates)
 {
     Poly x(cell.x.u, cell.x.v), y = x, z = x;
     double enclosure = 0;
@@ -198,6 +199,7 @@ Residual Build(const SourceCell &cell, const Projection &frame, const AnalyticPa
     }
     if (!std::isfinite(out.f.maxAbs() + out.error))
         throw Failure(Status::VerificationFailed, "Nonfinite mother residual");
+    if (coneCoordinates) *coneCoordinates = {std::move(x), std::move(y), std::move(z)};
     return out;
 }
 double Bound(const Residual &f, const AnalyticParameters &p, double scale)
@@ -251,7 +253,7 @@ std::pair<Residual, Residual> Subdivide(const Residual &f, bool along)
 } // namespace
 bool ValidatePosition(SourceCache &source, const AnalyticParameters &p,
                       const RecognitionOptions &options, MotherDistanceValidationReport &out,
-                      ValidationTimer &timer, const ExecutionDeadline *deadline)
+                      ValidationTimer &timer, const ExecutionDeadline *deadline, bool enableConeFactor)
 {
     ValidationTimer::Scope stage(timer, out.timing.surfaceBounds);
     Products products;
@@ -264,8 +266,12 @@ bool ValidatePosition(SourceCache &source, const AnalyticParameters &p,
     if (!(scale > 0 && std::isfinite(scale)))
         throw Failure(Status::VerificationFailed, "Invalid mother normalization scale");
     double maximum = 0;
-    std::function<bool(const Residual &, unsigned)> visit;
-    visit = [&](const Residual &f, unsigned depth) {
+    paired::Products coneProducts;
+    const bool coneEnabled = enableConeFactor && p.type == sggk::SurfaceType::Cone;
+    std::optional<std::array<Poly, 3>> coneCoordinates;
+    if (coneEnabled) coneCoordinates.emplace();
+    std::function<bool(const Residual &, unsigned, const ConeFactorCell *)> visit;
+    visit = [&](const Residual &f, unsigned depth, const ConeFactorCell *factor) {
         if (deadline) deadline->Check("iso_surface_bound");
         if (++out.surfaceNodes > options.maxValidationPieces)
             throw paired::Budget("Mother distance node budget exhausted");
@@ -280,14 +286,40 @@ bool ValidatePosition(SourceCache &source, const AnalyticParameters &p,
             maximum = std::max(maximum, upper);
             return true;
         }
+        // 原界优先；因子只在原单元构建一次，后代继承其区间残差和原参数因子。
+        std::optional<ConeFactorCell> rootFactor;
+        if (coneEnabled && depth == 0)
+        {
+            Measure buildTime(out.residualBuildMs), factorTime(out.coneFactorBuildMs);
+            rootFactor = TryConeFactor(*coneCoordinates, f.enclosure, p.halfAngle,
+                options.distanceTolerance / scale, coneProducts, out, deadline);
+            if (rootFactor) factor = &*rootFactor;
+        }
+        if (factor)
+        {
+            Measure time(out.residualBoundMs);
+            auto bound = BoundConeFactor(*factor);
+            out.coneFactorPerturbation = std::max(out.coneFactorPerturbation,
+                ErrorMul(scale, bound.perturbation));
+            double factorUpper = ErrorMul(scale, bound.upper);
+            if (factorUpper < options.distanceTolerance)
+            {
+                ++out.coneFactorAcceptedNodes;
+                maximum = std::max(maximum, factorUpper);
+                return true;
+            }
+        }
         if (depth >= options.maxSubdivisionDepth)
             return false;
         std::pair<Residual, Residual> children;
+        std::optional<std::pair<ConeFactorCell, ConeFactorCell>> factorChildren;
         {
             ValidationTimer::Scope split(timer, out.timing.subdivision);
             children = Subdivide(f, depth % 2 == 0);
+            if (factor) factorChildren = SplitConeFactor(*factor, depth % 2 == 0);
         }
-        return visit(children.first, depth + 1) && visit(children.second, depth + 1);
+        return visit(children.first, depth + 1, factorChildren ? &factorChildren->first : nullptr) &&
+               visit(children.second, depth + 1, factorChildren ? &factorChildren->second : nullptr);
     };
     // 全部活动单元覆盖源面闭参数域及四边。
     // 流式处理允许提前失败，但只有所有单元都通过才能返回 Passed。
@@ -305,10 +337,10 @@ bool ValidatePosition(SourceCache &source, const AnalyticParameters &p,
         Residual f;
         {
             Measure time(out.residualBuildMs);
-            f = Build(*cell, frame, p, scale, products);
+            f = Build(*cell, frame, p, scale, products, coneCoordinates ? &*coneCoordinates : nullptr);
         }
         out.sourceEnclosureRadius = std::max(out.sourceEnclosureRadius, f.enclosure * scale);
-        if (!visit(f, 0))
+        if (!visit(f, 0, nullptr))
         {
             out.motherDistance.state = CheckState::Unresolved;
             return false;

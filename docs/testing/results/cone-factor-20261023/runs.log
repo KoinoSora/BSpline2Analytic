@@ -1,0 +1,781 @@
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\baseline\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 1 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\baseline-1.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 1 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\Release\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 1 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\factor-1.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 1 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\Release\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 101 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\factor-101.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 101 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\baseline\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 101 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\baseline-101.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 101 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\baseline\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 201 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\baseline-201.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 201 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\Release\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 201 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\factor-201.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 201 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\Release\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 203 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\factor-203.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 203 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\baseline\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 203 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\baseline-203.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 203 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\baseline\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 205 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\baseline-205.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 205 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\Release\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 205 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\factor-205.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 205 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\Release\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 207 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\factor-207.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 207 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\baseline\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 207 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\baseline-207.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 207 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\baseline\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 209 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\baseline-209.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 209 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\Release\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 209 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\factor-209.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 209 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\Release\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 211 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\factor-211.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 211 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\baseline\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 211 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\baseline-211.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 211 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\baseline\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 213 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\baseline-213.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 213 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\Release\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 213 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\factor-213.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 213 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\Release\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 215 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\factor-215.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 215 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\baseline\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 215 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\baseline-215.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 215 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\baseline\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 221 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\baseline-221.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 221 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\Release\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 221 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\factor-221.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 221 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\Release\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 223 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\factor-223.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 223 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\baseline\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 223 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\baseline-223.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 223 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\baseline\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 225 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\baseline-225.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 225 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\Release\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 225 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\factor-225.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 225 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\Release\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 227 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\factor-227.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 227 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\baseline\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 227 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\baseline-227.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 227 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\baseline\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 229 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\baseline-229.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 229 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\Release\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 229 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\factor-229.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 229 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\Release\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 231 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\factor-231.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 231 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\baseline\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 231 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\baseline-231.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 231 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\baseline\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 233 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\baseline-233.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 233 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\Release\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 233 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\factor-233.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 233 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\Release\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 235 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\factor-235.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 235 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\baseline\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 235 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\baseline-235.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 235 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\baseline\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 241 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\baseline-241.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 241 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\Release\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 241 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\factor-241.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 241 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\Release\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 243 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\factor-243.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 243 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\baseline\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 243 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\baseline-243.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 243 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\baseline\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 245 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\baseline-245.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 245 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\Release\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 245 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\factor-245.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 245 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\Release\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 247 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\factor-247.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 247 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\baseline\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 247 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\baseline-247.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 247 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\baseline\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 249 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\baseline-249.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 249 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\Release\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 249 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\factor-249.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 249 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\Release\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 251 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\factor-251.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 251 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\baseline\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 251 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\baseline-251.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 251 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\baseline\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 253 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\baseline-253.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 253 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\Release\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 253 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\factor-253.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 253 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\Release\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 255 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\factor-255.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 255 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\baseline\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 255 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\baseline-255.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 255 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\baseline\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 261 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\baseline-261.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 261 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\Release\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 261 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\factor-261.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 261 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\Release\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 263 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\factor-263.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 263 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\baseline\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 263 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\baseline-263.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 263 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\baseline\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 265 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\baseline-265.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 265 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\Release\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 265 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\factor-265.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 265 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\Release\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 267 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\factor-267.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 267 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\baseline\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 267 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\baseline-267.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 267 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\baseline\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 269 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\baseline-269.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 269 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\Release\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 269 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\factor-269.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 269 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\Release\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 271 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\factor-271.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 271 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\baseline\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 271 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\baseline-271.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 271 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\baseline\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 273 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\baseline-273.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 273 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\Release\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 273 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\factor-273.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 273 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\Release\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 275 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\factor-275.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 275 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\baseline\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 275 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\baseline-275.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 275 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\baseline\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 281 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\baseline-281.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 281 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\Release\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 281 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\factor-281.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 281 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\Release\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 283 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\factor-283.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 283 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\baseline\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 283 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\baseline-283.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 283 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\baseline\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 285 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\baseline-285.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 285 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\Release\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 285 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\factor-285.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 285 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\Release\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 287 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\factor-287.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 287 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\baseline\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 287 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\baseline-287.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 287 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\baseline\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 289 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\baseline-289.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 289 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\Release\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 289 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\factor-289.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 289 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\Release\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 291 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\factor-291.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 291 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\baseline\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 291 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\baseline-291.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 291 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\baseline\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 293 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\baseline-293.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 293 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\Release\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 293 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\factor-293.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 293 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\Release\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 295 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\factor-295.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 295 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\baseline\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 295 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\baseline-295.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 295 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\baseline\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 301 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\baseline-301.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 301 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\Release\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 301 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\factor-301.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 301 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\Release\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 351 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\factor-351.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 351 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\baseline\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 351 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\baseline-351.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 351 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\baseline\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 381 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\baseline-381.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 381 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\Release\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 381 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\factor-381.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 381 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\Release\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 383 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\factor-383.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 383 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\baseline\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 383 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\baseline-383.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 383 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\baseline\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 391 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\baseline-391.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 391 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\Release\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 391 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\factor-391.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 391 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\Release\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 395 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\factor-395.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 395 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\baseline\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 395 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\baseline-395.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 395 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\baseline\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 401 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\baseline-401.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 401 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\Release\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 401 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\factor-401.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 401 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\Release\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 451 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\factor-451.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 451 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\baseline\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 451 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\baseline-451.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 451 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\baseline\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 481 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\baseline-481.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 481 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\Release\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 481 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\factor-481.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 481 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\Release\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 485 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\factor-485.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 485 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\baseline\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 485 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\baseline-485.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 485 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\baseline\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 489 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\baseline-489.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 489 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\Release\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 489 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\factor-489.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 489 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\Release\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 491 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\factor-491.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 491 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\baseline\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 491 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\baseline-491.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 491 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\baseline\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 497 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\baseline-497.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 497 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\Release\BSpline2AnalyticMotherDistanceSelectedTests.exe D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\tests\data\dataset500 497 D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\measurement-1\factor-497.csv 5
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+selected 497 runs=5 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\Release\BSpline2AnalyticMotherConeFactorTests.exe
+exit=0
+Failed to open log output file.
+Failed to open log output file.
+Cone factor checks=28600 PASSED
+
+
+D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\build-cone-factor\Release\BSpline2AnalyticMotherConeFactorTests.exe --benchmark D:\Projects\CppProjects\SeaGo\SGK1.7.11\samples\src\BSpline2Analytic\docs\testing\results\cone-factor-20261023\position-probes.csv
+exit=0
+Failed to open log output file.
+Failed to open log output file.
