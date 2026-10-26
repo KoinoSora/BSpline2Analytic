@@ -1,0 +1,52 @@
+name: Closed-loop protocol rehearsal
+
+on:
+  push:
+    branches: [experiment/closed-loop-validation]
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: closed-loop-protocol-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  protocol:
+    name: closed-loop/protocol-smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Protocol fault injection only (no SDK or datasets)
+        run: python3 -m unittest discover -s tests/closed_loop -p 'test_*.py' -v
+      - name: Generate synthetic lifecycle evidence
+        env:
+          PR_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+          PR_BASE: ${{ github.event.pull_request.base.sha }}
+        shell: bash
+        run: |
+          base="${PR_BASE:-$(git rev-parse origin/main)}"
+          python3 tests/closed_loop/run.py smoke --output out/closed-loop-protocol \
+            --head "$PR_HEAD" --base "$base" --merge-tree "$(git rev-parse HEAD^{tree})"
+          python3 tests/closed_loop/run.py verify --bundle out/closed-loop-protocol
+          cat out/closed-loop-protocol/report.md >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload synthetic evidence
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: closed-loop-protocol-${{ github.run_id }}-${{ github.run_attempt }}
+          path: out/closed-loop-protocol/
+          if-no-files-found: error
+          retention-days: 30
+      - name: Explicit activation state
+        run: |
+          python3 -c 'import json; p=json.load(open("tests/closed_loop/policy.json")); assert p["real_tests_enabled"] is False, "Activation requires a separately reviewed production workflow"'
+          echo 'Production gate: NOT_ACTIVATED. This green protocol check is not closed-loop/gate.' >> "$GITHUB_STEP_SUMMARY"

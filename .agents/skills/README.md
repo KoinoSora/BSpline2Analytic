@@ -2,6 +2,7 @@
 
 | Skill | 用途 |
 | --- | --- |
+| [closed-loop-validation](closed-loop-validation/SKILL.md) | PR 闭环证据与管理员审批；当前仅合成协议演练，真实测试和正式门禁关闭。 |
 | [bspline2analytic-git-sync](bspline2analytic-git-sync/SKILL.md) | 修改完成后的验证、提交、推送及远端核验。 |
 | [algorithm-documentation](algorithm-documentation/SKILL.md) | 依据实现编写数学化算法说明书，包含流程图与案例；尽可能压缩内容，保留关键叙述，不设默认页数上限。 |
 

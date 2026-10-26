@@ -1,0 +1,4 @@
+interface:
+  display_name: "闭环提交验证（实验）"
+  short_description: "核对 PR、验证规则和证据发布；当前仅演练协议，禁止真实几何与性能测试"
+  default_prompt: "使用 $closed-loop-validation 检查当前 PR 的合成验证流程，保留正式测试关闭状态。"
