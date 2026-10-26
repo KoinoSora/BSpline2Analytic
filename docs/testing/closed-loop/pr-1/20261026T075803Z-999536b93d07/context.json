@@ -1,0 +1,9 @@
+{
+  "repository": "KoinoSora/BSpline2Analytic",
+  "base_branch": "main",
+  "head_sha": "85f4cb573848ad63997990097a8679b3c7b2865d",
+  "base_sha": "bad641386dd0ed2b73202cd48a8e3a0b53c937ec",
+  "merge_tree_sha": "500e62c2068c5c6e3085d3e15c585b06c62e0e3c",
+  "trusted_collector": false,
+  "author": "synthetic-contributor"
+}

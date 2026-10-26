@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "synthetic": true,
+  "files": {
+    "context.json": "072a132410ecc9da2339c4d3f4ca49f1b97667474d30e81513c3011f10d36acf",
+    "evidence.json": "c8f761d185d1bc47cd7930825fdb7783dc6079628c50dab10e7fc9764246370e",
+    "lifecycle.json": "5fa738b98b1869e576bde5f9c29dc7421b8c9e722a4c8885288e5f6116c742df",
+    "measurements.csv": "64b499d5a839a830d9b660f7605f7eac50c3a4342efbdee889d506c5e7fd5fba",
+    "policy.json": "cc30baab4afed0dd1f01cdeedabaefae0b18f174a5dcb125977d721bb934906d",
+    "production-refusal.json": "3e1ff268be55b3dc146fdcb7fe7b1c600626e27621757c3ee2f7862ea219dd33",
+    "registry.json": "32aafc1c055cc81d660db3166f0976c2004404c45845910056e42f2c2a47ae07",
+    "report.md": "2342b8b26f837ddb509d9b252b92121e0743ef9295838420ac39cfdc7b5208f2",
+    "result.json": "2fc81b81d2e4613b4bd93bfbd373d636cc2204e45ebee8210994d8684adef474"
+  }
+}

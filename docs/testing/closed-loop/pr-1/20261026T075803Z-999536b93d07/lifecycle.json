@@ -1,0 +1,22 @@
+[
+  {
+    "step": "evaluated",
+    "state": "SIMULATION_PASS"
+  },
+  {
+    "step": "not_uploaded",
+    "state": "SIMULATION_BLOCKED_PUBLICATION"
+  },
+  {
+    "step": "published_simulation",
+    "state": "SIMULATION_AWAITING_ADMIN_REVIEW"
+  },
+  {
+    "step": "simulated_admin_approval",
+    "state": "SIMULATION_READY_FOR_ADMIN_MERGE"
+  },
+  {
+    "step": "base_changed",
+    "state": "SIMULATION_STALE"
+  }
+]

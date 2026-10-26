@@ -1,0 +1,758 @@
+{
+  "schema_version": 1,
+  "mode": "simulation",
+  "synthetic": true,
+  "anchor_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "policy_sha256": "ef642310739f19ae0ac6853b70f6e447f5e4943cdefdb20a422dc18636562276",
+  "registry_sha256": "09497e64c52e55c579f763986b7589cad9925d6a024c11daed2c1c708b76ff6f",
+  "environment_sha256": "50c4fa96f7e07e4c7b2c1a40eff37a75d3b52b848a8b742ed9fbd35f7ae2fa35",
+  "environment_valid": true,
+  "timing_scope": "complete-api-cold-context",
+  "documents": {
+    "algorithm": "docs/algorithm/CLOSED_LOOP_VALIDATION.md",
+    "impact": "docs/requirements/CLOSED_LOOP_VALIDATION.md"
+  },
+  "cases": [
+    {
+      "id": "synthetic:existing-cone",
+      "input_sha256": "91bcaffc6b8f6b0d7dfb9770457ed7603f85b6406c3f08673308ed6ed61dfb33",
+      "options_sha256": "17a80e9610c7f3aabef5e2916f9e5d4bf651f81bd574d4adcf80d700b9beb163",
+      "contract": "mother-distance-joint-v1",
+      "entrypoint": "ValidateMotherDistanceConversion",
+      "runs": [
+        {
+          "iteration": 0,
+          "status": "ACCEPT",
+          "independent_audit": "PASS",
+          "checks": {
+            "surface_distance": "PASS",
+            "boundary_position": "PASS",
+            "uv_joint_tangent": "PASS"
+          },
+          "bounds": {
+            "surface_distance": 2e-06,
+            "boundary_position": 3e-06,
+            "joint_tangent_deg": 0.04
+          },
+          "candidate_ms": 4.04,
+          "anchor_ms": 4.0,
+          "base_ms": 4.0
+        },
+        {
+          "iteration": 1,
+          "status": "ACCEPT",
+          "independent_audit": "PASS",
+          "checks": {
+            "surface_distance": "PASS",
+            "boundary_position": "PASS",
+            "uv_joint_tangent": "PASS"
+          },
+          "bounds": {
+            "surface_distance": 2e-06,
+            "boundary_position": 3e-06,
+            "joint_tangent_deg": 0.04
+          },
+          "candidate_ms": 4.04,
+          "anchor_ms": 4.0,
+          "base_ms": 4.0
+        },
+        {
+          "iteration": 2,
+          "status": "ACCEPT",
+          "independent_audit": "PASS",
+          "checks": {
+            "surface_distance": "PASS",
+            "boundary_position": "PASS",
+            "uv_joint_tangent": "PASS"
+          },
+          "bounds": {
+            "surface_distance": 2e-06,
+            "boundary_position": 3e-06,
+            "joint_tangent_deg": 0.04
+          },
+          "candidate_ms": 4.04,
+          "anchor_ms": 4.0,
+          "base_ms": 4.0
+        },
+        {
+          "iteration": 3,
+          "status": "ACCEPT",
+          "independent_audit": "PASS",
+          "checks": {
+            "surface_distance": "PASS",
+            "boundary_position": "PASS",
+            "uv_joint_tangent": "PASS"
+          },
+          "bounds": {
+            "surface_distance": 2e-06,
+            "boundary_position": 3e-06,
+            "joint_tangent_deg": 0.04
+          },
+          "candidate_ms": 4.04,
+          "anchor_ms": 4.0,
+          "base_ms": 4.0
+        },
+        {
+          "iteration": 4,
+          "status": "ACCEPT",
+          "independent_audit": "PASS",
+          "checks": {
+            "surface_distance": "PASS",
+            "boundary_position": "PASS",
+            "uv_joint_tangent": "PASS"
+          },
+          "bounds": {
+            "surface_distance": 2e-06,
+            "boundary_position": 3e-06,
+            "joint_tangent_deg": 0.04
+          },
+          "candidate_ms": 4.04,
+          "anchor_ms": 4.0,
+          "base_ms": 4.0
+        },
+        {
+          "iteration": 5,
+          "status": "ACCEPT",
+          "independent_audit": "PASS",
+          "checks": {
+            "surface_distance": "PASS",
+            "boundary_position": "PASS",
+            "uv_joint_tangent": "PASS"
+          },
+          "bounds": {
+            "surface_distance": 2e-06,
+            "boundary_position": 3e-06,
+            "joint_tangent_deg": 0.04
+          },
+          "candidate_ms": 4.04,
+          "anchor_ms": 4.0,
+          "base_ms": 4.0
+        },
+        {
+          "iteration": 6,
+          "status": "ACCEPT",
+          "independent_audit": "PASS",
+          "checks": {
+            "surface_distance": "PASS",
+            "boundary_position": "PASS",
+            "uv_joint_tangent": "PASS"
+          },
+          "bounds": {
+            "surface_distance": 2e-06,
+            "boundary_position": 3e-06,
+            "joint_tangent_deg": 0.04
+          },
+          "candidate_ms": 4.04,
+          "anchor_ms": 4.0,
+          "base_ms": 4.0
+        },
+        {
+          "iteration": 7,
+          "status": "ACCEPT",
+          "independent_audit": "PASS",
+          "checks": {
+            "surface_distance": "PASS",
+            "boundary_position": "PASS",
+            "uv_joint_tangent": "PASS"
+          },
+          "bounds": {
+            "surface_distance": 2e-06,
+            "boundary_position": 3e-06,
+            "joint_tangent_deg": 0.04
+          },
+          "candidate_ms": 4.04,
+          "anchor_ms": 4.0,
+          "base_ms": 4.0
+        },
+        {
+          "iteration": 8,
+          "status": "ACCEPT",
+          "independent_audit": "PASS",
+          "checks": {
+            "surface_distance": "PASS",
+            "boundary_position": "PASS",
+            "uv_joint_tangent": "PASS"
+          },
+          "bounds": {
+            "surface_distance": 2e-06,
+            "boundary_position": 3e-06,
+            "joint_tangent_deg": 0.04
+          },
+          "candidate_ms": 4.04,
+          "anchor_ms": 4.0,
+          "base_ms": 4.0
+        },
+        {
+          "iteration": 9,
+          "status": "ACCEPT",
+          "independent_audit": "PASS",
+          "checks": {
+            "surface_distance": "PASS",
+            "boundary_position": "PASS",
+            "uv_joint_tangent": "PASS"
+          },
+          "bounds": {
+            "surface_distance": 2e-06,
+            "boundary_position": 3e-06,
+            "joint_tangent_deg": 0.04
+          },
+          "candidate_ms": 4.04,
+          "anchor_ms": 4.0,
+          "base_ms": 4.0
+        },
+        {
+          "iteration": 10,
+          "status": "ACCEPT",
+          "independent_audit": "PASS",
+          "checks": {
+            "surface_distance": "PASS",
+            "boundary_position": "PASS",
+            "uv_joint_tangent": "PASS"
+          },
+          "bounds": {
+            "surface_distance": 2e-06,
+            "boundary_position": 3e-06,
+            "joint_tangent_deg": 0.04
+          },
+          "candidate_ms": 4.04,
+          "anchor_ms": 4.0,
+          "base_ms": 4.0
+        },
+        {
+          "iteration": 11,
+          "status": "ACCEPT",
+          "independent_audit": "PASS",
+          "checks": {
+            "surface_distance": "PASS",
+            "boundary_position": "PASS",
+            "uv_joint_tangent": "PASS"
+          },
+          "bounds": {
+            "surface_distance": 2e-06,
+            "boundary_position": 3e-06,
+            "joint_tangent_deg": 0.04
+          },
+          "candidate_ms": 4.04,
+          "anchor_ms": 4.0,
+          "base_ms": 4.0
+        },
+        {
+          "iteration": 12,
+          "status": "ACCEPT",
+          "independent_audit": "PASS",
+          "checks": {
+            "surface_distance": "PASS",
+            "boundary_position": "PASS",
+            "uv_joint_tangent": "PASS"
+          },
+          "bounds": {
+            "surface_distance": 2e-06,
+            "boundary_position": 3e-06,
+            "joint_tangent_deg": 0.04
+          },
+          "candidate_ms": 4.04,
+          "anchor_ms": 4.0,
+          "base_ms": 4.0
+        },
+        {
+          "iteration": 13,
+          "status": "ACCEPT",
+          "independent_audit": "PASS",
+          "checks": {
+            "surface_distance": "PASS",
+            "boundary_position": "PASS",
+            "uv_joint_tangent": "PASS"
+          },
+          "bounds": {
+            "surface_distance": 2e-06,
+            "boundary_position": 3e-06,
+            "joint_tangent_deg": 0.04
+          },
+          "candidate_ms": 4.04,
+          "anchor_ms": 4.0,
+          "base_ms": 4.0
+        },
+        {
+          "iteration": 14,
+          "status": "ACCEPT",
+          "independent_audit": "PASS",
+          "checks": {
+            "surface_distance": "PASS",
+            "boundary_position": "PASS",
+            "uv_joint_tangent": "PASS"
+          },
+          "bounds": {
+            "surface_distance": 2e-06,
+            "boundary_position": 3e-06,
+            "joint_tangent_deg": 0.04
+          },
+          "candidate_ms": 4.04,
+          "anchor_ms": 4.0,
+          "base_ms": 4.0
+        },
+        {
+          "iteration": 15,
+          "status": "ACCEPT",
+          "independent_audit": "PASS",
+          "checks": {
+            "surface_distance": "PASS",
+            "boundary_position": "PASS",
+            "uv_joint_tangent": "PASS"
+          },
+          "bounds": {
+            "surface_distance": 2e-06,
+            "boundary_position": 3e-06,
+            "joint_tangent_deg": 0.04
+          },
+          "candidate_ms": 4.04,
+          "anchor_ms": 4.0,
+          "base_ms": 4.0
+        },
+        {
+          "iteration": 16,
+          "status": "ACCEPT",
+          "independent_audit": "PASS",
+          "checks": {
+            "surface_distance": "PASS",
+            "boundary_position": "PASS",
+            "uv_joint_tangent": "PASS"
+          },
+          "bounds": {
+            "surface_distance": 2e-06,
+            "boundary_position": 3e-06,
+            "joint_tangent_deg": 0.04
+          },
+          "candidate_ms": 4.04,
+          "anchor_ms": 4.0,
+          "base_ms": 4.0
+        },
+        {
+          "iteration": 17,
+          "status": "ACCEPT",
+          "independent_audit": "PASS",
+          "checks": {
+            "surface_distance": "PASS",
+            "boundary_position": "PASS",
+            "uv_joint_tangent": "PASS"
+          },
+          "bounds": {
+            "surface_distance": 2e-06,
+            "boundary_position": 3e-06,
+            "joint_tangent_deg": 0.04
+          },
+          "candidate_ms": 4.04,
+          "anchor_ms": 4.0,
+          "base_ms": 4.0
+        },
+        {
+          "iteration": 18,
+          "status": "ACCEPT",
+          "independent_audit": "PASS",
+          "checks": {
+            "surface_distance": "PASS",
+            "boundary_position": "PASS",
+            "uv_joint_tangent": "PASS"
+          },
+          "bounds": {
+            "surface_distance": 2e-06,
+            "boundary_position": 3e-06,
+            "joint_tangent_deg": 0.04
+          },
+          "candidate_ms": 4.04,
+          "anchor_ms": 4.0,
+          "base_ms": 4.0
+        },
+        {
+          "iteration": 19,
+          "status": "ACCEPT",
+          "independent_audit": "PASS",
+          "checks": {
+            "surface_distance": "PASS",
+            "boundary_position": "PASS",
+            "uv_joint_tangent": "PASS"
+          },
+          "bounds": {
+            "surface_distance": 2e-06,
+            "boundary_position": 3e-06,
+            "joint_tangent_deg": 0.04
+          },
+          "candidate_ms": 4.04,
+          "anchor_ms": 4.0,
+          "base_ms": 4.0
+        }
+      ]
+    },
+    {
+      "id": "synthetic:new-cone",
+      "input_sha256": "91bcaffc6b8f6b0d7dfb9770457ed7603f85b6406c3f08673308ed6ed61dfb33",
+      "options_sha256": "17a80e9610c7f3aabef5e2916f9e5d4bf651f81bd574d4adcf80d700b9beb163",
+      "contract": "mother-distance-joint-v1",
+      "entrypoint": "ValidateMotherDistanceConversion",
+      "runs": [
+        {
+          "iteration": 0,
+          "status": "ACCEPT",
+          "independent_audit": "PASS",
+          "checks": {
+            "surface_distance": "PASS",
+            "boundary_position": "PASS",
+            "uv_joint_tangent": "PASS"
+          },
+          "bounds": {
+            "surface_distance": 2e-06,
+            "boundary_position": 3e-06,
+            "joint_tangent_deg": 0.04
+          },
+          "candidate_ms": 6.0,
+          "anchor_ms": 4.0,
+          "base_ms": 4.0
+        },
+        {
+          "iteration": 1,
+          "status": "ACCEPT",
+          "independent_audit": "PASS",
+          "checks": {
+            "surface_distance": "PASS",
+            "boundary_position": "PASS",
+            "uv_joint_tangent": "PASS"
+          },
+          "bounds": {
+            "surface_distance": 2e-06,
+            "boundary_position": 3e-06,
+            "joint_tangent_deg": 0.04
+          },
+          "candidate_ms": 6.0,
+          "anchor_ms": 4.0,
+          "base_ms": 4.0
+        },
+        {
+          "iteration": 2,
+          "status": "ACCEPT",
+          "independent_audit": "PASS",
+          "checks": {
+            "surface_distance": "PASS",
+            "boundary_position": "PASS",
+            "uv_joint_tangent": "PASS"
+          },
+          "bounds": {
+            "surface_distance": 2e-06,
+            "boundary_position": 3e-06,
+            "joint_tangent_deg": 0.04
+          },
+          "candidate_ms": 6.0,
+          "anchor_ms": 4.0,
+          "base_ms": 4.0
+        },
+        {
+          "iteration": 3,
+          "status": "ACCEPT",
+          "independent_audit": "PASS",
+          "checks": {
+            "surface_distance": "PASS",
+            "boundary_position": "PASS",
+            "uv_joint_tangent": "PASS"
+          },
+          "bounds": {
+            "surface_distance": 2e-06,
+            "boundary_position": 3e-06,
+            "joint_tangent_deg": 0.04
+          },
+          "candidate_ms": 6.0,
+          "anchor_ms": 4.0,
+          "base_ms": 4.0
+        },
+        {
+          "iteration": 4,
+          "status": "ACCEPT",
+          "independent_audit": "PASS",
+          "checks": {
+            "surface_distance": "PASS",
+            "boundary_position": "PASS",
+            "uv_joint_tangent": "PASS"
+          },
+          "bounds": {
+            "surface_distance": 2e-06,
+            "boundary_position": 3e-06,
+            "joint_tangent_deg": 0.04
+          },
+          "candidate_ms": 6.0,
+          "anchor_ms": 4.0,
+          "base_ms": 4.0
+        },
+        {
+          "iteration": 5,
+          "status": "ACCEPT",
+          "independent_audit": "PASS",
+          "checks": {
+            "surface_distance": "PASS",
+            "boundary_position": "PASS",
+            "uv_joint_tangent": "PASS"
+          },
+          "bounds": {
+            "surface_distance": 2e-06,
+            "boundary_position": 3e-06,
+            "joint_tangent_deg": 0.04
+          },
+          "candidate_ms": 6.0,
+          "anchor_ms": 4.0,
+          "base_ms": 4.0
+        },
+        {
+          "iteration": 6,
+          "status": "ACCEPT",
+          "independent_audit": "PASS",
+          "checks": {
+            "surface_distance": "PASS",
+            "boundary_position": "PASS",
+            "uv_joint_tangent": "PASS"
+          },
+          "bounds": {
+            "surface_distance": 2e-06,
+            "boundary_position": 3e-06,
+            "joint_tangent_deg": 0.04
+          },
+          "candidate_ms": 6.0,
+          "anchor_ms": 4.0,
+          "base_ms": 4.0
+        },
+        {
+          "iteration": 7,
+          "status": "ACCEPT",
+          "independent_audit": "PASS",
+          "checks": {
+            "surface_distance": "PASS",
+            "boundary_position": "PASS",
+            "uv_joint_tangent": "PASS"
+          },
+          "bounds": {
+            "surface_distance": 2e-06,
+            "boundary_position": 3e-06,
+            "joint_tangent_deg": 0.04
+          },
+          "candidate_ms": 6.0,
+          "anchor_ms": 4.0,
+          "base_ms": 4.0
+        },
+        {
+          "iteration": 8,
+          "status": "ACCEPT",
+          "independent_audit": "PASS",
+          "checks": {
+            "surface_distance": "PASS",
+            "boundary_position": "PASS",
+            "uv_joint_tangent": "PASS"
+          },
+          "bounds": {
+            "surface_distance": 2e-06,
+            "boundary_position": 3e-06,
+            "joint_tangent_deg": 0.04
+          },
+          "candidate_ms": 6.0,
+          "anchor_ms": 4.0,
+          "base_ms": 4.0
+        },
+        {
+          "iteration": 9,
+          "status": "ACCEPT",
+          "independent_audit": "PASS",
+          "checks": {
+            "surface_distance": "PASS",
+            "boundary_position": "PASS",
+            "uv_joint_tangent": "PASS"
+          },
+          "bounds": {
+            "surface_distance": 2e-06,
+            "boundary_position": 3e-06,
+            "joint_tangent_deg": 0.04
+          },
+          "candidate_ms": 6.0,
+          "anchor_ms": 4.0,
+          "base_ms": 4.0
+        },
+        {
+          "iteration": 10,
+          "status": "ACCEPT",
+          "independent_audit": "PASS",
+          "checks": {
+            "surface_distance": "PASS",
+            "boundary_position": "PASS",
+            "uv_joint_tangent": "PASS"
+          },
+          "bounds": {
+            "surface_distance": 2e-06,
+            "boundary_position": 3e-06,
+            "joint_tangent_deg": 0.04
+          },
+          "candidate_ms": 6.0,
+          "anchor_ms": 4.0,
+          "base_ms": 4.0
+        },
+        {
+          "iteration": 11,
+          "status": "ACCEPT",
+          "independent_audit": "PASS",
+          "checks": {
+            "surface_distance": "PASS",
+            "boundary_position": "PASS",
+            "uv_joint_tangent": "PASS"
+          },
+          "bounds": {
+            "surface_distance": 2e-06,
+            "boundary_position": 3e-06,
+            "joint_tangent_deg": 0.04
+          },
+          "candidate_ms": 6.0,
+          "anchor_ms": 4.0,
+          "base_ms": 4.0
+        },
+        {
+          "iteration": 12,
+          "status": "ACCEPT",
+          "independent_audit": "PASS",
+          "checks": {
+            "surface_distance": "PASS",
+            "boundary_position": "PASS",
+            "uv_joint_tangent": "PASS"
+          },
+          "bounds": {
+            "surface_distance": 2e-06,
+            "boundary_position": 3e-06,
+            "joint_tangent_deg": 0.04
+          },
+          "candidate_ms": 6.0,
+          "anchor_ms": 4.0,
+          "base_ms": 4.0
+        },
+        {
+          "iteration": 13,
+          "status": "ACCEPT",
+          "independent_audit": "PASS",
+          "checks": {
+            "surface_distance": "PASS",
+            "boundary_position": "PASS",
+            "uv_joint_tangent": "PASS"
+          },
+          "bounds": {
+            "surface_distance": 2e-06,
+            "boundary_position": 3e-06,
+            "joint_tangent_deg": 0.04
+          },
+          "candidate_ms": 6.0,
+          "anchor_ms": 4.0,
+          "base_ms": 4.0
+        },
+        {
+          "iteration": 14,
+          "status": "ACCEPT",
+          "independent_audit": "PASS",
+          "checks": {
+            "surface_distance": "PASS",
+            "boundary_position": "PASS",
+            "uv_joint_tangent": "PASS"
+          },
+          "bounds": {
+            "surface_distance": 2e-06,
+            "boundary_position": 3e-06,
+            "joint_tangent_deg": 0.04
+          },
+          "candidate_ms": 6.0,
+          "anchor_ms": 4.0,
+          "base_ms": 4.0
+        },
+        {
+          "iteration": 15,
+          "status": "ACCEPT",
+          "independent_audit": "PASS",
+          "checks": {
+            "surface_distance": "PASS",
+            "boundary_position": "PASS",
+            "uv_joint_tangent": "PASS"
+          },
+          "bounds": {
+            "surface_distance": 2e-06,
+            "boundary_position": 3e-06,
+            "joint_tangent_deg": 0.04
+          },
+          "candidate_ms": 6.0,
+          "anchor_ms": 4.0,
+          "base_ms": 4.0
+        },
+        {
+          "iteration": 16,
+          "status": "ACCEPT",
+          "independent_audit": "PASS",
+          "checks": {
+            "surface_distance": "PASS",
+            "boundary_position": "PASS",
+            "uv_joint_tangent": "PASS"
+          },
+          "bounds": {
+            "surface_distance": 2e-06,
+            "boundary_position": 3e-06,
+            "joint_tangent_deg": 0.04
+          },
+          "candidate_ms": 6.0,
+          "anchor_ms": 4.0,
+          "base_ms": 4.0
+        },
+        {
+          "iteration": 17,
+          "status": "ACCEPT",
+          "independent_audit": "PASS",
+          "checks": {
+            "surface_distance": "PASS",
+            "boundary_position": "PASS",
+            "uv_joint_tangent": "PASS"
+          },
+          "bounds": {
+            "surface_distance": 2e-06,
+            "boundary_position": 3e-06,
+            "joint_tangent_deg": 0.04
+          },
+          "candidate_ms": 6.0,
+          "anchor_ms": 4.0,
+          "base_ms": 4.0
+        },
+        {
+          "iteration": 18,
+          "status": "ACCEPT",
+          "independent_audit": "PASS",
+          "checks": {
+            "surface_distance": "PASS",
+            "boundary_position": "PASS",
+            "uv_joint_tangent": "PASS"
+          },
+          "bounds": {
+            "surface_distance": 2e-06,
+            "boundary_position": 3e-06,
+            "joint_tangent_deg": 0.04
+          },
+          "candidate_ms": 6.0,
+          "anchor_ms": 4.0,
+          "base_ms": 4.0
+        },
+        {
+          "iteration": 19,
+          "status": "ACCEPT",
+          "independent_audit": "PASS",
+          "checks": {
+            "surface_distance": "PASS",
+            "boundary_position": "PASS",
+            "uv_joint_tangent": "PASS"
+          },
+          "bounds": {
+            "surface_distance": 2e-06,
+            "boundary_position": 3e-06,
+            "joint_tangent_deg": 0.04
+          },
+          "candidate_ms": 6.0,
+          "anchor_ms": 4.0,
+          "base_ms": 4.0
+        }
+      ]
+    }
+  ],
+  "head_sha": "85f4cb573848ad63997990097a8679b3c7b2865d",
+  "base_sha": "bad641386dd0ed2b73202cd48a8e3a0b53c937ec",
+  "merge_tree_sha": "500e62c2068c5c6e3085d3e15c585b06c62e0e3c"
+}
