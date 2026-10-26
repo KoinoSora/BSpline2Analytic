@@ -2,6 +2,8 @@
 
 ## 当前测试材料导航
 
+[闭环提交协议](../docs/requirements/CLOSED_LOOP_VALIDATION.md)使用 `tests/closed_loop/`。当前只运行 Python 合成协议和故障注入，不调用 SDK、数据集或性能基准，不代表实际算法达标。正式基线与执行器尚未激活。
+
 [圆锥近锥顶端点因子测试](../docs/testing/MOTHER_CONE_FACTOR_2026-10-23.md)使用 `BSpline2AnalyticMotherConeFactorTests`：位置模块覆盖因子、扰动、细分、预算及负例，另保留完整母面验证器检查。`BenchmarkMotherConeFactor.py` 对照保存的修改前程序，普通固定案例与合成位置探针分别统计；不调用退休验证器。
 
 [测试报告（实验报告）](../docs/testing/report/README.md)按命题 PDF 说明实测结果、误差分析与验收边界，明确区分历史批次和当前源码版本。

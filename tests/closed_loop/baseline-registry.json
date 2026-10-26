@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "state": "AWAITING_ADMIN_APPROVED_BASELINE",
+  "anchor_sha": null,
+  "approval": null,
+  "environment_sha256": null,
+  "cases": [],
+  "note": "No historical report is promoted to an approved baseline. No SGK test has been run for this experimental gate. Activation needs an independently approved full case/contract registry and a trusted isolated collector."
+}

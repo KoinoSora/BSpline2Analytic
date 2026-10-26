@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "policy_id": "b2a-closed-loop-experimental-v1",
+  "repository": "KoinoSora/BSpline2Analytic",
+  "target_branch": "main",
+  "real_tests_enabled": false,
+  "required_repetitions": 20,
+  "maximum_time_ratio": 1.05,
+  "new_case_limit_ms": 10.0,
+  "preserve_existing_10ms": true,
+  "bootstrap_samples": 2000,
+  "bootstrap_seed": 20261026,
+  "confidence": 0.95,
+  "maximum_retries": 1,
+  "reviewers": ["KoinoSora"],
+  "evidence_branch": "validation-evidence",
+  "production_status": "closed-loop/gate",
+  "simulation_status": "closed-loop/dry-run",
+  "retired_entrypoints": ["ValidateConversion", "ValidateGeneralHybrid", "ConvertApproximate"],
+  "retired_datasets": ["dataset500/general-", "dataset500/general-extra-", "general-extreme320"],
+  "contracts": {
+    "mother-distance-joint-v1": ["surface_distance", "boundary_position", "uv_joint_tangent"],
+    "paired-v1": ["paired_position", "boundary_position", "boundary_tangent", "paired_normal"],
+    "general-rational-v2": ["interior_sample", "boundary_position", "boundary_tangent"],
+    "exact-recognition-v1": ["exact_identity"]
+  }
+}

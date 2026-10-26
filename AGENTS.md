@@ -4,6 +4,8 @@
 
 用户已持续授权：每次完成一轮代码修改及相关测试、构建或配套文档修改后，执行相应验证，提交到当前工作分支并推送至本项目 Git 远端，核验推送结果后再汇报完成。正常提交与推送无需重复询问；用户后续明确指示优先。
 
+2026-10-26：面向 main 的修改采用工作分支和 PR，经闭环验证及指定管理员评审后合并，不再直接推送 main。闭环框架当前仅允许无 SDK 的合成协议演练，暂不启动模型 AGENT、几何数据集、性能基准或正式基线采集。使用 [closed-loop-validation Skill](.agents/skills/closed-loop-validation/SKILL.md) 和 [实验运行规范](docs/requirements/CLOSED_LOOP_VALIDATION.md)；`closed-loop/protocol-smoke` / `closed-loop/dry-run` 的绿色状态不代表正式 `closed-loop/gate` 通过。正式强制规则与执行器需另行激活，AGENT 不自行批准或合并。
+
 仓库为 https://github.com/KoinoSora/BSpline2Analytic，保持私有。SDK、许可证、凭据及构建产物不进入仓库。完整流程和失败处理以所链接的 Skill 为准。
 
 ## 一般兜底验证器约束
