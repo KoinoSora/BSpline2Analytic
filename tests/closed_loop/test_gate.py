@@ -138,6 +138,15 @@ class GateTests(unittest.TestCase):
         self.assertEqual(result["state"], "SIMULATION_PASS")
         self.assertEqual(result["comparisons"], [])
 
+    def test_missing_diagnostic_cannot_be_labelled_expected(self):
+        for status in (None, "NOT_RUN", "CRASH"):
+            with self.subTest(status=status):
+                self.registry["cases"][0].update(expectation="diagnostic", diagnostic_status=status)
+                self.update_registry()
+                for run in self.evidence["cases"][0]["runs"]:
+                    run["status"] = status
+                self.assert_code("DIAGNOSTIC")
+
     def test_geometric_bound_cannot_be_relabelled_pass(self):
         self.evidence["cases"][0]["runs"][0]["bounds"]["surface_distance"] = 1e-5
         self.assert_code("GEOMETRY_BOUND")

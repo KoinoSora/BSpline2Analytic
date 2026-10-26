@@ -125,7 +125,8 @@ def evaluate(policy, registry, evidence, context):
             status = run.get("status")
             expected = spec["expectation"]
             if expected == "diagnostic":
-                if status != spec.get("diagnostic_status"):
+                allowed_diagnostics = {"ACCEPT", "REJECT", "UNRESOLVED", "TIMEOUT", "INVALID", "UNSUPPORTED", "BUDGET_EXCEEDED"}
+                if spec.get("diagnostic_status") not in allowed_diagnostics or status != spec.get("diagnostic_status"):
                     fail("DIAGNOSTIC", key)
             elif status in ("TIMEOUT", "CRASH", "NOT_RUN", "INVALID"):
                 fail("EXECUTION", f"{key}: {status}")
