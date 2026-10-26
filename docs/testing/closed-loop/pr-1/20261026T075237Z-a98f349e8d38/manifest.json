@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "synthetic": true,
+  "files": {
+    "context.json": "db49f08672359271f4e527074d51eec3e704eafa4f47b8a9601c12fd2f5d0af0",
+    "evidence.json": "919c2a25a6ef9e8325642c244c90b7c8f54b38919c3b123ebf5313a8b8f6df6b",
+    "lifecycle.json": "5fa738b98b1869e576bde5f9c29dc7421b8c9e722a4c8885288e5f6116c742df",
+    "measurements.csv": "64b499d5a839a830d9b660f7605f7eac50c3a4342efbdee889d506c5e7fd5fba",
+    "policy.json": "cc30baab4afed0dd1f01cdeedabaefae0b18f174a5dcb125977d721bb934906d",
+    "production-refusal.json": "3d4717c65f439f5ec051c08de689f43e01a645292cb6b394acda98b7703333e5",
+    "registry.json": "32aafc1c055cc81d660db3166f0976c2004404c45845910056e42f2c2a47ae07",
+    "report.md": "8964b1b2b6c77d3ec7a25595f1a5990470373032917fd3696a7e0f57c2588455",
+    "result.json": "f7dfdf3302c37a3e4a4f6b0a9ae3c0e4899872b2eff3acb0d2a6c43cb2616089"
+  }
+}

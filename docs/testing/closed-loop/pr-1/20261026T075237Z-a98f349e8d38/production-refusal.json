@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "state": "FAIL",
+  "mode": "production",
+  "synthetic": false,
+  "production_eligible": false,
+  "issues": [
+    {
+      "code": "NOT_ACTIVATED",
+      "detail": "Real tests and the production gate are disabled"
+    },
+    {
+      "code": "BASELINE_NOT_APPROVED",
+      "detail": "No administrator-approved baseline"
+    },
+    {
+      "code": "UNTRUSTED_COLLECTOR",
+      "detail": "Producer identity has not been verified by the controller"
+    }
+  ],
+  "warnings": [],
+  "comparisons": [
+    {
+      "case": "synthetic:existing-cone",
+      "baseline": "anchor_ms",
+      "ratio": 1.01,
+      "lower": 1.01,
+      "upper": 1.01
+    },
+    {
+      "case": "synthetic:existing-cone",
+      "baseline": "base_ms",
+      "ratio": 1.01,
+      "lower": 1.01,
+      "upper": 1.01
+    },
+    {
+      "group": "all",
+      "baseline": "anchor_ms",
+      "ratio": 1.01
+    },
+    {
+      "group": "cone",
+      "baseline": "anchor_ms",
+      "ratio": 1.01
+    },
+    {
+      "group": "all",
+      "baseline": "base_ms",
+      "ratio": 1.01
+    },
+    {
+      "group": "cone",
+      "baseline": "base_ms",
+      "ratio": 1.01
+    }
+  ],
+  "head_sha": "ec869f6350e9281474416de01c712896b9ebd6b3",
+  "base_sha": "bad641386dd0ed2b73202cd48a8e3a0b53c937ec",
+  "merge_tree_sha": "bfb868a69fbed9d621471b4396cddfb44eabec43",
+  "evidence_sha256": "26a3485cf8e8b073e49490a812bc8d6a62031e5451a7a49d3101f1a5d7f3bc13",
+  "policy_sha256": "ef642310739f19ae0ac6853b70f6e447f5e4943cdefdb20a422dc18636562276",
+  "registry_sha256": "09497e64c52e55c579f763986b7589cad9925d6a024c11daed2c1c708b76ff6f"
+}

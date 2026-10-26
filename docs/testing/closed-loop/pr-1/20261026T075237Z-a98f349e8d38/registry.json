@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "state": "SIMULATION_ONLY",
+  "approval": null,
+  "anchor_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "environment_sha256": "50c4fa96f7e07e4c7b2c1a40eff37a75d3b52b848a8b742ed9fbd35f7ae2fa35",
+  "cases": [
+    {
+      "id": "synthetic:existing-cone",
+      "input_sha256": "91bcaffc6b8f6b0d7dfb9770457ed7603f85b6406c3f08673308ed6ed61dfb33",
+      "options_sha256": "17a80e9610c7f3aabef5e2916f9e5d4bf651f81bd574d4adcf80d700b9beb163",
+      "contract": "mother-distance-joint-v1",
+      "entrypoint": "ValidateMotherDistanceConversion",
+      "dataset": "synthetic-only",
+      "expectation": "accept",
+      "new": false,
+      "group": "cone"
+    },
+    {
+      "id": "synthetic:new-cone",
+      "input_sha256": "91bcaffc6b8f6b0d7dfb9770457ed7603f85b6406c3f08673308ed6ed61dfb33",
+      "options_sha256": "17a80e9610c7f3aabef5e2916f9e5d4bf651f81bd574d4adcf80d700b9beb163",
+      "contract": "mother-distance-joint-v1",
+      "entrypoint": "ValidateMotherDistanceConversion",
+      "dataset": "synthetic-only",
+      "expectation": "accept",
+      "new": true,
+      "group": "cone"
+    }
+  ]
+}
